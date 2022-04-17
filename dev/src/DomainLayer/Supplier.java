@@ -11,13 +11,16 @@ public class Supplier {
     private Map<String,String> contacts =new HashMap<>();//<name,email>
     private Map<Integer,Product> products =new HashMap<>();
     private Map<Integer,Double> discountByAmount;//sum of products in order
-
+    private Map<Integer,Order> orders;
+    private Map<Integer,Order> pastOrders;
     public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts){
         this.supplierNumber=supplierNumber;
         this.name=name;
         this.bankAccount=bankAccount;
         contacts.replaceAll((n,v) -> v);
         discountByAmount=new TreeMap<>();
+        orders = new TreeMap<>();
+        pastOrders = new HashMap<>();
     }
     public boolean updateAccount(String supplierName,int bankAccount,Map<String,String>contacts){
         this.name=supplierName;
@@ -67,5 +70,27 @@ public class Supplier {
     }
     public boolean addProductToOrder(int orderId,int catalogNumber){
         return true;
+    }
+    public double updateTotalIncludeDiscounts(int orderId){
+        Order order = orders.get(orderId);
+        int count = order.getCountProducts();
+        double price = order.getTotalIncludeDiscounts();
+        return price*findMaxUnder(count);
+    }
+    private double findMaxUnder(int count){
+        int out=0;
+        for(int s:discountByAmount.keySet()){
+            if(s<=count){
+                out=s;
+            }
+            else{
+                return discountByAmount.get(out);
+            }
+        }
+        return discountByAmount.get(out);
+    }
+    public PastOrder finishOrder(int orderId){
+        double totalPrice =updateTotalIncludeDiscounts(orderId);
+        return new PastOrder(orders.get(orderId),totalPrice);
     }
 }

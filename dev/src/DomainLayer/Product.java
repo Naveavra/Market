@@ -14,6 +14,15 @@ public class Product {
         this.price=price;
         discount =new TreeMap<>();// keep it sorted
     }
+    public Product (Product product){
+        this.catalogNumber = product.catalogNumber;
+        this.name= product.name;
+        this.price=product.price;
+        discount=new TreeMap<>();
+        for(int x: product.discount.keySet()){
+             discount.put(x,product.discount.get(x));
+        }
+    }
     public void setName(String name) {
         this.name = name;
 
@@ -35,5 +44,25 @@ public class Product {
         }
         this.discount.remove(count);
         return true;
+    }
+
+    public double getPriceAfterDiscount(int count) {
+        return this.price*count*findMaxUnder(count);
+    }
+    private double findMaxUnder(int count){
+        int out=0;
+        for(int s:discount.keySet()){
+            if(s<=count){
+                out=s;
+            }
+            else{
+                return discount.get(out);
+            }
+        }
+        return discount.get(out);
+    }
+
+    public double getPrice() {
+        return price;
     }
 }
