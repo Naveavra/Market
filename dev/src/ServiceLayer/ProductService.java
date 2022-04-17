@@ -1,15 +1,14 @@
 package ServiceLayer;
-//import org.Json.simple.JSONObject;
-//import org.json.JSONArray;
 
 import DomainLayer.SupplierControler;
+import org.json.JSONObject;
 
 public class ProductService {
 
     private SupplierControler supplierControler;
 
 
-    public String addProduct(int supplierNumber, int catalogNamber, String name, int price){
+    public JSONObject addProduct(int supplierNumber, int catalogNamber, String name, int price){
         boolean ans = supplierControler.getSupplier(supplierNumber).addProduct(catalogNamber, name, price);
         return ToJson(ans);
         //JSONObject json = new JSONObject(demo);
@@ -22,14 +21,13 @@ public class ProductService {
     }
 
 
-    public String removeProduct(int supplierNumber, int catalogNumber){
+    public JSONObject removeProduct(int supplierNumber, int catalogNumber){
         boolean ans = supplierControler.getSupplier(supplierNumber).removeProduct(catalogNumber);
         return ToJson(ans);
     }
 
-    private String ToJson(Object obj)
+    private JSONObject ToJson(Object obj)
     {
-        return null;
-        //return JsonSerializer.Serialize(obj, obj.GetType());
+        return new JSONObject(obj);
     }
 }

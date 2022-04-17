@@ -13,4 +13,7 @@ public class Supplier {
     public boolean removeProduct(int catalogNamber) {
         return false;
     }
+
+    public void createOrder() {
+    }
 }
