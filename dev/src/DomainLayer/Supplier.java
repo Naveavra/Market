@@ -11,7 +11,7 @@ public class Supplier {
     private Map<String,String> contacts =new HashMap<>();//<name,email>
     private Map<Integer,Product> products =new HashMap<>();
     private Map<Integer,Double> discountByAmount;//sum of products in order
-    //
+
     public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts){
         this.supplierNumber=supplierNumber;
         this.name=name;
@@ -64,5 +64,8 @@ public class Supplier {
 //    }
     public Product getProduct(int catalogNumber){
         return products.get(catalogNumber);
+    }
+    public boolean addProductToOrder(int orderId,int catalogNumber){
+        return true;
     }
 }
