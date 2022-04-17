@@ -1,14 +1,14 @@
 package ServiceLayer;
 
-import DomainLayer.SupplierControler;
+import DomainLayer.SupplierController;
 import org.json.JSONObject;
 
 public class ProductService {
 
-    private SupplierControler supplierControler;
+    private SupplierController supplierControler;
 
 
-    public JSONObject addProduct(int supplierNumber, int catalogNamber, String name, int price){
+    public JSONObject addProduct(int supplierNumber, int catalogNumber, String name, int price){
         boolean ans = supplierControler.getSupplier(supplierNumber).addProduct(catalogNamber, name, price);
         return ToJson(ans);
         //JSONObject json = new JSONObject(demo);

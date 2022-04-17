@@ -34,4 +34,7 @@ public class Supplier {
     public boolean createOrder(int supplierNumber){
         return true;
     }
+    public Product getProduct(int catalogNumber){
+        return
+    }
 }

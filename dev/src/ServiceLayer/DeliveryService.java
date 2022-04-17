@@ -1,10 +1,10 @@
 package ServiceLayer;
 
-import DomainLayer.SupplierControler;
+import DomainLayer.SupplierController;
 import org.json.JSONObject;
 
 public class DeliveryService {
-    private SupplierControler supplierControler;
+    private SupplierController supplierControler;
 
     public JSONObject addFixedDeliveryDaysForOrder(int orderId, String[] daysInWeek){
         return null;

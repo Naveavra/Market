@@ -1,11 +1,11 @@
 package ServiceLayer;
 
-import DomainLayer.SupplierControler;
+import DomainLayer.SupplierController;
 import org.json.JSONObject;
 
 public class OrderService {
 
-    private SupplierControler supplierControler;
+    private SupplierController supplierControler;
 
     public boolean createOrder(int supplierNumber){
         supplierControler.getSupplier(supplierNumber).createOrder();
