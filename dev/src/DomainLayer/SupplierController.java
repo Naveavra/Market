@@ -17,8 +17,5 @@ public class SupplierController {
     public boolean closeAccount(int supplierNumber){
         return true;
     }
-    public boolean updateAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts){
-        return true;
-    }
 
 }

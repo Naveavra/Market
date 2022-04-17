@@ -7,6 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jsonschema2pojo.ant" level="project" />
+    <orderEntry type="library" exported="" name="com.eduworks:org.json-ld:3.1.8" level="project" />
+    <orderEntry type="library" exported="" name="com.eduworks:org.json-ld:3.1.5" level="project" />
   </component>
 </module>
