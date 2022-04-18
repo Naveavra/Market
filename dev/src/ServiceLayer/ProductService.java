@@ -9,7 +9,7 @@ public class ProductService {
 
 
     public JSONObject addProduct(int supplierNumber, int catalogNumber, String name, int price){
-        boolean ans = supplierControler.getSupplier(supplierNumber).addProduct(catalogNamber, name, price);
+        boolean ans = supplierControler.getSupplier(supplierNumber).addProduct(catalogNumber, name, price);
         return ToJson(ans);
         //JSONObject json = new JSONObject(demo);
     }

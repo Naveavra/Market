@@ -1,9 +1,12 @@
 package ServiceLayer;
 
 
+import DomainLayer.Supplier;
 import DomainLayer.SupplierController;
 
 import java.util.Map;
+import com.google.gson.Gson;
+import org.json.JSONObject;
 
 public class SupplierService {
     private SupplierController supplierController =new SupplierController();
@@ -27,5 +30,13 @@ public class SupplierService {
     }
     public boolean removeDiscountOnAmount(int supplierNumber,int count){
         return supplierController.getSupplier(supplierNumber).removeDiscountOnAmount(count);
+    }
+
+    public String getSupplier(int supplierNumber) {
+        Gson gson = new Gson();
+        Supplier s = supplierController.getSupplier(supplierNumber);
+        String json = gson.toJson(s);
+        return  json;
+
     }
 }

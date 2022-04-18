@@ -93,4 +93,7 @@ public class Supplier {
         double totalPrice =updateTotalIncludeDiscounts(orderId);
         return new PastOrder(orders.get(orderId),totalPrice);
     }
+
+    public void createOrder() {
+    }
 }
