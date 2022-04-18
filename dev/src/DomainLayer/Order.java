@@ -7,16 +7,16 @@ import java.util.TreeMap;
 
 public class Order {
     private int orderId;
-    private LocalDateTime date;
+    //private LocalDateTime date;
     private Map<Product,Integer> products;//product and count
 
     public Order(int orderId){
         this.orderId = orderId;
         products = new HashMap<>();
-        date = LocalDateTime.now();
+//        date = LocalDateTime.now();
     }
     public Order(Order order){
-        this.date=order.date;
+//        this.date=order.date;
         this.orderId=order.orderId;
         this.products = new HashMap<>();
         for(Product p:order.products.keySet()){

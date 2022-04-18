@@ -14,6 +14,10 @@ public class ProductService {
         //JSONObject json = new JSONObject(demo);
     }
 
+    public String getProductsOfSupplier(int supplierNumber){
+        return null;
+    }
+
     public void updateProuduct(int supplierNumber, int catalogNumber, String name, int price){
         supplierControler.getSupplier(supplierNumber).getProduct(catalogNumber).setName(name);
         supplierControler.getSupplier(supplierNumber).getProduct(catalogNumber).setPrice(price);

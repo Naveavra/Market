@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 public class SupplierController {
-    private Map<Integer,Supplier> suppliers = new HashMap<>();
+    private static Map<Integer,Supplier> suppliers = new HashMap<>();
 
     public Supplier getSupplier(Integer supplierNumber){
         return suppliers.get(supplierNumber);
     }
     public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts){
+        Supplier s = new Supplier(supplierNumber,supplierName, bankAccount, contacts);
+        suppliers.put(supplierNumber, s);
         return true;
     }
     public boolean closeAccount(int supplierNumber){

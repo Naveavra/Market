@@ -14,19 +14,19 @@ public class Supplier {
     private String name;
     private int bankAccount;
     private Map<String,String> contacts =new HashMap<>();//<name,email>
-    private Map<Integer, Product> products =new HashMap<>();
-    private Map<Integer,Double> discountByAmount;//sum of products in order
-    private Map<Integer, Order> orders;
-    private Map<Integer,Order> pastOrders;
+//    private Map<Integer, Product> products =new HashMap<>();
+//    private Map<Integer,Double> discountByAmount;//sum of products in order
+//    private Map<Integer, Order> orders;
+//    private Map<Integer,Order> pastOrders;
 
     public Supplier(int supplierNumber, String name, int bankAccount, Map<String,String> contacts){
         this.supplierNumber=supplierNumber;
         this.name=name;
         this.bankAccount=bankAccount;
         contacts.replaceAll((n,v) -> v);
-        discountByAmount=new TreeMap<>();
-        orders = new TreeMap<>();
-        pastOrders = new HashMap<>();
+//        discountByAmount=new TreeMap<>();
+//        orders = new TreeMap<>();
+//        pastOrders = new HashMap<>();
     }
 
     public String getSupplierName() {
@@ -46,5 +46,13 @@ public class Supplier {
             ans+= "\n\t* "+ e.getKey() + ": " + e.getValue();
         }
         return ans;
+    }
+
+    public int getBankNumber() {
+        return bankAccount;
+    }
+
+    public Map<String, String> getContacts() {
+        return contacts;
     }
 }

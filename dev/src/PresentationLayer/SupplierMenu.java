@@ -15,7 +15,7 @@ public class SupplierMenu {
     private SupplierService ss = new SupplierService();
 
     public void chooseSupplierMenu() {
-        System.out.println("We enter to Suppliers page:");
+        System.out.println("***You enter to Suppliers page:***");
         System.out.println("Please choose what you whant to do:");
         System.out.println("\t1. Open new Supplier");
         System.out.println("\t2. See details of Supplier that exist in tha system");
@@ -32,7 +32,7 @@ public class SupplierMenu {
             case 2:
                 int supNumber = 0;
                 System.out.println("Enter the supplier number you whant to see:");
-                supNumber =- sc.nextInt();
+                supNumber = sc.nextInt();
                 inSupplierMenu(supNumber);
                 break;
             default:
@@ -44,8 +44,13 @@ public class SupplierMenu {
 
     }
 
-    private void inSupplierMenu(int supplierNumber) {
+    public void inSupplierMenu(int supplierNumber) {
         String json = ss.getSupplier(supplierNumber);
+        if (json == null || json.equals("null")){
+            System.out.println("supplier number don't found");
+            chooseSupplierMenu();
+            return;
+        }
         Gson gson = new Gson();
         Supplier s = gson.fromJson(json, Supplier.class);
         System.out.println("You see details of supplier: "+ s.getSupplierName());
@@ -56,6 +61,7 @@ public class SupplierMenu {
         System.out.println("\t4. Add discount on amount of products to supplier.");
         System.out.println("\t5. Create new order from the supplier.");
         System.out.println("\t6. Watch existing orders from the supplier.");
+        System.out.println("\t7. Return to choose anther supplier.");
         int choise = 0;
         try{choise = sc.nextInt();}
         catch (Exception e){
@@ -84,6 +90,9 @@ public class SupplierMenu {
                 OrderMenu om6 = new OrderMenu(s);
                 om6.watchOrdersMenu();
                 break;
+            case 7:
+                chooseSupplierMenu();
+                break;
             default:
                 System.out.println("You must type digit 1 to 2");
                 inSupplierMenu(supplierNumber);
@@ -109,21 +118,71 @@ public class SupplierMenu {
         }
         ss.addDiscount(supplierNum,count,discount);
         System.out.println("discount is added to supplier");
-        new Menu().intialMenu();
+        inSupplierMenu(supplierNum);
 
     }
 
     private void seeSupplierDetails(Supplier s) {
         System.out.println(s.toString());
-        chooseSupplierMenu();
+        inSupplierMenu(s.getSupplierNumber());
 
 
     }
 
     private void updateSupplierDetails(Supplier s) {//need to imp
         System.out.println(s.toString());
+        System.out.println("Choose what you want to update:");
+        System.out.println("\t1. supplier name");
+        System.out.println("\t2. bank number");
+        System.out.println("\t3. contacts");
+        System.out.println("\t4. Return to supplier page");
+        int choise = 0;
+        try{choise = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only number");
+            updateSupplierDetails(s);
+        }
+        switch (choise){
+            case 1:
+                String newSupplierName = "";
+                System.out.println("Enter Supplier's name: ");
+                newSupplierName = sc.next();
+                ss.updateAccount(s.getSupplierNumber(),newSupplierName, s.getBankNumber(), s.getContacts());
+                break;
+            case 2:
+                int bankNumber = 0;
+                System.out.println("Enter Supplier's bankNumber: ");
+                try{bankNumber = sc.nextInt();}
+                catch (Exception e){
+                    System.out.println("you must enter only digits number");
+                    openNewAccountSupplier();
+                }
+                ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), bankNumber, s.getContacts());
+                break;
+            case 3://contacts
+                int countContacts = 0;
+                System.out.println("Enter count of contacts you have: ");
+                try{countContacts = sc.nextInt();}
+                catch (Exception e){
+                    System.out.println("you must enter only digits number");
+                    openNewAccountSupplier();
+                }
+                Map<String,String> contacts = new HashMap<>();
+                for (int i=1; i<=countContacts; i++){
+                    System.out.println(i + ". name: ");
+                    String name = sc.next();
+                    System.out.println(i + ". email: ");
+                    String email = sc.next();
+                    contacts.put(name,email);
+                }
+                ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), s.getBankNumber(), contacts);
+                break;
+            case 4:
+                inSupplierMenu(s.getSupplierNumber());
+                break;
 
-        chooseSupplierMenu();
+        }
+        updateSupplierDetails(s);
 
     }
 
@@ -135,15 +194,27 @@ public class SupplierMenu {
         supName = sc.next();
         int supNumber = 0;
         System.out.println("Enter Supplier's number: ");
-        supNumber = sc.nextInt();
+        try{supNumber = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only digits number");
+            openNewAccountSupplier();
+        }
 
         int bankNumber = 0;
         System.out.println("Enter Supplier's bankNumber: ");
-        bankNumber = sc.nextInt();
+        try{bankNumber = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only digits number");
+            openNewAccountSupplier();
+        }
 
         int countContacts = 0;
         System.out.println("Enter count of contacts you have: ");
-        countContacts = sc.nextInt();
+        try{countContacts = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only digits number");
+            openNewAccountSupplier();
+        }
         Map<String,String> contacts = new HashMap<>();
         for (int i=1; i<=countContacts; i++){
             System.out.println(i + ". name: ");

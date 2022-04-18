@@ -23,7 +23,22 @@ public class OrderService {
         return null;
     }
 
-    public String updateProductToOrder(int supplierNumber, int catalogNUmber, int newCount){
+    public String updateProductInOrder(int supplierNumber,int orderId, int catalogNUmber, int newCount){
+
+        return null;
+    }
+
+    public String deleteProductFromOrder(int supplierNumber,int orderId, int catalogNUmber){
+
+        return null;
+    }
+
+    public String getActiveOrders(int supplierNumber){
+
+        return null;
+    }
+
+    public String getFixedDaysOrders(int supplierNumber){
 
         return null;
     }

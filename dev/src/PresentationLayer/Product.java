@@ -42,4 +42,11 @@ public class Product {
     public double getPrice() {
         return price;
     }
+
+    public String toString(){
+        String ans = "catalog Number: " + catalogNumber;
+        ans += ", name: "+ name;
+        ans+= ", price: "+ price;
+        return ans;
+    }
 }

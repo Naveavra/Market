@@ -1,8 +1,11 @@
 package PresentationLayer;
 
+import ServiceLayer.OrderService;
+import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 
 import java.io.Console;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Menu {
@@ -39,6 +42,23 @@ public class Menu {
     }
 
     private void loadIntialData() {
+
+        Gson gson = new Gson();
+        SupplierService ss =  new SupplierService();
+        HashMap<String,String> contacts = new HashMap<>();
+        contacts.put("eyal", "eyal@gmail.com");
+        ss.openAccount(123,"LG", 5555, contacts);
+
+        contacts = new HashMap<>();
+        contacts.put("Dan", "dan@gmail.com");
+        ss.openAccount(1235,"Boxit", 456, contacts);
+
+        ss.addDiscount(123, 5, 0.8);
+        OrderService os = new OrderService();
+        String json = os.createOrder(1235);
+        Order o1 = gson.fromJson(json,Order.class);
+
+
 
     }
 

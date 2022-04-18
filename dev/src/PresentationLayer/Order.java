@@ -25,4 +25,10 @@ public class Order {
         }
     }
 
+    public String toString(){
+        String ans = "Order number: "+ orderId;
+        ans += ", date" + date;
+        return ans;
+    }
+
 }

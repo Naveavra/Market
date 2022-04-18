@@ -35,6 +35,7 @@ public class SupplierService {
     public String getSupplier(int supplierNumber) {
         Gson gson = new Gson();
         Supplier s = supplierController.getSupplier(supplierNumber);
+//        String json = "{ \"supplierNumber\": " +supplierNumber + ", \"name\": "+ s.getName();
         String json = gson.toJson(s);
         return  json;
 

@@ -13,6 +13,7 @@ public class OrderMenu {
     private Supplier supplier;
     private ProductMenu pm;
     private OrderService orderService;
+
     public OrderMenu(Supplier s) {
         this.supplier = s;
         pm = new ProductMenu(supplier);
@@ -31,6 +32,7 @@ public class OrderMenu {
     }
 
     private void addProductsToOrder(Order o) {
+        System.out.println("NOT IMPL");
     }
 
     public void watchOrdersMenu() {
@@ -71,11 +73,16 @@ public class OrderMenu {
     }
 
     private void watchFIxedDaysOrders() {
+        String json = orderService.getFixedDaysOrders(supplier.getSupplierNumber());
+
+        System.out.println("NOT IMPL");
 
 
     }
 
     private void watchWaitOrders() {
+
+        System.out.println("NOT IMPL");
 
     }
 
@@ -86,11 +93,12 @@ public class OrderMenu {
         System.out.println("\t1. add new product.");
         System.out.println("\t2. watch all the product in the order.");
         System.out.println("\t3. update product in order.");
+        System.out.println("\t4. Return to choose orders.");
         int choise = 0;
         try{choise = sc.nextInt();}
         catch (Exception e){
             System.out.println("you must enter only 1 digit number");
-            watchOrdersMenu();
+            updateOrderMenu(orderID);
         }
         switch (choise){
             case 1:
@@ -116,17 +124,55 @@ public class OrderMenu {
             case 3:
                 updateProductInOrder(orderID);
                 break;
-
+            case 4:
+                watchOrdersMenu();
+                break;
             default:
                 System.out.println("You must type number between 1 to 3");
-                watchOrdersMenu();
-
+                updateOrderMenu(orderID);
+                break;
         }
+        System.out.println("You want to edit anther product?\n1.YES\n2.NO");
+        try{choise = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only 1 digit number");
+            updateOrderMenu(orderID);
+        }
+        switch (choise){
+            case 1:
+                updateOrderMenu(orderID);
+                break;
+            case 2:
+                new SupplierMenu().inSupplierMenu(supplier.getSupplierNumber());
+        }
+
 
 
     }
 
     private void updateProductInOrder(int orderID) {
+        watchOrdersMenu();
+        System.out.println("choose product you want to edit and enter the catalog number:");
+        int catalogNum = 0;
+        try{catalogNum = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only numbers");
+            updateProductInOrder(orderID);
+        }
+        System.out.println("Enter the new count for product (0 for delete");
+        int count = 0;
+        try{count = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only numbers");
+            updateProductInOrder(orderID);
+        }
+        if (count > 0){
+            orderService.updateProductInOrder(supplier.getSupplierNumber(),orderID, catalogNum, count);
+        }
+        else{
+            orderService.deleteProductFromOrder(supplier.getSupplierNumber(), orderID,catalogNum);
+        }
+
 
     }
 
@@ -136,6 +182,7 @@ public class OrderMenu {
         int i = 1;
         for (Map.Entry<Product,Integer> e: products.entrySet()){
             System.out.println("\t"+i+ ". "+ e.getKey() + "in count: "+ e.getValue() );
+            i++;
         }
 
     }

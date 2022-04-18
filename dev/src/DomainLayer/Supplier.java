@@ -13,6 +13,7 @@ public class Supplier {
     private Map<Integer,Double> discountByAmount;//sum of products in order
     private Map<Integer,Order> orders;
     private Map<Integer,Order> pastOrders;
+
     public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts){
         this.supplierNumber=supplierNumber;
         this.name=name;
@@ -95,5 +96,9 @@ public class Supplier {
     }
 
     public void createOrder() {
+    }
+
+    public String getName() {
+        return name;
     }
 }
