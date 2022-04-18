@@ -7,16 +7,23 @@ import org.json.JSONObject;
 public class DeliveryService {
     private SupplierController supplierControler;
 
-    public JSONObject addFixedDeliveryDaysForOrder(int orderId, String[] daysInWeek){
-        return null;
+    public DeliveryService(){
+        supplierControler = new SupplierController();
     }
 
-    public JSONObject updateFixedDeliveryDaysForOrder(int orderId, String[] daysInWeek){
-        return null;
+    public boolean addFixedDeliveryDaysForOrder(int orderId, String[] daysInWeek){
+
+
+        return false;
     }
 
-    public JSONObject stopFixedDeliveryDaysForOrder(int orderId){
+    public boolean updateFixedDeliveryDaysForOrder(int orderId, String[] daysInWeek){
 
-        return null;
+        return false;
+    }
+
+    public boolean stopFixedDeliveryDaysForOrder(int orderId){
+
+        return false;
     }
 }

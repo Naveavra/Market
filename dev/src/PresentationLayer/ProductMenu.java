@@ -98,7 +98,25 @@ public class ProductMenu {
     }
 
     private void updateProduct(Supplier supplier) {
-        System.out.println("");
+        System.out.println("Update product:");
+        System.out.println("Enter catalog number of the product:");
+        int catalogNum = 0;
+        try{catalogNum = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only number");
+            removeProduct(supplier);
+        }
+        System.out.println("Enter new name for product:");
+        String newName = sc.next();
+        System.out.println("Enter new price for product:");
+        int price = 0;
+        try{price = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only number");
+            removeProduct(supplier);
+        }
+        ps.updateProuduct(supplier.getSupplierNumber(),catalogNum, newName, price);
+        System.out.println("product updated");
 
     }
 

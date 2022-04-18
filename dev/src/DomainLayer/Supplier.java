@@ -63,9 +63,9 @@ public class Supplier {
         products.remove(catalogNumber);
         return true;
     }
-//    public Order createOrder(){
-//        return true;
-//    }
+    public Order createOrder(){
+        return null;
+    }
     public Product getProduct(int catalogNumber){
         return products.get(catalogNumber);
     }
@@ -95,10 +95,16 @@ public class Supplier {
         return new PastOrder(orders.get(orderId),totalPrice);
     }
 
-    public void createOrder() {
-    }
 
     public String getName() {
         return name;
+    }
+
+    public Order getOrder(int orderId) {
+        return orders.get(orderId);
+    }
+
+    public Map<Integer,Order> getActiveOrders() {
+        return orders;
     }
 }

@@ -24,7 +24,7 @@ public class Order {
         }
     }
 
-    public boolean addProductToOrder(Product p, int count){
+    public boolean updateProductToOrder(Product p, int count){
         products.put(p, products.getOrDefault(p,0)+count);
         return true;
 
@@ -47,5 +47,14 @@ public class Order {
            sum +=products.get(p);
         }
         return sum;
+    }
+
+    public boolean removeProductFromOrder(Product p) {
+        products.remove(p);
+        return true;
+    }
+
+    public Map<Product,Integer> getProducts() {
+        return products;
     }
 }

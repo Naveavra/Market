@@ -13,11 +13,13 @@ public class OrderMenu {
     private Supplier supplier;
     private ProductMenu pm;
     private OrderService orderService;
+    private Gson gson;
 
     public OrderMenu(Supplier s) {
         this.supplier = s;
         pm = new ProductMenu(supplier);
         orderService = new OrderService();
+        gson = new Gson();
     }
 
     public void newOrder() {
@@ -32,6 +34,7 @@ public class OrderMenu {
     }
 
     private void addProductsToOrder(Order o) {
+
         System.out.println("NOT IMPL");
     }
 
@@ -87,7 +90,7 @@ public class OrderMenu {
     }
 
     private void updateOrderMenu(int orderID) {
-        Order o = orderService.getOrder(orderID);
+        Order o = gson.fromJson(orderService.getOrder(supplier.getSupplierNumber(), orderID),Order.class);
         System.out.println("Order: "+ orderID);
         System.out.println("Choose what you want:");
         System.out.println("\t1. add new product.");
@@ -116,7 +119,7 @@ public class OrderMenu {
                     System.out.println("you must enter only numbers");
                     updateOrderMenu(orderID);
                 }
-                orderService.addProductToOrder(orderID,catalogNum, count);
+                orderService.addProductToOrder(supplier.getSupplierNumber(),orderID,catalogNum, count);
                 break;
             case 2:
                 watchProductInOrder(orderID);
@@ -177,7 +180,7 @@ public class OrderMenu {
     }
 
     private void watchProductInOrder(int orderID) {
-        Map<Product,Integer> products = Menu.fromJson(orderService.getProductsInOrder(orderID), Map.class);
+        Map<Product,Integer> products = Menu.fromJson(orderService.getProductsInOrder(supplier.getSupplierNumber(), orderID), Map.class);
         System.out.println("Product in Order: "+ orderID);
         int i = 1;
         for (Map.Entry<Product,Integer> e: products.entrySet()){

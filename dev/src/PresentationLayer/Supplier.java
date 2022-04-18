@@ -52,6 +52,8 @@ public class Supplier {
         return bankAccount;
     }
 
+
+
     public Map<String, String> getContacts() {
         return contacts;
     }
