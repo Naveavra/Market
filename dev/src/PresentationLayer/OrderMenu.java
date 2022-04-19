@@ -1,8 +1,8 @@
 package PresentationLayer;
 
-import DomainLayer.Product;
 import ServiceLayer.OrderService;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.*;
 
@@ -116,16 +116,24 @@ public class OrderMenu {
 
         System.out.println("NOT IMPL");
 
+        watchOrdersMenu();
 
     }
 
     private void watchWaitOrders() {
         String json=orderService.getActiveOrders(supplier.getSupplierNumber());
-      List<Order> orders=new ArrayList<>();
-        orders=gson.fromJson(json,orders.getClass());
-        for(Order o:orders){
-            System.out.println(o.toString());
+//        List<Order> orders=new ArrayList<>();
+//
+//        //orders=gson.fromJson(
+//        orders= Menu.fromJson(json,orders.getClass());
+        Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
+        orders = Menu.fromJson(json, orders.getClass());
+
+        for(LinkedTreeMap o: orders.values()){
+            Order order = Menu.fromJson(o.toString(), Order.class);
+            System.out.println(order.toString());
         }
+        watchOrdersMenu();
     }
 
     private void updateOrderMenu(int orderID) {
@@ -188,9 +196,7 @@ public class OrderMenu {
             case 2:
                 new SupplierMenu().inSupplierMenu(supplier.getSupplierNumber());
         }
-
-
-
+        updateOrderMenu(orderID);
     }
 
     private void updateProductInOrder(int orderID) {
@@ -215,7 +221,7 @@ public class OrderMenu {
         else{
             orderService.deleteProductFromOrder(supplier.getSupplierNumber(), orderID,catalogNum);
         }
-
+        updateOrderMenu(orderID);
 
     }
 
@@ -227,6 +233,7 @@ public class OrderMenu {
             System.out.println("\t"+i+ ". "+ e.getKey() + "in count: "+ e.getValue() );
             i++;
         }
+        updateOrderMenu(orderID);
 
     }
 
