@@ -80,6 +80,7 @@ public class OrderMenu {
         System.out.println("\t1. Update order.");
         System.out.println("\t2. See all your wait orders.");
         System.out.println("\t3. See all your orders in fixed days delivery.");
+        System.out.println("\t4. Return to supplier page");
         int choise = 0;
         try{choise = sc.nextInt();}
         catch (Exception e){
@@ -109,6 +110,7 @@ public class OrderMenu {
                 watchOrdersMenu();
 
         }
+        sm.inSupplierMenu(supplier.getSupplierNumber());
     }
 
     private void watchFixedDaysOrders() {

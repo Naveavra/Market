@@ -3,10 +3,9 @@ package PresentationLayer;
 import ServiceLayer.ProductService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ProductMenu {
 
@@ -118,7 +117,7 @@ public class ProductMenu {
         try{catalogNum = sc.nextInt();}
         catch (Exception e){
             System.out.println("you must enter only number");
-            removeProduct(supplier);
+            updateProduct(supplier);
         }
         System.out.println("Enter new name for product:");
         String newName = sc.next();
@@ -127,7 +126,7 @@ public class ProductMenu {
         try{price = sc.nextInt();}
         catch (Exception e){
             System.out.println("you must enter only number");
-            removeProduct(supplier);
+            updateProduct(supplier);
         }
         boolean updated=ps.updateProduct(supplier.getSupplierNumber(),catalogNum, newName, price);
         if(updated) {
@@ -136,12 +135,13 @@ public class ProductMenu {
         else{
             System.out.println("product didn't found or the price was invalid number");
         }
+        manageProductsSupplierMenu();
     }
 
     private void watchSupplierProducts(Supplier supplier) {
         String json = ps.getProductsOfSupplier(supplier.getSupplierNumber());
         Gson gson = new Gson();
-        List products = new ArrayList<>();
+        Map<Integer, LinkedTreeMap> products = new HashMap<>();
         products = gson.fromJson(json,products.getClass());
         int i = 1;
         if(products == null){
@@ -149,8 +149,9 @@ public class ProductMenu {
             manageProductsSupplierMenu();
         }
         assert products != null;
-        for (Object p: products){
-            System.out.println(i + ". "+ p);
+        for (LinkedTreeMap p: products.values()){
+            Product product = Menu.fromJson(p.toString(), Product.class);
+            System.out.println(i + ". "+ product.toString());
             i++;
         }
         manageProductsSupplierMenu();
@@ -165,7 +166,7 @@ public class ProductMenu {
         }
         System.out.println("enter amount of discount");
         double discount = 0;
-        try{discount = sc.nextInt();}
+        try{discount = sc.nextDouble();}
         catch (Exception e){
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
@@ -177,6 +178,14 @@ public class ProductMenu {
             System.out.println("you must enter only digits number");
             manageProductsSupplierMenu();
         }
-        ss.addDiscount(supplier.getSupplierNumber(),catalogNum ,count , discount);
+        boolean added = ss.addDiscount(supplier.getSupplierNumber(),catalogNum ,count , discount);
+        if (added){
+            System.out.println("discount added to product");
+        }
+        else{
+            System.out.println("invalid input");
+        }
+
+        manageProductsSupplierMenu();
     }
 }

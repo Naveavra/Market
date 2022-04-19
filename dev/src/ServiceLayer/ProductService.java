@@ -1,7 +1,12 @@
 package ServiceLayer;
 
+import DomainLayer.Product;
 import DomainLayer.SupplierController;
 import com.google.gson.Gson;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class ProductService {
 
@@ -25,7 +30,8 @@ public class ProductService {
             System.out.println("supplier didnt found");
             return "";
         }
-        return supplierController.getSupplier(supplierNumber).getProducts().values().toString();
+        Map<Integer,Product> products = supplierController.getSupplier(supplierNumber).getProducts();
+        return gson.toJson(products);
     }
 
     public boolean updateProduct(int supplierNumber, int catalogNumber, String name, int price){
