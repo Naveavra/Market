@@ -12,8 +12,6 @@ public class DeliveryService {
     }
 
     public boolean addFixedDeliveryDaysForOrder(int orderId, String[] daysInWeek){
-
-
         return false;
     }
 

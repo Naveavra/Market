@@ -32,7 +32,8 @@ public class ProductMenu {
         System.out.println("\t2. Add new product.");
         System.out.println("\t3. Remove product.");
         System.out.println("\t4. Update product.");
-        System.out.println("\t5. Return to supplier page.");
+        System.out.println("\t5. Add new discount on count of product.");
+        System.out.println("\t6. Return to supplier page.");
 
         int choise = 0;
         try{choise = sc.nextInt();}
@@ -54,6 +55,9 @@ public class ProductMenu {
                 updateProduct(supplier);
                 break;
             case 5:
+                addDiscountOnProduct(supplier);
+                break;
+            case 6:
                 sm.inSupplierMenu(supplier.getSupplierNumber());
                 break;
         }
@@ -77,8 +81,13 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
         }
-        ps.addProduct(supplier.getSupplierNumber(), catalogNum,name, price);
-        System.out.println("product added");
+        boolean added=ps.addProduct(supplier.getSupplierNumber(), catalogNum,name, price);
+        if(added) {
+            System.out.println("product added");
+        }
+        else{
+            System.out.println("The product is already exist or the price is invalid ");
+        }
         manageProductsSupplierMenu();
 
     }
@@ -92,8 +101,13 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             removeProduct(supplier);
         }
-        ps.removeProduct(supplier.getSupplierNumber(), catalogNum);
-        System.out.println("product remove");
+        boolean removed=ps.removeProduct(supplier.getSupplierNumber(), catalogNum);
+        if(removed) {
+            System.out.println("product remove");
+        }
+        else{
+            System.out.println("product didn't exist");
+        }
         manageProductsSupplierMenu();
     }
 
@@ -115,21 +129,54 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             removeProduct(supplier);
         }
-        ps.updateProuduct(supplier.getSupplierNumber(),catalogNum, newName, price);
-        System.out.println("product updated");
-
+        boolean updated=ps.updateProduct(supplier.getSupplierNumber(),catalogNum, newName, price);
+        if(updated) {
+            System.out.println("product updated");
+        }
+        else{
+            System.out.println("product didn't found or the price was invalid number");
+        }
     }
 
     private void watchSupplierProducts(Supplier supplier) {
         String json = ps.getProductsOfSupplier(supplier.getSupplierNumber());
         Gson gson = new Gson();
-        List<Product>products = new ArrayList<>();
+        List products = new ArrayList<>();
         products = gson.fromJson(json,products.getClass());
-        int i= 1;
-        for (Product p: products){
+        int i = 1;
+        if(products == null){
+            System.out.println("There is no products to show");
+            manageProductsSupplierMenu();
+        }
+        assert products != null;
+        for (Object p: products){
             System.out.println(i + ". "+ p);
             i++;
         }
         manageProductsSupplierMenu();
+    }
+    public void addDiscountOnProduct(Supplier supplier){
+        System.out.println("enter catalog number of product to add discount");
+        int catalogNum = 0;
+        try{catalogNum = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only number");
+            manageProductsSupplierMenu();
+        }
+        System.out.println("enter amount of discount");
+        double discount = 0;
+        try{discount = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only number");
+            manageProductsSupplierMenu();
+        }
+        System.out.println("Please write on how much product you want add discount?");
+        int count = 0;
+        try{count = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only digits number");
+            manageProductsSupplierMenu();
+        }
+        ss.addDiscount(supplier.getSupplierNumber(),catalogNum ,count , discount);
     }
 }

@@ -4,8 +4,7 @@ import DomainLayer.Product;
 import ServiceLayer.OrderService;
 import com.google.gson.Gson;
 
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class OrderMenu {
 
@@ -14,12 +13,14 @@ public class OrderMenu {
     private ProductMenu pm;
     private OrderService orderService;
     private Gson gson;
+    private SupplierMenu sm ;
 
     public OrderMenu(Supplier s) {
         this.supplier = s;
         pm = new ProductMenu(supplier);
         orderService = new OrderService();
         gson = new Gson();
+        sm =new SupplierMenu();
     }
 
     public void newOrder() {
@@ -27,6 +28,7 @@ public class OrderMenu {
         String json  = orderService.createOrder(supplier.getSupplierNumber());
         Gson gson = new Gson();
         Order o = gson.fromJson(json, Order.class);
+
         System.out.println("order created. you can mow add products.");
         addProductsToOrder(o);
 
@@ -34,8 +36,42 @@ public class OrderMenu {
     }
 
     private void addProductsToOrder(Order o) {
+        System.out.println("Do you want to add products to this order?");
+        System.out.println("\t1. YES.");
+        System.out.println("\t2. NO.");
+        int choise = 0;
+        try{choise = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only 1 digit number");
+            addProductsToOrder(o);
+        }
+        switch (choise){
+            case 1:
+                System.out.println("Enter a catalog number");
+                int catalogNum = 0;
+                try{catalogNum = sc.nextInt();}
+                catch (Exception e){
+                    System.out.println("you must enter only 1 digit number");
+                    addProductsToOrder(o);
+                }
+                System.out.println("Enter an amount");
+                int count = 0;
+                try{count = sc.nextInt();}
+                catch (Exception e){
+                    System.out.println("you must enter only 1 digit number");
+                    addProductsToOrder(o);
+                }
+                boolean added =orderService.addProductToOrder(supplier.getSupplierNumber(), o.getOrderId(), catalogNum, count);
+                if(!added){
+                    System.out.println("The product isn't exist or the amount was invalid");
+                    addProductsToOrder(o);
+                }
+                break;
+            case 2:
+                sm.inSupplierMenu(supplier.getSupplierNumber());
+        }
+        addProductsToOrder(o);
 
-        System.out.println("NOT IMPL");
     }
 
     public void watchOrdersMenu() {
@@ -65,7 +101,7 @@ public class OrderMenu {
                 watchWaitOrders();
                 break;
             case 3:
-                watchFIxedDaysOrders();
+                watchFixedDaysOrders();
                 break;
 
             default:
@@ -75,7 +111,7 @@ public class OrderMenu {
         }
     }
 
-    private void watchFIxedDaysOrders() {
+    private void watchFixedDaysOrders() {
         String json = orderService.getFixedDaysOrders(supplier.getSupplierNumber());
 
         System.out.println("NOT IMPL");
@@ -84,13 +120,17 @@ public class OrderMenu {
     }
 
     private void watchWaitOrders() {
-
-        System.out.println("NOT IMPL");
-
+        String json=orderService.getActiveOrders(supplier.getSupplierNumber());
+      List<Order> orders=new ArrayList<>();
+        orders=gson.fromJson(json,orders.getClass());
+        for(Order o:orders){
+            System.out.println(o.toString());
+        }
     }
 
     private void updateOrderMenu(int orderID) {
-        Order o = gson.fromJson(orderService.getOrder(supplier.getSupplierNumber(), orderID),Order.class);
+        String json=orderService.getOrder(supplier.getSupplierNumber(), orderID);
+        Order o = gson.fromJson(json,Order.class);
         System.out.println("Order: "+ orderID);
         System.out.println("Choose what you want:");
         System.out.println("\t1. add new product.");

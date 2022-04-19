@@ -17,6 +17,7 @@ public class SupplierController {
         return true;
     }
     public boolean closeAccount(int supplierNumber){
+        suppliers.get(supplierNumber).closeAccount();
         return true;
     }
 

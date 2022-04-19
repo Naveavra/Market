@@ -1,22 +1,28 @@
 package DomainLayer;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Order {
     private int orderId;
-    //private LocalDateTime date;
+    private String date;
     private Map<Product,Integer> products;//product and count
 
     public Order(int orderId){
         this.orderId = orderId;
         products = new HashMap<>();
-//        date = LocalDateTime.now();
+        String pattern = "MM-dd-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        date = simpleDateFormat.format(new Date());
     }
     public Order(Order order){
-//        this.date=order.date;
+        this.date=order.date;
         this.orderId=order.orderId;
         this.products = new HashMap<>();
         for(Product p:order.products.keySet()){
@@ -25,11 +31,22 @@ public class Order {
     }
 
     public boolean updateProductToOrder(Product p, int count){
+        if(count<=0){
+            return false;
+        }
+        if(p==null){
+            return false;
+        }
         products.put(p, products.getOrDefault(p,0)+count);
         return true;
 
     }
-
+public int getOrderId(){
+        return orderId;
+}
+public String getDate(){
+        return date;
+}
 
 
     public double getTotalIncludeDiscounts() {
@@ -50,8 +67,11 @@ public class Order {
     }
 
     public boolean removeProductFromOrder(Product p) {
-        products.remove(p);
-        return true;
+        if(products.containsKey(p)) {
+            products.remove(p);
+            return true;
+        }
+        return false;
     }
 
     public Map<Product,Integer> getProducts() {

@@ -2,19 +2,23 @@ package PresentationLayer;
 
 import DomainLayer.Product;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Order {
     private int orderId;
-    private LocalDateTime date;
+    private String date;
     private Map<Product,Integer> products;//product and count
 
     public Order(int orderId){
         this.orderId = orderId;
         products = new HashMap<>();
-        date = LocalDateTime.now();
+        String pattern = "MM-dd-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        date = simpleDateFormat.format(new Date());
     }
     public Order(Order order){
         this.date=order.date;
@@ -29,6 +33,9 @@ public class Order {
         String ans = "Order number: "+ orderId;
         ans += ", date" + date;
         return ans;
+    }
+    public int getOrderId(){
+        return orderId;
     }
 
 }
