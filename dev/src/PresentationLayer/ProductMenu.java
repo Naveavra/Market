@@ -11,14 +11,12 @@ public class ProductMenu {
 
     private Supplier supplier;
     private Scanner sc;
-    private SupplierMenu sm;
     private SupplierService ss;
     private ProductService ps;
 
     public ProductMenu(Supplier s) {
         sc=new Scanner(System.in);
         supplier = s;
-        sm = new SupplierMenu();
         ss = new SupplierService();
         ps = new ProductService();
     }
@@ -57,7 +55,7 @@ public class ProductMenu {
                 addDiscountOnProduct(supplier);
                 break;
             case 6:
-                sm.inSupplierMenu(supplier.getSupplierNumber());
+                new SupplierMenu().inSupplierMenu(supplier.getSupplierNumber());
                 break;
         }
     }

@@ -76,4 +76,7 @@ public class Product {
     public Map<Integer,Double> getDiscount(){
         return discount;
     }
+    public int getCatalogNumber(){
+        return catalogNumber;
+    }
 }

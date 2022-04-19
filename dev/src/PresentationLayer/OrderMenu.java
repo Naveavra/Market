@@ -17,7 +17,6 @@ public class OrderMenu {
 
     public OrderMenu(Supplier s) {
         this.supplier = s;
-        pm = new ProductMenu(supplier);
         orderService = new OrderService();
         gson = new Gson();
         sm =new SupplierMenu();

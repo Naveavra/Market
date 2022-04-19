@@ -54,6 +54,9 @@ public class Supplier {
     }
 
     public boolean removeDiscountOnAmount(int count){
+        if(count<=0){
+            return false;
+        }
         if(!this.discountByAmount.containsKey(count)){
             return false;
         }
