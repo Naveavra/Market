@@ -154,7 +154,7 @@ public class ProductMenu {
         }
         manageProductsSupplierMenu();
     }
-    public void addDiscountOnProduct(Supplier supplier){
+    private void addDiscountOnProduct(Supplier supplier){
         System.out.println("enter catalog number of product to add discount");
         int catalogNum = 0;
         try{catalogNum = sc.nextInt();}

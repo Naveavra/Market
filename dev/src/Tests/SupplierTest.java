@@ -1,5 +1,6 @@
 package Tests;
 
+import DomainLayer.Order;
 import DomainLayer.Product;
 import DomainLayer.Supplier;
 import org.junit.Before;
@@ -16,15 +17,18 @@ private Supplier s1;
 private Map<String,String> sMap;
 private Map<String,String> s1Map;
 private Product p1;
+private Product p2;
+
     @Before
     public void setUp() throws Exception {
         sMap=new HashMap<>();
         sMap.put("eyal", "eya;@gmail.com");
         s1Map=new HashMap<>();
         s1Map.put("ziv", "ziv@gmail.com");
-        s=new Supplier(1, "ziv", 11,sMap );
+        s=new Supplier(1, "ziv", 11,sMap);
         s1=new Supplier(2, "eyal", 12, s1Map);
         p1=new Product(0,"chair", 100);
+        p2=new Product(1,"table", 100);
     }
 
     @Test
@@ -62,7 +66,7 @@ private Product p1;
     public void addProduct() {
         assertTrue(s.addProduct(p1.getCatalogNumber(), p1.getName(), p1.getPrice())) ;
         assertFalse(s.addProduct(p1.getCatalogNumber(), p1.getName(), p1.getPrice()));
-        assertFalse(s.addProduct(334, p1.getName(), p1.getPrice()));
+        assertFalse(s.addProduct(-334, p1.getName(), p1.getPrice()));
         assertFalse(s.addProduct(p1.getCatalogNumber(), p1.getName(), -50));
 
 
@@ -77,53 +81,61 @@ private Product p1;
 
     @Test
     public void createOrder() {
+        s.createOrder();
+        assertTrue(s.getActiveOrders().containsKey(0));
+        s.createOrder();
+        assertTrue(s.getActiveOrders().containsKey(1));
+        s.createOrder();
+        assertFalse(s.getActiveOrders().containsKey(3));
+
     }
 
     @Test
     public void getProduct() {
+        s.addProduct(p1.getCatalogNumber(), p1.getName(),p1.getPrice());
+        Product p2=s.getProduct(p1.getCatalogNumber());
+        assertEquals(p2.getName(), p1.getName());
+        assertTrue(p2.getPrice()==p1.getPrice());
+        assertSame(p2.getCatalogNumber(), p1.getCatalogNumber());
+        s.removeProduct(p1.getCatalogNumber());
+        assertNull(s.getProduct(p1.getCatalogNumber()));
     }
 
     @Test
     public void updateTotalIncludeDiscounts() {
+        Order o1 =s.createOrder();
+        o1.updateProductToOrder(p1,10);
+        o1.updateProductToOrder(p2,20);
+        double total = s.updateTotalIncludeDiscounts(o1.getOrderId());
+        assertEquals(3000.0,total,0.0);
+        s.finishOrder(0);
     }
 
     @Test
     public void finishOrder() {
+        Order o2 =s.createOrder();
+        o2.updateProductToOrder(p1,10);
+        o2.updateProductToOrder(p2,20);
+        assertTrue(s.finishOrder(o2.getOrderId()));
+        assertFalse(s.finishOrder(o2.getOrderId()+1));
+        assertFalse(s.finishOrder(-1));
+        assertEquals(s.getFinalOrders().get(0).getOrderId(), o2.getOrderId());
     }
 
-    @Test
-    public void getName() {
-    }
-
-    @Test
-    public void getOrder() {
-    }
-
-    @Test
-    public void getActiveOrders() {
-    }
 
     @Test
     public void isProductExist() {
+        s.addProduct(1, "ziv", 100);
+        assertTrue(s.isProductExist(1));
+        assertFalse(s.isProductExist(12));
+        s.removeProduct(1);
+        assertFalse(s.isProductExist(1));
+        assertFalse(s.isProductExist(-1));
     }
 
     @Test
     public void closeAccount() {
-    }
-
-    @Test
-    public void isActive() {
-    }
-
-    @Test
-    public void getProducts() {
-    }
-
-    @Test
-    public void getProductsNames() {
-    }
-
-    @Test
-    public void addToFinish() {
+        s.closeAccount();
+        assertFalse(s.isActive());
     }
 }
