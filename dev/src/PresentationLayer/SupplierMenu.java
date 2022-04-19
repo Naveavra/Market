@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class SupplierMenu {
 
@@ -15,23 +16,32 @@ public class SupplierMenu {
     private SupplierService ss = new SupplierService();
 
     public void chooseSupplierMenu() {
+        CharSequence charSequence ="qwertyuiopasdfghjklzxcvbnm";
         System.out.println("***You enter to Suppliers page:***");
         System.out.println("Please choose what you whant to do:");
         System.out.println("\t1. Open new Supplier");
         System.out.println("\t2. See details of Supplier that exist in tha system");
-        int choise = 0;
-        try{choise = sc.nextInt();}
-        catch (Exception e){
-            System.out.println("you must enter only 1 digit number");
-            chooseSupplierMenu();
+        int choice = 0;
+        try{
+            choice = sc.nextInt();
+            if(Integer.toString(choice).contains(charSequence)){
+                System.out.println("you must enter a valid number");
+                chooseSupplierMenu();
+            }
         }
-        switch (choise){
+        catch (Exception e){
+
+            System.out.println("you must enter only 1 digit number");
+
+
+        }
+        switch (choice){
             case 1:
                 openNewAccountSupplier();
                 break;
             case 2:
                 int supNumber = 0;
-                System.out.println("Enter the supplier number you whant to see:");
+                System.out.println("Enter the supplier number you want to see:");
                 supNumber = sc.nextInt();
                 inSupplierMenu(supNumber);
                 break;
@@ -61,14 +71,18 @@ public class SupplierMenu {
         System.out.println("\t4. Add discount on amount of products to supplier.");
         System.out.println("\t5. Create new order from the supplier.");
         System.out.println("\t6. Watch existing orders from the supplier.");
-        System.out.println("\t7. Return to choose anther supplier.");
-        int choise = 0;
-        try{choise = sc.nextInt();}
+        System.out.println("\t7. close supplier account.");
+        System.out.println("\t8. Return to choose anther supplier.");
+        int choice = 0;
+        try{choice = sc.nextInt();}
         catch (Exception e){
             System.out.println("you must enter only 1 digit number");
             inSupplierMenu(supplierNumber);
         }
-        switch (choise){
+        if(choice >7 || choice<=0){
+            System.out.println("you must enter only 1 digit number");
+        }
+        switch (choice){
             case 1:
                 seeSupplierDetails(s);
                 break;
@@ -91,6 +105,8 @@ public class SupplierMenu {
                 om6.watchOrdersMenu();
                 break;
             case 7:
+                ss.closeAccount(supplierNumber);
+            case 8:
                 chooseSupplierMenu();
                 break;
             default:
@@ -148,6 +164,7 @@ public class SupplierMenu {
                 System.out.println("Enter Supplier's name: ");
                 newSupplierName = sc.next();
                 ss.updateAccount(s.getSupplierNumber(),newSupplierName, s.getBankNumber(), s.getContacts());
+                s.setSupplierName(newSupplierName);
                 break;
             case 2:
                 int bankNumber = 0;
@@ -158,6 +175,7 @@ public class SupplierMenu {
                     openNewAccountSupplier();
                 }
                 ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), bankNumber, s.getContacts());
+                s.setBankAccount(bankNumber);
                 break;
             case 3://contacts
                 int countContacts = 0;
@@ -199,6 +217,10 @@ public class SupplierMenu {
             System.out.println("you must enter only digits number");
             openNewAccountSupplier();
         }
+        if(supNumber<=0){
+            System.out.println("you must enter only positive number");
+            openNewAccountSupplier();
+        }
 
         int bankNumber = 0;
         System.out.println("Enter Supplier's bankNumber: ");
@@ -207,11 +229,18 @@ public class SupplierMenu {
             System.out.println("you must enter only digits number");
             openNewAccountSupplier();
         }
-
+        if(bankNumber<=0){
+            System.out.println("you must enter only positive number");
+            openNewAccountSupplier();
+        }
         int countContacts = 0;
         System.out.println("Enter count of contacts you have: ");
         try{countContacts = sc.nextInt();}
         catch (Exception e){
+            System.out.println("you must enter only digits number");
+            openNewAccountSupplier();
+        }
+        if(countContacts<0) {
             System.out.println("you must enter only digits number");
             openNewAccountSupplier();
         }
@@ -221,13 +250,26 @@ public class SupplierMenu {
             String name = sc.next();
             System.out.println(i + ". email: ");
             String email = sc.next();
-            contacts.put(name,email);
+            if(!checkEmail(email)){
+                System.out.println("you must enter a valid email");
+                i=i-1;
+            }
+            else {
+                contacts.put(name, email);
+            }
         }
-        ss.openAccount(supNumber,supName, bankNumber,contacts);
-        System.out.println("The account opened");
-
-        chooseSupplierMenu();
-
-
+        boolean open=ss.openAccount(supNumber,supName, bankNumber,contacts);
+        if(open) {
+            System.out.println("The account opened");
+            chooseSupplierMenu();
+        }
+        else{
+            System.out.println("one of the details is invalid");
+            openNewAccountSupplier();
+        }
+    }
+    public boolean checkEmail(String email){
+        String regex = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        return Pattern.compile(regex).matcher(email).matches();
     }
 }

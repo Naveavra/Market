@@ -5,15 +5,14 @@ import DomainLayer.Order;
 import DomainLayer.PastOrder;
 import DomainLayer.Product;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Supplier {
     private int supplierNumber;
     private String name;
     private int bankAccount;
     private Map<String,String> contacts =new HashMap<>();//<name,email>
+    private List<String> namesOfContacts;
 //    private Map<Integer, Product> products =new HashMap<>();
 //    private Map<Integer,Double> discountByAmount;//sum of products in order
 //    private Map<Integer, Order> orders;
@@ -24,6 +23,8 @@ public class Supplier {
         this.name=name;
         this.bankAccount=bankAccount;
         contacts.replaceAll((n,v) -> v);
+        namesOfContacts=new ArrayList<>();
+        namesOfContacts.addAll(this.contacts.keySet());
 //        discountByAmount=new TreeMap<>();
 //        orders = new TreeMap<>();
 //        pastOrders = new HashMap<>();
@@ -42,8 +43,10 @@ public class Supplier {
         ans+= "\nSupplier number: " + supplierNumber;
         ans+= "\nBank Account: "+ bankAccount;
         ans+= "\nContacts:";
+        int i=1;
         for( Map.Entry<String,String> e: contacts.entrySet()){
-            ans+= "\n\t* "+ e.getKey() + ": " + e.getValue();
+            ans+= "\n\t "+i+". "+ e.getKey() + ": " + e.getValue();
+            i++;
         }
         return ans;
     }
@@ -57,4 +60,16 @@ public class Supplier {
     public Map<String, String> getContacts() {
         return contacts;
     }
+
+    public void setSupplierName(String newSupplierName) {
+        this.name=newSupplierName;
+    }
+
+    public void setBankAccount(int bankNumber) {
+        this.bankAccount=bankNumber;
+    }
+    public int numOfContacts(){
+        return namesOfContacts.size();
+    }
+
 }

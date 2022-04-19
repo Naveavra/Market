@@ -1,10 +1,14 @@
 package PresentationLayer;
 
+import DomainLayer.Product;
 import ServiceLayer.OrderService;
+import ServiceLayer.ProductService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 
-import java.io.Console;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -13,46 +17,74 @@ public class Menu {
 
     public static void main(String[] args){
         Menu m = new Menu();
-        m.intialMenu();
+        m.initialMenu();
     }
 
 
-    public void intialMenu(){
+
+    public void initialMenu(){
         int choise = 0;
-        System.out.println("Welcome to Supllier Model!!");
+        System.out.println("Welcome to Supplier Model!!");
         System.out.println("How do you want to start?");
         System.out.println("\t1. with empty data ");
-        System.out.println("\t2. with intial data");
+        System.out.println("\t2. with initial data");
         try{choise = sc.nextInt();}
         catch (Exception e){
             System.out.println("you must enter only 1 digit number");
-            intialMenu();
+            initialMenu();
         }
         if (choise==2){
-            loadIntialData();
+            loadInitialData();
         }
         SupplierMenu sm = new SupplierMenu();
         sm.chooseSupplierMenu();
 
     }
 
-    private void loadIntialData() {
+    private void loadInitialData() {
+//        Product p1 =new Product(1, "chair",50 );
+//        Product p2 =new Product(2, "table",60 );
+//        Product p3 =new Product(3, "pencil",5 );
+//        Product p4 =new Product(4, "pen",10 );
+//        Product p5 =new Product(5, "flashlight",70 );
+//        Product p6 =new Product(6, "iphone",3300 );
 
         Gson gson = new Gson();
+
         SupplierService ss =  new SupplierService();
+        ProductService ps =new ProductService();
+        OrderService os = new OrderService();
+        SupplierMenu sm =new SupplierMenu();
+
         HashMap<String,String> contacts = new HashMap<>();
         contacts.put("eyal", "eyal@gmail.com");
-        ss.openAccount(123,"LG", 5555, contacts);
+        contacts.put("eldad","eldad@gmail.com");
+        contacts.put("ziv", "ziv@gmail.com");
+
+        ss.openAccount(1,"LG", 5555, contacts);
+        ps.addProduct(1, 1, "chair", 50);
+        ps.addProduct(1, 2, "table", 60);
+        ps.addProduct(1, 3, "pencil", 5);
 
         contacts = new HashMap<>();
         contacts.put("Dan", "dan@gmail.com");
-        ss.openAccount(1235,"Boxit", 456, contacts);
+        contacts.put("nave","nave@gmail.com");
+        contacts.put("itay", "itay@gmail.com");
 
-        ss.addDiscount(123, 5, 0.8);
-        OrderService os = new OrderService();
-        String json = os.createOrder(1235);
+        ss.openAccount(2,"APEL", 456, contacts);
+        ps.addProduct(2, 3, "pencil", 50);
+        ps.addProduct(2, 5, "table", 60);
+        ps.addProduct(2, 6, "pencil", 5);
+
+        ss.addDiscount(1, 5, 0.8);
+
+        ss.addDiscount(2, 10, 0.6);
+
+
+        String json = os.createOrder(1);
         Order o1 = gson.fromJson(json,Order.class);
-
+        os.addProductToOrder(1, o1.getOrderId(), 1 ,10);
+        os.sendOrder(1, o1.getOrderId(), true);
 
 
     }

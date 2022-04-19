@@ -8,25 +8,36 @@ public class Supplier {
     private int supplierNumber;
     private String name;
     private int bankAccount;
-    private Map<String,String> contacts =new HashMap<>();//<name,email>
+    private Map<String,String> contacts;//<name,email>
     private Map<Integer,Product> products =new HashMap<>();
     private Map<Integer,Double> discountByAmount;//sum of products in order
     private Map<Integer,Order> orders;
     private Map<Integer,Order> pastOrders;
+    private boolean active;
+    private List<PastOrder> finalOrders;
+    private static int orderNum=0;
 
     public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts){
         this.supplierNumber=supplierNumber;
         this.name=name;
         this.bankAccount=bankAccount;
-        contacts.replaceAll((n,v) -> v);
+        this.contacts=new HashMap<>();
+        for(String n: contacts.keySet()){
+            this.contacts.put(n,contacts.get(n));
+        }
         discountByAmount=new TreeMap<>();
-        orders = new TreeMap<>();
+        orders = new HashMap<>();
         pastOrders = new HashMap<>();
+        active =true;
+        finalOrders=new ArrayList<>();
     }
     public boolean updateAccount(String supplierName,int bankAccount,Map<String,String>contacts){
         this.name=supplierName;
         this.bankAccount=bankAccount;
-        contacts.replaceAll((n,v) -> v);
+        this.contacts=new HashMap<>();
+        for(String n: contacts.keySet()){
+            this.contacts.put(n,contacts.get(n));
+        }
         return true;
     }
     public boolean addContact(String name,String email){
@@ -52,6 +63,12 @@ public class Supplier {
         return true;
     }
     public boolean addProduct(int catalogNumber,String name, double price){
+        if(products.containsKey(catalogNumber)){
+            return false;
+        }
+        if(price<=0){
+            return false;
+        }
         Product product =new Product(catalogNumber, name, price);
         products.put(catalogNumber, product);
         return true;
@@ -64,13 +81,13 @@ public class Supplier {
         return true;
     }
     public Order createOrder(){
-        return null;
+        Order order = new Order(orderNum);
+        orders.put(orderNum,order);
+        orderNum++;
+        return order;
     }
     public Product getProduct(int catalogNumber){
         return products.get(catalogNumber);
-    }
-    public boolean addProductToOrder(int orderId,int catalogNumber){
-        return true;
     }
     public double updateTotalIncludeDiscounts(int orderId){
         Order order = orders.get(orderId);
@@ -90,9 +107,13 @@ public class Supplier {
         }
         return discountByAmount.get(out);
     }
-    public PastOrder finishOrder(int orderId){
+    public boolean finishOrder(int orderId){
+        if(orders.get(orderId)==null){
+            return false;
+        }
         double totalPrice =updateTotalIncludeDiscounts(orderId);
-        return new PastOrder(orders.get(orderId),totalPrice);
+        this.addToFinish(new PastOrder(orders.get(orderId),totalPrice));
+        return true;
     }
 
 
@@ -106,5 +127,32 @@ public class Supplier {
 
     public Map<Integer,Order> getActiveOrders() {
         return orders;
+    }
+    public boolean isProductExist(int catalogNumber){
+        return products.containsKey(catalogNumber);
+    }
+
+    public void closeAccount() {
+        active=false;
+    }
+    public boolean isActive(){
+        return active;
+    }
+
+
+    public Map<Integer,Product> getProducts() {
+        return products;
+    }
+
+    public String getProductsNames() {
+        StringBuilder list = new StringBuilder();
+        for(Product p: products.values()){
+            list.append(" ").append(p.getName());
+        }
+        return list.toString();
+    }
+
+    public void addToFinish(PastOrder pastOrder) {
+        this.finalOrders.add(pastOrder);
     }
 }

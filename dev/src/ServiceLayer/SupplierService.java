@@ -12,16 +12,22 @@ public class SupplierService {
     private SupplierController supplierController =new SupplierController();
 
     public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts){
+        if(supplierNumber<=0){
+            return false;
+        }
         return supplierController.openAccount(supplierNumber, supplierName,bankAccount,contacts);
     }
     public boolean closeAccount(int supplierNumber){
+        if(!supplierController.getSupplier(supplierNumber).isActive()){
+            return false;
+        }
         return supplierController.closeAccount(supplierNumber);
     }
     public boolean updateAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts){
         return supplierController.getSupplier(supplierNumber).updateAccount(supplierName,bankAccount,contacts);
     }
-    public boolean addDiscount(int supplierNumber,int productNumber,int count,double discount){
-        return supplierController.getSupplier(supplierNumber).getProduct(productNumber).addDiscount(count, discount);
+    public boolean addDiscount(int supplierNumber,int catalogNumber,int count,double discount){
+        return supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).addDiscount(count, discount);
     }
     public boolean addDiscount(int supplierNumber,int count,double discount){
         return supplierController.getSupplier(supplierNumber).addDiscount(count, discount);
@@ -41,4 +47,7 @@ public class SupplierService {
         return  json;
 
     }
+//    public void addContact(int supplierNumber,String name,String email){
+//        supplierController.getSupplier(supplierNumber).
+//    }
 }

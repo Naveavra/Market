@@ -2,40 +2,48 @@ package ServiceLayer;
 
 import DomainLayer.SupplierController;
 import com.google.gson.Gson;
-import org.json.JSONObject;
 
 public class ProductService {
 
-    private SupplierController supplierControler;
+    private SupplierController supplierController;
     private Gson gson;
 
     public ProductService(){
-        supplierControler = new SupplierController();
+        supplierController = new SupplierController();
         gson = new Gson();
     }
 
 
     public boolean addProduct(int supplierNumber, int catalogNumber, String name, int price){
-        boolean ans = supplierControler.getSupplier(supplierNumber).addProduct(catalogNumber, name, price);
+        boolean ans = supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, name, price);
         return ans;
         //JSONObject json = new JSONObject(demo);
     }
 
     public String getProductsOfSupplier(int supplierNumber){
-
-        return null;
+        if(supplierController.getSupplier(supplierNumber)==null){
+            System.out.println("supplier didnt found");
+            return "";
+        }
+        return supplierController.getSupplier(supplierNumber).getProducts().values().toString();
     }
 
-    public boolean updateProuduct(int supplierNumber, int catalogNumber, String name, int price){
-        supplierControler.getSupplier(supplierNumber).getProduct(catalogNumber).setName(name);
-        supplierControler.getSupplier(supplierNumber).getProduct(catalogNumber).setPrice(price);
+    public boolean updateProduct(int supplierNumber, int catalogNumber, String name, int price){
+        if(price<=0){
+            return false;
+        }
+        if(!supplierController.getSupplier(supplierNumber).isProductExist(catalogNumber)){
+           return false;
+        }
+        supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).setName(name);
+        supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).setPrice(price);
         return true;
 
     }
 
 
     public boolean removeProduct(int supplierNumber, int catalogNumber){
-        boolean ans = supplierControler.getSupplier(supplierNumber).removeProduct(catalogNumber);
+        boolean ans = supplierController.getSupplier(supplierNumber).removeProduct(catalogNumber);
         return ans;
     }
 
