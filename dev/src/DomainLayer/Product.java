@@ -14,13 +14,15 @@ public class Product {
         this.catalogNumber =catalogNumber;
         this.name=name;
         this.price=price;
-        discount =new HashMap<>();// keep it sorted
+        discount =new HashMap<>();
+        discount.put(0, 1.0);// keep it sorted
     }
     public Product (Product product){
         this.catalogNumber = product.catalogNumber;
         this.name= product.name;
         this.price=product.price;
         discount=new HashMap<>();
+        discount.put(0, 1.0);// keep it sorted
         for(int x: product.discount.keySet()){
              discount.put(x,product.discount.get(x));
         }
@@ -56,9 +58,6 @@ public class Product {
     }
     private double findMaxUnder(int count){
         int out=0;
-        if(discount.keySet().size()==0){
-            return 1;
-        }
         for(int s:discount.keySet()){
             if(s<=count){
                 out=s;
