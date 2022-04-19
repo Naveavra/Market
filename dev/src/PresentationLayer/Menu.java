@@ -17,11 +17,6 @@ public class Menu {
     }
 
 
-    public void run(){
-
-        intialMenu();
-    }
-
     public void intialMenu(){
         int choise = 0;
         System.out.println("Welcome to Supllier Model!!");

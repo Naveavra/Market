@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 public class SupplierService {
     private SupplierController supplierController =new SupplierController();
+
     public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts){
         return supplierController.openAccount(supplierNumber, supplierName,bankAccount,contacts);
     }
