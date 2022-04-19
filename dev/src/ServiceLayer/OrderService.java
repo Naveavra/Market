@@ -62,7 +62,7 @@ public class OrderService {
 //        }
         List<Order> orders1=new ArrayList<>(orders.values());
 
-        return gson.toJson(orders1);
+        return gson.toJson(orders);
         //return gson.toJson(out.toString());
     }
 

@@ -10,6 +10,7 @@ public class Product {
     private double price;
     private Map<Integer,Double> discount;//sum of specific product
 
+
     public Product (int catalogNumber,String name,double price){
         this.catalogNumber =catalogNumber;
         this.name=name;
