@@ -11,5 +11,8 @@ public class PastOrder extends Order {
         this.totalPrice=totalPrice;
         this.finishDate=LocalDateTime.now().toString();
     }
+    public int getOrderId(){
+        return super.getOrderId();
+    }
 
 }

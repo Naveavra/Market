@@ -25,6 +25,7 @@ public class Supplier {
             this.contacts.put(n,contacts.get(n));
         }
         discountByAmount=new TreeMap<>();
+        discountByAmount.put(0,1.0);
         orders = new HashMap<>();
         active =true;
         finalOrders=new ArrayList<>();
@@ -46,6 +47,9 @@ public class Supplier {
         return true;
     }
     public boolean addDiscount( int count,double discount){
+        if(count<0|discount<0|discount>1){
+            return false;
+        }
         if(this.discountByAmount.containsKey(count)){
             return false;
         }
@@ -64,6 +68,9 @@ public class Supplier {
         return true;
     }
     public boolean addProduct(int catalogNumber,String name, double price){
+        if(catalogNumber<0){
+            return false;
+        }
         if(products.containsKey(catalogNumber)){
             return false;
         }
@@ -98,6 +105,7 @@ public class Supplier {
     }
     private double findMaxUnder(int count){
         int out=0;
+
         for(int s:discountByAmount.keySet()){
             if(s<=count){
                 out=s;
@@ -109,11 +117,15 @@ public class Supplier {
         return discountByAmount.get(out);
     }
     public boolean finishOrder(int orderId){
+        if(orderId<0){
+            return false;
+        }
         if(orders.get(orderId)==null){
             return false;
         }
         double totalPrice =updateTotalIncludeDiscounts(orderId);
-        this.addToFinish(new PastOrder(orders.get(orderId),totalPrice));
+        finalOrders.add(new PastOrder(orders.get(orderId),totalPrice));
+        orders.remove(orderId);
         return true;
     }
 
@@ -130,6 +142,9 @@ public class Supplier {
         return orders;
     }
     public boolean isProductExist(int catalogNumber){
+        if(catalogNumber<0){
+            return false;
+        }
         return products.containsKey(catalogNumber);
     }
 
@@ -153,13 +168,15 @@ public class Supplier {
         return list.toString();
     }
 
-    public void addToFinish(PastOrder pastOrder) {
-        this.finalOrders.add(pastOrder);
-    }
+
     public int getBankAccount(){
         return bankAccount;
     }
     public Map<String,String> getContacts(){
         return contacts;
+    }
+
+    public List<PastOrder> getFinalOrders() {
+        return finalOrders;
     }
 }

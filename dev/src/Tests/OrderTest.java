@@ -39,7 +39,7 @@ public class OrderTest {
     @org.junit.Test
     public void getCountProducts() {
         order.updateProductToOrder(p,10);
-        assertEquals(1,order.getCountProducts());
+        assertEquals(10,order.getCountProducts());
         order.removeProductFromOrder(p);
         assertEquals(0,order.getCountProducts());
     }
@@ -47,7 +47,7 @@ public class OrderTest {
     @org.junit.Test
     public void removeProductFromOrder() {
         order.updateProductToOrder(p,10);
-        assertFalse(order.removeProductFromOrder(p));
+        assertTrue(order.removeProductFromOrder(p));
         assertFalse(order.getProducts().containsKey(p));
     }
 
