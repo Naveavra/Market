@@ -72,4 +72,7 @@ public class Product {
     public double getPrice() {
         return price;
     }
+    public Map<Integer,Double> getDiscount(){
+        return discount;
+    }
 }

@@ -12,7 +12,6 @@ public class Supplier {
     private Map<Integer,Product> products =new HashMap<>();
     private Map<Integer,Double> discountByAmount;//sum of products in order
     private Map<Integer,Order> orders;
-    private Map<Integer,Order> pastOrders;
     private boolean active;
     private List<PastOrder> finalOrders;
     private static int orderNum=0;
@@ -27,7 +26,6 @@ public class Supplier {
         }
         discountByAmount=new TreeMap<>();
         orders = new HashMap<>();
-        pastOrders = new HashMap<>();
         active =true;
         finalOrders=new ArrayList<>();
     }
@@ -154,5 +152,11 @@ public class Supplier {
 
     public void addToFinish(PastOrder pastOrder) {
         this.finalOrders.add(pastOrder);
+    }
+    public int getBankAccount(){
+        return bankAccount;
+    }
+    public Map<String,String> getContacts(){
+        return contacts;
     }
 }
