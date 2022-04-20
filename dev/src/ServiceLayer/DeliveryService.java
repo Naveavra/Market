@@ -5,19 +5,37 @@ import org.json.JSONObject;
 
 
 public class DeliveryService {
-    private SupplierController supplierControler;
+    private SupplierController supplierController;
 
     public DeliveryService(){
-        supplierControler = new SupplierController();
+        supplierController = new SupplierController();
     }
 
-    public boolean addFixedDeliveryDaysForOrder(int orderId, String[] daysInWeek){
-        return false;
+    public boolean addFixedDeliveryDaysForOrder(int supplierNumber,int orderId, String[] daysInWeek){
+     if(supplierController.getSupplier(supplierNumber)==null){
+         return false;
+     }
+     if(!supplierController.getSupplier(supplierNumber).isActive()){
+         return false;
+     }
+     if(supplierController.getSupplier(supplierNumber).getOrder(orderId)==null){
+         return false;
+     }
+        return supplierController.getSupplier(supplierNumber).getOrder(orderId).addDeliveryDays(daysInWeek);
     }
 
-    public boolean updateFixedDeliveryDaysForOrder(int orderId, String[] daysInWeek){
+    public boolean updateFixedDeliveryDaysForOrder(int supplierNumber,int orderId, String[] daysInWeek){
+        if(supplierController.getSupplier(supplierNumber)==null){
+            return false;
+        }
+        if(!supplierController.getSupplier(supplierNumber).isActive()){
+            return false;
+        }
+        if(supplierController.getSupplier(supplierNumber).getOrder(orderId)==null){
+            return false;
+        }
+        return supplierController.getSupplier(supplierNumber).getOrder(orderId).updateDeliveryDays(daysInWeek);
 
-        return false;
     }
 
     public boolean stopFixedDeliveryDaysForOrder(int orderId){

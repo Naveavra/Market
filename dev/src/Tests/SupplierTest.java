@@ -25,8 +25,8 @@ private Product p2;
         sMap.put("eyal", "eya;@gmail.com");
         s1Map=new HashMap<>();
         s1Map.put("ziv", "ziv@gmail.com");
-        s=new Supplier(1, "ziv", 11,sMap);
-        s1=new Supplier(2, "eyal", 12, s1Map);
+        s=new Supplier(1, "ziv", 11,sMap,true);
+        s1=new Supplier(2, "eyal", 12, s1Map,true);
         p1=new Product(0,"chair", 100);
         p2=new Product(1,"table", 100);
     }

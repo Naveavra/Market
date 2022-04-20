@@ -1,13 +1,11 @@
 package ServiceLayer;
 
-import DomainLayer.Order;
-import DomainLayer.PastOrder;
-import DomainLayer.Product;
-import DomainLayer.SupplierController;
+import DomainLayer.*;
 import com.google.gson.Gson;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,13 +65,18 @@ public class OrderService {
     }
 
     public String getFixedDaysOrders(int supplierNumber){
-
-        return null;
+        Map<Integer,Order> orders = supplierController.getSupplier(supplierNumber).getActiveOrders();
+        Map<Integer,DeliveryTerm> deliveryDays=new HashMap<>();
+        for(Integer o: orders.keySet()){
+            if(!orders.get(o).getDaysToDeliver().isEmpty()){
+                deliveryDays.put(orders.get(o).getOrderId(),orders.get(o).getDaysToDeliver());
+            }
+        }
+        return gson.toJson(deliveryDays);
     }
 
-    public boolean sendOrder(int supplierNumber, int orderId, boolean isSupplierDeliver){
+    public boolean sendOrder(int supplierNumber, int orderId){
         return supplierController.getSupplier(supplierNumber).finishOrder(orderId);
-
     }
 
     public String getOrder(int supplierNumber, int orderId) {
@@ -82,7 +85,6 @@ public class OrderService {
     }
 
     public String getProductsInOrder(int supplierNumber, int orderID) {
-
         return gson.toJson(supplierController.getSupplier(supplierNumber).getOrder(orderID).getProducts());
     }
 }

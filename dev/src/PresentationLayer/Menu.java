@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -61,7 +62,7 @@ public class Menu {
         contacts.put("eldad","eldad@gmail.com");
         contacts.put("ziv", "ziv@gmail.com");
 
-        ss.openAccount(1,"LG", 5555, contacts);
+        ss.openAccount(1,"LG", 5555, contacts,true);
         ps.addProduct(1, 1, "chair", 50);
         ps.addProduct(1, 2, "table", 60);
         ps.addProduct(1, 3, "pencil", 5);
@@ -71,7 +72,7 @@ public class Menu {
         contacts.put("nave","nave@gmail.com");
         contacts.put("itay", "itay@gmail.com");
 
-        ss.openAccount(2,"APEL", 456, contacts);
+        ss.openAccount(2,"APEL", 456, contacts,false);
         ps.addProduct(2, 3, "pencil", 50);
         ps.addProduct(2, 5, "table", 60);
         ps.addProduct(2, 6, "pencil", 5);
@@ -84,7 +85,7 @@ public class Menu {
         String json = os.createOrder(1);
         Order o1 = gson.fromJson(json,Order.class);
         os.addProductToOrder(1, o1.getOrderId(), 1 ,10);
-        os.sendOrder(1, o1.getOrderId(), true);
+        os.sendOrder(1, o1.getOrderId());
 
 
     }

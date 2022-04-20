@@ -13,6 +13,7 @@ public class Order {
     private int orderId;
     private String date;
     private Map<Product,Integer> products;//product and count
+    private DeliveryTerm daysToDeliver;
 
     public Order(int orderId){
         this.orderId = orderId;
@@ -20,6 +21,8 @@ public class Order {
         String pattern = "MM-dd-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         date = simpleDateFormat.format(new Date());
+        DeliveryTerm.DaysInWeek[] daysInWeek = {};
+        daysToDeliver=new DeliveryTerm(daysInWeek);
     }
     public Order(Order order){
         this.date=order.date;
@@ -28,6 +31,7 @@ public class Order {
         for(Product p:order.products.keySet()){
             this.products.put(new Product(p),order.products.get(p));
         }
+        this.daysToDeliver=order.daysToDeliver;
     }
 
     public boolean updateProductToOrder(Product p, int count){
@@ -76,5 +80,17 @@ public String getDate(){
 
     public Map<Product,Integer> getProducts() {
         return products;
+    }
+    public DeliveryTerm getDaysToDeliver(){
+        return daysToDeliver;
+    }
+    public boolean addDeliveryDays(String[] daysInWeeks){
+       this.daysToDeliver.updateFixedDeliveryDays(daysInWeeks);
+       return true;
+    }
+
+    public boolean updateDeliveryDays(String[] daysInWeek) {
+        this.daysToDeliver.updateFixedDeliveryDays(daysInWeek);
+        return true;
     }
 }

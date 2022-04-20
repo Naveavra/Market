@@ -1,19 +1,21 @@
 package PresentationLayer;
 
+import DomainLayer.PastOrder;
+import ServiceLayer.DeliveryService;
+import ServiceLayer.OrderService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 import netscape.javascript.JSObject;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class SupplierMenu {
 
     private Scanner sc=new Scanner(System.in);
     private SupplierService ss = new SupplierService();
+    private DeliveryService ds =new DeliveryService();
 
     public void chooseSupplierMenu() {
         CharSequence charSequence ="qwertyuiopasdfghjklzxcvbnm";
@@ -69,10 +71,12 @@ public class SupplierMenu {
         System.out.println("\t2. update supplier details.");
         System.out.println("\t3. manage supplier products.");
         System.out.println("\t4. Add discount on amount of products to supplier.");
-        System.out.println("\t5. Create new order from the supplier.");
-        System.out.println("\t6. Watch existing orders from the supplier.");
-        System.out.println("\t7. close supplier account.");
-        System.out.println("\t8. Return to choose anther supplier.");
+        System.out.println("\t5. remove discount on amount of product to supplier ");
+        System.out.println("\t6. Create new order from the supplier.");
+        System.out.println("\t7. Watch existing orders from the supplier.");
+        System.out.println("\t8. watch past orders.");
+        System.out.println("\t9. close supplier account.");
+        System.out.println("\t10. Return to choose anther supplier.");
         int choice = 0;
         try{choice = sc.nextInt();}
         catch (Exception e){
@@ -97,24 +101,56 @@ public class SupplierMenu {
                 addDiscountMenu(supplierNumber);
                 break;
             case 5:
+                removeDiscountMenu(supplierNumber);
+                break;
+            case 6:
                 OrderMenu om = new OrderMenu(s);
                 om.newOrder();
                 break;
-            case 6:
+            case 7:
                 OrderMenu om6 = new OrderMenu(s);
                 om6.watchOrdersMenu();
                 break;
-            case 7:
-                ss.closeAccount(supplierNumber);
             case 8:
+                watchPastOrders(supplierNumber);
+                break;
+            case 9:
+                ss.closeAccount(supplierNumber);
+                break;
+            case 10:
                 chooseSupplierMenu();
                 break;
             default:
-                System.out.println("You must type digit 1 to 2");
+                System.out.println("You must type digit 1 to 10");
                 inSupplierMenu(supplierNumber);
-
         }
+    }
 
+    private void watchPastOrders(int supplierNumber) {
+        String json = ss.watchPastOrders(supplierNumber);
+        List<PastOrder> pastOrders=new ArrayList<>();
+        pastOrders=Menu.fromJson(json, pastOrders.getClass());
+        for(PastOrder p:pastOrders){
+            System.out.println(p.toString());
+        }
+    }
+
+    private void removeDiscountMenu(int supplierNumber) {
+        System.out.println("Please write on how much product you want remove discount?");
+        int count = 0;
+        try{count = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only digits number");
+            addDiscountMenu(supplierNumber);
+        }
+        boolean removed=ss.removeDiscountOnAmount(supplierNumber, count);
+        if(removed) {
+            System.out.println("discount is removed to supplier");
+        }
+        else {
+            System.out.println("catalog number or count were invalid");
+        }
+        inSupplierMenu(supplierNumber);
     }
 
     private void addDiscountMenu(int supplierNum) {
@@ -132,8 +168,13 @@ public class SupplierMenu {
             System.out.println("you must enter only number");
             addDiscountMenu(supplierNum);
         }
-        ss.addDiscount(supplierNum,count,discount);
-        System.out.println("discount is added to supplier");
+        boolean added=ss.addDiscount(supplierNum,count,discount);
+        if(added) {
+            System.out.println("discount is added to supplier");
+        }
+        else {
+            System.out.println("catalog number or count or discount were invalid");
+        }
         inSupplierMenu(supplierNum);
 
     }
@@ -151,14 +192,15 @@ public class SupplierMenu {
         System.out.println("\t1. supplier name");
         System.out.println("\t2. bank number");
         System.out.println("\t3. contacts");
-        System.out.println("\t4. Return to supplier page");
-        int choise = 0;
-        try{choise = sc.nextInt();}
+        System.out.println("\t4. transportation");
+        System.out.println("\t5. Return to supplier page");
+        int choice = 0;
+        try{choice = sc.nextInt();}
         catch (Exception e){
             System.out.println("you must enter only number");
             updateSupplierDetails(s);
         }
-        switch (choise){
+        switch (choice){
             case 1:
                 String newSupplierName = "";
                 System.out.println("Enter Supplier's name: ");
@@ -196,8 +238,42 @@ public class SupplierMenu {
                 ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), s.getBankNumber(), contacts);
                 break;
             case 4:
+                System.out.println("Choose who responsible for Future orders");
+                System.out.println("\t1. SUPER LI");
+                System.out.println("\t2. "+s.getSupplierName());
+                int supNum = 0;
+                try{supNum = sc.nextInt();}
+                catch (Exception e){
+                    System.out.println("you must enter only digits number");
+                    openNewAccountSupplier();
+                }
+                if(supNum!=1& supNum!=2){
+                    System.out.println("you must enter only 1 or 2");
+                    updateSupplierDetails(s);
+                }
+                boolean deliver=supNum==2;
+                boolean update=ss.updateDeliveration(s,deliver);
+                if(update & deliver){
+                    System.out.println(s.getSupplierName()+" is responsible for transformation");
+                }
+                else if(update &!deliver){
+                    System.out.println("SUPER LI is responsible for transformation");
+                }
+                else if(!update & !deliver){
+                    System.out.println("SUPER LI is already responsible for transformation");
+                    updateSupplierDetails(s);
+                }
+                else if(!update & deliver){
+                    System.out.println(s.getSupplierName()+" is already responsible for transformation");
+                    updateSupplierDetails(s);
+                }
+                break;
+            case 5:
                 inSupplierMenu(s.getSupplierNumber());
                 break;
+            default:
+                System.out.println("you must peak number between 1 to 5");
+                updateSupplierDetails(s);
 
         }
         updateSupplierDetails(s);
@@ -258,7 +334,23 @@ public class SupplierMenu {
                 contacts.put(name, email);
             }
         }
-        boolean open=ss.openAccount(supNumber,supName, bankNumber,contacts);
+        System.out.println("Choose who responsible for Future orders");
+        System.out.println("\t1. SUPER LI");
+        System.out.println("\t2. "+supName);
+        int supNum = 0;
+        try{supNum = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only digits number");
+            openNewAccountSupplier();
+        }
+        if(supNum!=1& supNum!=2){
+            System.out.println("you must enter only 1 or 2");
+            openNewAccountSupplier();
+        }
+        //
+        boolean deliver=supNum==2;
+
+        boolean open=ss.openAccount(supNumber,supName, bankNumber,contacts,deliver);
         if(open) {
             System.out.println("The account opened");
             chooseSupplierMenu();

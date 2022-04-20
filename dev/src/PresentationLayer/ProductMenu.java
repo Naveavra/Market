@@ -29,16 +29,17 @@ public class ProductMenu {
         System.out.println("\t2. Add new product.");
         System.out.println("\t3. Remove product.");
         System.out.println("\t4. Update product.");
-        System.out.println("\t5. Add new discount on count of product.");
-        System.out.println("\t6. Return to supplier page.");
+        System.out.println("\t5. Add new discount on count of products.");
+        System.out.println("\t6. Remove discount on amount of product ");
+        System.out.println("\t7. Return to supplier page.");
 
-        int choise = 0;
-        try{choise = sc.nextInt();}
+        int choice = 0;
+        try{choice = sc.nextInt();}
         catch (Exception e){
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
         }
-        switch (choise){
+        switch (choice){
             case 1:
                 watchSupplierProducts(supplier);
                 break;
@@ -55,10 +56,18 @@ public class ProductMenu {
                 addDiscountOnProduct(supplier);
                 break;
             case 6:
+                removeDiscountOnProduct(supplier);
+                break;
+            case 7:
                 new SupplierMenu().inSupplierMenu(supplier.getSupplierNumber());
                 break;
+            default:
+                System.out.println("you must peek a number between 1 to 7");
+                manageProductsSupplierMenu();
         }
     }
+
+
 
     private void addProduct(Supplier supplier) {
         System.out.println("Add new product:");
@@ -179,6 +188,31 @@ public class ProductMenu {
         boolean added = ss.addDiscount(supplier.getSupplierNumber(),catalogNum ,count , discount);
         if (added){
             System.out.println("discount added to product");
+        }
+        else{
+            System.out.println("invalid input");
+        }
+
+        manageProductsSupplierMenu();
+    }
+    private void removeDiscountOnProduct(Supplier supplier) {
+        System.out.println("enter catalog number of product to remove discount");
+        int catalogNum = 0;
+        try{catalogNum = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only number");
+            manageProductsSupplierMenu();
+        }
+        System.out.println("Please write on how much product you want remove discount?");
+        int count = 0;
+        try{count = sc.nextInt();}
+        catch (Exception e){
+            System.out.println("you must enter only digits number");
+            manageProductsSupplierMenu();
+        }
+        boolean removed = ss.removeDiscountOnProduct(supplier.getSupplierNumber(), catalogNum, count);
+        if (removed){
+            System.out.println("discount removed on product");
         }
         else{
             System.out.println("invalid input");
