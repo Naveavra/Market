@@ -103,7 +103,8 @@ public class OrderMenu {
             case 3:
                 watchFixedDaysOrders();
                 break;
-
+            case 4:
+                sm.inSupplierMenu(supplier.getSupplierNumber());
             default:
                 System.out.println("You must type number between 1 to 6");
                 watchOrdersMenu();
@@ -201,7 +202,7 @@ public class OrderMenu {
     }
 
     private void updateProductInOrder(int orderID) {
-        watchOrdersMenu();
+        //watchOrdersMenu();
         System.out.println("choose product you want to edit and enter the catalog number:");
         int catalogNum = 0;
         try{catalogNum = sc.nextInt();}
