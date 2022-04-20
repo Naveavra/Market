@@ -103,6 +103,12 @@ public class OrderService {
         if(supplierController.getSupplier(supplierNumber).getOrder(orderID)==null){
             return "fail";
         }
-        return gson.toJson(supplierController.getSupplier(supplierNumber).getOrder(orderID).getProducts().toString());
+        Map<Product,Integer> products = supplierController.getSupplier(supplierNumber).getOrder(orderID).getProducts();
+        Map<String,Integer> prouductsJson = new HashMap<>();
+        for (Map.Entry<Product,Integer> e: products.entrySet()){
+            Product p = e.getKey();
+            prouductsJson.put(gson.toJson(p),e.getValue());
+        }
+        return gson.toJson(prouductsJson);
     }
 }
