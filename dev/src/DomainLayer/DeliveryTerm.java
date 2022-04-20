@@ -57,6 +57,6 @@ public class DeliveryTerm {
         for(DaysInWeek a: daysInWeeks){
             out.append(a.toString()).append(",");
         }
-        return out.toString().substring(0, out.toString().length()-1);
+        return out.substring(0, out.toString().length()-1);
     }
 }

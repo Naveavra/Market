@@ -76,15 +76,33 @@ public class OrderService {
     }
 
     public boolean sendOrder(int supplierNumber, int orderId){
+        if(supplierController.getSupplier(supplierNumber)==null){
+            return false;
+        }
+        if(supplierController.getSupplier(supplierNumber).getOrder(orderId)==null){
+            return false;
+        }
         return supplierController.getSupplier(supplierNumber).finishOrder(orderId);
     }
 
     public String getOrder(int supplierNumber, int orderId) {
+        if(supplierController.getSupplier(supplierNumber)==null){
+            return "fail";
+        }
+        if(supplierController.getSupplier(supplierNumber).getOrder(orderId)==null){
+            return "fail";
+        }
         Order o = supplierController.getSupplier(supplierNumber).getOrder(orderId);
         return gson.toJson(o);
     }
 
     public String getProductsInOrder(int supplierNumber, int orderID) {
-        return gson.toJson(supplierController.getSupplier(supplierNumber).getOrder(orderID).getProducts());
+        if(supplierController.getSupplier(supplierNumber)==null){
+            return "fail";
+        }
+        if(supplierController.getSupplier(supplierNumber).getOrder(orderID)==null){
+            return "fail";
+        }
+        return gson.toJson(supplierController.getSupplier(supplierNumber).getOrder(orderID).getProducts().toString());
     }
 }

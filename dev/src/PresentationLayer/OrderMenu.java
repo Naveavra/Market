@@ -370,11 +370,13 @@ public class OrderMenu {
     }
 
     private void watchProductInOrder(int orderID) {
-        Map<Product,Integer> products = Menu.fromJson(orderService.getProductsInOrder(supplier.getSupplierNumber(), orderID), Map.class);
+        String json = orderService.getProductsInOrder(supplier.getSupplierNumber(), orderID);
+        Map<Product,Integer> products = new HashMap<>();
+        products=Menu.fromJson(json, products.getClass());
         System.out.println("Product in Order: "+ orderID);
         int i = 1;
         for (Map.Entry<Product,Integer> e: products.entrySet()){
-            System.out.println("\t"+i+ ". "+ e.getKey() + "in count: "+ e.getValue() );
+            System.out.println("\t"+i+ ". "+ e.getKey() + ", in count: "+ e.getValue() );
             i++;
         }
         updateOrderMenu(orderID);
