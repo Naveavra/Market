@@ -32,7 +32,6 @@ public class ProductMenu {
         System.out.println("\t5. Add new discount on count of products.");
         System.out.println("\t6. Remove discount on amount of product ");
         System.out.println("\t7. Return to supplier page.");
-
         int choice = 0;
         try{choice = sc.nextInt();}
         catch (Exception e){
@@ -169,21 +168,21 @@ public class ProductMenu {
         try{catalogNum = sc.nextInt();}
         catch (Exception e){
             System.out.println("you must enter only number");
-            manageProductsSupplierMenu();
+            addDiscountOnProduct(supplier);
         }
         System.out.println("enter amount of discount");
         double discount = 0;
         try{discount = sc.nextDouble();}
         catch (Exception e){
             System.out.println("you must enter only number");
-            manageProductsSupplierMenu();
+            addDiscountOnProduct(supplier);
         }
         System.out.println("Please write on how much product you want add discount?");
         int count = 0;
         try{count = sc.nextInt();}
         catch (Exception e){
             System.out.println("you must enter only digits number");
-            manageProductsSupplierMenu();
+            addDiscountOnProduct(supplier);
         }
         boolean added = ss.addDiscount(supplier.getSupplierNumber(),catalogNum ,count , discount);
         if (added){
