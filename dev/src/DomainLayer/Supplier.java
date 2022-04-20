@@ -15,8 +15,9 @@ public class Supplier {
     private boolean active;
     private List<PastOrder> finalOrders;
     private static int orderNum=0;
+    private boolean isDeliver;
 
-    public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts){
+    public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts,boolean isDeliver){
         this.supplierNumber=supplierNumber;
         this.name=name;
         this.bankAccount=bankAccount;
@@ -29,10 +30,12 @@ public class Supplier {
         orders = new HashMap<>();
         active =true;
         finalOrders=new ArrayList<>();
+        this.isDeliver=isDeliver;
     }
     public boolean updateAccount(String supplierName,int bankAccount,Map<String,String>contacts){
         this.name=supplierName;
         this.bankAccount=bankAccount;
+       // this.isDeliver=isDeliver;
         this.contacts=new HashMap<>();
         for(String n: contacts.keySet()){
             this.contacts.put(n,contacts.get(n));
@@ -123,7 +126,8 @@ public class Supplier {
         if(orders.get(orderId)==null){
             return false;
         }
-        double totalPrice =updateTotalIncludeDiscounts(orderId);
+        //do something with isDeliver
+        double totalPrice = updateTotalIncludeDiscounts(orderId);
         finalOrders.add(new PastOrder(orders.get(orderId),totalPrice));
         orders.remove(orderId);
         return true;
@@ -178,5 +182,13 @@ public class Supplier {
 
     public List<PastOrder> getFinalOrders() {
         return finalOrders;
+    }
+
+    public boolean updateDeliveration(boolean deliver) {
+        if(isDeliver==deliver){
+            return false;
+        }
+        isDeliver=deliver;
+        return true;
     }
 }

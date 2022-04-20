@@ -14,5 +14,8 @@ public class PastOrder extends Order {
     public int getOrderId(){
         return super.getOrderId();
     }
+    public String toString(){
+        return "total price: "+totalPrice+", finish date"+finishDate;
+    }
 
 }

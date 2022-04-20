@@ -11,7 +11,7 @@ public class SupplierController {
     public Supplier getSupplier(Integer supplierNumber){
         return suppliers.get(supplierNumber);
     }
-    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts){
+    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts,boolean isDeliver){
         if(supplierNumber<0){
             return false;
         }
@@ -21,7 +21,7 @@ public class SupplierController {
         if(suppliers.containsKey(supplierNumber)){
             return false;
         }
-        Supplier s = new Supplier(supplierNumber,supplierName, bankAccount, contacts);
+        Supplier s = new Supplier(supplierNumber,supplierName, bankAccount, contacts,isDeliver);
         suppliers.put(supplierNumber, s);
         return true;
     }
