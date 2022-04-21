@@ -183,7 +183,7 @@ public class OrderMenu {
             case 5:
                 sm.inSupplierMenu(supplier.getSupplierNumber());
             default:
-                System.out.println("You must type number between 1 to 4");
+                System.out.println("You must type number between 1 to 5");
                 watchOrdersMenu();
 
         }
