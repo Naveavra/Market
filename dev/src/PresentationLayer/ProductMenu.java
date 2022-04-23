@@ -32,8 +32,12 @@ public class ProductMenu {
         System.out.println("\t5. Add new discount on count of products.");
         System.out.println("\t6. Remove discount on amount of product ");
         System.out.println("\t7. Return to supplier page.");
-        int choice = 0;
-        try{choice = sc.nextInt();}
+        String choiceStr = "";
+        int choice =0;
+        try{
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
@@ -71,8 +75,12 @@ public class ProductMenu {
     private void addProduct(Supplier supplier) {
         System.out.println("Add new product:");
         System.out.println("Enter catalog number:");
-        int catalogNum = 0;
-        try{catalogNum = sc.nextInt();}
+        String choiceStr = "";
+        int catalogNum =0;
+        try{
+            choiceStr = sc.next();
+            catalogNum=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
@@ -80,8 +88,11 @@ public class ProductMenu {
         System.out.println("Enter name of product:");
         String name = sc.next();
         System.out.println("Enter price:");
-        int price = 0;
-        try{price = sc.nextInt();}
+        int price =0;
+        try{
+            choiceStr = sc.next();
+            price=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
@@ -100,8 +111,12 @@ public class ProductMenu {
     private void removeProduct(Supplier supplier) {
         System.out.println("Remove product:");
         System.out.println("Enter catalog number of the product:");
-        int catalogNum = 0;
-        try{catalogNum = sc.nextInt();}
+        String choiceStr = "";
+        int catalogNum =0;
+        try{
+            choiceStr = sc.next();
+            catalogNum=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             removeProduct(supplier);
@@ -119,8 +134,12 @@ public class ProductMenu {
     private void updateProduct(Supplier supplier) {
         System.out.println("Update product:");
         System.out.println("Enter catalog number of the product:");
-        int catalogNum = 0;
-        try{catalogNum = sc.nextInt();}
+        String choiceStr = "";
+        int catalogNum =0;
+        try{
+            choiceStr = sc.next();
+            catalogNum=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             updateProduct(supplier);
@@ -128,8 +147,12 @@ public class ProductMenu {
         System.out.println("Enter new name for product:");
         String newName = sc.next();
         System.out.println("Enter new price for product:");
-        int price = 0;
-        try{price = sc.nextInt();}
+        choiceStr = "";
+        int price =0;
+        try{
+            choiceStr = sc.next();
+            price=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             updateProduct(supplier);
@@ -150,11 +173,11 @@ public class ProductMenu {
         Map<Integer, LinkedTreeMap> products = new HashMap<>();
         products = gson.fromJson(json,products.getClass());
         int i = 1;
-        if(products == null){
+        if(products.size() == 0){
             System.out.println("There is no products to show");
             manageProductsSupplierMenu();
         }
-        assert products != null;
+       // assert products != null;
         for (LinkedTreeMap p: products.values()){
             Product product = Menu.fromJson(p.toString(), Product.class);
             System.out.println(i + ". "+ product.toString());
@@ -164,22 +187,34 @@ public class ProductMenu {
     }
     private void addDiscountOnProduct(Supplier supplier){
         System.out.println("enter catalog number of product to add discount");
-        int catalogNum = 0;
-        try{catalogNum = sc.nextInt();}
+        String choiceStr = "";
+        int catalogNum =0;
+        try{
+            choiceStr = sc.next();
+            catalogNum=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             addDiscountOnProduct(supplier);
         }
         System.out.println("enter amount of discount");
-        double discount = 0;
-        try{discount = sc.nextDouble();}
+        choiceStr = "";
+        double discount =0;
+        try{
+            choiceStr = sc.next();
+            discount=Double.parseDouble(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             addDiscountOnProduct(supplier);
         }
         System.out.println("Please write on how much product you want add discount?");
-        int count = 0;
-        try{count = sc.nextInt();}
+        choiceStr = "";
+        int count=0;
+        try{
+            choiceStr = sc.next();
+            count=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only digits number");
             addDiscountOnProduct(supplier);
@@ -196,15 +231,23 @@ public class ProductMenu {
     }
     private void removeDiscountOnProduct(Supplier supplier) {
         System.out.println("enter catalog number of product to remove discount");
-        int catalogNum = 0;
-        try{catalogNum = sc.nextInt();}
+        String choiceStr = "";
+        int catalogNum =0;
+        try{
+            choiceStr = sc.next();
+            catalogNum=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
         }
         System.out.println("Please write on how much product you want remove discount?");
-        int count = 0;
-        try{count = sc.nextInt();}
+        choiceStr = "";
+        int count =0;
+        try{
+            choiceStr = sc.next();
+            count=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only digits number");
             manageProductsSupplierMenu();

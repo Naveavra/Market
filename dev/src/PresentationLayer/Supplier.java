@@ -13,6 +13,7 @@ public class Supplier {
     private int bankAccount;
     private Map<String,String> contacts =new HashMap<>();//<name,email>
     private List<String> namesOfContacts;
+    private boolean active;
 //    private Map<Integer, Product> products =new HashMap<>();
 //    private Map<Integer,Double> discountByAmount;//sum of products in order
 //    private Map<Integer, Order> orders;
@@ -25,6 +26,7 @@ public class Supplier {
         contacts.replaceAll((n,v) -> v);
         namesOfContacts=new ArrayList<>();
         namesOfContacts.addAll(this.contacts.keySet());
+        active =true;
 //        discountByAmount=new TreeMap<>();
 //        orders = new TreeMap<>();
 //        pastOrders = new HashMap<>();
@@ -70,6 +72,9 @@ public class Supplier {
     }
     public int numOfContacts(){
         return namesOfContacts.size();
+    }
+    public boolean isActive(){
+        return active;
     }
 
 }

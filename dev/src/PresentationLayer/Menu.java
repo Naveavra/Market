@@ -24,17 +24,21 @@ public class Menu {
 
 
     public void initialMenu(){
-        int choise = 0;
+        int choice = 0;
         System.out.println("Welcome to Supplier Model!!");
         System.out.println("How do you want to start?");
         System.out.println("\t1. with empty data ");
         System.out.println("\t2. with initial data");
-        try{choise = sc.nextInt();}
+        String choiceStr = "";
+        try{
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only 1 digit number");
             initialMenu();
         }
-        if (choise==2){
+        if (choice==2){
             loadInitialData();
         }
         SupplierMenu sm = new SupplierMenu();

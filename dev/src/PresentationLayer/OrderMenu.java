@@ -42,24 +42,36 @@ public class OrderMenu {
         System.out.println("Do you want to add products to this order?");
         System.out.println("\t1. YES.");
         System.out.println("\t2. NO.");
-        int choise = 0;
-        try{choise = sc.nextInt();}
+        String choiceStr = "";
+        int choice =0;
+        try{
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only 1 digit number");
             addProductsToOrder(o);
         }
-        switch (choise){
+        switch (choice){
             case 1:
                 System.out.println("Enter a catalog number");
-                int catalogNum = 0;
-                try{catalogNum = sc.nextInt();}
+                choiceStr = "";
+                int catalogNum =0;
+                try{
+                    choiceStr = sc.next();
+                    catalogNum=Integer.parseInt(choiceStr);
+                }
                 catch (Exception e){
                     System.out.println("you must enter only 1 digit number");
                     addProductsToOrder(o);
                 }
                 System.out.println("Enter an amount");
-                int count = 0;
-                try{count = sc.nextInt();}
+                choiceStr = "";
+                int count =0;
+                try{
+                    choiceStr = sc.next();
+                    count=Integer.parseInt(choiceStr);
+                }
                 catch (Exception e){
                     System.out.println("you must enter only 1 digit number");
                     addProductsToOrder(o);
@@ -82,8 +94,12 @@ public class OrderMenu {
         System.out.println(" Do to want to add delivery days to this order?");
         System.out.println("\t1. YES.");
         System.out.println("\t2. NO.");
-        int choice = 0;
-        try{choice = sc.nextInt();}
+        String choiceStr = "";
+        int choice =0;
+        try{
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only 1 digit number");
             determineDeliveryDays(o);
@@ -147,20 +163,31 @@ public class OrderMenu {
         System.out.println("\t3. See all your orders in fixed days delivery.");
         System.out.println("\t4. Send orders.");
         System.out.println("\t5. Return to supplier page");
-        int choise = 0;
-        try{choise = sc.nextInt();}
+        String choiceStr = "";
+        int choice =0;
+        try{
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only 1 digit number");
             watchOrdersMenu();
+            return;
         }
-        switch (choise){
+        switch (choice){
             case 1:
+                watchWaitOrdersForUpdate();
                 System.out.println("Enter orderID:");
-                int orderID = 0;
-                try{orderID = sc.nextInt();}
+                choiceStr = "";
+                int orderID =0;
+                try{
+                    choiceStr = sc.next();
+                    orderID=Integer.parseInt(choiceStr);
+                }
                 catch (Exception e){
                     System.out.println("you must enter only 1 digit number");
                     watchOrdersMenu();
+                    return;
                 }
                 updateOrderMenu(orderID);
                 break;
@@ -172,11 +199,16 @@ public class OrderMenu {
                 break;
             case 4:
                 System.out.println("Enter orderID:");
-                int orderId = 0;
-                try{orderId = sc.nextInt();}
+                choiceStr = "";
+                int orderId =0;
+                try{
+                    choiceStr = sc.next();
+                    orderId=Integer.parseInt(choiceStr);
+                }
                 catch (Exception e){
                     System.out.println("you must enter only 1 digit number");
                     watchOrdersMenu();
+                    return;
                 }
                 sendOrders(orderId);
                 break;
@@ -202,7 +234,6 @@ public class OrderMenu {
 
     private void watchFixedDaysOrders() {
         String json = orderService.getFixedDaysOrders(supplier.getSupplierNumber());
-
         Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
         orders = Menu.fromJson(json, orders.getClass());
         List<Integer> list = new LinkedList<>();
@@ -224,17 +255,35 @@ public class OrderMenu {
         String json=orderService.getActiveOrders(supplier.getSupplierNumber());
         Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
         orders = Menu.fromJson(json, orders.getClass());
-
+        if(orders.isEmpty()){
+            System.out.println("there is no orders to show");
+        }
         for(LinkedTreeMap o: orders.values()){
             Order order = Menu.fromJson(o.toString(), Order.class);
             System.out.println(order.toString());
         }
         watchOrdersMenu();
     }
+    private void watchWaitOrdersForUpdate() {
+        String json=orderService.getActiveOrders(supplier.getSupplierNumber());
+        Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
+        orders = Menu.fromJson(json, orders.getClass());
+        if(orders.isEmpty()){
+            System.out.println("there is no orders to show");
+        }
+        for(LinkedTreeMap o: orders.values()){
+            Order order = Menu.fromJson(o.toString(), Order.class);
+            System.out.println(order.toString());
+        }
+    }
 
     private void updateOrderMenu(int orderID) {
         String json = orderService.getOrder(supplier.getSupplierNumber(), orderID);
-
+        if(json.equals("fail")){
+           System.out.println("Order does not exist");
+           watchOrdersMenu();
+           return;
+        }
         Order o = gson.fromJson(json,Order.class);
         System.out.println("Order: "+ orderID);
         System.out.println("Choose what you want:");
@@ -243,8 +292,12 @@ public class OrderMenu {
         System.out.println("\t3. update product in order.");
         System.out.println("\t4. update deliver days in order.");
         System.out.println("\t5. Return to choose orders.");
-        int choice = 0;
-        try{choice = sc.nextInt();}
+        String choiceStr = "";
+        int choice =0;
+        try{
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only 1 digit number");
             updateOrderMenu(orderID);
@@ -252,15 +305,24 @@ public class OrderMenu {
         switch (choice){
             case 1:
                 System.out.println("Enter catalog number:");
-                int catalogNum = 0;
-                try{catalogNum = sc.nextInt();}
+                choiceStr = "";
+                int catalogNum =0;
+                try{
+                    choiceStr = sc.next();
+                    catalogNum=Integer.parseInt(choiceStr);
+                }
                 catch (Exception e){
                     System.out.println("you must enter only numbers");
                     updateOrderMenu(orderID);
+                    return;
                 }
                 System.out.println("Enter count:");
-                int count = 0;
-                try{count = sc.nextInt();}
+                choiceStr = "";
+                int count =0;
+                try{
+                    choiceStr = sc.next();
+                    count=Integer.parseInt(choiceStr);
+                }
                 catch (Exception e){
                     System.out.println("you must enter only numbers");
                     updateOrderMenu(orderID);
@@ -285,7 +347,12 @@ public class OrderMenu {
                 break;
         }
         System.out.println("You want to edit anther product?\n1.YES\n2.NO");
-        try{choice = sc.nextInt();}
+        choiceStr = "";
+        choice =0;
+        try{
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only 1 digit number");
             updateOrderMenu(orderID);
@@ -336,7 +403,7 @@ public class OrderMenu {
         }
         boolean added=ds.updateFixedDeliveryDaysForOrder(supplier.getSupplierNumber(), orderID, Days);
         if(added){
-            System.out.println("days added!");
+            System.out.println("days changed!");
         }
         else{
             System.out.println("Invalid Input");
@@ -347,15 +414,23 @@ public class OrderMenu {
     private void updateProductInOrder(int orderID) {
         watchOrdersMenu();
         System.out.println("choose product you want to edit and enter the catalog number:");
-        int catalogNum = 0;
-        try{catalogNum = sc.nextInt();}
+        String choiceStr = "";
+        int catalogNum =0;
+        try{
+            choiceStr = sc.next();
+            catalogNum=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only numbers");
             updateProductInOrder(orderID);
         }
         System.out.println("Enter the new count for product (0 for delete");
-        int count = 0;
-        try{count = sc.nextInt();}
+        choiceStr = "";
+        int count =0;
+        try{
+            choiceStr = sc.next();
+            count=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only numbers");
             updateProductInOrder(orderID);
@@ -372,10 +447,18 @@ public class OrderMenu {
 
     private void watchProductInOrder(int orderID) {
         String json = orderService.getProductsInOrder(supplier.getSupplierNumber(), orderID);
+        if(json.equals("fail")){
+            System.out.println("Order or supplier does not exist");
+            updateOrderMenu(orderID);
+            return;
+        }
         Map<String,Integer> products = new HashMap<>();
         products=Menu.fromJson(json, products.getClass());
         System.out.println("Product in Order: "+ orderID);
         int i = 1;
+        if(products.isEmpty()){
+            System.out.println("There is no products to show");
+        }
         for (Map.Entry<String,Integer> e: products.entrySet()){
             Product p = gson.fromJson(e.getKey(), Product.class);
             System.out.println("\t"+i+ ". "+ p.toString() + ", in count: "+ e.getValue() );

@@ -23,28 +23,33 @@ public class SupplierMenu {
         System.out.println("Please choose what you whant to do:");
         System.out.println("\t1. Open new Supplier");
         System.out.println("\t2. See details of Supplier that exist in tha system");
-        int choice = 0;
+        String choiceStr = "";
+        int choice =0;
         try{
-            choice = sc.nextInt();
-            if(Integer.toString(choice).contains(charSequence)){
-                System.out.println("you must enter a valid number");
-                chooseSupplierMenu();
-            }
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
         }
         catch (Exception e){
 
             System.out.println("you must enter only 1 digit number");
-
-
+            chooseSupplierMenu();
         }
         switch (choice){
             case 1:
                 openNewAccountSupplier();
                 break;
             case 2:
-                int supNumber = 0;
                 System.out.println("Enter the supplier number you want to see:");
-                supNumber = sc.nextInt();
+                choiceStr = "";
+                int supNumber =0;
+                try{
+                    choiceStr = sc.next();
+                    supNumber=Integer.parseInt(choiceStr);
+                }
+                catch (Exception e){
+                    System.out.println("you must enter only 1 digit number");
+                    chooseSupplierMenu();
+                }
                 inSupplierMenu(supNumber);
                 break;
             default:
@@ -65,6 +70,11 @@ public class SupplierMenu {
         }
         Gson gson = new Gson();
         Supplier s = gson.fromJson(json, Supplier.class);
+        if(!s.isActive()){
+            System.out.println("supplier account is closed");
+            chooseSupplierMenu();
+            return;
+        }
         System.out.println("You see details of supplier: "+ s.getSupplierName());
         System.out.println("Choose what you want to do:");
         System.out.println("\t1. Watch supplier details.");
@@ -76,10 +86,14 @@ public class SupplierMenu {
         System.out.println("\t7. Watch existing orders from the supplier.");
         System.out.println("\t8. watch past orders.");
         System.out.println("\t9. close supplier account.");
-        System.out.println("\t10. Return to choose anther supplier.");
-        int choice = 0;
-        try{choice = sc.nextInt();}
-        catch (Exception e){
+        System.out.println("\t10. Return to choose another supplier.");
+        String choiceStr = "";
+        int choice =0;
+        try{
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
+        }
+        catch (Exception e ){
             System.out.println("you must enter only 1 digit number");
             inSupplierMenu(supplierNumber);
         }
@@ -115,7 +129,14 @@ public class SupplierMenu {
                 watchPastOrders(supplierNumber);
                 break;
             case 9:
-                ss.closeAccount(supplierNumber);
+                boolean close =ss.closeAccount(supplierNumber);
+                if(close){
+                    System.out.println("account closed!");
+                }
+                else{
+                    System.out.println("account is already closed");
+                }
+                chooseSupplierMenu();
                 break;
             case 10:
                 chooseSupplierMenu();
@@ -137,8 +158,12 @@ public class SupplierMenu {
 
     private void removeDiscountMenu(int supplierNumber) {
         System.out.println("Please write on how much product you want remove discount?");
-        int count = 0;
-        try{count = sc.nextInt();}
+        String choiceStr = "";
+        int count =0;
+        try{
+            choiceStr = sc.next();
+            count=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only digits number");
             addDiscountMenu(supplierNumber);
@@ -155,15 +180,23 @@ public class SupplierMenu {
 
     private void addDiscountMenu(int supplierNum) {
         System.out.println("Please write on how much product you want add discount?");
-        int count = 0;
-        try{count = sc.nextInt();}
+        String choiceStr = "";
+        int count =0;
+        try{
+            choiceStr = sc.next();
+            count=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only digits number");
             addDiscountMenu(supplierNum);
         }
         System.out.println("Please write the discount?");
-        double discount = 1;
-        try{discount = sc.nextDouble();}
+        choiceStr = "";
+        double discount =0;
+        try{
+            choiceStr = sc.next();
+            discount=Double.parseDouble(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             addDiscountMenu(supplierNum);
@@ -182,8 +215,6 @@ public class SupplierMenu {
     private void seeSupplierDetails(Supplier s) {
         System.out.println(s.toString());
         inSupplierMenu(s.getSupplierNumber());
-
-
     }
 
     private void updateSupplierDetails(Supplier s) {//need to imp
@@ -194,8 +225,12 @@ public class SupplierMenu {
         System.out.println("\t3. contacts");
         System.out.println("\t4. transportation");
         System.out.println("\t5. Return to supplier page");
-        int choice = 0;
-        try{choice = sc.nextInt();}
+        String choiceStr = "";
+        int choice =0;
+        try{
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only number");
             updateSupplierDetails(s);
@@ -209,9 +244,13 @@ public class SupplierMenu {
                 s.setSupplierName(newSupplierName);
                 break;
             case 2:
-                int bankNumber = 0;
                 System.out.println("Enter Supplier's bankNumber: ");
-                try{bankNumber = sc.nextInt();}
+                choiceStr = "";
+                int bankNumber =0;
+                try{
+                    choiceStr = sc.next();
+                    bankNumber=Integer.parseInt(choiceStr);
+                }
                 catch (Exception e){
                     System.out.println("you must enter only digits number");
                     openNewAccountSupplier();
@@ -220,9 +259,13 @@ public class SupplierMenu {
                 s.setBankAccount(bankNumber);
                 break;
             case 3://contacts
-                int countContacts = 0;
                 System.out.println("Enter count of contacts you have: ");
-                try{countContacts = sc.nextInt();}
+                choiceStr = "";
+                int countContacts =0;
+                try{
+                    choiceStr = sc.next();
+                    countContacts=Integer.parseInt(choiceStr);
+                }
                 catch (Exception e){
                     System.out.println("you must enter only digits number");
                     openNewAccountSupplier();
@@ -241,8 +284,12 @@ public class SupplierMenu {
                 System.out.println("Choose who responsible for Future orders");
                 System.out.println("\t1. SUPER LI");
                 System.out.println("\t2. "+s.getSupplierName());
-                int supNum = 0;
-                try{supNum = sc.nextInt();}
+                choiceStr = "";
+                int supNum =0;
+                try{
+                    choiceStr = sc.next();
+                    supNum=Integer.parseInt(choiceStr);
+                }
                 catch (Exception e){
                     System.out.println("you must enter only digits number");
                     openNewAccountSupplier();
@@ -286,9 +333,13 @@ public class SupplierMenu {
         String supName = "";
         System.out.println("Enter Supplier's name: ");
         supName = sc.next();
-        int supNumber = 0;
         System.out.println("Enter Supplier's number: ");
-        try{supNumber = sc.nextInt();}
+        String choiceStr = "";
+        int supNumber =0;
+        try{
+            choiceStr = sc.next();
+            supNumber=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only digits number");
             openNewAccountSupplier();
@@ -297,10 +348,13 @@ public class SupplierMenu {
             System.out.println("you must enter only positive number");
             openNewAccountSupplier();
         }
-
-        int bankNumber = 0;
         System.out.println("Enter Supplier's bankNumber: ");
-        try{bankNumber = sc.nextInt();}
+        choiceStr = "";
+        int bankNumber =0;
+        try{
+            choiceStr = sc.next();
+            bankNumber=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only digits number");
             openNewAccountSupplier();
@@ -309,9 +363,13 @@ public class SupplierMenu {
             System.out.println("you must enter only positive number");
             openNewAccountSupplier();
         }
-        int countContacts = 0;
         System.out.println("Enter count of contacts you have: ");
-        try{countContacts = sc.nextInt();}
+        choiceStr = "";
+        int countContacts =0;
+        try{
+            choiceStr = sc.next();
+            countContacts=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only digits number");
             openNewAccountSupplier();
@@ -337,8 +395,12 @@ public class SupplierMenu {
         System.out.println("Choose who responsible for Future orders");
         System.out.println("\t1. SUPER LI");
         System.out.println("\t2. "+supName);
-        int supNum = 0;
-        try{supNum = sc.nextInt();}
+        choiceStr = "";
+        int supNum =0;
+        try{
+            choiceStr = sc.next();
+            supNum=Integer.parseInt(choiceStr);
+        }
         catch (Exception e){
             System.out.println("you must enter only digits number");
             openNewAccountSupplier();
