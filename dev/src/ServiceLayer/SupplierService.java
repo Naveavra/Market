@@ -127,7 +127,7 @@ public class SupplierService {
 
     public String  watchPastOrders(int supplierNumber) {
      List<PastOrder> pastOrderList=new ArrayList<>();
-     supplierController.getSupplier(supplierNumber).getFinalOrders();
+    pastOrderList=supplierController.getSupplier(supplierNumber).getFinalOrders();
      return gson.toJson(pastOrderList);
     }
 //    public void addContact(int supplierNumber,String name,String email){

@@ -83,8 +83,8 @@ public class SupplierMenu {
             System.out.println("you must enter only 1 digit number");
             inSupplierMenu(supplierNumber);
         }
-        if(choice >7 || choice<=0){
-            System.out.println("you must enter only 1 digit number");
+        if(choice >10 || choice<=0){
+            System.out.println("you must enter only digit between 1 to 10");
         }
         switch (choice){
             case 1:

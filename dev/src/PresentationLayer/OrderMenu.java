@@ -233,7 +233,7 @@ public class OrderMenu {
     }
 
     private void updateOrderMenu(int orderID) {
-        String json=orderService.getOrder(supplier.getSupplierNumber(), orderID);
+        String json = orderService.getOrder(supplier.getSupplierNumber(), orderID);
         Order o = gson.fromJson(json,Order.class);
         System.out.println("Order: "+ orderID);
         System.out.println("Choose what you want:");
@@ -371,12 +371,13 @@ public class OrderMenu {
 
     private void watchProductInOrder(int orderID) {
         String json = orderService.getProductsInOrder(supplier.getSupplierNumber(), orderID);
-        Map<Product,Integer> products = new HashMap<>();
+        Map<String,Integer> products = new HashMap<>();
         products=Menu.fromJson(json, products.getClass());
         System.out.println("Product in Order: "+ orderID);
         int i = 1;
-        for (Map.Entry<Product,Integer> e: products.entrySet()){
-            System.out.println("\t"+i+ ". "+ e.getKey() + ", in count: "+ e.getValue() );
+        for (Map.Entry<String,Integer> e: products.entrySet()){
+            Product p = gson.fromJson(e.getKey(), Product.class);
+            System.out.println("\t"+i+ ". "+ p.toString() + ", in count: "+ e.getValue() );
             i++;
         }
         updateOrderMenu(orderID);
