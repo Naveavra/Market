@@ -234,6 +234,7 @@ public class OrderMenu {
 
     private void updateOrderMenu(int orderID) {
         String json = orderService.getOrder(supplier.getSupplierNumber(), orderID);
+
         Order o = gson.fromJson(json,Order.class);
         System.out.println("Order: "+ orderID);
         System.out.println("Choose what you want:");
