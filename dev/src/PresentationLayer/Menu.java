@@ -1,15 +1,10 @@
 package PresentationLayer;
 
-import DomainLayer.Product;
 import ServiceLayer.OrderService;
 import ServiceLayer.ProductService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -47,12 +42,6 @@ public class Menu {
     }
 
     private void loadInitialData() {
-//        Product p1 =new Product(1, "chair",50 );
-//        Product p2 =new Product(2, "table",60 );
-//        Product p3 =new Product(3, "pencil",5 );
-//        Product p4 =new Product(4, "pen",10 );
-//        Product p5 =new Product(5, "flashlight",70 );
-//        Product p6 =new Product(6, "iphone",3300 );
 
         Gson gson = new Gson();
 

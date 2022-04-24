@@ -116,8 +116,12 @@ public class OrderMenu {
             determineDeliveryDays(o);
         }
         switch (choice) {
-            case 1 -> addDeliveryDays(o);
-            case 2 -> sm.inSupplierMenu(supplier.getSupplierNumber());
+            case 1:
+                addDeliveryDays(o);
+                break;
+            case 2 :
+                sm.inSupplierMenu(supplier.getSupplierNumber());
+                break;
         }
      sm.inSupplierMenu(supplier.getSupplierNumber());
     }
