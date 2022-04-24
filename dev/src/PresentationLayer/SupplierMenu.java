@@ -97,7 +97,7 @@ public class SupplierMenu {
             inSupplierMenu(supplierNumber);
         }
         if(choice >10 || choice<=0){
-            System.out.println("you must enter only digit between 1 to 10");
+            System.out.println("you must enter only digit between 1 to 9");
         }
         switch (choice){
             case 1:
