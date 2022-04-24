@@ -1,10 +1,10 @@
 package PresentationLayer;
 
-import DomainLayer.PastOrder;
 import ServiceLayer.DeliveryService;
 import ServiceLayer.OrderService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import netscape.javascript.JSObject;
 import org.json.JSONObject;
 
@@ -84,9 +84,8 @@ public class SupplierMenu {
         System.out.println("\t5. remove discount on amount of product to supplier ");
         System.out.println("\t6. Create new order from the supplier.");
         System.out.println("\t7. Watch existing orders from the supplier.");
-        System.out.println("\t8. watch past orders.");
-        System.out.println("\t9. close supplier account.");
-        System.out.println("\t10. Return to choose another supplier.");
+        System.out.println("\t8. close supplier account.");
+        System.out.println("\t9. Return to choose another supplier.");
         String choiceStr = "";
         int choice =0;
         try{
@@ -98,7 +97,7 @@ public class SupplierMenu {
             inSupplierMenu(supplierNumber);
         }
         if(choice >10 || choice<=0){
-            System.out.println("you must enter only digit between 1 to 10");
+            System.out.println("you must enter only digit between 1 to 9");
         }
         switch (choice){
             case 1:
@@ -126,9 +125,6 @@ public class SupplierMenu {
                 om6.watchOrdersMenu();
                 break;
             case 8:
-                watchPastOrders(supplierNumber);
-                break;
-            case 9:
                 boolean close =ss.closeAccount(supplierNumber);
                 if(close){
                     System.out.println("account closed!");
@@ -138,7 +134,7 @@ public class SupplierMenu {
                 }
                 chooseSupplierMenu();
                 break;
-            case 10:
+            case 9:
                 chooseSupplierMenu();
                 break;
             default:
@@ -147,14 +143,17 @@ public class SupplierMenu {
         }
     }
 
-    private void watchPastOrders(int supplierNumber) {
-        String json = ss.watchPastOrders(supplierNumber);
-        List<PastOrder> pastOrders=new ArrayList<>();
-        pastOrders=Menu.fromJson(json, pastOrders.getClass());
-        for(PastOrder p:pastOrders){
-            System.out.println(p.toString());
-        }
-    }
+//    private void watchPastOrders(int supplierNumber) {
+//        String json = ss.watchPastOrders(supplierNumber);
+//        List<LinkedTreeMap> pastOrders=new ArrayList<>();
+//        pastOrders=Menu.fromJson(json, pastOrders.getClass());
+//        int i=1;
+//        for (LinkedTreeMap p: pastOrders){
+//            PastOrder pastOrder = Menu.fromJson(p.toString(), PastOrder.class);
+//            System.out.println(i + ". "+ pastOrder.toString());
+//            i++;
+//        }
+//    }
 
     private void removeDiscountMenu(int supplierNumber) {
         System.out.println("Please write on how much product you want remove discount?");
