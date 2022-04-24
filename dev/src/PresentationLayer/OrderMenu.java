@@ -3,6 +3,7 @@ package PresentationLayer;
 import DomainLayer.DeliveryTerm;
 import ServiceLayer.DeliveryService;
 import ServiceLayer.OrderService;
+import ServiceLayer.ProductService;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -24,6 +25,7 @@ public class OrderMenu {
         gson = new Gson();
         sm =new SupplierMenu();
         ds =new DeliveryService();
+
     }
 
     public void newOrder() {
@@ -31,10 +33,8 @@ public class OrderMenu {
         String json  = orderService.createOrder(supplier.getSupplierNumber());
         Gson gson = new Gson();
         Order o = gson.fromJson(json, Order.class);
-
         System.out.println("order created. you can mow add products.");
         addProductsToOrder(o);
-
 
     }
 
@@ -54,6 +54,17 @@ public class OrderMenu {
         }
         switch (choice){
             case 1:
+                System.out.println("The products which the supplier supply are: ");
+                ProductService ps=new ProductService();
+                String json1 = ps.getProductsOfSupplier(supplier.getSupplierNumber());
+                Map<Integer, LinkedTreeMap> productMap=new HashMap<>();
+                productMap=gson.fromJson(json1, productMap.getClass());
+                int i=1;
+                for (LinkedTreeMap p: productMap.values()){
+                    Product product = Menu.fromJson(p.toString(), Product.class);
+                    System.out.println("\t"+i + ". "+ product.toString());
+                    i++;
+                }
                 System.out.println("Enter a catalog number");
                 choiceStr = "";
                 int catalogNum =0;
