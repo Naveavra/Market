@@ -1,4 +1,4 @@
-package main.java.DomainLayer.Storage;
+package DomainLayer.Storage;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -21,7 +21,7 @@ public class Product
     private double priceSupplier;
     private double discount;
     private transient boolean needsRefill;
-    private List<Item> items;
+    private List<main.java.DomainLayer.Storage.Item> items;
     private transient List<Item> damagedItems;
 
 

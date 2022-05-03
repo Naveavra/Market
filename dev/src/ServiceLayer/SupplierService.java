@@ -115,7 +115,7 @@ public class SupplierService {
 
     }
 
-    public boolean updateDeliveration(PresentationLayer.Supplier s,boolean isDeliver) {
+    public boolean updateDeliveration(PresentationLayer.Supplier.Supplier s,boolean isDeliver) {
         if(supplierController.getSupplier(s.getSupplierNumber())==null){
             return false;
         }

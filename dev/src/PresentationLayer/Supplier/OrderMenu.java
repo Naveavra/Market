@@ -1,11 +1,11 @@
-package main.java.PresentationLayer.Supplier;
+package PresentationLayer.Supplier;
 
+import ServiceLayer.DeliveryService;
+import ServiceLayer.OrderService;
+import ServiceLayer.ProductService;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import main.java.DomainLayer.Supplier.DeliveryTerm;
-import main.java.ServiceLayer.Supplier.DeliveryService;
-import main.java.ServiceLayer.Supplier.OrderService;
-import main.java.ServiceLayer.Supplier.ProductService;
+
 
 import java.util.*;
 

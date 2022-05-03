@@ -1,10 +1,9 @@
-package main.java.PresentationLayer.Supplier;
+package PresentationLayer.Supplier;
 
+import ServiceLayer.OrderService;
+import ServiceLayer.ProductService;
+import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
-import main.java.ServiceLayer.Supplier.OrderService;
-import main.java.ServiceLayer.Supplier.ProductService;
-import main.java.ServiceLayer.Supplier.SupplierService;
-
 import java.util.HashMap;
 import java.util.Scanner;
 

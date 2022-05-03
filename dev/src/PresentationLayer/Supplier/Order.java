@@ -1,4 +1,4 @@
-package main.java.PresentationLayer.Supplier;
+package PresentationLayer.Supplier;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
