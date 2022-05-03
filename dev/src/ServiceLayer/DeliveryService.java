@@ -37,9 +37,9 @@ public class DeliveryService {
         return supplierController.getSupplier(supplierNumber).getOrder(orderId).updateDeliveryDays(daysInWeek);
 
     }
-
-    public boolean stopFixedDeliveryDaysForOrder(int orderId){
-
-        return false;
-    }
+//
+//    public boolean stopFixedDeliveryDaysForOrder(int orderId){
+//
+//        return false;
+//    }
 }

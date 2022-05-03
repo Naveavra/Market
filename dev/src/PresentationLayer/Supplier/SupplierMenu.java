@@ -1,10 +1,9 @@
-package PresentationLayer;
+package main.java.PresentationLayer.Supplier;
 
-import ServiceLayer.DeliveryService;
-import ServiceLayer.OrderService;
-import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import main.java.ServiceLayer.Supplier.DeliveryService;
+import main.java.ServiceLayer.Supplier.SupplierService;
 import netscape.javascript.JSObject;
 import org.json.JSONObject;
 

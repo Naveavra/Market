@@ -1,6 +1,4 @@
-package PresentationLayer;
-
-import DomainLayer.Product;
+package main.java.PresentationLayer.Supplier;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;

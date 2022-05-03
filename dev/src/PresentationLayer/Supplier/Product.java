@@ -1,4 +1,4 @@
-package PresentationLayer;
+package main.java.PresentationLayer.Supplier;
 
 import java.util.HashMap;
 import java.util.Map;

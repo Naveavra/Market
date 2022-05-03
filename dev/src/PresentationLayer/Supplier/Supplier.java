@@ -1,9 +1,6 @@
-package PresentationLayer;
+package main.java.PresentationLayer.Supplier;
 
 
-import DomainLayer.Order;
-import DomainLayer.PastOrder;
-import DomainLayer.Product;
 
 import java.util.*;
 
