@@ -1,7 +1,7 @@
 package PresentationLayer.Supplier;
 
 import ServiceLayer.OrderService;
-import ServiceLayer.ProductService;
+import ServiceLayer.ProductSupplierService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class Menu {
         Gson gson = new Gson();
 
         SupplierService ss =  new SupplierService();
-        ProductService ps =new ProductService();
+        ProductSupplierService ps =new ProductSupplierService();
         OrderService os = new OrderService();
         SupplierMenu sm =new SupplierMenu();
 

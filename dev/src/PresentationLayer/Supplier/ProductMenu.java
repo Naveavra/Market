@@ -1,6 +1,6 @@
 package PresentationLayer.Supplier;
 
-import ServiceLayer.ProductService;
+import ServiceLayer.ProductSupplierService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
@@ -13,13 +13,13 @@ public class ProductMenu {
     private Supplier supplier;
     private Scanner sc;
     private SupplierService ss;
-    private ProductService ps;
+    private ProductSupplierService ps;
 
     public ProductMenu(Supplier s) {
         sc=new Scanner(System.in);
         supplier = s;
         ss = new SupplierService();
-        ps = new ProductService();
+        ps = new ProductSupplierService();
     }
 
 

@@ -2,7 +2,7 @@ package PresentationLayer.Supplier;
 
 import ServiceLayer.DeliveryService;
 import ServiceLayer.OrderService;
-import ServiceLayer.ProductService;
+import ServiceLayer.ProductSupplierService;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -55,7 +55,7 @@ public class OrderMenu {
         switch (choice){
             case 1:
                 System.out.println("The products which the supplier supply are: ");
-                ProductService ps=new ProductService();
+                ProductSupplierService ps=new ProductSupplierService();
                 String json1 = ps.getProductsOfSupplier(supplier.getSupplierNumber());
                 Map<Integer, LinkedTreeMap> productMap=new HashMap<>();
                 productMap=gson.fromJson(json1, productMap.getClass());

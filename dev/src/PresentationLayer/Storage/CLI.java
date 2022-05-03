@@ -5,7 +5,7 @@ import main.java.DomainLayer.Storage.CategoryController;
 import main.java.DomainLayer.Storage.ProductController;
 import main.java.DomainLayer.Storage.ReportController;
 import main.java.ServiceLayer.Storage.CategoryService;
-import main.java.ServiceLayer.Storage.ProductService;
+import ServiceLayer.ProductService;
 import main.java.ServiceLayer.Storage.ReportService;
 
 import java.io.IOException;
