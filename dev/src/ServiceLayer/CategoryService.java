@@ -1,4 +1,4 @@
-package main.java.ServiceLayer.Storage;
+package ServiceLayer;
 
 import main.java.DomainLayer.Storage.Category;
 import main.java.DomainLayer.Storage.CategoryController;

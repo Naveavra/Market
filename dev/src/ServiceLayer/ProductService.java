@@ -2,7 +2,6 @@ package ServiceLayer;
 
 import main.java.DomainLayer.Storage.Item;
 import main.java.DomainLayer.Storage.Location;
-import main.java.DomainLayer.Storage.Product;
 import main.java.DomainLayer.Storage.ProductController;
 
 import java.io.IOException;
