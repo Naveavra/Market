@@ -114,22 +114,20 @@ public class SupplierService {
         return  json;
 
     }
-
     public boolean updateDeliveration(int supplierNumber,boolean isDeliver) {
-        Supplier s = supplierController.getSupplier(supplierNumber);
-        if(supplierController.getSupplier(s.getSupplierNumber())==null){
+        if(supplierController.getSupplier(supplierNumber)==null){
             return false;
         }
-        if(!supplierController.getSupplier(s.getSupplierNumber()).isActive()){
+        if(!supplierController.getSupplier(supplierNumber).isActive()){
             return false;
         }
-        return supplierController.getSupplier(s.getSupplierNumber()).updateDeliveration(isDeliver);
+        return supplierController.getSupplier(supplierNumber).updateDeliveration(isDeliver);
     }
 
     public String  watchPastOrders(int supplierNumber) {
-     List<PastOrder> pastOrderList=new ArrayList<>();
-    pastOrderList=supplierController.getSupplier(supplierNumber).getFinalOrders();
-     return gson.toJson(pastOrderList);
+        List<PastOrder> pastOrderList=new ArrayList<>();
+        pastOrderList=supplierController.getSupplier(supplierNumber).getFinalOrders();
+        return gson.toJson(pastOrderList);
     }
 //    public void addContact(int supplierNumber,String name,String email){
 //        supplierController.getSupplier(supplierNumber).
