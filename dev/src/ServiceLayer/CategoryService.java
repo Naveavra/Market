@@ -51,9 +51,6 @@ public class CategoryService {
         categoryCon.transferProduct(id, catRemove, catAdd, subAdd, subSubAdd);
     }
 
-    public boolean canRemoveProduct(int id) {
-        return categoryCon.canRemoveProduct(id);
-    }
 
     public void removeFromCatalog(int id) {
         categoryCon.removeFromCatalog(id);
