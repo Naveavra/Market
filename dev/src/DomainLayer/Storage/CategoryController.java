@@ -264,9 +264,9 @@ public class CategoryController
 //    }
 //
 //
-//    public ProductController getProductCon(){
-//        return productCon;
-//    }
+    public ProductController getProductCon(){
+        return productCon;
+    }
 
 
 }
