@@ -43,4 +43,11 @@ public class SubSubCategory {
                 products.remove(p);
 
     }
+
+    public Product findProductWithId(int id){
+        for(Product p : this.products)
+            if(p.getId() == id)
+                return p;
+        return null;
+    }
 }
