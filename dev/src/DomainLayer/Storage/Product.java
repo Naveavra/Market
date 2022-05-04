@@ -23,7 +23,7 @@ public class Product
     private transient boolean needsRefill;
     private List<Item> items;
     private transient List<Item> damagedItems;
-    private transient List<DomainLayer.Storage.Product> productSuppliers;//all the supplier that supplier the product
+    private transient List<Product> productSuppliers;//all the supplier that supplier the product
 
     /**
      *
@@ -75,9 +75,10 @@ public class Product
     }
 
 
-    public boolean hasItem(Location.Place loc, int shelf, String ed){
+    public boolean hasItem(String loc, int shelf, String ed){
+        Location.Place check=stringToPlace(loc);
         for(Item i : this.items) {
-            if (i.getLoc().getPlace().equals(loc) && shelf == i.getLoc().getShelf() && ed.equals(i.getExpDate())) {
+            if (i.getLoc().getPlace().equals(check) && shelf == i.getLoc().getShelf() && ed.equals(i.getExpDate())) {
                 return true;
             }
         }
@@ -112,7 +113,7 @@ public class Product
         return items;
     }
 
-    public Item removeItem(Location.Place loc, int shelf, String ed, boolean bought)
+    public Item removeItem(String loc, int shelf, String ed, boolean bought)
     {
         Item i=null;
         if(hasItem(loc, shelf, ed))
@@ -131,12 +132,15 @@ public class Product
 
     }
 
-    public void addItem(Location.Place  loc, int shelf, String ed){
-        if(loc.equals(Location.Place.STORAGE))
+    public void addItem(String  loc, int shelf, String ed){
+        Location.Place add=stringToPlace(loc);
+        if(add.equals(Location.Place.STORAGE))
             storageAmount++;
+
         else
             storeAmount++;
-        items.add(new Item(productId, name, new Location(loc, shelf), ed));
+
+        items.add(new Item(name, new Location(add, shelf), ed));
     }
     public int getId() {
         return productId;
@@ -153,7 +157,8 @@ public class Product
         damagedItems=new LinkedList<>();
     }
     public void calcMinAmount(){
-        minAmount= (int) (Math.ceil(daysForResupply*timesBought/daysPassed));
+        double calc=daysForResupply*timesBought;
+        minAmount= (int) (Math.ceil(calc/daysPassed));
     }
     public void toRefill(){
         calcMinAmount();
@@ -184,43 +189,50 @@ public class Product
 
     public double buyAmount(int amount){
         if(canBuy(amount)) {
-            for (int i = 0; i < amount&& i<items.size(); i++)
-                removeItem(items.get(i).getLoc().getPlace(), items.get(i).getLoc().getShelf(), items.get(i).getExpDate(), true);
+            for (int i = 0; i < amount&& i<items.size(); i++) {
+                String check;
+                if(items.get(i).getLoc().getPlace().equals(Location.Place.STORAGE))
+                    check= "Storage";
+                else
+                    check= "Store";
+                removeItem(check, items.get(i).getLoc().getShelf(), items.get(i).getExpDate(), true);
+            }
             return (price - (price * discount / 100)) * amount;
         }
         return -1;
     }
 
-    public Item findItem(String ed, Location.Place curPlace, int curShelf){
+    public Item findItem(String ed, String curPlace, int curShelf){
+
         for(Item i : items)
-            if(i.getLoc().getPlace().equals(curPlace) && i.getLoc().getShelf()==curShelf && i.getExpDate().equals(ed))
+            if(i.getLoc().getPlace().equals(stringToPlace(curPlace)) && i.getLoc().getShelf()==curShelf && i.getExpDate().equals(ed))
                 return i;
         return null;
     }
 
-    public void transferItem(String ed, Location.Place curPlace, int curShelf, Location.Place toPlace, int toShelf){
+    public void transferItem(String ed, String curPlace, int curShelf, String toPlace, int toShelf){
         Item i=null;
+
         if(hasItem(curPlace, curShelf, ed))
             i=findItem(ed, curPlace, curShelf);
         if(i!=null) {
-            if(!i.getLoc().getPlace().equals(toPlace)){
-                if(i.getLoc().getPlace().equals(Location.Place.STORAGE)) {
-                    storageAmount--;
-                    storeAmount++;
-                }
-                else {
-                    storeAmount--;
-                    storageAmount++;
-                }
+            if(i.getLoc().getPlace().equals(Location.Place.STORAGE)) {
+                storageAmount--;
+                storeAmount++;
             }
-            i.transferPlace(toPlace, toShelf);
+            else {
+                storeAmount--;
+                storageAmount++;
+            }
+            Location.Place check=stringToPlace(toPlace);
+            i.transferPlace(check, toShelf);
         }
 
     }
 
     public void addAllItems(int amount, String ed, int shelf){
         for(int i=0;i<amount;i++){
-            addItem(Location.Place.STORAGE, shelf, ed);
+            addItem("Storage", shelf, ed);
         }
         toRefill();
     }
@@ -250,6 +262,15 @@ public class Product
 
     public double getDaysForResupply() {
         return this.daysForResupply;
+    }
+
+
+    public static Location.Place stringToPlace(String s)
+    {
+        if(s.equals("STORE"))
+            return Location.Place.STORE;
+        else
+            return Location.Place.STORAGE;
     }
 
 }

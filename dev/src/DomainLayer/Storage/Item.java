@@ -1,23 +1,17 @@
 package DomainLayer.Storage;
 
 public class Item {
-    private int productId;
     private String name;
     private Location loc;
     private String expirationDate;
     private String defectiveDescription;
 
-    public Item(int productId, String name, Location loc, String ed){
-        this.productId=productId;
+    public Item(String name, Location loc, String ed){
         this.name=name;
         this.loc=loc;
         this.expirationDate=ed;
         this.defectiveDescription = null;
 
-    }
-
-    public int getId() {
-        return productId;
     }
 
     public String getName() {
