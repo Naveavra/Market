@@ -1,6 +1,9 @@
 package ServiceLayer;
 
-import DomainLayer.*;
+import DomainLayer.DeliveryTerm;
+import DomainLayer.OrderFromSupplier;
+import DomainLayer.Product;
+import DomainLayer.SupplierController;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -65,7 +68,7 @@ public class OrderService {
 
     public String getFixedDaysOrders(int supplierNumber){
         Map<Integer, OrderFromSupplier> orders = supplierController.getSupplier(supplierNumber).getActiveOrders();
-        Map<Integer,DeliveryTerm> deliveryDays=new HashMap<>();
+        Map<Integer, DeliveryTerm> deliveryDays=new HashMap<>();
         for(Integer o: orders.keySet()){
             if(!orders.get(o).getDaysToDeliver().isEmpty()){
                 deliveryDays.put(orders.get(o).getOrderId(),orders.get(o).getDaysToDeliver());

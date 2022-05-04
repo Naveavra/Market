@@ -51,7 +51,7 @@ public class ReportController {
                 out.write(jsonString);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace();//throw new
         }
     }
 
