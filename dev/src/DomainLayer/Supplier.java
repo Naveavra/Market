@@ -8,7 +8,7 @@ public class Supplier {
     private String name;
     private int bankAccount;
     private Map<String,String> contacts;//<name,email>
-    private Map<Integer,Product> products =new HashMap<>();
+    private Map<Integer,Product> products;
     private Map<Integer,Double> discountByAmount;//sum of products in order
     private Map<Integer, OrderFromSupplier> orders;
     private boolean active;
@@ -30,6 +30,7 @@ public class Supplier {
         active =true;
         finalOrders=new ArrayList<>();
         this.isDeliver=isDeliver;
+        products =new HashMap<>();
     }
     public boolean updateAccount(String supplierName,int bankAccount,Map<String,String>contacts){
         this.name=supplierName;
@@ -69,7 +70,7 @@ public class Supplier {
         this.discountByAmount.remove(count);
         return true;
     }
-    public boolean addProduct(int catalogNumber,String name, double price){
+    public boolean addProduct(int catalogNumber, double price, int productId){
         if(catalogNumber<0){
             return false;
         }
@@ -79,7 +80,7 @@ public class Supplier {
         if(price<=0){
             return false;
         }
-        Product product =new Product(catalogNumber, name, price);
+        Product product =new Product(catalogNumber, price, productId);
         products.put(catalogNumber, product);
         return true;
     }

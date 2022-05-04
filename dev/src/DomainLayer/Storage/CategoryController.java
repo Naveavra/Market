@@ -1,4 +1,4 @@
-package main.java.DomainLayer.Storage;
+package DomainLayer.Storage;
 
 import java.util.LinkedList;
 import java.util.List;

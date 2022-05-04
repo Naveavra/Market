@@ -1,7 +1,7 @@
 package ServiceLayer;
 
-import main.java.DomainLayer.Storage.Category;
-import main.java.DomainLayer.Storage.CategoryController;
+import DomainLayer.Storage.Category;
+import DomainLayer.Storage.CategoryController;
 
 import java.util.List;
 
@@ -12,6 +12,10 @@ public class CategoryService {
     //cons - need to be empty
     public CategoryService(CategoryController categoryCon) {
         this.categoryCon = categoryCon;
+    }
+
+    public CategoryService() {
+        this.categoryCon = new CategoryController();
     }
 
     public void addCategory(String cName) {

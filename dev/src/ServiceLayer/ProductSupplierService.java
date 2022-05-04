@@ -17,16 +17,16 @@ public class ProductSupplierService {
     }
 
 
-    public boolean addProduct(int supplierNumber, int catalogNumber, String name, int price){
-        boolean ans = supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, name, price);
+    public boolean addProduct(int supplierNumber, int catalogNumber, String name, int price, int productId){
+        boolean ans = supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, price, productId);
         return ans;
         //JSONObject json = new JSONObject(demo);
     }
 
     public String getProductsOfSupplier(int supplierNumber){
         if(supplierController.getSupplier(supplierNumber)==null){
-            System.out.println("supplier didnt found");
-            return "";
+            //System.out.println("supplier didnt found");//not printing in service
+            return "fail";//change form ""
         }
         Map<Integer,Product> products = supplierController.getSupplier(supplierNumber).getProducts();
         return gson.toJson(products);
@@ -39,7 +39,7 @@ public class ProductSupplierService {
         if(!supplierController.getSupplier(supplierNumber).isProductExist(catalogNumber)){
            return false;
         }
-        supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).setName(name);
+        //supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).setName(name);
         supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).setPrice(price);
         return true;
 

@@ -7,21 +7,22 @@ import java.util.TreeMap;
 public class Product {
     private int catalogNumber;//unique number in supplier
     private int productId;//unique number to product in the system
-    private String name;//remove
+    //private String name;//remove
     private double price;
     private Map<Integer,Double> discount;//sum of specific product
 
 
-    public Product (int catalogNumber,String name,double price){
+    public Product (int catalogNumber, double price, int productId){
         this.catalogNumber =catalogNumber;
-        this.name=name;
+        //this.name=name;
         this.price=price;
+        this.productId = productId;
         discount =new HashMap<>();
         discount.put(0, 1.0);// keep it sorted
     }
     public Product (Product product){
         this.catalogNumber = product.catalogNumber;
-        this.name= product.name;
+        //this.name= product.name;
         this.price=product.price;
         discount=new HashMap<>();
         discount.put(0, 1.0);// keep it sorted
@@ -29,13 +30,12 @@ public class Product {
              discount.put(x,product.discount.get(x));
         }
     }
-    public void setName(String name) {
-        this.name = name;
-
-    }
-    public String getName(){
-        return name;
-    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//    public String getName(){
+//        return name;
+//    }
 
     public void setPrice(int price) {
         this.price = price;

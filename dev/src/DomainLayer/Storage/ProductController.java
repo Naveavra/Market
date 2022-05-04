@@ -1,4 +1,4 @@
-package main.java.DomainLayer.Storage;
+package DomainLayer.Storage;
 
 import java.io.IOException;
 import java.util.HashMap;

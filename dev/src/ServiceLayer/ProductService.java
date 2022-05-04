@@ -1,11 +1,7 @@
 package ServiceLayer;
-
-import main.java.DomainLayer.Storage.Item;
-import main.java.DomainLayer.Storage.Location;
-import main.java.DomainLayer.Storage.ProductController;
-
+import DomainLayer.Storage.ProductController;
 import java.io.IOException;
-import java.util.List;
+
 
 public class ProductService {
 
@@ -14,6 +10,10 @@ public class ProductService {
     //cons - empty?
     public ProductService(ProductController productCon){
         this.productCon=productCon;
+    }
+
+    public ProductService(){
+        this.productCon = new ProductController();
     }
 
     public Product getProductWithId(int id)
