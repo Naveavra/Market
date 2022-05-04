@@ -1,12 +1,9 @@
-package main.java.PresentationLayer.Storage;
+package PresentationLayer.Storage;
 
-import main.java.DomainLayer.Storage.Location;
-import main.java.DomainLayer.Storage.CategoryController;
-import main.java.DomainLayer.Storage.ProductController;
-import main.java.DomainLayer.Storage.ReportController;
-import main.java.ServiceLayer.Storage.CategoryService;
+import DomainLayer.Storage.Location;
+import ServiceLayer.CategoryService;
 import ServiceLayer.ProductService;
-import main.java.ServiceLayer.Storage.ReportService;
+import ServiceLayer.ReportService;
 
 import java.io.IOException;
 import java.util.*;
@@ -15,11 +12,11 @@ import java.util.*;
 public class CLI
 {
     static Scanner in = new Scanner(System.in);
-    public static void main(String[]args) throws IOException
+    public static void main(String[]args)
     {
-        ProductService pC=new ProductService(new ProductController());
-        CategoryService cC=new CategoryService(new CategoryController(pC.getProductCon()));
-        ReportService rC=new ReportService(new ReportController(cC.getCategoryCon(), pC.getProductCon()));
+        ProductService pC=new ProductService();
+        CategoryService cC=pC.createCategoryCon();
+        ReportService rC=cC.createReportService();
         String command;
         String detail;
         String line = "";
@@ -139,7 +136,7 @@ public class CLI
                             else
                                 System.out.println("not enough in store");
                             if(pC.needsRefill(id))
-                                System.out.println("the product "+id+":"+pC.getProductWithId(id).getName()+" need a refill. added to refill list");
+                                System.out.println("the product "+id+":"+pC.getNameWithId(id)+" need a refill. added to refill list");
                         }
                         catch (Exception e){
                             System.out.println("wrong input");

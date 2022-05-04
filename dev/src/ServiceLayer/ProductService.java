@@ -1,29 +1,27 @@
 package ServiceLayer;
-import DomainLayer.Storage.ProductController;
-import java.io.IOException;
 
+import DomainLayer.Storage.ProductController;
+import DomainLayer.Storage.*;
+
+import java.io.IOException;
+import java.util.List;
 
 public class ProductService {
 
     private ProductController productCon;
 
-    //cons - empty?
-    public ProductService(ProductController productCon){
-        this.productCon=productCon;
-    }
-
     public ProductService(){
-        this.productCon = new ProductController();
+        this.productCon=new ProductController();
     }
 
-    public Product getProductWithId(int id)
+    public String getNameWithId(int id)
     {
-        return productCon.getProductWithId(id);
-    }//json3
+        return productCon.getProductWithId(id).getName();
+    }
 
-    public Product addNewProduct(int pId, String pName, String desc, int daysForResupply, double priceSupplier,//json 4
-                                 double price, String maker){
-        return productCon.addNewProduct(pId, pName, desc, daysForResupply, priceSupplier, price, maker);
+    public void addNewProduct(int pId, String pName, String desc, int daysForResupply, double priceSupplier,
+                              double price, String maker){
+        productCon.addNewProduct(pId, pName, desc, daysForResupply, priceSupplier, price, maker);
     }
 
     public void changeDaysForResupply(int id, int days){
@@ -54,31 +52,22 @@ public class ProductService {
         return productCon.productInShop(id);
     }
 
-    public void removeItem(Location.Place place, int shelf, String ed, int pId){//location need to be string
+    public void removeItem(Location.Place place, int shelf, String ed, int pId){
         productCon.removeItem(place, shelf, ed, pId);
     }
 
-    public boolean hasItem(Location.Place place, int shelf, String ed, int pId){//location need to be string
+    public boolean hasItem(Location.Place place, int shelf, String ed, int pId){
         return productCon.hasItem(place, shelf, ed, pId);
     }
 
-    public void setDiscountToOneItem(int prodectId, double discount){
-        productCon.setDiscountToOneItem(prodectId, discount);
+    public void setDiscountToOneItem(int id, double discount){
+        productCon.setDiscountToOneItem(id, discount);
     }
 
-    public Item defineAsDamaged(int id, String description, Location.Place place, int shelf, String ed)//location need to be string, json 5
-
+    public Item defineAsDamaged(int id, String description, Location.Place place, int shelf, String ed)
     {
         return productCon.defineAsDamaged(id, description, place, shelf, ed);
     }
-
-    public List<Item> getDamagedItems() throws IOException {//service can not throw IOException, json6
-        return productCon.getDamagedItems();
-    }
-
-    public List<Product> makeRefillReport(){
-        return productCon.makeRefillReport();
-    }//json7
 
     public boolean canBuyItems(int id, int amount){
         return productCon.canBuyItems(id, amount);
@@ -92,7 +81,7 @@ public class ProductService {
         return productCon.needsRefill(id);
     }
 
-    public void transferItem(int id, String ed, Location.Place curePlace, int curShelf, Location.Place toPlace, int toShelf){//location need to be string
+    public void transferItem(int id, String ed, Location.Place curePlace, int curShelf, Location.Place toPlace, int toShelf){
         productCon.transferItem(id, ed, curePlace, curShelf, toPlace, toShelf);
     }
 
@@ -112,8 +101,8 @@ public class ProductService {
         return productCon.hasProduct(pId);
     }
 
-    public ProductController getProductCon(){
-        return productCon;
+    public CategoryService createCategoryCon(){
+        return new CategoryService(new CategoryController(productCon));
     }
 
 }

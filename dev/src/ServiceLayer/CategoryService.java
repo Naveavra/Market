@@ -2,6 +2,7 @@ package ServiceLayer;
 
 import DomainLayer.Storage.Category;
 import DomainLayer.Storage.CategoryController;
+import DomainLayer.Storage.ReportController;
 
 import java.util.List;
 
@@ -9,13 +10,8 @@ public class CategoryService {
 
     private CategoryController categoryCon;
 
-    //cons - need to be empty
     public CategoryService(CategoryController categoryCon) {
         this.categoryCon = categoryCon;
-    }
-
-    public CategoryService() {
-        this.categoryCon = new CategoryController();
     }
 
     public void addCategory(String cName) {
@@ -41,7 +37,7 @@ public class CategoryService {
 
     public Category findCat(String cat) {
         return categoryCon.findCat(cat);
-    }//json1
+    }
 
     public void setDiscount(String cName, double discount) {
         categoryCon.setDiscount(cName, discount);
@@ -49,7 +45,7 @@ public class CategoryService {
 
     public List<Category> makeReport(List<String> catNames) {
         return categoryCon.makeReport(catNames);
-    }//json2
+    }
 
     public void transferProduct(int id, String catRemove, String catAdd, String subAdd, String subSubAdd) {
         categoryCon.transferProduct(id, catRemove, catAdd, subAdd, subSubAdd);
@@ -74,8 +70,8 @@ public class CategoryService {
     public boolean hasCategory(String name){
         return categoryCon.hasCategory(name);
     }
-//
-//    public CategoryController getCategoryCon(){
-//        return categoryCon;
-//    }
+
+    public ReportService createReportService(){
+        return new ReportService(new ReportController(categoryCon, categoryCon.getProductCon()));
+    }
 }
