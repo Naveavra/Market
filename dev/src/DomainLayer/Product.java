@@ -5,8 +5,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Product {
-    private int catalogNumber;
-    private String name;
+    private int catalogNumber;//unique number in supplier
+    private int productId;//unique number to product in the system
+    private String name;//remove
     private double price;
     private Map<Integer,Double> discount;//sum of specific product
 

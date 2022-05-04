@@ -1,7 +1,7 @@
 package Tests;
 
 
-import DomainLayer.Order;
+import DomainLayer.OrderFromSupplier;
 import DomainLayer.Product;
 
 import java.util.HashMap;
@@ -11,12 +11,12 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
 public class OrderTest {
-    private Order order;
+    private OrderFromSupplier order;
     private Product p;
     private Product p1;
     @org.junit.Before
     public void setUp() throws Exception {
-         order =new Order(0);
+         order =new OrderFromSupplier(0);
          p=new Product(0, "chair", 100);
          p1=new Product(1,"table", 25);
     }

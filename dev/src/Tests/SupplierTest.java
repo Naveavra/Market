@@ -1,6 +1,6 @@
 package Tests;
 
-import DomainLayer.Order;
+import DomainLayer.OrderFromSupplier;
 import DomainLayer.Product;
 import DomainLayer.Supplier;
 import org.junit.Before;
@@ -103,7 +103,7 @@ private Product p2;
 
     @Test
     public void updateTotalIncludeDiscounts() {
-        Order o1 =s.createOrder();
+        OrderFromSupplier o1 =s.createOrder();
         o1.updateProductToOrder(p1,10);
         o1.updateProductToOrder(p2,20);
         double total = s.updateTotalIncludeDiscounts(o1.getOrderId());
@@ -113,7 +113,7 @@ private Product p2;
 
     @Test
     public void finishOrder() {
-        Order o2 =s.createOrder();
+        OrderFromSupplier o2 =s.createOrder();
         o2.updateProductToOrder(p1,10);
         o2.updateProductToOrder(p2,20);
         assertTrue(s.finishOrder(o2.getOrderId()));

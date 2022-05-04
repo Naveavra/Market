@@ -75,9 +75,9 @@ public class ProductController
         return allProducts.get(pId).hasItem(place, shelf, ed);
     }
 
-    public void setDiscountToOneItem(int id, double discount)
+    public void setDiscountToOneItem(int prodectId, double discount)
     {
-        allProducts.get(id).setDiscount(discount);
+        allProducts.get(prodectId).setDiscount(discount);
     }
 
     public Item defineAsDamaged(int id, String description, Location.Place place, int shelf, String ed)

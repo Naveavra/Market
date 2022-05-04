@@ -1,14 +1,14 @@
-package main.java.DomainLayer.Storage;
+package DomainLayer.Storage;
 
 public class Item {
-    private int pId;
+    private int productId;
     private String name;
     private Location loc;
     private String expirationDate;
     private String defectiveDescription;
 
-    public Item(int id, String name, Location loc, String ed){
-        this.pId=id;
+    public Item(int productId, String name, Location loc, String ed){
+        this.productId=productId;
         this.name=name;
         this.loc=loc;
         this.expirationDate=ed;
@@ -17,7 +17,7 @@ public class Item {
     }
 
     public int getId() {
-        return pId;
+        return productId;
     }
 
     public String getName() {

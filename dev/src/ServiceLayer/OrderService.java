@@ -2,7 +2,6 @@ package ServiceLayer;
 
 import DomainLayer.*;
 import com.google.gson.Gson;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +42,7 @@ public class OrderService {
     }
 
     public String getActiveOrders(int supplierNumber){
-        Map<Integer,Order> orders = supplierController.getSupplier(supplierNumber).getActiveOrders();
+        Map<Integer, OrderFromSupplier> orders = supplierController.getSupplier(supplierNumber).getActiveOrders();
 //        String[] arr=new String[orders.size()];
 //        StringBuilder out= new StringBuilder();
 //        int i=0;
@@ -58,14 +57,14 @@ public class OrderService {
 //        for (String s : arr) {
 //            out.append(s);
 //        }
-        List<Order> orders1=new ArrayList<>(orders.values());
+        List<OrderFromSupplier> orders1=new ArrayList<>(orders.values());
 
         return gson.toJson(orders);
         //return gson.toJson(out.toString());
     }
 
     public String getFixedDaysOrders(int supplierNumber){
-        Map<Integer,Order> orders = supplierController.getSupplier(supplierNumber).getActiveOrders();
+        Map<Integer, OrderFromSupplier> orders = supplierController.getSupplier(supplierNumber).getActiveOrders();
         Map<Integer,DeliveryTerm> deliveryDays=new HashMap<>();
         for(Integer o: orders.keySet()){
             if(!orders.get(o).getDaysToDeliver().isEmpty()){
@@ -92,7 +91,7 @@ public class OrderService {
         if(supplierController.getSupplier(supplierNumber).getOrder(orderId)==null){
             return "fail";
         }
-        Order o = supplierController.getSupplier(supplierNumber).getOrder(orderId);
+        OrderFromSupplier o = supplierController.getSupplier(supplierNumber).getOrder(orderId);
         return gson.toJson(o);
     }
 

@@ -11,6 +11,7 @@ public class ProductService {
 
     private ProductController productCon;
 
+    //cons - empty?
     public ProductService(ProductController productCon){
         this.productCon=productCon;
     }
@@ -18,9 +19,9 @@ public class ProductService {
     public Product getProductWithId(int id)
     {
         return productCon.getProductWithId(id);
-    }
+    }//json3
 
-    public Product addNewProduct(int pId, String pName, String desc, int daysForResupply, double priceSupplier,
+    public Product addNewProduct(int pId, String pName, String desc, int daysForResupply, double priceSupplier,//json 4
                                  double price, String maker){
         return productCon.addNewProduct(pId, pName, desc, daysForResupply, priceSupplier, price, maker);
     }
@@ -53,30 +54,31 @@ public class ProductService {
         return productCon.productInShop(id);
     }
 
-    public void removeItem(Location.Place place, int shelf, String ed, int pId){
+    public void removeItem(Location.Place place, int shelf, String ed, int pId){//location need to be string
         productCon.removeItem(place, shelf, ed, pId);
     }
 
-    public boolean hasItem(Location.Place place, int shelf, String ed, int pId){
+    public boolean hasItem(Location.Place place, int shelf, String ed, int pId){//location need to be string
         return productCon.hasItem(place, shelf, ed, pId);
     }
 
-    public void setDiscountToOneItem(int id, double discount){
-        productCon.setDiscountToOneItem(id, discount);
+    public void setDiscountToOneItem(int prodectId, double discount){
+        productCon.setDiscountToOneItem(prodectId, discount);
     }
 
-    public Item defineAsDamaged(int id, String description, Location.Place place, int shelf, String ed)
+    public Item defineAsDamaged(int id, String description, Location.Place place, int shelf, String ed)//location need to be string, json 5
+
     {
         return productCon.defineAsDamaged(id, description, place, shelf, ed);
     }
 
-    public List<Item> getDamagedItems() throws IOException {
+    public List<Item> getDamagedItems() throws IOException {//service can not throw IOException, json6
         return productCon.getDamagedItems();
     }
 
     public List<Product> makeRefillReport(){
         return productCon.makeRefillReport();
-    }
+    }//json7
 
     public boolean canBuyItems(int id, int amount){
         return productCon.canBuyItems(id, amount);
@@ -90,7 +92,7 @@ public class ProductService {
         return productCon.needsRefill(id);
     }
 
-    public void transferItem(int id, String ed, Location.Place curePlace, int curShelf, Location.Place toPlace, int toShelf){
+    public void transferItem(int id, String ed, Location.Place curePlace, int curShelf, Location.Place toPlace, int toShelf){//location need to be string
         productCon.transferItem(id, ed, curePlace, curShelf, toPlace, toShelf);
     }
 

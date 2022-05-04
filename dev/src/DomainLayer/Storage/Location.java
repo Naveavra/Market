@@ -1,4 +1,4 @@
-package main.java.DomainLayer.Storage;
+package DomainLayer.Storage;
 
 public class Location
 {

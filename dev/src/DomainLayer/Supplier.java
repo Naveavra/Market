@@ -1,7 +1,6 @@
 package DomainLayer;
 
 
-import java.security.PrivateKey;
 import java.util.*;
 
 public class Supplier {
@@ -11,7 +10,7 @@ public class Supplier {
     private Map<String,String> contacts;//<name,email>
     private Map<Integer,Product> products =new HashMap<>();
     private Map<Integer,Double> discountByAmount;//sum of products in order
-    private Map<Integer,Order> orders;
+    private Map<Integer, OrderFromSupplier> orders;
     private boolean active;
     private List<PastOrder> finalOrders;
     private static int orderNum=0;
@@ -91,8 +90,8 @@ public class Supplier {
         products.remove(catalogNumber);
         return true;
     }
-    public Order createOrder(){
-        Order order = new Order(orderNum);
+    public OrderFromSupplier createOrder(){
+        OrderFromSupplier order = new OrderFromSupplier(orderNum);
         orders.put(orderNum,order);
         orderNum++;
         return order;
@@ -101,7 +100,7 @@ public class Supplier {
         return products.get(catalogNumber);
     }
     public double updateTotalIncludeDiscounts(int orderId){
-        Order order = orders.get(orderId);
+        OrderFromSupplier order = orders.get(orderId);
         int count = order.getCountProducts();
         double price = order.getTotalIncludeDiscounts();
         return price*findMaxUnder(count);
@@ -138,11 +137,11 @@ public class Supplier {
         return name;
     }
 
-    public Order getOrder(int orderId) {
+    public OrderFromSupplier getOrder(int orderId) {
         return orders.get(orderId);
     }
 
-    public Map<Integer,Order> getActiveOrders() {
+    public Map<Integer, OrderFromSupplier> getActiveOrders() {
         return orders;
     }
     public boolean isProductExist(int catalogNumber){

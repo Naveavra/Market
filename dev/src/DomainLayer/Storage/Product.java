@@ -6,28 +6,38 @@ import java.util.List;
 
 public class Product
 {
-    private int id;
+    private int productId;
     private String name;
     private String description;
     private String maker;
     private int storeAmount;
     private int storageAmount;
-    private transient int timesBought;
-    private transient int daysPassed;
+    private transient int timesBought;//remove
+    private transient int daysPassed;//remove
     private double daysForResupply;
     private int minAmount;
     private int amountToRefill;
     private double price;
-    private double priceSupplier;
+    private double priceSupplier;//remove
     private double discount;
     private transient boolean needsRefill;
-    private List<main.java.DomainLayer.Storage.Item> items;
+    private List<Item> items;
     private transient List<Item> damagedItems;
+    private transient List<DomainLayer.Product> productSuppliers;//all the supplier that supplier the product
 
-
+    /**
+     *
+     * @param pId
+     * @param pName
+     * @param desc
+     * @param daysForResupply
+     * @param priceSupplier
+     * @param price
+     * @param maker
+     */
     public Product(int pId, String pName, String desc, int daysForResupply, double priceSupplier, double price, String maker)
     {
-        this.id = pId;
+        this.productId = pId;
         this.name = pName;
         this.description=desc;
         this.priceSupplier = priceSupplier;
@@ -126,10 +136,10 @@ public class Product
             storageAmount++;
         else
             storeAmount++;
-        items.add(new Item(id, name, new Location(loc, shelf), ed));
+        items.add(new Item(productId, name, new Location(loc, shelf), ed));
     }
     public int getId() {
-        return id;
+        return productId;
     }
 
     public String getName() {

@@ -1,21 +1,17 @@
 package DomainLayer;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
-public class Order {
+public class OrderFromSupplier {
     private int orderId;
     private String date;
     private Map<Product,Integer> products;//product and count
     private DeliveryTerm daysToDeliver;
 
-    public Order(int orderId){
+    public OrderFromSupplier(int orderId){
         this.orderId = orderId;
         products = new HashMap<>();
         String pattern = "MM-dd-yyyy";
@@ -24,7 +20,7 @@ public class Order {
         DeliveryTerm.DaysInWeek[] daysInWeek = {};
         daysToDeliver=new DeliveryTerm(daysInWeek);
     }
-    public Order(Order order){
+    public OrderFromSupplier(OrderFromSupplier order){
         this.date=order.date;
         this.orderId=order.orderId;
         this.products = new HashMap<>();
