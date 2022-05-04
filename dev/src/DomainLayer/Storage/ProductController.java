@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ProductController
 {
-    private HashMap<Integer, Product> allProducts;
+    private HashMap<Integer, Product> allProducts;//remove
     private List<Product> refill;
 
     public ProductController(){
@@ -15,17 +15,17 @@ public class ProductController
         refill=new LinkedList<>();
     }
 
-    public Product getProductWithId(int id)
+    public Product getProductWithId(int productId)
     {
-        if(allProducts.containsKey(id))
-            return this.allProducts.get(id);
+        if(allProducts.containsKey(productId))
+            return this.allProducts.get(productId);
         return null;
     }
 
-    public Product addNewProduct(int pId, String pName, String desc, int daysForResupply, double priceSupplier,
+    public Product addNewProduct(int productId, String productName, String desc, int daysForResupply, double priceSupplier,
                                  double price, String maker){
-        Product p=new Product(pId, pName, desc, daysForResupply, priceSupplier, price, maker);
-        allProducts.put(pId, p);
+        Product p=new Product(productId, productName, desc, daysForResupply, priceSupplier, price, maker);
+        allProducts.put(productId, p);
         return p;
     }
 

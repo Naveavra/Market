@@ -5,7 +5,7 @@ import java.util.List;
 
 public class SubSubCategory {
     private String name;
-    private List<Product> products;
+    private List<Product> products;//products
 
     public SubSubCategory(String name){
         this.name=name;

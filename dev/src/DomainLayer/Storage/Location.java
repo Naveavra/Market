@@ -3,6 +3,7 @@ package DomainLayer.Storage;
 public class Location
 {
     public enum Place {STORE , STORAGE}
+
     private Place place;
     private int shelf;
 

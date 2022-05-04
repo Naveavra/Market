@@ -32,7 +32,7 @@ public class ProductService {
         productCon.changeDaysPassed(id, days);
     }
 
-    public void addItemToProduct(int id, Location.Place  loc, int shelf, String ed){
+    public void addItemToProduct(int id, Location.Place  loc, int shelf, String ed){//location ?? -> string
         productCon.addItemToProduct(id, loc, shelf, ed);
     }
 
@@ -52,11 +52,11 @@ public class ProductService {
         return productCon.productInShop(id);
     }
 
-    public void removeItem(Location.Place place, int shelf, String ed, int pId){
+    public void removeItem(Location.Place place, int shelf, String ed, int pId){//location
         productCon.removeItem(place, shelf, ed, pId);
     }
 
-    public boolean hasItem(Location.Place place, int shelf, String ed, int pId){
+    public boolean hasItem(Location.Place place, int shelf, String ed, int pId){//location
         return productCon.hasItem(place, shelf, ed, pId);
     }
 
@@ -64,7 +64,7 @@ public class ProductService {
         productCon.setDiscountToOneItem(id, discount);
     }
 
-    public Item defineAsDamaged(int id, String description, Location.Place place, int shelf, String ed)
+    public Item defineAsDamaged(int id, String description, Location.Place place, int shelf, String ed)//location??
     {
         return productCon.defineAsDamaged(id, description, place, shelf, ed);
     }
@@ -81,7 +81,7 @@ public class ProductService {
         return productCon.needsRefill(id);
     }
 
-    public void transferItem(int id, String ed, Location.Place curePlace, int curShelf, Location.Place toPlace, int toShelf){
+    public void transferItem(int id, String ed, Location.Place curePlace, int curShelf, Location.Place toPlace, int toShelf){//location???
         productCon.transferItem(id, ed, curePlace, curShelf, toPlace, toShelf);
     }
 
@@ -101,7 +101,7 @@ public class ProductService {
         return productCon.hasProduct(pId);
     }
 
-    public CategoryService createCategoryCon(){
+    public CategoryService createCategoryService(){
         return new CategoryService(new CategoryController(productCon));
     }
 

@@ -12,7 +12,7 @@ public class CategoryService {
 
     public CategoryService(CategoryController categoryCon) {
         this.categoryCon = categoryCon;
-    }
+    }//const empty
 
     public void addCategory(String cName) {
         categoryCon.addCategory(cName);
@@ -37,7 +37,7 @@ public class CategoryService {
 
     public Category findCat(String cat) {
         return categoryCon.findCat(cat);
-    }
+    }//return json
 
     public void setDiscount(String cName, double discount) {
         categoryCon.setDiscount(cName, discount);
@@ -45,7 +45,7 @@ public class CategoryService {
 
     public List<Category> makeReport(List<String> catNames) {
         return categoryCon.makeReport(catNames);
-    }
+    }//json
 
     public void transferProduct(int id, String catRemove, String catAdd, String subAdd, String subSubAdd) {
         categoryCon.transferProduct(id, catRemove, catAdd, subAdd, subSubAdd);

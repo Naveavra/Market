@@ -6,7 +6,7 @@ import java.util.List;
 
 public class CategoryController
 {
-    List<Category> categories;
+    List<Category> categories;//all products
     ProductController productCon;
     public CategoryController(ProductController pro){
         categories=new LinkedList<>();

@@ -14,7 +14,7 @@ public class Product
     private int storageAmount;
     private transient int timesBought;//remove
     private transient int daysPassed;//remove
-    private double daysForResupply;
+    private int daysForResupply;
     private int minAmount;
     private int amountToRefill;
     private double price;
@@ -23,11 +23,11 @@ public class Product
     private transient boolean needsRefill;
     private List<Item> items;
     private transient List<Item> damagedItems;
-    private transient List<DomainLayer.Product> productSuppliers;//all the supplier that supplier the product
+    private transient List<DomainLayer.Storage.Product> productSuppliers;//all the supplier that supplier the product
 
     /**
      *
-     * @param pId
+     * @param productId
      * @param pName
      * @param desc
      * @param daysForResupply
@@ -35,9 +35,9 @@ public class Product
      * @param price
      * @param maker
      */
-    public Product(int pId, String pName, String desc, int daysForResupply, double priceSupplier, double price, String maker)
+    public Product(int productId, String pName, String desc, int daysForResupply, double priceSupplier, double price, String maker)
     {
-        this.productId = pId;
+        this.productId = productId;
         this.name = pName;
         this.description=desc;
         this.priceSupplier = priceSupplier;
@@ -62,7 +62,7 @@ public class Product
         return priceSupplier;
     }
 
-    public void setDaysForResupply(double change){
+    public void setDaysForResupply(int change){
         daysForResupply=change;
     }
 
