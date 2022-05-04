@@ -1,4 +1,4 @@
-package main.java.DomainLayer.Storage;
+package DomainLayer.Storage;
 
 
 import com.google.gson.Gson;
@@ -67,6 +67,6 @@ public class ReportController {
             e.printStackTrace();
         }
     }
-    
+
 
 }

@@ -1,5 +1,6 @@
 package DomainLayer.Storage;
 
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class CategoryController
     public void addSubCat(String cName, String subName){
         Category cat=findCat(cName);
         if(cat!=null)
-           cat.addSubCat(subName);
+            cat.addSubCat(subName);
     }
     public void addSubSubCat(String cName, String subName, String subsub){
         int place=0;
@@ -48,11 +49,11 @@ public class CategoryController
     }
 
     public Category findCat(String cat){
-            Category ans=null;
-            for(Category category : categories)
-                if(category.getName().equals(cat))
-                    ans=category;
-            return ans;
+        Category ans=null;
+        for(Category category : categories)
+            if(category.getName().equals(cat))
+                ans=category;
+        return ans;
     }
     public void setDiscount(String cName, double discount){
         if(findCat(cName)!=null)
@@ -105,5 +106,9 @@ public class CategoryController
         return false;
     }
 
-    
+    public ProductController getProductCon(){
+        return productCon;
+    }
+
+
 }

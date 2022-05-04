@@ -1,6 +1,6 @@
-package main.java.ServiceLayer.Storage;
+package ServiceLayer;
 
-import main.java.DomainLayer.Storage.ReportController;
+import DomainLayer.Storage.ReportController;
 
 import java.io.IOException;
 import java.util.List;

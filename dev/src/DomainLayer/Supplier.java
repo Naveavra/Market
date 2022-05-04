@@ -164,13 +164,13 @@ public class Supplier {
         return products;
     }
 
-    public String getProductsNames() {
-        StringBuilder list = new StringBuilder();
-        for(Product p: products.values()){
-            list.append(" ").append(p.getName());
-        }
-        return list.toString();
-    }
+//    public String getProductsNames() {
+//        StringBuilder list = new StringBuilder();
+//        for(Product p: products.values()){
+//            list.append(" ").append(p.getName());
+//        }
+//        return list.toString();
+//    }
 
 
     public int getBankAccount(){
