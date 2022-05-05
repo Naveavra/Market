@@ -57,6 +57,10 @@ public class OrderMenu {
                 System.out.println("The products which the supplier supply are: ");
                 ProductSupplierService ps=new ProductSupplierService();
                 String json1 = ps.getProductsOfSupplier(supplier.getSupplierNumber());
+                if(json1=="fail"){
+                    System.out.println("supplier didnt found");
+                    addProductsToOrder(o);
+                }
                 Map<Integer, LinkedTreeMap> productMap=new HashMap<>();
                 productMap=gson.fromJson(json1, productMap.getClass());
                 int i=1;

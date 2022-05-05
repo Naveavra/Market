@@ -24,6 +24,14 @@ public class OrderService {
         return gson.toJson(supplierController.getSupplier(supplierNumber).createOrder());
     }
 
+    /**
+     * the function adds product to an existing order
+     * @param supplierNumber the id of the supplier
+     * @param orderId the id of the order
+     * @param catalogNUmber unique number of the product in specific supplier
+     * @param count how much to add
+     * @return true if succeed, false if failed
+     */
     public boolean addProductToOrder(int supplierNumber,int orderId , int catalogNUmber, int count){
         Product p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
         if(p==null){
@@ -33,39 +41,47 @@ public class OrderService {
         return ans;
     }
 
+    /**
+     * the function update a product to an existing order
+     * @param supplierNumber the id of the supplier
+     * @param orderId the id of the order
+     * @param catalogNUmber unique number of the product in specific supplier
+     * @param newCount the new number of product in the order
+     * @return true if succeed, false if failed
+     */
     public boolean updateProductInOrder(int supplierNumber,int orderId, int catalogNUmber, int newCount){
         Product p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
         boolean ans = supplierController.getSupplier(supplierNumber).getOrder(orderId).updateProductToOrder(p, newCount);
         return ans;
     }
-
+    /**
+     * the function remove a product to an existing order
+     * @param supplierNumber the id of the supplier
+     * @param orderId the id of the order
+     * @param catalogNUmber unique number of the product in specific supplier
+     * @return true if succeed, false if failed
+     */
     public boolean deleteProductFromOrder(int supplierNumber,int orderId, int catalogNUmber){
         Product p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
         return supplierController.getSupplier(supplierNumber).getOrder(orderId).removeProductFromOrder(p);
     }
 
+    /**
+     * the function return the active orders(which has not benn sent) of a supplier
+     * @param supplierNumber the id of the supplier
+     * @return gson string which wrappers the list of the active order
+     */
     public String getActiveOrders(int supplierNumber){
         Map<Integer, OrderFromSupplier> orders = supplierController.getSupplier(supplierNumber).getActiveOrders();
-//        String[] arr=new String[orders.size()];
-//        StringBuilder out= new StringBuilder();
-//        int i=0;
-//        for(Order o: orders.values()){
-//            StringBuilder tmp= new StringBuilder();
-//            tmp = new StringBuilder(String.valueOf(o.getOrderId()) + "\n");
-//            tmp.append(o.getDate());
-//            for(Product x:o.getProducts().keySet()){
-//                tmp.append("\n\t product: ").append(x.getName()).append(" count: ").append(o.getProducts().get(x).toString());
-//            }
-//        }
-//        for (String s : arr) {
-//            out.append(s);
-//        }
         List<OrderFromSupplier> orders1=new ArrayList<>(orders.values());
-
         return gson.toJson(orders);
-        //return gson.toJson(out.toString());
     }
 
+    /**
+     * the function gets the delivery days for each active order
+     * @param supplierNumber the id of the supplier
+     * @return gson string which wrappers the dictionary<order id,days[]> of the delivery days of each active order
+     */
     public String getFixedDaysOrders(int supplierNumber){
         Map<Integer, OrderFromSupplier> orders = supplierController.getSupplier(supplierNumber).getActiveOrders();
         Map<Integer, DeliveryTerm> deliveryDays=new HashMap<>();
@@ -77,6 +93,12 @@ public class OrderService {
         return gson.toJson(deliveryDays);
     }
 
+    /**
+     * the function send the order to the supplier system( hasn't been Implemented yet)
+     * @param supplierNumber the id of the supplier
+     * @param orderId the id of the order
+     * @return true is succeed, false if failed
+     */
     public boolean sendOrder(int supplierNumber, int orderId){
         if(supplierController.getSupplier(supplierNumber)==null){
             return false;
@@ -87,6 +109,12 @@ public class OrderService {
         return supplierController.getSupplier(supplierNumber).finishOrder(orderId);
     }
 
+    /**
+     * the function get the order from the supplier
+     * @param supplierNumber the id of the supplier
+     * @param orderId the id of the order
+     * @return gson string which wrappers the order
+     */
     public String getOrder(int supplierNumber, int orderId) {
         if(supplierController.getSupplier(supplierNumber)==null){
             return "fail";
@@ -98,6 +126,12 @@ public class OrderService {
         return gson.toJson(o);
     }
 
+    /**
+     * the function return the products in the order of the supplier
+     * @param supplierNumber the id of the supplier
+     * @param orderID the id of the supplier
+     * @return gson which wrappers the dictionary<product,amount>
+     */
     public String getProductsInOrder(int supplierNumber, int orderID) {
         if(supplierController.getSupplier(supplierNumber)==null){
             return "fail";

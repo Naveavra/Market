@@ -32,6 +32,12 @@ public class DeliveryTerm {
         this.daysInWeeks=new DaysInWeek[daysInWeek.length];
         System.arraycopy(daysInWeek, 0, this.daysInWeeks, 0, daysInWeek.length);
     }
+
+    /**
+     *
+     * @param days
+     * @return
+     */
     public boolean updateFixedDeliveryDays(String[] days){
         daysInWeeks = new DaysInWeek[days.length];
         for(int i=0; i< days.length; i++){
