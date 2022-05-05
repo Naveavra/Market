@@ -8,28 +8,27 @@ import java.util.List;
 public class ReportService {
     private ReportController reportCon;
 
-    //cons - empty?
     public ReportService(ReportController reportCon){
         this.reportCon=reportCon;
     }
 
 
-    public void makeReport(List<String> catNames){
-        reportCon.makeReport(catNames);
-    }//service can not throw IOException
+    public boolean makeReport(List<String> catNames){
+        return reportCon.makeReport(catNames);
+    }
 
-    public void makeDamagedReport() throws IOException {//service can not throw IOException
-        reportCon.makeDamagedReport();
+    public boolean makeDamagedReport() throws IOException {
+        return reportCon.makeDamagedReport();
     }
 
 
-    public void makeRefillReport(){
-        reportCon.makeRefillReport();
-    }//service can not throw IOException
+    public boolean makeRefillReport(){
+        return reportCon.makeRefillReport();
+    }
 
-    public void makeProductReport(int id){
-        reportCon.makeProductReport(id);
-    }//service can not throw IOException
-
-
+    public boolean makeProductReport(int id){
+        return reportCon.makeProductReport(id);
+    }
 }
+
+

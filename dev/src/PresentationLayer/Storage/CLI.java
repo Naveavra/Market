@@ -2,7 +2,6 @@ package PresentationLayer.Storage;
 
 import DomainLayer.Storage.Location;
 import ServiceLayer.CategoryService;
-import ServiceLayer.ProductService;
 import ServiceLayer.ReportService;
 
 import java.io.IOException;
@@ -14,8 +13,7 @@ public class CLI
     static Scanner in = new Scanner(System.in);
     public static void main(String[]args)
     {
-        ProductService pC=new ProductService();
-        CategoryService cC=pC.createCategoryCon();
+        CategoryService cC=new CategoryService();
         ReportService rC=cC.createReportService();
         String command;
         String detail;
@@ -31,7 +29,7 @@ public class CLI
                 switch (command) {
                     case ("1"): {
                         try {
-                            System.out.println("enter the attributes of id");
+                            System.out.println("enter the attributes of product");
                             detail = in.nextLine();
                             String[] fields = detail.split(",");
                             int id = Integer.parseInt(fields[0]);
@@ -46,8 +44,7 @@ public class CLI
                             String[] cats = line.split(",");
                             if(cC.findCat(cats[0])!=null && cC.findCat(cats[0]).findSub(cats[1])!=null &&
                                     cC.findCat(cats[0]).findSub(cats[1]).findSubSub(cats[2])!=null) {
-                                pC.addNewProduct(id, name, desc, daysForResupply, priceSupplier, price, maker);
-                                cC.addProductToCat(id, cats[0], cats[1], cats[2]);
+                                cC.addNewProduct(id, name, desc, daysForResupply, priceSupplier, price, maker, cats[0], cats[1], cats[2]);
                             }
                             else
                                 System.out.println("wrong input or one of the categories does not exists");
@@ -103,13 +100,13 @@ public class CLI
                             if (checkId(fields[0]))
                                 id = Integer.parseInt(fields[0]);
                             else
-                                id = pC.getProductIdWithName(fields[0]);
+                                id = cC.getProductIdWithName(fields[0]);
                             if (id != -1) {
                                 int amount = Integer.parseInt(fields[1]);
                                 String exp = fields[2];
                                 int shelf = Integer.parseInt(fields[3]);
-                                pC.addAllItems(id, amount, exp, shelf);
-                                pC.needsRefill(id);
+                                cC.addAllItems(id, amount, exp, shelf);
+                                cC.needsRefill(id);
                             } else
                                 System.out.println("no such product exists");
                         }
@@ -128,15 +125,15 @@ public class CLI
                             if (checkId(fields[0]))
                                 id = Integer.parseInt(fields[0]);
                             else
-                                id = pC.getProductIdWithName(fields[0]);
+                                id = cC.getProductIdWithName(fields[0]);
                             int amount = Integer.parseInt(fields[1]);
-                            double finalPrice = pC.buyItems(id, amount);
+                            double finalPrice = cC.buyItems(id, amount);
                             if (finalPrice != -1)
                                 System.out.println("the price is: " + finalPrice);
                             else
                                 System.out.println("not enough in store");
-                            if(pC.needsRefill(id))
-                                System.out.println("the product "+id+":"+pC.getNameWithId(id)+" need a refill. added to refill list");
+                            if(cC.needsRefill(id))
+                                System.out.println("the product "+id+":"+cC.getNameWithId(id)+" need a refill. added to refill list");
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -153,9 +150,9 @@ public class CLI
                             if (checkId(fields[0]))
                                 id = Integer.parseInt(fields[0]);
                             else
-                                id = pC.getProductIdWithName(fields[0]);
+                                id = cC.getProductIdWithName(fields[0]);
                             int amount = Integer.parseInt(fields[1]);
-                            pC.moveItemsToStore(id, amount);
+                            cC.moveItemsToStore(id, amount);
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -171,7 +168,10 @@ public class CLI
                             List<String> cats = new LinkedList<String>();
                             for (String s : fields)
                                 cats.add(s);
-                            rC.makeReport(cats);
+                            if(rC.makeReport(cats))
+                                System.out.println("made category report");
+                            else
+                                System.out.println("failed while making report");
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -181,7 +181,10 @@ public class CLI
                     }
                     case ("9"): {
                         try {
-                            rC.makeDamagedReport();
+                            if(rC.makeDamagedReport())
+                                System.out.println("made damaged report");
+                            else
+                                System.out.println("failed while making report");
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -197,12 +200,12 @@ public class CLI
                             if (checkId(fields[0]))
                                 id = Integer.parseInt(fields[0]);
                             else
-                                id = pC.getProductIdWithName(fields[0]);
+                                id = cC.getProductIdWithName(fields[0]);
                             String description = fields[1];
-                            Location.Place place = stringToPlace(fields[2]);
+                            String place = fields[2];
                             int shelf = Integer.parseInt(fields[3]);
                             String ed = fields[4];
-                            pC.defineAsDamaged(id, description, place, shelf, ed);
+                            cC.defineAsDamaged(id, description, place, shelf, ed);
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -211,7 +214,10 @@ public class CLI
                     }
                     case ("11"): {
                         try {
-                            rC.makeRefillReport();
+                            if(rC.makeRefillReport())
+                                System.out.println("made refill report");
+                            else
+                                System.out.println("failed while making report");
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -227,7 +233,7 @@ public class CLI
                             if (checkId(fields[0]))
                                 id = Integer.parseInt(fields[0]);
                             else
-                                id = pC.getProductIdWithName(fields[0]);
+                                id = cC.getProductIdWithName(fields[0]);
                             String catRemove = fields[1];
                             String catAdd = fields[2];
                             String subAdd = fields[3];
@@ -247,7 +253,7 @@ public class CLI
                             if (checkId(detail))
                                 id = Integer.parseInt(detail);
                             else
-                                id = pC.getProductIdWithName(detail);
+                                id = cC.getProductIdWithName(detail);
                             if (id != -1)
                                 cC.removeFromCatalog(id);
                         }
@@ -265,10 +271,10 @@ public class CLI
                             if (checkId(fields[0]))
                                 id = Integer.parseInt(fields[0]);
                             else
-                                id = pC.getProductIdWithName(fields[0]);
+                                id = cC.getProductIdWithName(fields[0]);
                             double discount = Double.parseDouble(fields[1]);
                             if(id!=-1)
-                                pC.setDiscountToOneItem(id, discount);
+                                cC.setDiscountToOneItem(id, discount);
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -291,8 +297,6 @@ public class CLI
                     }
                     case ("16"): {
                         try {
-
-
                             System.out.println("enter the id/name, daysForResupply");
                             detail = in.nextLine();
                             String[] fields = detail.split(",");
@@ -300,10 +304,10 @@ public class CLI
                             if (checkId(fields[0]))
                                 id = Integer.parseInt(fields[0]);
                             else
-                                id = pC.getProductIdWithName(fields[0]);
+                                id = cC.getProductIdWithName(fields[0]);
                             int days = Integer.parseInt(fields[1]);
                             if (id != -1)
-                                pC.changeDaysForResupply(id, days);
+                                cC.changeDaysForResupply(id, days);
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -320,15 +324,22 @@ public class CLI
                             if (checkId(detail))
                                 id = Integer.parseInt(detail);
                             else
-                                id = pC.getProductIdWithName(detail);
-                            rC.makeProductReport(id);
+                                id = cC.getProductIdWithName(detail);
+                            if(rC.makeProductReport(id))
+                                System.out.println("made product report");
+                            else
+                                System.out.println("failed while making report");
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
                         }
                         break;
                     }
-                    case ("18"): {
+                    case("18"):{
+                        System.out.println(cC.printAllProducts());
+                        break;
+                    }
+                    case ("19"): {
                         try {
 
                             System.out.println("creating a scenario");
@@ -338,14 +349,14 @@ public class CLI
                             cC.addCategory("second");
                             cC.addSubCat("second", "second1");
                             cC.addSubSubCat("second", "second1", "second11");
-                            pC.addNewProduct(1, "milk", "from cow", 2, 1, 3, "me");
-                            pC.addNewProduct(2, "eggs", "from chicken", 3, 2, 5, "me");
-                            cC.addProductToCat(1, "first", "first1", "first11");
-                            cC.addProductToCat(2, "second", "second1", "second11");
-                            pC.addAllItems(1, 7, "2022-06-01", 1);
-                            pC.addAllItems(2, 3, "2019-06-01", 1);
-                            pC.changeDaysPassed(1, 5);
-                            pC.changeDaysPassed(2, 3);
+                            cC.addNewProduct(1, "milk", "from cow", 2, 1, 3, "me"
+                                    , "first", "first1", "first11");
+                            cC.addNewProduct(2, "eggs", "from chicken", 3, 2, 5, "me",
+                                    "second", "second1", "second11");
+                            cC.addAllItems(1, 7, "2022-06-01", 1);
+                            cC.addAllItems(2, 3, "2019-06-01", 1);
+                            cC.changeDaysPassed(1, 5);
+                            cC.changeDaysPassed(2, 3);
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -357,14 +368,6 @@ public class CLI
         }
     }
 
-    public static Location.Place stringToPlace(String s)
-    {
-        if(s.equals("STORE"))
-            return Location.Place.STORE;
-        else
-            return Location.Place.STORAGE;
-    }
-
     public static boolean checkId(String id){
         String nums="0123456789";
         for (int i=0;i<id.length();i++)
@@ -372,6 +375,5 @@ public class CLI
                 return false;
         return true;
     }
-
 
 }
