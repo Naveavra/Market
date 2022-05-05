@@ -336,7 +336,7 @@ public class CLI
                         break;
                     }
                     case("18"):{
-                        cC.printAllProducts();
+                        System.out.println(cC.printAllProducts());
                         break;
                     }
                     case ("19"): {

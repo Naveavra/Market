@@ -289,11 +289,13 @@ public class CategoryController
         return true;
     }
 
-    public void printAllProducts() {
+    public String printAllProducts() {
         List<Product> list = getAllProducts();
+        String ans="";
         for(Product p : list) {
-            System.out.println("Product id is: " +p.getId()+"\tProduct name is: "+p.getName());
+            ans+="Product id is: " +p.getId()+"\tProduct name is: "+p.getName()+"\tthe current amount is:"+p.getCurAmount()+'\n';
         }
+        return ans;
     }
 
 }

@@ -161,7 +161,7 @@ public class CategoryService {
         return new ReportService(new ReportController(categoryCon));
     }
 
-    public void printAllProducts(){
-        categoryCon.printAllProducts();
+    public String printAllProducts(){
+        return categoryCon.printAllProducts();
     }
 }
