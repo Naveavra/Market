@@ -80,4 +80,8 @@ public class Product {
     public int getCatalogNumber(){
         return catalogNumber;
     }
+
+    public String getName() {
+        return "";
+    }
 }

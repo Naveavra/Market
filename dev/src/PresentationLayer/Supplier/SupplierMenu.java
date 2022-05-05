@@ -295,7 +295,7 @@ public class SupplierMenu {
                     updateSupplierDetails(s);
                 }
                 boolean deliver=supNum==2;
-                boolean update=ss.updateDeliveration(s,deliver);
+                boolean update=ss.updateDeliveration(s.getSupplierNumber(),deliver);
                 if(update & deliver){
                     System.out.println(s.getSupplierName()+" is responsible for transformation");
                 }

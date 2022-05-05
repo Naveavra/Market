@@ -98,7 +98,7 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
         }
-        boolean added=ps.addProduct(supplier.getSupplierNumber(), catalogNum,name, price);
+        boolean added=ps.addProduct(supplier.getSupplierNumber(), catalogNum,name,price, price);
         if(added) {
             System.out.println("product added");
         }
