@@ -8,6 +8,8 @@ import java.util.List;
 public class CategoryController
 {
     List<Category> categories;//all products
+
+
     public CategoryController(){
         categories=new LinkedList<>();
     }
@@ -285,6 +287,13 @@ public class CategoryController
             if(p.getId()==id)
                 return false;
         return true;
+    }
+
+    public void printAllProducts() {
+        List<Product> list = getAllProducts();
+        for(Product p : list) {
+            System.out.println("Product id is: " +p.getId()+"\tProduct name is: "+p.getName());
+        }
     }
 
 }

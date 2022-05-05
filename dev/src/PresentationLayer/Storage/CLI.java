@@ -297,8 +297,6 @@ public class CLI
                     }
                     case ("16"): {
                         try {
-
-
                             System.out.println("enter the id/name, daysForResupply");
                             detail = in.nextLine();
                             String[] fields = detail.split(",");
@@ -337,7 +335,11 @@ public class CLI
                         }
                         break;
                     }
-                    case ("18"): {
+                    case("18"):{
+                        cC.printAllProducts();
+                        break;
+                    }
+                    case ("19"): {
                         try {
 
                             System.out.println("creating a scenario");

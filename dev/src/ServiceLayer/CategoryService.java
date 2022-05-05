@@ -1,5 +1,6 @@
 package ServiceLayer;
 
+import DomainLayer.Product;
 import DomainLayer.Storage.Category;
 import DomainLayer.Storage.CategoryController;
 import DomainLayer.Storage.ReportController;
@@ -158,5 +159,9 @@ public class CategoryService {
 
     public ReportService createReportService(){
         return new ReportService(new ReportController(categoryCon));
+    }
+
+    public void printAllProducts(){
+        categoryCon.printAllProducts();
     }
 }
