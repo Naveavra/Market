@@ -2,7 +2,7 @@ package ServiceLayer;
 
 import DomainLayer.DeliveryTerm;
 import DomainLayer.OrderFromSupplier;
-import DomainLayer.Product;
+import DomainLayer.ProductSupplier;
 import DomainLayer.SupplierController;
 import com.google.gson.Gson;
 
@@ -33,7 +33,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean addProductToOrder(int supplierNumber,int orderId , int catalogNUmber, int count){
-        Product p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
+        ProductSupplier p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
         if(p==null){
             return false;
         }
@@ -50,7 +50,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean updateProductInOrder(int supplierNumber,int orderId, int catalogNUmber, int newCount){
-        Product p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
+        ProductSupplier p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
         boolean ans = supplierController.getSupplier(supplierNumber).getOrder(orderId).updateProductToOrder(p, newCount);
         return ans;
     }
@@ -62,7 +62,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean deleteProductFromOrder(int supplierNumber,int orderId, int catalogNUmber){
-        Product p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
+        ProductSupplier p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
         return supplierController.getSupplier(supplierNumber).getOrder(orderId).removeProductFromOrder(p);
     }
 
@@ -139,10 +139,10 @@ public class OrderService {
         if(supplierController.getSupplier(supplierNumber).getOrder(orderID)==null){
             return "fail";
         }
-        Map<Product,Integer> products = supplierController.getSupplier(supplierNumber).getOrder(orderID).getProducts();
+        Map<ProductSupplier,Integer> products = supplierController.getSupplier(supplierNumber).getOrder(orderID).getProducts();
         Map<String,Integer> prouductsJson = new HashMap<>();
-        for (Map.Entry<Product,Integer> e: products.entrySet()){
-            Product p = e.getKey();
+        for (Map.Entry<ProductSupplier,Integer> e: products.entrySet()){
+            ProductSupplier p = e.getKey();
             prouductsJson.put(gson.toJson(p),e.getValue());
         }
         return gson.toJson(prouductsJson);

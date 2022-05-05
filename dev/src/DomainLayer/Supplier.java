@@ -8,7 +8,7 @@ public class Supplier {
     private String name;
     private int bankAccount;
     private Map<String,String> contacts;//<name,email>
-    private Map<Integer,Product> products;
+    private Map<Integer, ProductSupplier> products;
     private Map<Integer,Double> discountByAmount;//sum of products in order
     private Map<Integer, OrderFromSupplier> orders;
     private boolean active;
@@ -80,8 +80,8 @@ public class Supplier {
         if(price<=0){
             return false;
         }
-        Product product =new Product(catalogNumber, price, productId);
-        products.put(catalogNumber, product);
+        ProductSupplier productSupplier =new ProductSupplier(catalogNumber, price, productId);
+        products.put(catalogNumber, productSupplier);
         return true;
     }
     public boolean removeProduct(int catalogNumber){
@@ -97,7 +97,7 @@ public class Supplier {
         orderNum++;
         return order;
     }
-    public Product getProduct(int catalogNumber){
+    public ProductSupplier getProduct(int catalogNumber){
         return products.get(catalogNumber);
     }
     public double updateTotalIncludeDiscounts(int orderId){
@@ -160,7 +160,7 @@ public class Supplier {
     }
 
 
-    public Map<Integer,Product> getProducts() {
+    public Map<Integer, ProductSupplier> getProducts() {
         return products;
     }
 

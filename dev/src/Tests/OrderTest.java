@@ -2,7 +2,7 @@ package Tests;
 
 
 import DomainLayer.OrderFromSupplier;
-import DomainLayer.Product;
+import DomainLayer.ProductSupplier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,13 +12,13 @@ import static org.junit.Assert.assertTrue;
 
 public class OrderTest {
     private OrderFromSupplier order;
-    private Product p;
-    private Product p1;
+    private ProductSupplier p;
+    private ProductSupplier p1;
     @org.junit.Before
     public void setUp() throws Exception {
          order =new OrderFromSupplier(0);
-         p=new Product(0, "chair", 100);
-         p1=new Product(1,"table", 25);
+         p=new ProductSupplier(0,5 , 100);
+         p1=new ProductSupplier(1,5, 25);
     }
 
     @org.junit.Test
@@ -54,7 +54,7 @@ public class OrderTest {
     @org.junit.Test
     public void getProducts() {
         order.updateProductToOrder(p,10);
-        Map<Product,Integer> tmp=new HashMap<>();
+        Map<ProductSupplier,Integer> tmp=new HashMap<>();
         tmp.put(p,10);
         assertEquals(tmp,order.getProducts());
 

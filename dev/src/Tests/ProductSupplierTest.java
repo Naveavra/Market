@@ -1,27 +1,24 @@
 package Tests;
 
-import DomainLayer.Product;
+import DomainLayer.ProductSupplier;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.Assert.*;
 
-public class ProductTest {
-private Product p;
-private Product p1;
+public class ProductSupplierTest {
+private ProductSupplier p;
+private ProductSupplier p1;
     @Before
     public void setUp() throws Exception {
-        p=new Product(0, "chair", 10);
-        p1=new Product(1,"table", 50);
+        p=new ProductSupplier(0, 5, 10);
+        p1=new ProductSupplier(1,5, 50);
 
     }
 
     @Test
     public void setName() {
-        p.setName("pen");
+       // p.setName("pen");
         assertEquals("pen", p.getName());
     }
 

@@ -2,9 +2,8 @@ package DomainLayer;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
-public class Product {
+public class ProductSupplier {
     private int catalogNumber;//unique number in supplier
     private int productId;//unique number to product in the system
     //private String name;//remove
@@ -12,7 +11,7 @@ public class Product {
     private Map<Integer,Double> discount;//sum of specific product
 
 
-    public Product (int catalogNumber, double price, int productId){
+    public ProductSupplier(int catalogNumber, double price, int productId){
         this.catalogNumber =catalogNumber;
         //this.name=name;
         this.price=price;
@@ -20,14 +19,14 @@ public class Product {
         discount =new HashMap<>();
         discount.put(0, 1.0);// keep it sorted
     }
-    public Product (Product product){
-        this.catalogNumber = product.catalogNumber;
+    public ProductSupplier(ProductSupplier productSupplier){
+        this.catalogNumber = productSupplier.catalogNumber;
         //this.name= product.name;
-        this.price=product.price;
+        this.price= productSupplier.price;
         discount=new HashMap<>();
         discount.put(0, 1.0);// keep it sorted
-        for(int x: product.discount.keySet()){
-             discount.put(x,product.discount.get(x));
+        for(int x: productSupplier.discount.keySet()){
+             discount.put(x, productSupplier.discount.get(x));
         }
     }
 //    public void setName(String name) {
@@ -83,5 +82,9 @@ public class Product {
 
     public String getName() {
         return "";
+    }
+
+    public int getProductId() {
+        return productId;
     }
 }
