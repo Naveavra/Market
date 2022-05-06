@@ -6,6 +6,7 @@ import java.util.Map;
 public class ProductSupplier {
     private int catalogNumber;//unique number in supplier
     private int productId;//unique number to product in the system
+    private int supplierNumber;
     //private String name;//remove
     private double price;
     private Map<Integer,Double> discount;//sum of specific product
@@ -86,5 +87,9 @@ public class ProductSupplier {
 
     public int getProductId() {
         return productId;
+    }
+
+    public int getSupplierNumber() {
+        return supplierNumber;
     }
 }
