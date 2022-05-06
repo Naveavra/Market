@@ -200,7 +200,10 @@ public class Supplier {
         return active;
     }
 
-    public boolean getIsDelicer() {
+    public boolean getIsDeliver() {
         return isDeliver;
+    }
+    public Map<Integer,Double> getDiscounts(){
+        return discountByAmount;
     }
 }

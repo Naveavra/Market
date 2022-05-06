@@ -51,9 +51,9 @@ public class Connect {
         ProductSupplier p1=new ProductSupplier(16,100,5);
         p1.addDiscount(10,0.5);
         productSupplierMapper.insert(p1);
-        ProductSupplier p = productSupplierMapper.get(14, 5);
+        ProductSupplier p = productSupplierMapper.getProduct(14, 5);
         System.out.println(p.getPrice());
-        ProductSupplier p2 = productSupplierMapper.get(14, 5);
+        ProductSupplier p2 = productSupplierMapper.getProduct(14, 5);
         System.out.println(p2.getPrice());
     }
     public void createTables() throws SQLException {
