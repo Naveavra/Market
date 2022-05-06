@@ -42,7 +42,7 @@ public class SupplierController {
             return false;
         }
         try {
-            if(suppliersDAO.getSupplier(supplierNumber)==null){
+            if(suppliersDAO.getSupplier(supplierNumber) != null){
                 return false;
             }
             Supplier s = new Supplier(supplierNumber,supplierName, bankAccount, contacts,isDeliver,true);

@@ -79,7 +79,7 @@ public class Connect {
             query = "CREATE TABLE IF NOT EXISTS \"Suppliers\"  (\n" +
                     "\t\"supplierNumber\"\tINTEGER,\n" +
                     "\t\"name\"\tTEXT ,\n" +
-                    "\t\"banlNumber\"\tInteger,\n" +
+                    "\t\"bankAccount\"\tInteger,\n" +
                     "\t\"active\"\tInteger,\n"+
                     "\t\"isDeliver\"\tInteger,\n"+
                     "\tPRIMARY KEY(\"supplierNumber\")\n"+ ")";

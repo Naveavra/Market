@@ -72,8 +72,8 @@ public class SuppliersDAO {
         }
     }
     public void insertSupplier(Supplier s) throws SQLException {
-        String query =String.format("INSERT INTO Suppliers (supplierNumber,bankAccount,active,isDeliver)", s.getSupplierNumber(),s.getBankAccount()
-                ,s.getActive(),s.getIsDeliver());
+        String query =String.format("INSERT INTO Suppliers (supplierNumber,name,bankAccount,active,isDeliver) " +
+                        "VALUES (%d,'%s',%d,%b,%b)", s.getSupplierNumber(),s.getName(),s.getBankAccount(),s.getActive(),s.getIsDeliver());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
             IMSuppliers.put(s.getSupplierNumber(), s);
@@ -94,7 +94,8 @@ public class SuppliersDAO {
         String query =String.format("SELECT * from Suppliers WHERE supplierNumber =%d", supplierNumber);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
-            rs.next();
+            if (!rs.next())
+                return null;
             System.out.println(rs.getInt("isDeliver"));
             System.out.println(rs.getBoolean("isDeliver"));
             Supplier supplier =new Supplier(supplierNumber, rs.getNString("name"),rs.getInt("bankAccount"),getContacts(supplierNumber),

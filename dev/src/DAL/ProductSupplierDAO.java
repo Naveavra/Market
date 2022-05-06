@@ -50,7 +50,8 @@ public class ProductSupplierDAO {
                 String.format("supplierNumber=%d and productId=%d", supplierNumber, productId);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs =stmt.executeQuery(query);
-            rs.next();
+            if (!rs.next())
+                return null;
             ProductSupplier p = new ProductSupplier(rs.getInt("catalogNumber"),rs.getDouble("price"),rs.getInt("productId"));
             IMProductSupplier.put(new Pair<>(p.getProductId(), p.getCatalogNumber()), p);
             return p;
