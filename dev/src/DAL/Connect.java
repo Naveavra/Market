@@ -47,7 +47,7 @@ public class Connect {
      */
     public static void main(String[] args) throws SQLException {
         Connect connect =new Connect();
-        ProductSupplierMapper productSupplierMapper=new ProductSupplierMapper();
+        ProductSupplierDAO productSupplierMapper=new ProductSupplierDAO();
         ProductSupplier p1=new ProductSupplier(16,100,5);
         p1.addDiscount(10,0.5);
         productSupplierMapper.insert(p1);

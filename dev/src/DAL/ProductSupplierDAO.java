@@ -3,15 +3,13 @@ package DAL;
 import DomainLayer.ProductSupplier;
 import javafx.util.Pair;
 
-import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.Map;
 
-public class ProductSupplierMapper {
+public class ProductSupplierDAO {
     private Connect connect;
     private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier;
 
@@ -19,7 +17,7 @@ public class ProductSupplierMapper {
      * constructor
      * the connect is singleton
      */
-    public ProductSupplierMapper(){
+    public ProductSupplierDAO(){
         connect=Connect.getInstance();
         IMProductSupplier=new HashMap<>();
     }

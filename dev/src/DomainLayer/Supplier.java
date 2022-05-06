@@ -12,7 +12,7 @@ public class Supplier {
     private Map<Integer,Double> discountByAmount;//sum of products in order
     private Map<Integer, OrderFromSupplier> orders;
     private boolean active;
-    private List<PastOrder> finalOrders;
+    private List<PastOrderSupplier> finalOrders;
     private static int orderNum=0;
     private boolean isDeliver;
 
@@ -128,7 +128,7 @@ public class Supplier {
         }
         //do something with isDeliver
         double totalPrice = updateTotalIncludeDiscounts(orderId);
-        finalOrders.add(new PastOrder(orders.get(orderId),totalPrice));
+        finalOrders.add(new PastOrderSupplier(orders.get(orderId),totalPrice));
         orders.remove(orderId);
         return true;
     }
@@ -180,7 +180,7 @@ public class Supplier {
         return contacts;
     }
 
-    public List<PastOrder> getFinalOrders() {
+    public List<PastOrderSupplier> getFinalOrders() {
         return finalOrders;
     }
 
