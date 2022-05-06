@@ -2,11 +2,11 @@ package DomainLayer;
 
 import java.time.LocalDateTime;
 
-public class PastOrder extends OrderFromSupplier {
+public class PastOrderSupplier extends OrderFromSupplier {
     private double totalPrice;
     private String finishDate;
 
-    public PastOrder(OrderFromSupplier order, double totalPrice) {
+    public PastOrderSupplier(OrderFromSupplier order, double totalPrice) {
         super(order);
         this.totalPrice=totalPrice;
         this.finishDate=LocalDateTime.now().toString();

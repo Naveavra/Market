@@ -47,7 +47,7 @@ public class Connect {
      */
     public static void main(String[] args) throws SQLException {
         Connect connect =new Connect();
-        ProductSupplierMapper productSupplierMapper=new ProductSupplierMapper();
+        ProductSupplierDAO productSupplierMapper=new ProductSupplierDAO();
         ProductSupplier p1=new ProductSupplier(16,100,5);
         p1.addDiscount(10,0.5);
         productSupplierMapper.insert(p1);
@@ -60,18 +60,19 @@ public class Connect {
         try (Statement stmt = createStatement()) {
             //table product supplier
             String query = "CREATE TABLE IF NOT EXISTS \"ProductSupplier\"  (\n" +
-                    "\t\"catalogNumber\"\tINTEGER,\n" +
                     "\t\"productId\"\tInteger,\n" +
+                    "\t\"supplierNumber\"\tInteger,\n" +
+                    "\t\"catalogNumber\"\tINTEGER,\n" +
                     "\t\"price\"\tInteger,\n"+
-                    "\tPRIMARY KEY(\"catalogNumber\",\"productId\")\n"+ ")";
+                    "\tPRIMARY KEY(\"supplierNumber\",\"productId\")\n"+ ")";
             stmt.execute(query);
             //table DiscountProductSupplier
             query = "CREATE TABLE IF NOT EXISTS \"DiscountProductSupplier\"  (\n" +
-                    "\t\"catalogNumber\"\tINTEGER,\n" +
+                    "\t\"supplierNumber\"\tINTEGER,\n" +
                     "\t\"productId\"\tINTEGER,\n" +
                     "\t\"quantity\"\tInteger,\n" +
                     "\t\"discount\"\tInteger,\n"+
-                    "\tPRIMARY KEY(\"catalogNumber\",\"productId\",\"quantity\")\n"+ ")";
+                    "\tPRIMARY KEY(\"supplierNumber\",\"productId\",\"quantity\")\n"+ ")";
             stmt.execute(query);
 
             //table suppliers
@@ -84,8 +85,9 @@ public class Connect {
                     "\tPRIMARY KEY(\"supplierNumber\")\n"+ ")";
             stmt.execute(query);
             //add table contacts
-            //add table discount
 
+
+            //table discount
             query = "CREATE TABLE IF NOT EXISTS \"DiscountSupplier\"  (\n" +
                     "\t\"supplierNumber\"\tINTEGER,\n" +
                     "\t\"quantity\"\tInteger,\n" +
@@ -107,21 +109,13 @@ public class Connect {
             stmt.execute(query);
 
             //table pastOrder
-            query = "CREATE TABLE IF NOT EXISTS \"PastOrders\"  (\n" +
+            query = "CREATE TABLE IF NOT EXISTS \"PastOrdersSupplier\"  (\n" +
                     "\t\"orderId\"\tINTEGER,\n" +
-                    "\t\"totalPrice\"\tREAL,\n" +
                     "\t\"finishDate\"\tTEXT,\n" +
-                    "\tPRIMARY KEY(\"orderId\")\n"+ ")";
+                    "\t\"totalPrice\"\tREAL,\n" +
+                    "\tPRIMARY KEY(\"orderId\", \"finishDate\")\n"+ ")";
             stmt.execute(query);
-//            while (rs.next()) {
-//                String coffeeName = rs.getString("COF_NAME");
-//                int supplierID = rs.getInt("SUP_ID");
-//                float price = rs.getFloat("PRICE");
-//                int sales = rs.getInt("SALES");
-//                int total = rs.getInt("TOTAL");
-//                System.out.println(coffeeName + ", " + supplierID + ", " + price +
-//                        ", " + sales + ", " + total);
-//            }
+
         } catch (SQLException e) {
             throw e;
         }

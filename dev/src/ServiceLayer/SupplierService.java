@@ -1,7 +1,7 @@
 package ServiceLayer;
 
 
-import DomainLayer.PastOrder;
+import DomainLayer.PastOrderSupplier;
 import DomainLayer.Supplier;
 import DomainLayer.SupplierController;
 
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
-import org.json.JSONObject;
 
 public class SupplierService {
     private SupplierController supplierController =new SupplierController();
@@ -193,7 +192,7 @@ public class SupplierService {
      * @return Json string which wrappers the list of past order
      */
     public String  watchPastOrders(int supplierNumber) {
-        List<PastOrder> pastOrderList=new ArrayList<>();
+        List<PastOrderSupplier> pastOrderList=new ArrayList<>();
         pastOrderList=supplierController.getSupplier(supplierNumber).getFinalOrders();
         return gson.toJson(pastOrderList);
     }
