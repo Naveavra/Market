@@ -25,10 +25,10 @@ private ProductSupplier p2;
         sMap.put("eyal", "eya;@gmail.com");
         s1Map=new HashMap<>();
         s1Map.put("ziv", "ziv@gmail.com");
-        s=new Supplier(1, "ziv", 11,sMap,true);
-        s1=new Supplier(2, "eyal", 12, s1Map,true);
-        p1=new ProductSupplier(0,6, 100);
-        p2=new ProductSupplier(1,7, 100);
+//        s=new Supplier(1, "ziv", 11,sMap,true);
+//        s1=new Supplier(2, "eyal", 12, s1Map,true);
+//        p1=new ProductSupplier(0,6, 100);
+//        p2=new ProductSupplier(1,7, 100);
     }
 
     @Test

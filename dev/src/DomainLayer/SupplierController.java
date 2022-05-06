@@ -1,5 +1,8 @@
 package DomainLayer;
 
+import DAL.SuppliersDAO;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.Map;
 
 public class SupplierController {
     private static Map<Integer,Supplier> suppliers = new HashMap<>();
+    private SuppliersDAO suppliersDAO =new SuppliersDAO();
 
     /**
      * the function gets a supplier number and return the supplier with the same supplier number
@@ -14,7 +18,11 @@ public class SupplierController {
      * @return supplier
      */
     public Supplier getSupplier(Integer supplierNumber) {
-        return suppliers.get(supplierNumber);
+        try {
+            return suppliersDAO.getSupplier(supplierNumber);
+        }catch (Exception e){
+            return null;
+        }
     }
 
     /**
@@ -33,11 +41,18 @@ public class SupplierController {
         if(bankAccount<0){
             return false;
         }
-        if(suppliers.containsKey(supplierNumber)){
+        try {
+            if(suppliersDAO.getSupplier(supplierNumber)==null){
+                return false;
+            }
+            Supplier s = new Supplier(supplierNumber,supplierName, bankAccount, contacts,isDeliver,true);
+
+            suppliersDAO.insertSupplier(s);
+        }
+        catch (Exception e){
             return false;
         }
-        Supplier s = new Supplier(supplierNumber,supplierName, bankAccount, contacts,isDeliver);
-        suppliers.put(supplierNumber, s);
+        //suppliers.put(supplierNumber, s);
         return true;
     }
 

@@ -14,9 +14,6 @@ public class Menu {
         Menu m = new Menu();
         m.initialMenu();
     }
-
-
-
     public void initialMenu(){
         int choice = 0;
         System.out.println("Welcome to Supplier Model!!");

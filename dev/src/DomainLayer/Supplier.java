@@ -1,6 +1,8 @@
 package DomainLayer;
 
 
+import DAL.SuppliersDAO;
+
 import java.util.*;
 
 public class Supplier {
@@ -15,8 +17,7 @@ public class Supplier {
     private List<PastOrderSupplier> finalOrders;
     private static int orderNum=0;
     private boolean isDeliver;
-
-    public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts,boolean isDeliver){
+    public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts,boolean isDeliver,boolean active){
         this.supplierNumber=supplierNumber;
         this.name=name;
         this.bankAccount=bankAccount;
@@ -27,7 +28,7 @@ public class Supplier {
         discountByAmount=new TreeMap<>();
         discountByAmount.put(0,1.0);
         orders = new HashMap<>();
-        active =true;
+        this.active =active;
         finalOrders=new ArrayList<>();
         this.isDeliver=isDeliver;
         products =new HashMap<>();
@@ -40,6 +41,7 @@ public class Supplier {
         for(String n: contacts.keySet()){
             this.contacts.put(n,contacts.get(n));
         }
+
         return true;
     }
     public boolean addContact(String name,String email){

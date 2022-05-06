@@ -47,14 +47,14 @@ public class Connect {
      */
     public static void main(String[] args) throws SQLException {
         Connect connect =new Connect();
-        ProductSupplierDAO productSupplierMapper=new ProductSupplierDAO();
-        ProductSupplier p1=new ProductSupplier(16,100,5);
-        p1.addDiscount(10,0.5);
-        productSupplierMapper.insert(p1);
-        ProductSupplier p = productSupplierMapper.getProduct(14, 5);
-        System.out.println(p.getPrice());
-        ProductSupplier p2 = productSupplierMapper.getProduct(14, 5);
-        System.out.println(p2.getPrice());
+//        ProductSupplierDAO productSupplierMapper=new ProductSupplierDAO();
+//        ProductSupplier p1=new ProductSupplier(16,100,5);
+//        p1.addDiscount(10,0.5);
+//        productSupplierMapper.insert(p1);
+//        ProductSupplier p = productSupplierMapper.getProduct(14, 5);
+//        System.out.println(p.getPrice());
+//        ProductSupplier p2 = productSupplierMapper.getProduct(14, 5);
+//        System.out.println(p2.getPrice());
     }
     public void createTables() throws SQLException {
         try (Statement stmt = createStatement()) {
@@ -84,8 +84,14 @@ public class Connect {
                     "\t\"isDeliver\"\tInteger,\n"+
                     "\tPRIMARY KEY(\"supplierNumber\")\n"+ ")";
             stmt.execute(query);
-            //add table contacts
 
+            //add table contacts
+            query = "CREATE TABLE IF NOT EXISTS \"ContactsSupplier\"  (\n" +
+                    "\t\"supplierNumber\"\tINTEGER,\n" +
+                    "\t\"name\"\tTEXT,\n" +
+                    "\t\"email\"\tTEXT,\n"+
+                    "\tPRIMARY KEY(\"supplierNumber\",\"name\")\n"+ ")";
+            stmt.execute(query);
 
             //table discount
             query = "CREATE TABLE IF NOT EXISTS \"DiscountSupplier\"  (\n" +
@@ -115,6 +121,8 @@ public class Connect {
                     "\t\"totalPrice\"\tREAL,\n" +
                     "\tPRIMARY KEY(\"orderId\", \"finishDate\")\n"+ ")";
             stmt.execute(query);
+
+
 
         } catch (SQLException e) {
             throw e;
