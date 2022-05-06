@@ -7,13 +7,13 @@ import java.util.HashMap;
 
 public class SupplieresDAO {
     private Connect connect;
-    private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier;
+    private static HashMap<Integer, ProductSupplier> IMSuppliers;//key: supplierId
 
     /**
      * constructor
      */
     public SupplieresDAO(){
-        connect=Connect.getInstance();
-        IMProductSupplier=new HashMap<>();
+        connect = Connect.getInstance();
+        IMSuppliers = new HashMap<>();
     }
 }
