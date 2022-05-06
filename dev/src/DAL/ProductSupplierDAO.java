@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ProductSupplierDAO {
     private Connect connect;
-    private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier;
+    private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier; //key: productID, supplierNumber
 
     /**
      * constructor
@@ -22,8 +22,8 @@ public class ProductSupplierDAO {
         IMProductSupplier=new HashMap<>();
     }
     public void insert(ProductSupplier ps) throws SQLException {
-        String query = "INSERT INTO ProductSupplier (catalogNumber,productId,price)" +
-                " VALUES "+String.format("(%d,%d,%f)",ps.getCatalogNumber(),ps.getProductId(),ps.getPrice());
+        String query = "INSERT INTO ProductSupplier (catalogNumber,productId,price, supplierNumber)" +
+                " VALUES "+String.format("(%d,%d,%f,%d)",ps.getCatalogNumber(),ps.getProductId(),ps.getPrice(), ps.getSupplierNumber());
 
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
@@ -39,22 +39,39 @@ public class ProductSupplierDAO {
             connect.closeConnect();
         }
     }
-    public ProductSupplier get(int catalogNumber,int productId) throws SQLException {
-        Pair<Integer,Integer> keySet =new Pair<>(catalogNumber,productId);
+
+    public ProductSupplier getProduct(int supplierNumber,int productId) throws SQLException {
+        Pair<Integer,Integer> keySet =new Pair<>(supplierNumber,productId);
         if(IMProductSupplier.containsKey(keySet)) {
             System.out.println("exist in field");
             return IMProductSupplier.get(keySet);
         }
         String query = "SELECT * FROM ProductSupplier WHERE " +
-                String.format("catalogNumber=%d and productId=%d", catalogNumber, productId);
+                String.format("supplierNumber=%d and productId=%d", supplierNumber, productId);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs =stmt.executeQuery(query);
             rs.next();
             ProductSupplier p = new ProductSupplier(rs.getInt("catalogNumber"),rs.getDouble("price"),rs.getInt("productId"));
-            IMProductSupplier.put(new Pair<>(p.getCatalogNumber(), p.getProductId()), p);
+            IMProductSupplier.put(new Pair<>(p.getProductId(), p.getCatalogNumber()), p);
             return p;
-        } catch (SQLException throwable) {
-            throw throwable;
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+    public void updateProduct(ProductSupplier productSupplier) throws SQLException {
+
+        String query = String.format("UPDATE ProductSupplier SET price = %f and catalogNumber = %d WHERE productId = %d and supplierNumber = %d",
+                productSupplier.getPrice(),productSupplier.getCatalogNumber(),productSupplier.getProductId(),
+                                productSupplier.getSupplierNumber());
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+            IMProductSupplier.put(new Pair<>(productSupplier.getProductId(), productSupplier.getCatalogNumber()), productSupplier);
+        } catch (SQLException e) {
+            throw e;
         }
         finally {
             connect.closeConnect();

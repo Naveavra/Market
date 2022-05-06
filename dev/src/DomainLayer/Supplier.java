@@ -191,4 +191,16 @@ public class Supplier {
         isDeliver=deliver;
         return true;
     }
+
+    public int getSupplierNumber() {
+        return supplierNumber;
+    }
+
+    public boolean getActive() {
+        return active;
+    }
+
+    public boolean getIsDelicer() {
+        return isDeliver;
+    }
 }
