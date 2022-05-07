@@ -6,6 +6,7 @@ import DomainLayer.Supplier;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,7 +103,7 @@ private ProductSupplier p2;
     }
 
     @Test
-    public void updateTotalIncludeDiscounts() {
+    public void updateTotalIncludeDiscounts() throws SQLException {
         OrderFromSupplier o1 =s.createOrder();
         o1.updateProductToOrder(p1,10);
         o1.updateProductToOrder(p2,20);

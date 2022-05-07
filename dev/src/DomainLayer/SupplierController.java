@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SupplierController {
-    private static Map<Integer,Supplier> suppliers = new HashMap<>();
+    //private static Map<Integer,Supplier> suppliers = new HashMap<>();
     private SuppliersDAO suppliersDAO =new SuppliersDAO();
 
     /**
@@ -65,14 +65,21 @@ public class SupplierController {
         if(supplierNumber<0){
             return false;
         }
-        if(!suppliers.containsKey(supplierNumber)){
+        try {
+            Supplier s = suppliersDAO.getSupplier(supplierNumber);
+            if (s == null) {
+                return false;
+            }
+            if (!s.isActive()) {
+                return false;
+            }
+            s.closeAccount();
+            suppliersDAO.updateSupplier(s);
+            return true;
+        }
+        catch (Exception e){
             return false;
         }
-        if(!suppliers.get(supplierNumber).isActive()){
-            return false;
-        }
-        suppliers.get(supplierNumber).closeAccount();
-        return true;
     }
 
 }

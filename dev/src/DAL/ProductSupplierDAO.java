@@ -77,5 +77,12 @@ public class ProductSupplierDAO {
             connect.closeConnect();
         }
     }
+
+    public Map<Integer, ProductSupplier> getAllProductsOfSupplier(int supplierNumber) {
+        return null;
+    }
+
+    public void removeProduct(int catalogNumber, int supplierNumber) {
+    }
 }
 

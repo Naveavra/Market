@@ -26,7 +26,7 @@ public class ProductSupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addProduct(int supplierNumber, int catalogNumber, String name, int price, int productId){
-        boolean ans = supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, price, productId);
+        boolean ans = supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, price, productId, supplierNumber);
         return ans;
     }
 

@@ -1,22 +1,33 @@
 package DomainLayer;
 
 
+import DAL.OrdersFromSupplierDAO;
+import DAL.ProductSupplierDAO;
 import DAL.SuppliersDAO;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class Supplier {
+    private static int orderNum=0;
+
     private int supplierNumber;
     private String name;
     private int bankAccount;
-    private Map<String,String> contacts;//<name,email>
-    private Map<Integer, ProductSupplier> products;
-    private Map<Integer,Double> discountByAmount;//sum of products in order
-    private Map<Integer, OrderFromSupplier> orders;
-    private boolean active;
-    private List<PastOrderSupplier> finalOrders;
-    private static int orderNum=0;
     private boolean isDeliver;
+    private boolean active;
+    private Map<String,String> contacts;//<name,email>
+    private Map<Integer,Double> discountByAmount;//sum of products in order
+
+    //DAO to db
+    private ProductSupplierDAO productsDAO;
+    private OrdersFromSupplierDAO ordersDAO;
+
+    private Map<Integer, ProductSupplier> products;//remove
+    private Map<Integer, OrderFromSupplier> orders;//remove
+    private List<PastOrderSupplier> finalOrders;//remove
+
+
     public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts,boolean isDeliver,boolean active){
         this.supplierNumber=supplierNumber;
         this.name=name;
@@ -27,11 +38,13 @@ public class Supplier {
         }
         discountByAmount=new TreeMap<>();
         discountByAmount.put(0,1.0);
-        orders = new HashMap<>();
         this.active =active;
         finalOrders=new ArrayList<>();
         this.isDeliver=isDeliver;
-        products =new HashMap<>();
+        productsDAO = new ProductSupplierDAO();
+        ordersDAO = new OrdersFromSupplierDAO();
+//        orders = new HashMap<>();
+//        products =new HashMap<>();
     }
     public boolean updateAccount(String supplierName,int bankAccount,Map<String,String>contacts){
         this.name=supplierName;
@@ -41,7 +54,6 @@ public class Supplier {
         for(String n: contacts.keySet()){
             this.contacts.put(n,contacts.get(n));
         }
-
         return true;
     }
     public boolean addContact(String name,String email){
@@ -72,38 +84,55 @@ public class Supplier {
         this.discountByAmount.remove(count);
         return true;
     }
-    public boolean addProduct(int catalogNumber, double price, int productId){
+    public boolean addProduct(int catalogNumber, double price, int productId, int supplierNumber){
         if(catalogNumber<0){
-            return false;
-        }
-        if(products.containsKey(catalogNumber)){
             return false;
         }
         if(price<=0){
             return false;
         }
-        ProductSupplier productSupplier =new ProductSupplier(catalogNumber, price, productId);
-        products.put(catalogNumber, productSupplier);
-        return true;
-    }
-    public boolean removeProduct(int catalogNumber){
-        if(!products.containsKey(catalogNumber)){
+        try {
+            if (isProductExist(productId)) {
+                return false;
+            }
+
+            ProductSupplier productSupplier = new ProductSupplier(catalogNumber, price, productId);
+            productsDAO.insert(productSupplier);
+            //products.put(catalogNumber, productSupplier);
+            return true;
+        }
+        catch (Exception e){
             return false;
         }
-        products.remove(catalogNumber);
+    }
+    public boolean removeProduct(int catalogNumber){
+//        if(!products.containsKey(catalogNumber)){
+//            return false;
+//        }
+        try {
+            productsDAO.removeProduct(catalogNumber, supplierNumber);
+        }
+        catch (Exception e){
+            return false;
+        }
         return true;
     }
     public OrderFromSupplier createOrder(){
         OrderFromSupplier order = new OrderFromSupplier(orderNum);
-        orders.put(orderNum,order);
+        try {
+            ordersDAO.createOrderFromSupplier(order,supplierNumber);
+        } catch (SQLException e) {
+            return null;
+        }
         orderNum++;
         return order;
     }
     public ProductSupplier getProduct(int catalogNumber){
         return products.get(catalogNumber);
     }
-    public double updateTotalIncludeDiscounts(int orderId){
-        OrderFromSupplier order = orders.get(orderId);
+
+    public double updateTotalIncludeDiscounts(int orderId) throws SQLException {
+        OrderFromSupplier order = getOrder(orderId);
         int count = order.getCountProducts();
         double price = order.getTotalIncludeDiscounts();
         return price*findMaxUnder(count);
@@ -125,12 +154,18 @@ public class Supplier {
         if(orderId<0){
             return false;
         }
-        if(orders.get(orderId)==null){
+        OrderFromSupplier o = getOrder(orderId);
+        if(o == null){
             return false;
         }
         //do something with isDeliver
-        double totalPrice = updateTotalIncludeDiscounts(orderId);
-        finalOrders.add(new PastOrderSupplier(orders.get(orderId),totalPrice));
+        double totalPrice = 0;
+        try {
+            totalPrice = updateTotalIncludeDiscounts(orderId);
+        } catch (SQLException e) {
+            return false;
+        }
+        finalOrders.add(new PastOrderSupplier(o,totalPrice));
         orders.remove(orderId);
         return true;
     }
@@ -141,17 +176,24 @@ public class Supplier {
     }
 
     public OrderFromSupplier getOrder(int orderId) {
-        return orders.get(orderId);
+        try {
+            return ordersDAO.getOrderWithAllTheProducts(orderId);
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public Map<Integer, OrderFromSupplier> getActiveOrders() {
         return orders;
     }
-    public boolean isProductExist(int catalogNumber){
-        if(catalogNumber<0){
+
+    public boolean isProductExist(int productId){
+        try{
+            return (productsDAO.getProduct(supplierNumber, productId) != null);
+        }
+        catch (Exception e){
             return false;
         }
-        return products.containsKey(catalogNumber);
     }
 
     public void closeAccount() {
@@ -163,7 +205,7 @@ public class Supplier {
 
 
     public Map<Integer, ProductSupplier> getProducts() {
-        return products;
+        return productsDAO.getAllProductsOfSupplier(supplierNumber);
     }
 
 //    public String getProductsNames() {
