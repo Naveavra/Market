@@ -208,4 +208,8 @@ public class Supplier {
     public Map<Integer,Double> getDiscounts(){
         return discountByAmount;
     }
+
+    public void addDiscounts(Map<Integer, Double> newDiscountsSupplier) {
+        discountByAmount.putAll(newDiscountsSupplier);
+    }
 }

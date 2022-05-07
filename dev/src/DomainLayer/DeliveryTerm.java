@@ -1,6 +1,7 @@
 package DomainLayer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DeliveryTerm {
@@ -31,6 +32,13 @@ public class DeliveryTerm {
 
         this.daysInWeeks=new DaysInWeek[daysInWeek.length];
         System.arraycopy(daysInWeek, 0, this.daysInWeeks, 0, daysInWeek.length);
+    }
+
+    public DeliveryTerm(List<String> days){
+        daysInWeeks = new DaysInWeek[days.size()];
+        for(int i=0; i< days.size(); i++){
+            daysInWeeks[i] = fromStringToDays(days.get(i));
+        }
     }
 
     /**

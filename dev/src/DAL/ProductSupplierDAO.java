@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ProductSupplierDAO {
     private Connect connect;
-    private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier; //key: productID, supplierNumber
+    private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier =new HashMap<>();; //key: productID, supplierNumber
 
     /**
      * constructor
@@ -19,7 +19,6 @@ public class ProductSupplierDAO {
      */
     public ProductSupplierDAO(){
         connect=Connect.getInstance();
-        IMProductSupplier=new HashMap<>();
     }
     public void insert(ProductSupplier ps) throws SQLException {
         String query = "INSERT INTO ProductSupplier (catalogNumber,productId,price, supplierNumber)" +

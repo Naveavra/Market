@@ -96,10 +96,9 @@ public class SuppliersDAO {
             ResultSet rs = stmt.executeQuery(query);
             if (!rs.next())
                 return null;
-            System.out.println(rs.getInt("isDeliver"));
-            System.out.println(rs.getBoolean("isDeliver"));
             Supplier supplier =new Supplier(supplierNumber, rs.getNString("name"),rs.getInt("bankAccount"),getContacts(supplierNumber),
                     Boolean.parseBoolean(rs.getInt("isDeliver")+""),rs.getBoolean("active"));
+            supplier.addDiscounts(getDiscountsSupplier(supplierNumber));
             return supplier;
         } catch (SQLException e) {
             throw e;
@@ -118,6 +117,24 @@ public class SuppliersDAO {
                 contacts.put(rs.getString("name"),rs.getString("email"));
             }
             return contacts;
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+
+    private Map<Integer,Double> getDiscountsSupplier(int supplierNumber) throws SQLException {
+        String query =String.format("SELECT * from DiscountSupplier WHERE supplierNumber =%d", supplierNumber);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            Map<Integer,Double> discounts =new HashMap<>();
+            while(rs.next())  {
+                discounts.put(rs.getInt("quantity"),rs.getDouble("discount"));
+            }
+            return discounts;
         } catch (SQLException e) {
             throw e;
         }

@@ -20,6 +20,15 @@ public class OrderFromSupplier {
         DeliveryTerm.DaysInWeek[] daysInWeek = {};
         daysToDeliver=new DeliveryTerm(daysInWeek);
     }
+
+
+    public OrderFromSupplier(int orderId, String date, DeliveryTerm deliveryTerm){
+        this.orderId = orderId;
+        products = new HashMap<>();
+        this.date = date;
+        daysToDeliver = deliveryTerm;
+    }
+
     public OrderFromSupplier(OrderFromSupplier order){
         this.date=order.date;
         this.orderId=order.orderId;

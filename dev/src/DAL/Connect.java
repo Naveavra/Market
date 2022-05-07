@@ -101,12 +101,20 @@ public class Connect {
                     "\tPRIMARY KEY(\"supplierNumber\",\"quantity\")\n"+ ")";
             stmt.execute(query);
             //table orderFromSupplier
-            query = "CREATE TABLE IF NOT EXISTS \"OrderFromSupplier\"  (\n" +
+            query = "CREATE TABLE IF NOT EXISTS \"OrdersFromSupplier\"  (\n" +
                     "\t\"orderId\"\tINTEGER,\n" +
                     "\t\"date\"\tTEXT,\n" +
+                    "\t\"supplierNumber\"\tTEXT,\n" +
                     "\tPRIMARY KEY(\"orderId\")\n"+ ")";
             stmt.execute(query);
 
+            //table productsInOrder
+            query = "CREATE TABLE IF NOT EXISTS \"ProductsInOrder\"  (\n" +
+                    "\t\"orderId\"\tINTEGER,\n" +
+                    "\t\"productId\"\tINTEGER,\n" +
+                    "\t\"count\"\tINTEGER,\n" +
+                    "\tPRIMARY KEY(\"orderId\" , \"productId\")\n"+ ")";
+            stmt.execute(query);
             //table deliveryTerms
             query = "CREATE TABLE IF NOT EXISTS \"DeliveryTerms\"  (\n" +
                     "\t\"orderId\"\tINTEGER,\n" +
