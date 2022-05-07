@@ -2,6 +2,7 @@ package DomainLayer;
 
 
 import DAL.OrdersFromSupplierDAO;
+import DAL.PastOrdersSupplierDAO;
 import DAL.ProductSupplierDAO;
 import DAL.SuppliersDAO;
 
@@ -22,10 +23,11 @@ public class Supplier {
     //DAO to db
     private ProductSupplierDAO productsDAO;
     private OrdersFromSupplierDAO ordersDAO;
-
-    private Map<Integer, ProductSupplier> products;//remove
-    private Map<Integer, OrderFromSupplier> orders;//remove
-    private List<PastOrderSupplier> finalOrders;//remove
+    private PastOrdersSupplierDAO pastOrdersDAO;
+//
+//    private Map<Integer, ProductSupplier> products;//remove
+//    private Map<Integer, OrderFromSupplier> orders;//remove
+//    private List<PastOrderSupplier> finalOrders;//remove
 
 
     public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts,boolean isDeliver,boolean active){
@@ -39,10 +41,10 @@ public class Supplier {
         discountByAmount=new TreeMap<>();
         discountByAmount.put(0,1.0);
         this.active =active;
-        finalOrders=new ArrayList<>();
         this.isDeliver=isDeliver;
         productsDAO = new ProductSupplierDAO();
         ordersDAO = new OrdersFromSupplierDAO();
+//        finalOrders=new ArrayList<>();
 //        orders = new HashMap<>();
 //        products =new HashMap<>();
     }
@@ -128,7 +130,12 @@ public class Supplier {
         return order;
     }
     public ProductSupplier getProduct(int catalogNumber){
-        return products.get(catalogNumber);
+        try{
+            return productsDAO.getProductByCatalogNumber(supplierNumber,catalogNumber);
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
     public double updateTotalIncludeDiscounts(int orderId) throws SQLException {
@@ -165,8 +172,8 @@ public class Supplier {
         } catch (SQLException e) {
             return false;
         }
-        finalOrders.add(new PastOrderSupplier(o,totalPrice));
-        orders.remove(orderId);
+        pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
+        ordersDAO.removeOrder(orderId);
         return true;
     }
 
@@ -184,7 +191,7 @@ public class Supplier {
     }
 
     public Map<Integer, OrderFromSupplier> getActiveOrders() {
-        return orders;
+        return ordersDAO.getActiveOrders();
     }
 
     public boolean isProductExist(int productId){
@@ -205,7 +212,12 @@ public class Supplier {
 
 
     public Map<Integer, ProductSupplier> getProducts() {
-        return productsDAO.getAllProductsOfSupplier(supplierNumber);
+        try{
+            return productsDAO.getAllProductsOfSupplier(supplierNumber);
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
 //    public String getProductsNames() {
@@ -225,7 +237,7 @@ public class Supplier {
     }
 
     public List<PastOrderSupplier> getFinalOrders() {
-        return finalOrders;
+        return pastOrdersDAO.getAllPastOrders();
     }
 
     public boolean updateDeliveration(boolean deliver) {

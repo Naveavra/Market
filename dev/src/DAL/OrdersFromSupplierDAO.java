@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrdersFromSupplierDAO {
     private Connect connect;
@@ -128,15 +129,15 @@ public class OrdersFromSupplierDAO {
         }
     }
 
-    private List<ProductSupplier> getAllProductsOfOrder(int orderId,int supplierNumber) throws SQLException {
-        String query =String.format("SELECT * FROM ProductsInOrder WHERE orderId = %d"
+    public Map<ProductSupplier,Integer> getAllProductsOfOrder(int orderId) throws SQLException {
+        String query =String.format("SELECT * FROM ProductsInOrder p, OrdersFromSupplier o WHERE o.orderId = p.orderId orderId = %d"
                 , orderId);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
-            List<ProductSupplier> products = new ArrayList<>();
+            Map<ProductSupplier,Integer> products = new HashMap<>();
             while (rs.next()){
-                ProductSupplier p = productSupplierDAO.getProduct(supplierNumber, rs.getInt("productId"));
-                products.add(p);
+                ProductSupplier p = productSupplierDAO.getProduct(rs.getInt("supplierNumber"), rs.getInt("productId"));
+                products.put(p,rs.getInt("count"));
             }
             return products;
         } catch (SQLException e) {
@@ -147,4 +148,10 @@ public class OrdersFromSupplierDAO {
         }
     }
 
+    public Map<Integer, OrderFromSupplier> getActiveOrders() {
+        return null;
+    }
+
+    public void removeOrder(int orderId) {
+    }
 }

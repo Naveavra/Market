@@ -1,9 +1,11 @@
 package DAL;
 
 import DomainLayer.OrderFromSupplier;
+import DomainLayer.PastOrderSupplier;
 import javafx.util.Pair;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class PastOrdersSupplierDAO {
     private Connect connect;
@@ -15,5 +17,12 @@ public class PastOrdersSupplierDAO {
     public PastOrdersSupplierDAO(){
         connect=Connect.getInstance();
         IMPastOrdersFromSupplier = new HashMap<>();
+    }
+
+    public List<PastOrderSupplier> getAllPastOrders() {
+        return null;
+    }
+
+    public void insertPastOrder(PastOrderSupplier pastOrderSupplier) {
     }
 }
