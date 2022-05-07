@@ -14,7 +14,7 @@ public class DeliveryTerm {
         Friday,
         Saturday
     }
-    Map<String, DaysInWeek> M  = new HashMap<String, DaysInWeek>() {{
+    public static Map<String, DaysInWeek> M  = new HashMap<String, DaysInWeek>() {{
         put("1", DaysInWeek.Sunday);
         put("2", DaysInWeek.monday);
         put("3", DaysInWeek.Tuesday);

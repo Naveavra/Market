@@ -14,6 +14,7 @@ public class OrderFromSupplier {
     private int orderId;
     private String date;
     private DeliveryTerm daysToDeliver;
+    private int supplierNumber;
     //DAO
     private ProductSupplierDAO productsDAO;
     private OrdersFromSupplierDAO ordersDAO;

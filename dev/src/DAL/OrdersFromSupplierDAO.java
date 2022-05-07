@@ -130,7 +130,7 @@ public class OrdersFromSupplierDAO {
     }
 
     public Map<ProductSupplier,Integer> getAllProductsOfOrder(int orderId) throws SQLException {
-        String query =String.format("SELECT * FROM ProductsInOrder p, OrdersFromSupplier o WHERE o.orderId = p.orderId orderId = %d"
+        String query =String.format("SELECT * FROM ProductsInOrder p, OrdersFromSupplier o WHERE o.orderId = p.orderId and orderId = %d"
                 , orderId);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
@@ -148,10 +148,37 @@ public class OrdersFromSupplierDAO {
         }
     }
 
-    public Map<Integer, OrderFromSupplier> getActiveOrders() {
-        return null;
+    public Map<Integer, OrderFromSupplier> getActiveOrders(int supplierNumber) throws SQLException {
+        String query =String.format("SELECT * FROM OrdersFromSupplier WHERE  supplierNumber = %d"
+                , supplierNumber);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            Map<Integer,OrderFromSupplier> orders = new HashMap<>();
+            while (rs.next()){
+                OrderFromSupplier order = new OrderFromSupplier(rs.getInt("orderId"), rs.getString("date")
+                        ,getDeliveryTermOfOrder(rs.getInt("orderId")));
+            }
+            return orders;
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
     }
 
-    public void removeOrder(int orderId) {
+    public boolean removeOrder(int orderId) throws SQLException {
+        String query =String.format("DELETE FROM OrdersFromSupplier WHERE orderId = %d"
+                , orderId);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+
+            return true;
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
     }
 }

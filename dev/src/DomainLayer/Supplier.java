@@ -169,12 +169,13 @@ public class Supplier {
         double totalPrice = 0;
         try {
             totalPrice = updateTotalIncludeDiscounts(orderId);
+            pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
+            ordersDAO.removeOrder(orderId);
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
-        ordersDAO.removeOrder(orderId);
-        return true;
+
     }
 
 
@@ -191,7 +192,11 @@ public class Supplier {
     }
 
     public Map<Integer, OrderFromSupplier> getActiveOrders() {
-        return ordersDAO.getActiveOrders();
+        try {
+            return ordersDAO.getActiveOrders(supplierNumber);
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public boolean isProductExist(int productId){
