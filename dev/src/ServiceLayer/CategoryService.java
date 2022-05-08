@@ -1,6 +1,5 @@
 package ServiceLayer;
 
-import DomainLayer.Product;
 import DomainLayer.Storage.Category;
 import DomainLayer.Storage.CategoryController;
 import DomainLayer.Storage.ReportController;

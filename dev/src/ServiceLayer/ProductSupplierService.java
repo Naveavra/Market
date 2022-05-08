@@ -1,6 +1,6 @@
 package ServiceLayer;
 
-import DomainLayer.Product;
+import DomainLayer.ProductSupplier;
 import DomainLayer.SupplierController;
 import com.google.gson.Gson;
 
@@ -26,7 +26,7 @@ public class ProductSupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addProduct(int supplierNumber, int catalogNumber, String name, int price, int productId){
-        boolean ans = supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, price, productId);
+        boolean ans = supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, price, productId, supplierNumber);
         return ans;
     }
 
@@ -39,7 +39,7 @@ public class ProductSupplierService {
         if(supplierController.getSupplier(supplierNumber)==null){
             return "fail";
         }
-        Map<Integer,Product> products = supplierController.getSupplier(supplierNumber).getProducts();
+        Map<Integer, ProductSupplier> products = supplierController.getSupplier(supplierNumber).getProducts();
         return gson.toJson(products);
     }
 

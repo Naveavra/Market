@@ -1,12 +1,16 @@
 package DomainLayer;
 
+import DAL.SuppliersDAO;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SupplierController {
-    private static Map<Integer,Supplier> suppliers = new HashMap<>();
+    //private static Map<Integer,Supplier> suppliers = new HashMap<>();
+    private SuppliersDAO suppliersDAO = new SuppliersDAO();
 
     /**
      * the function gets a supplier number and return the supplier with the same supplier number
@@ -14,7 +18,11 @@ public class SupplierController {
      * @return supplier
      */
     public Supplier getSupplier(Integer supplierNumber) {
-        return suppliers.get(supplierNumber);
+        try {
+            return suppliersDAO.getSupplier(supplierNumber);
+        }catch (Exception e){
+            return null;
+        }
     }
 
     /**
@@ -33,11 +41,18 @@ public class SupplierController {
         if(bankAccount<0){
             return false;
         }
-        if(suppliers.containsKey(supplierNumber)){
+        try {
+            if(suppliersDAO.getSupplier(supplierNumber) != null){
+                return false;
+            }
+            Supplier s = new Supplier(supplierNumber,supplierName, bankAccount, contacts,isDeliver,true);
+
+            suppliersDAO.insertSupplier(s);
+        }
+        catch (Exception e){
             return false;
         }
-        Supplier s = new Supplier(supplierNumber,supplierName, bankAccount, contacts,isDeliver);
-        suppliers.put(supplierNumber, s);
+        //suppliers.put(supplierNumber, s);
         return true;
     }
 
@@ -50,14 +65,21 @@ public class SupplierController {
         if(supplierNumber<0){
             return false;
         }
-        if(!suppliers.containsKey(supplierNumber)){
+        try {
+            Supplier s = suppliersDAO.getSupplier(supplierNumber);
+            if (s == null) {
+                return false;
+            }
+            if (!s.isActive()) {
+                return false;
+            }
+            s.closeAccount();
+            suppliersDAO.updateSupplier(s);
+            return true;
+        }
+        catch (Exception e){
             return false;
         }
-        if(!suppliers.get(supplierNumber).isActive()){
-            return false;
-        }
-        suppliers.get(supplierNumber).closeAccount();
-        return true;
     }
 
 }
