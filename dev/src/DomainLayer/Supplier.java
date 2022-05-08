@@ -22,7 +22,7 @@ public class Supplier {
 
     //DAO to db
     private ProductSupplierDAO productsDAO;
-    private OrdersFromSupplierDAO ordersDAO;
+    //private OrdersFromSupplierDAO ordersDAO;
     private PastOrdersSupplierDAO pastOrdersDAO;
 //
 //    private Map<Integer, ProductSupplier> products;//remove
@@ -43,7 +43,7 @@ public class Supplier {
         this.active =active;
         this.isDeliver=isDeliver;
         productsDAO = new ProductSupplierDAO();
-        ordersDAO = new OrdersFromSupplierDAO();
+        //ordersDAO = new OrdersFromSupplierDAO();
 //        finalOrders=new ArrayList<>();
 //        orders = new HashMap<>();
 //        products =new HashMap<>();
@@ -119,16 +119,16 @@ public class Supplier {
         }
         return true;
     }
-    public OrderFromSupplier createOrder(){
-        OrderFromSupplier order = new OrderFromSupplier(orderNum);
-        try {
-            ordersDAO.createOrderFromSupplier(order,supplierNumber);
-        } catch (SQLException e) {
-            return null;
-        }
-        orderNum++;
-        return order;
-    }
+//    public OrderFromSupplier createOrder(){
+//        OrderFromSupplier order = new OrderFromSupplier(orderNum);
+//        try {
+//            ordersDAO.createOrderFromSupplier(order,supplierNumber);
+//        } catch (SQLException e) {
+//            return null;
+//        }
+//        orderNum++;
+//        return order;
+//    }
     public ProductSupplier getProduct(int catalogNumber){
         try{
             return productsDAO.getProductByCatalogNumber(supplierNumber,catalogNumber);
@@ -137,67 +137,67 @@ public class Supplier {
             return null;
         }
     }
-
-    public double updateTotalIncludeDiscounts(int orderId) throws SQLException {
-        OrderFromSupplier order = getOrder(orderId);
-        int count = order.getCountProducts();
-        double price = order.getTotalIncludeDiscounts();
-        return price*findMaxUnder(count);
-    }
-    private double findMaxUnder(int count){
-        int out=0;
-
-        for(int s:discountByAmount.keySet()){
-            if(s<=count){
-                out=s;
-            }
-            else{
-                return discountByAmount.get(out);
-            }
-        }
-        return discountByAmount.get(out);
-    }
-    public boolean finishOrder(int orderId){
-        if(orderId<0){
-            return false;
-        }
-        OrderFromSupplier o = getOrder(orderId);
-        if(o == null){
-            return false;
-        }
-        //do something with isDeliver
-        double totalPrice = 0;
-        try {
-            totalPrice = updateTotalIncludeDiscounts(orderId);
-            pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
-            ordersDAO.removeOrder(orderId);
-            return true;
-        } catch (SQLException e) {
-            return false;
-        }
-
-    }
+//
+//    public double updateTotalIncludeDiscounts(int orderId) throws SQLException {
+//        OrderFromSupplier order = getOrder(orderId);
+//        int count = order.getCountProducts();
+//        double price = order.getTotalIncludeDiscounts();
+//        return price*findMaxUnder(count);
+//    }
+//    private double findMaxUnder(int count){
+//        int out=0;
+//
+//        for(int s:discountByAmount.keySet()){
+//            if(s<=count){
+//                out=s;
+//            }
+//            else{
+//                return discountByAmount.get(out);
+//            }
+//        }
+//        return discountByAmount.get(out);
+//    }
+//    public boolean finishOrder(int orderId){
+//        if(orderId<0){
+//            return false;
+//        }
+//        OrderFromSupplier o = getOrder(orderId);
+//        if(o == null){
+//            return false;
+//        }
+//        //do something with isDeliver
+//        double totalPrice = 0;
+//        try {
+//            totalPrice = updateTotalIncludeDiscounts(orderId);
+//            pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
+//            ordersDAO.removeOrder(orderId);
+//            return true;
+//        } catch (SQLException e) {
+//            return false;
+//        }
+//
+//    }
 
 
     public String getName() {
         return name;
     }
 
-    public OrderFromSupplier getOrder(int orderId) {
-        try {
-            return ordersDAO.getOrderWithAllTheProducts(orderId);
-        } catch (SQLException e) {
-            return null;
-        }
-    }
-
-    public Map<Integer, OrderFromSupplier> getActiveOrders() {
-        try {
-            return ordersDAO.getActiveOrders(supplierNumber);
-        } catch (SQLException e) {
-            return null;
-        }
-    }
+//    public OrderFromSupplier getOrder(int orderId) {
+//        try {
+//            return ordersDAO.getOrderWithAllTheProducts(orderId);
+//        } catch (SQLException e) {
+//            return null;
+//        }
+//    }
+//
+//    public Map<Integer, OrderFromSupplier> getActiveOrders() {
+//        try {
+//            return ordersDAO.getActiveOrders(supplierNumber);
+//        } catch (SQLException e) {
+//            return null;
+//        }
+//    }
 
     public boolean isProductExist(int productId){
         try{

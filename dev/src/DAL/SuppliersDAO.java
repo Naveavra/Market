@@ -126,7 +126,7 @@ public class SuppliersDAO {
     }
 
 
-    private Map<Integer,Double> getDiscountsSupplier(int supplierNumber) throws SQLException {
+    public Map<Integer,Double> getDiscountsSupplier(int supplierNumber) throws SQLException {
         String query =String.format("SELECT * from DiscountSupplier WHERE supplierNumber =%d", supplierNumber);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);

@@ -16,7 +16,7 @@ public class OrderFromSupplier {
     private DeliveryTerm daysToDeliver;
     private int supplierNumber;
     //DAO
-    //private ProductSupplierDAO productsDAO;
+    private ProductSupplierDAO productsDAO;
     private OrdersFromSupplierDAO ordersDAO;
     private Map<ProductSupplier,Integer> products;//product and count
 
@@ -135,5 +135,9 @@ public String getDate(){
     public boolean updateDeliveryDays(String[] daysInWeek) {
         this.daysToDeliver.updateFixedDeliveryDays(daysInWeek);
         return true;
+    }
+
+    public int getSupplierNumber() {
+        return supplierNumber;
     }
 }
