@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class SupplierController {
     //private static Map<Integer,Supplier> suppliers = new HashMap<>();
-    private SuppliersDAO suppliersDAO =new SuppliersDAO();
+    private SuppliersDAO suppliersDAO = new SuppliersDAO();
 
     /**
      * the function gets a supplier number and return the supplier with the same supplier number

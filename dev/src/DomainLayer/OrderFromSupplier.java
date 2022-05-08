@@ -16,9 +16,9 @@ public class OrderFromSupplier {
     private DeliveryTerm daysToDeliver;
     private int supplierNumber;
     //DAO
-    private ProductSupplierDAO productsDAO;
+    //private ProductSupplierDAO productsDAO;
     private OrdersFromSupplierDAO ordersDAO;
-    //private Map<ProductSupplier,Integer> products;//product and count
+    private Map<ProductSupplier,Integer> products;//product and count
 
 
     public OrderFromSupplier(int orderId){

@@ -17,7 +17,7 @@ public class Connect {
     private static Connect instance;
     public static Connect getInstance(){
         if(instance==null){
-            instance=new Connect();
+            instance = new Connect();
         }
         return instance;
     }
