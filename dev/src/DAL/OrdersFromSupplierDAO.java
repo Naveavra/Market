@@ -91,7 +91,7 @@ public class OrdersFromSupplierDAO {
 
 
     //need to add return products..
-    public OrderFromSupplier getOrderWithAllTheProducts(int orderId) throws SQLException {
+    public OrderFromSupplier getOrder(int orderId) throws SQLException {
         if (IMOrdersFromSupplier.containsKey(orderId)){
             return IMOrdersFromSupplier.get(orderId);
         }

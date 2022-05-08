@@ -11,6 +11,13 @@ public class PastOrderSupplier extends OrderFromSupplier {
         this.totalPrice=totalPrice;
         this.finishDate=LocalDateTime.now().toString();
     }
+
+    public PastOrderSupplier(OrderFromSupplier order, double totalPrice, String finishDate) {
+        super(order);
+        this.totalPrice=totalPrice;
+        this.finishDate= finishDate;
+    }
+
     public int getOrderId(){
         return super.getOrderId();
     }
@@ -18,4 +25,7 @@ public class PastOrderSupplier extends OrderFromSupplier {
         return "total price: "+totalPrice+", finish date"+finishDate;
     }
 
+    public double getTotalPrice() {
+        return totalPrice;
+    }
 }

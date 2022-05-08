@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProductsSupplierDAO {
-    private Connect connect;
-    private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier =new HashMap<>();; //key: productID, supplierNumber
+    private final Connect connect;
+    private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier =new HashMap<>(); //key: productID, supplierNumber
 
     /**
      * constructor

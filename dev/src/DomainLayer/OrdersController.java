@@ -55,7 +55,7 @@ public class OrdersController {
     }
     public OrderFromSupplier getOrder(int orderId) {
         try {
-            return ordersDAO.getOrderWithAllTheProducts(orderId);
+            return ordersDAO.getOrder(orderId);
         } catch (SQLException e) {
             return null;
         }
@@ -95,7 +95,11 @@ public class OrdersController {
 
 
     public List<PastOrderSupplier> getFinalOrders(int supplierNumber) {
-        return pastOrdersDAO.getAllPastOrders(supplierNumber);
+        try {
+            return pastOrdersDAO.getAllPastOrders(supplierNumber);
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
 
