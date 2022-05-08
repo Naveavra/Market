@@ -1,13 +1,11 @@
 package DomainLayer;
 
 import DAL.OrdersFromSupplierDAO;
-import DAL.ProductSupplierDAO;
+import DAL.ProductsSupplierDAO;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class OrderFromSupplier {
@@ -16,8 +14,9 @@ public class OrderFromSupplier {
     private DeliveryTerm daysToDeliver;
     private int supplierNumber;
     //DAO
-    private ProductSupplierDAO productsDAO;
+    private ProductsSupplierDAO productsDAO;
     private OrdersFromSupplierDAO ordersDAO;
+
     private Map<ProductSupplier,Integer> products;//product and count
 
 
@@ -29,7 +28,7 @@ public class OrderFromSupplier {
         date = simpleDateFormat.format(new Date());
         DeliveryTerm.DaysInWeek[] daysInWeek = {};
         daysToDeliver=new DeliveryTerm(daysInWeek);
-        productsDAO = new ProductSupplierDAO();
+        productsDAO = new ProductsSupplierDAO();
     }
 
 
@@ -50,6 +49,15 @@ public class OrderFromSupplier {
         this.daysToDeliver=order.daysToDeliver;
     }
 
+    public OrderFromSupplier() {
+        String pattern = "MM-dd-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        date = simpleDateFormat.format(new Date());
+        DeliveryTerm.DaysInWeek[] daysInWeek = {};
+        daysToDeliver=new DeliveryTerm(daysInWeek);
+        productsDAO = new ProductsSupplierDAO();
+    }
+
     public boolean updateProductToOrder(ProductSupplier p, int count){
         if(count<=0){
             return false;
@@ -66,10 +74,11 @@ public class OrderFromSupplier {
         return true;
 
     }
-public int getOrderId(){
-        return orderId;
-}
-public String getDate(){
+    public int getOrderId(){
+            return orderId;
+    }
+
+    public String getDate(){
         return date;
 }
 
@@ -139,5 +148,9 @@ public String getDate(){
 
     public int getSupplierNumber() {
         return supplierNumber;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }

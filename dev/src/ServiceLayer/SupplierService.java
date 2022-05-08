@@ -1,6 +1,7 @@
 package ServiceLayer;
 
 
+import DomainLayer.Facade;
 import DomainLayer.PastOrderSupplier;
 import DomainLayer.Supplier;
 import DomainLayer.SupplierController;
@@ -13,6 +14,11 @@ import com.google.gson.Gson;
 public class SupplierService {
     private SupplierController supplierController =new SupplierController();
     private Gson gson=new Gson();
+    private Facade facade;
+
+    public SupplierService(){
+        facade = new Facade();
+    }
 
     /**
      *the function open an account to a new supplier
@@ -23,12 +29,8 @@ public class SupplierService {
      *@param isDeliver  boolean var which specify who is responsible for delivery the SUPERLI or the supplier
      *@return true if succeed, false if failed
      */
-
     public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts,boolean isDeliver){
-        if(supplierNumber<=0){
-            return false;
-        }
-        return supplierController.openAccount(supplierNumber, supplierName,bankAccount,contacts,isDeliver);
+        return facade.openAccount(supplierNumber, supplierName, bankAccount, contacts, isDeliver);
     }
 
     /**
@@ -37,13 +39,7 @@ public class SupplierService {
      * @return true if succeed, false if failed
      */
     public boolean closeAccount(int supplierNumber){
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return false;
-        }
-        if(!supplierController.getSupplier(supplierNumber).isActive()){
-            return false;
-        }
-        return supplierController.closeAccount(supplierNumber);
+       return facade.closeAccount(supplierNumber);
     }
 
     /**
@@ -55,16 +51,7 @@ public class SupplierService {
      * @return
      */
     public boolean updateAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts){
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return false;
-        }
-        if(!supplierController.getSupplier(supplierNumber).isActive()){
-            return false;
-        }
-        if(bankAccount<0){
-            return false;
-        }
-        return supplierController.getSupplier(supplierNumber).updateAccount(supplierName,bankAccount,contacts);
+      return facade.updateAccount(supplierNumber, supplierName, bankAccount, contacts);
     }
 
     /**
@@ -76,26 +63,7 @@ public class SupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addDiscount(int supplierNumber,int catalogNumber,int count,double discount){
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return false;
-        }
-        if(!supplierController.getSupplier(supplierNumber).isActive()){
-            return false;
-        }
-
-        if(catalogNumber<0){
-            return false;
-        }
-        if(supplierController.getSupplier(supplierNumber).getProduct(catalogNumber)==null){
-            return false;
-        }
-        if(count<=0){
-            return false;
-        }
-        if(discount<=0|discount>=1){
-            return false;
-        }
-        return supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).addDiscount(count, discount);
+      return facade.addDiscount(supplierNumber, catalogNumber, count, discount);
     }
 
     /**
@@ -106,17 +74,7 @@ public class SupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addDiscount(int supplierNumber,int count,double discount){
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return false;
-        }
-        if(!supplierController.getSupplier(supplierNumber).isActive()){
-            return false;
-        }
-
-        if(count<=0|discount<=0|discount>=1){
-            return false;
-        }
-        return supplierController.getSupplier(supplierNumber).addDiscount(count, discount);
+      return facade.addDiscount(supplierNumber, count, discount);
     }
 
     /**
@@ -127,20 +85,7 @@ public class SupplierService {
      * @return true is succeed, false is failed
      */
     public boolean removeDiscountOnProduct(int supplierNumber,int catalogNumber,int count){
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return false;
-        }
-        if(!supplierController.getSupplier(supplierNumber).isActive()){
-            return false;
-        }
-
-        if(supplierController.getSupplier(supplierNumber).getProduct(catalogNumber)==null){
-            return false;
-        }
-        if(count<=0){
-            return false;
-        }
-        return supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).removeDiscountOnProduct(count);
+        return facade.removeDiscountOnProduct(supplierNumber, catalogNumber, count);
     }
 
     /**
@@ -150,24 +95,11 @@ public class SupplierService {
      * @return true if succeed,false if failed
      */
     public boolean removeDiscountOnAmount(int supplierNumber,int count){
-        if( supplierController.getSupplier(supplierNumber)==null){
-            return false;
-        }
-        if(!supplierController.getSupplier(supplierNumber).isActive()){
-            return false;
-        }
-
-        if(count<=0){
-            return false;
-        }
-        return supplierController.getSupplier(supplierNumber).removeDiscountOnAmount(count);
+        return facade.removeDiscountOnAmount(supplierNumber, count);
     }
 
     public String getSupplier(int supplierNumber) {
-        Gson gson = new Gson();
-        Supplier s = supplierController.getSupplier(supplierNumber);
-        return gson.toJson(s);
-
+      return facade.getSupplier(supplierNumber);
     }
 
     /**
@@ -177,14 +109,8 @@ public class SupplierService {
      * @return A Boolean variable that defines who is responsible for transports, true -the supplier,false - SUPERLI
      */
     public boolean updateDeliveration(int supplierNumber,boolean isDeliver) {
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return false;
-        }
-        if(!supplierController.getSupplier(supplierNumber).isActive()){
-            return false;
-        }
-        return supplierController.getSupplier(supplierNumber).updateDeliveration(isDeliver);
-    }
+         return facade.updateDeliveration(supplierNumber, isDeliver);
+      }
 
     /**
      * the function gets the past orders (Those sent) of a supplier
@@ -192,9 +118,7 @@ public class SupplierService {
      * @return Json string which wrappers the list of past order
      */
     public String  watchPastOrders(int supplierNumber) {
-        List<PastOrderSupplier> pastOrderList=new ArrayList<>();
-        pastOrderList=supplierController.getSupplier(supplierNumber).getFinalOrders();
-        return gson.toJson(pastOrderList);
+       return facade.watchPastOrders(supplierNumber);
     }
 //    public void addContact(int supplierNumber,String name,String email){
 //        supplierController.getSupplier(supplierNumber).

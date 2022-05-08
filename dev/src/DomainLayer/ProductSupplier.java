@@ -81,9 +81,9 @@ public class ProductSupplier {
         return catalogNumber;
     }
 
-    public String getName() {
-        return "";
-    }
+//    public String getName() {
+//        return "";
+//    }
 
     public int getProductId() {
         return productId;

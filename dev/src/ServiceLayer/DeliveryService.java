@@ -1,14 +1,13 @@
 package ServiceLayer;
 
-import DomainLayer.SupplierController;
-import org.json.JSONObject;
+import DomainLayer.Facade;
 
 
 public class DeliveryService {
-    private SupplierController supplierController;
+    private Facade facade;
 
     public DeliveryService(){
-        supplierController = new SupplierController();
+        facade=new Facade();
     }
 
     /**
@@ -19,16 +18,7 @@ public class DeliveryService {
      * @return true if succeed, false if failed
      */
     public boolean addFixedDeliveryDaysForOrder(int supplierNumber,int orderId, String[] daysInWeek){
-     if(supplierController.getSupplier(supplierNumber)==null){
-         return false;
-     }
-     if(!supplierController.getSupplier(supplierNumber).isActive()){
-         return false;
-     }
-     if(supplierController.getSupplier(supplierNumber).getOrder(orderId)==null){
-         return false;
-     }
-        return supplierController.getSupplier(supplierNumber).getOrder(orderId).addDeliveryDays(daysInWeek);
+        return facade.addFixedDeliveryDaysForOrder(supplierNumber, orderId, daysInWeek);
     }
 
     /**
@@ -39,21 +29,6 @@ public class DeliveryService {
      * @return true if succeed, false if failed
      */
     public boolean updateFixedDeliveryDaysForOrder(int supplierNumber,int orderId, String[] daysInWeek){
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return false;
-        }
-        if(!supplierController.getSupplier(supplierNumber).isActive()){
-            return false;
-        }
-        if(supplierController.getSupplier(supplierNumber).getOrder(orderId)==null){
-            return false;
-        }
-        return supplierController.getSupplier(supplierNumber).getOrder(orderId).updateDeliveryDays(daysInWeek);
-
+        return facade.updateFixedDeliveryDaysForOrder(supplierNumber, orderId, daysInWeek);
     }
-//
-//    public boolean stopFixedDeliveryDaysForOrder(int orderId){
-//
-//        return false;
-//    }
 }

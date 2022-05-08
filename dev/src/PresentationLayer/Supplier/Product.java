@@ -1,11 +1,10 @@
 package PresentationLayer.Supplier;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class Product {
     private int catalogNumber;
+    private int productId;
     private String name;
     private double price;
     private Map<Integer,Double> discount;//sum of specific product

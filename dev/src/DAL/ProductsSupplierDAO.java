@@ -9,15 +9,15 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProductSupplierDAO {
-    private Connect connect;
-    private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier =new HashMap<>();; //key: productID, supplierNumber
+public class ProductsSupplierDAO {
+    private final Connect connect;
+    private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier =new HashMap<>(); //key: productID, supplierNumber
 
     /**
      * constructor
      * the connect is singleton
      */
-    public ProductSupplierDAO(){
+    public ProductsSupplierDAO(){
         connect=Connect.getInstance();
     }
     public void insert(ProductSupplier ps) throws SQLException {

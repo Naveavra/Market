@@ -3,7 +3,6 @@ package DAL;
 import DomainLayer.DeliveryTerm;
 import DomainLayer.OrderFromSupplier;
 import DomainLayer.ProductSupplier;
-import DomainLayer.Supplier;
 
 
 import java.sql.ResultSet;
@@ -16,7 +15,7 @@ import java.util.Map;
 
 public class OrdersFromSupplierDAO {
     private Connect connect;
-    private ProductSupplierDAO productSupplierDAO;
+    private ProductsSupplierDAO productSupplierDAO;
     private static HashMap<Integer, OrderFromSupplier> IMOrdersFromSupplier = new HashMap<>();;//key: orderId
 
     /**
@@ -24,14 +23,17 @@ public class OrdersFromSupplierDAO {
      */
     public OrdersFromSupplierDAO(){
         connect=Connect.getInstance();
-        productSupplierDAO = new ProductSupplierDAO();
+        productSupplierDAO = new ProductsSupplierDAO();
     }
 
-    public void createOrderFromSupplier(OrderFromSupplier order, int supplierNumber) throws SQLException {
-        String query =String.format("INSERT INTO OrdersFromSupplier (orderId ,date ,supplierId) " +
-                "VALUES (%d,'%s',%d)", order.getOrderId(), order.getDate(), supplierNumber);
+    public void createOrderFromSupplier(OrderFromSupplier order) throws SQLException {
+        String query =String.format("INSERT INTO OrdersFromSupplier (date ,supplierNumber) " +
+                "VALUES ('%s',%d)", order.getDate(), order.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
+            query = String.format("SELECT MAX(orderId) from OrdersFromSupplier");
+            ResultSet rs = stmt.executeQuery(query);
+            order.setOrderId(rs.getInt(0));
             IMOrdersFromSupplier.put(order.getOrderId(), order);
         } catch (SQLException e) {
             throw e;
@@ -89,7 +91,7 @@ public class OrdersFromSupplierDAO {
 
 
     //need to add return products..
-    public OrderFromSupplier getOrderWithAllTheProducts(int orderId) throws SQLException {
+    public OrderFromSupplier getOrder(int orderId) throws SQLException {
         if (IMOrdersFromSupplier.containsKey(orderId)){
             return IMOrdersFromSupplier.get(orderId);
         }

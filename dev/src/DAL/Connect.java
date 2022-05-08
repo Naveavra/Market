@@ -102,7 +102,7 @@ public class Connect {
             stmt.execute(query);
             //table orderFromSupplier
             query = "CREATE TABLE IF NOT EXISTS \"OrdersFromSupplier\"  (\n" +
-                    "\t\"orderId\"\tINTEGER,\n" +
+                    "\t\"orderId\"\tINTEGER Identity(1000, 1) Unique,\n" +
                     "\t\"date\"\tTEXT,\n" +
                     "\t\"supplierNumber\"\tTEXT,\n" +
                     "\tPRIMARY KEY(\"orderId\")\n"+ ")";
