@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProductSupplierDAO {
+public class ProductsSupplierDAO {
     private Connect connect;
     private static HashMap<Pair<Integer,Integer>, ProductSupplier> IMProductSupplier =new HashMap<>();; //key: productID, supplierNumber
 
@@ -17,7 +17,7 @@ public class ProductSupplierDAO {
      * constructor
      * the connect is singleton
      */
-    public ProductSupplierDAO(){
+    public ProductsSupplierDAO(){
         connect=Connect.getInstance();
     }
     public void insert(ProductSupplier ps) throws SQLException {

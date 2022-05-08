@@ -4,9 +4,10 @@ import ServiceLayer.ProductSupplierService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
-
-import java.util.*;
 
 public class ProductMenu {
 

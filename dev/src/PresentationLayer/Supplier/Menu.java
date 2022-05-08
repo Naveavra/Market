@@ -1,10 +1,6 @@
 package PresentationLayer.Supplier;
 
-import ServiceLayer.OrderService;
-import ServiceLayer.ProductSupplierService;
-import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class Menu {

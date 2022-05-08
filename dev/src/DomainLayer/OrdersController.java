@@ -2,34 +2,35 @@ package DomainLayer;
 
 import DAL.OrdersFromSupplierDAO;
 import DAL.PastOrdersSupplierDAO;
-import DAL.ProductSupplierDAO;
+import DAL.ProductsSupplierDAO;
 import DAL.SuppliersDAO;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 public class OrdersController {
     private OrdersFromSupplierDAO ordersDAO;
-    private ProductSupplierDAO productsDAO;
+    private ProductsSupplierDAO productsDAO;
     private static int orderNum=0;
     private PastOrdersSupplierDAO pastOrdersDAO;
     private SuppliersDAO suppliersDAO;
 
     public OrdersController() {
         this.ordersDAO = new OrdersFromSupplierDAO();
-        this.productsDAO = new ProductSupplierDAO();
+        this.productsDAO = new ProductsSupplierDAO();
         this.pastOrdersDAO =new PastOrdersSupplierDAO();
         this.suppliersDAO=new SuppliersDAO();
     }
 
     public OrderFromSupplier createOrder(int supplierNumber){
-        OrderFromSupplier order = new OrderFromSupplier(orderNum);
+        OrderFromSupplier order = new OrderFromSupplier();
         try {
-            ordersDAO.createOrderFromSupplier(order,supplierNumber);
+            ordersDAO.createOrderFromSupplier(order);
         } catch (SQLException e) {
             return null;
         }
-        orderNum++;
+        //orderNum++;
         return order;
     }
     public boolean finishOrder(int orderId){
@@ -91,5 +92,11 @@ public class OrdersController {
             return null;
         }
     }
+
+
+    public List<PastOrderSupplier> getFinalOrders(int supplierNumber) {
+        return pastOrdersDAO.getAllPastOrders(supplierNumber);
+    }
+
 
 }

@@ -19,7 +19,7 @@ public class PastOrdersSupplierDAO {
         IMPastOrdersFromSupplier = new HashMap<>();
     }
 
-    public List<PastOrderSupplier> getAllPastOrders() {
+    public List<PastOrderSupplier> getAllPastOrders(int supplierNumber) {
         return null;
     }
 
