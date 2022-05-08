@@ -24,20 +24,24 @@ public class Facade {
         boolean ans = ordersController.getOrder(orderId).updateProductToOrder(p, count);
         return ans;
     }
+
     public boolean updateProductInOrder(int supplierNumber,int orderId, int catalogNUmber, int newCount){
         ProductSupplier p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
         boolean ans = ordersController.getOrder(orderId).updateProductToOrder(p, newCount);
         return ans;
     }
+
     public boolean deleteProductFromOrder(int supplierNumber,int orderId, int catalogNUmber){
         ProductSupplier p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
         return ordersController.getOrder(orderId).removeProductFromOrder(p);
     }
+
     public String getActiveOrders(int supplierNumber){
         Map<Integer, OrderFromSupplier> orders = ordersController.getActiveOrders(supplierNumber);
         List<OrderFromSupplier> orders1=new ArrayList<>(orders.values());
         return gson.toJson(orders);
     }
+
     public String getFixedDaysOrders(int supplierNumber){
         Map<Integer, OrderFromSupplier> orders = ordersController.getActiveOrders(supplierNumber);
         Map<Integer, DeliveryTerm> deliveryDays=new HashMap<>();
@@ -48,6 +52,7 @@ public class Facade {
         }
         return gson.toJson(deliveryDays);
     }
+
     public boolean sendOrder(int supplierNumber, int orderId){
         if(supplierController.getSupplier(supplierNumber)==null){
             return false;
@@ -57,6 +62,7 @@ public class Facade {
         }
         return ordersController.finishOrder(orderId);
     }
+
     public String getOrder(int supplierNumber, int orderId) {
         if(supplierController.getSupplier(supplierNumber)==null){
             return "fail";
@@ -67,6 +73,7 @@ public class Facade {
         OrderFromSupplier o = ordersController.getOrder(orderId);
         return gson.toJson(o);
     }
+
     public String getProductsInOrder(int supplierNumber, int orderID) {
         if(supplierController.getSupplier(supplierNumber)==null){
             return "fail";
@@ -96,6 +103,7 @@ public class Facade {
         }
         return ordersController.getOrder(orderId).addDeliveryDays(daysInWeek);
     }
+
     public boolean updateFixedDeliveryDaysForOrder(int supplierNumber,int orderId, String[] daysInWeek){
         if(supplierController.getSupplier(supplierNumber)==null){
             return false;
@@ -223,14 +231,12 @@ public class Facade {
         if(!supplierController.getSupplier(supplierNumber).isActive()){
             return false;
         }
-
         if(count<=0){
             return false;
         }
         return supplierController.getSupplier(supplierNumber).removeDiscountOnAmount(count);
     }
     public String getSupplier(int supplierNumber) {
-        Gson gson = new Gson();
         Supplier s = supplierController.getSupplier(supplierNumber);
         return gson.toJson(s);
 
