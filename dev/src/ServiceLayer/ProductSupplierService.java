@@ -1,19 +1,12 @@
 package ServiceLayer;
 
-import DomainLayer.ProductSupplier;
-import DomainLayer.SupplierController;
-import com.google.gson.Gson;
-
-import java.util.Map;
+import DomainLayer.Facade;
 
 public class ProductSupplierService {
-
-    private SupplierController supplierController;
-    private Gson gson;
+    private Facade facade;
 
     public ProductSupplierService(){
-        supplierController = new SupplierController();
-        gson = new Gson();
+        facade = new Facade();
     }
 
     /**
@@ -26,8 +19,7 @@ public class ProductSupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addProduct(int supplierNumber, int catalogNumber, String name, int price, int productId){
-        boolean ans = supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, price, productId, supplierNumber);
-        return ans;
+       return facade.addProduct(supplierNumber, catalogNumber, name, price, productId);
     }
 
     /**
@@ -36,11 +28,7 @@ public class ProductSupplierService {
      * @return gson which wrappers the dictionary<catalog number,product>
      */
     public String getProductsOfSupplier(int supplierNumber){
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return "fail";
-        }
-        Map<Integer, ProductSupplier> products = supplierController.getSupplier(supplierNumber).getProducts();
-        return gson.toJson(products);
+        return facade.getProductsOfSupplier(supplierNumber);
     }
 
     /**
@@ -52,17 +40,7 @@ public class ProductSupplierService {
      * @return true if succeed, false if failed
      */
     public boolean updateProduct(int supplierNumber, int catalogNumber, String name, int price){
-        if(price<=0){
-            return false;
-        }
-        if(!supplierController.getSupplier(supplierNumber).isProductExist(catalogNumber)){
-           return false;
-        }
-        if(name.equals("")){
-            return false;
-        }
-        supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).setPrice(price);
-        return true;
+     return facade.updateProduct(supplierNumber, catalogNumber, name, price);
     }
 
     /**
@@ -72,7 +50,6 @@ public class ProductSupplierService {
      * @return true if succeed, false if failed
      */
     public boolean removeProduct(int supplierNumber, int catalogNumber){
-        boolean ans = supplierController.getSupplier(supplierNumber).removeProduct(catalogNumber);
-        return ans;
+        return facade.removeProduct(supplierNumber, catalogNumber);
     }
 }

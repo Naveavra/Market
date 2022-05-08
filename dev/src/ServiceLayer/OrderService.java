@@ -1,27 +1,17 @@
 package ServiceLayer;
 
-import DomainLayer.DeliveryTerm;
-import DomainLayer.OrderFromSupplier;
-import DomainLayer.ProductSupplier;
-import DomainLayer.SupplierController;
-import com.google.gson.Gson;
+import DomainLayer.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class OrderService {
 
-    private SupplierController supplierController;
-    private Gson gson;
+    private Facade facade;
 
     public OrderService(){
-        supplierController = new SupplierController();
-        gson = new Gson();
+        facade=new Facade();
     }
     public String createOrder(int supplierNumber){
-        return gson.toJson(supplierController.getSupplier(supplierNumber).createOrder());
+        return facade.createOrder(supplierNumber);
     }
 
     /**
@@ -33,12 +23,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean addProductToOrder(int supplierNumber,int orderId , int catalogNUmber, int count){
-        ProductSupplier p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
-        if(p==null){
-            return false;
-        }
-        boolean ans = supplierController.getSupplier(supplierNumber).getOrder(orderId).updateProductToOrder(p, count);
-        return ans;
+        return facade.addProductToOrder(supplierNumber,orderId,catalogNUmber,count);
     }
 
     /**
@@ -50,9 +35,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean updateProductInOrder(int supplierNumber,int orderId, int catalogNUmber, int newCount){
-        ProductSupplier p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
-        boolean ans = supplierController.getSupplier(supplierNumber).getOrder(orderId).updateProductToOrder(p, newCount);
-        return ans;
+        return facade.updateProductInOrder(supplierNumber,orderId,catalogNUmber,newCount);
     }
     /**
      * the function remove a product to an existing order
@@ -62,8 +45,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean deleteProductFromOrder(int supplierNumber,int orderId, int catalogNUmber){
-        ProductSupplier p = supplierController.getSupplier(supplierNumber).getProduct(catalogNUmber);
-        return supplierController.getSupplier(supplierNumber).getOrder(orderId).removeProductFromOrder(p);
+        return facade.deleteProductFromOrder(supplierNumber, orderId, catalogNUmber);
     }
 
     /**
@@ -72,9 +54,7 @@ public class OrderService {
      * @return gson string which wrappers the list of the active order
      */
     public String getActiveOrders(int supplierNumber){
-        Map<Integer, OrderFromSupplier> orders = supplierController.getSupplier(supplierNumber).getActiveOrders();
-        List<OrderFromSupplier> orders1=new ArrayList<>(orders.values());
-        return gson.toJson(orders);
+      return facade.getActiveOrders(supplierNumber);
     }
 
     /**
@@ -83,14 +63,7 @@ public class OrderService {
      * @return gson string which wrappers the dictionary<order id,days[]> of the delivery days of each active order
      */
     public String getFixedDaysOrders(int supplierNumber){
-        Map<Integer, OrderFromSupplier> orders = supplierController.getSupplier(supplierNumber).getActiveOrders();
-        Map<Integer, DeliveryTerm> deliveryDays=new HashMap<>();
-        for(Integer o: orders.keySet()){
-            if(!orders.get(o).getDaysToDeliver().isEmpty()){
-                deliveryDays.put(orders.get(o).getOrderId(),orders.get(o).getDaysToDeliver());
-            }
-        }
-        return gson.toJson(deliveryDays);
+       return facade.getFixedDaysOrders(supplierNumber);
     }
 
     /**
@@ -100,13 +73,7 @@ public class OrderService {
      * @return true is succeed, false if failed
      */
     public boolean sendOrder(int supplierNumber, int orderId){
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return false;
-        }
-        if(supplierController.getSupplier(supplierNumber).getOrder(orderId)==null){
-            return false;
-        }
-        return supplierController.getSupplier(supplierNumber).finishOrder(orderId);
+      return facade.sendOrder(supplierNumber, orderId);
     }
 
     /**
@@ -116,14 +83,7 @@ public class OrderService {
      * @return gson string which wrappers the order
      */
     public String getOrder(int supplierNumber, int orderId) {
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return "fail";
-        }
-        if(supplierController.getSupplier(supplierNumber).getOrder(orderId)==null){
-            return "fail";
-        }
-        OrderFromSupplier o = supplierController.getSupplier(supplierNumber).getOrder(orderId);
-        return gson.toJson(o);
+      return facade.getOrder(supplierNumber, orderId);
     }
 
     /**
@@ -133,18 +93,6 @@ public class OrderService {
      * @return gson which wrappers the dictionary<product,amount>
      */
     public String getProductsInOrder(int supplierNumber, int orderID) {
-        if(supplierController.getSupplier(supplierNumber)==null){
-            return "fail";
-        }
-        if(supplierController.getSupplier(supplierNumber).getOrder(orderID)==null){
-            return "fail";
-        }
-        Map<ProductSupplier,Integer> products = supplierController.getSupplier(supplierNumber).getOrder(orderID).getProducts();
-        Map<String,Integer> prouductsJson = new HashMap<>();
-        for (Map.Entry<ProductSupplier,Integer> e: products.entrySet()){
-            ProductSupplier p = e.getKey();
-            prouductsJson.put(gson.toJson(p),e.getValue());
-        }
-        return gson.toJson(prouductsJson);
+        return facade.getProductsInOrder(supplierNumber, orderID);
     }
 }
