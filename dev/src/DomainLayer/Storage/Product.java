@@ -11,20 +11,20 @@ public class Product
     private int productId;
     private String name;
     private String description;
-    private String maker;
+    private String maker;// brand of the product
     private int storeAmount;
     private int storageAmount;
-    private transient int timesBought;//remove
-    private String dayAdded;//remove
-    private int daysForResupply;
-    private int minAmount;
-    private int amountToRefill;
+    private transient int timesBought;//how much the product sells
+    private String dayAdded;// day passed from the product added to the system
+    //private int daysForResupply;
+    //private int minAmount;
+    //private int amountToRefill;
     private double price;
-    private double priceSupplier;//remove
+    //private double priceSupplier;//remove
     private double discount;
-    private transient boolean needsRefill;
-    private transient ItemDAO items;
-    private transient List<Integer> productSuppliers;//all the supplier that supplier the product
+    //private transient boolean needsRefill;
+    private transient ItemDAO itemsDAO;
+    //private transient List<Integer> productSuppliers;//all the supplier that supplier the product
 
     /**
      *
@@ -50,7 +50,7 @@ public class Product
         this.amountToRefill=0;
         this.discount=0;
         this.maker=maker;
-        this.items = new ItemDAO();
+        this.itemsDAO = new ItemDAO();
         this.needsRefill=false;
     }
 
@@ -73,9 +73,8 @@ public class Product
     }
 
 
-    public boolean hasItem(String loc, int shelf, String ed){
-        Item i =items.getItem(this, loc, shelf, ed);
-        return i != null;
+    public boolean hasItem(String place, int shelf, String ed){
+        return findItem(ed, place, shelf) != null;
     }
 
     public int getCurAmount() {
@@ -103,18 +102,18 @@ public class Product
     }
 
     public List<Item> getItems() {
-        return items.getAllItemsOfProduct(this);
+        return itemsDAO.getAllItemsOfProduct(this);
     }
 
-    public Item removeItem(String loc, int shelf, String ed, boolean bought){
-        Item i=findItem(ed, loc, shelf);
+    public Item removeItem(String place, int shelf, String ed, boolean bought){
+        Item i=findItem(ed, place, shelf);
         if(i!=null) {
             if (i.getLoc().getPlace() == Location.Place.STORAGE)
                 this.storageAmount--;
             else
                 this.storeAmount--;
             try {
-                this.items.removeItem(productId, i);
+                this.itemsDAO.removeItem(productId, i);
             } catch (SQLException e) {
                 if (i.getLoc().getPlace() == Location.Place.STORAGE)
                     this.storageAmount++;
@@ -133,15 +132,13 @@ public class Product
         Location.Place add=stringToPlace(loc);
         if(add.equals(Location.Place.STORAGE))
             storageAmount++;
-
         else
             storeAmount++;
         try {
-            items.insert(new Item(name, new Location(add, shelf), ed), productId);
+            itemsDAO.insert(new Item(name, new Location(add, shelf), ed), productId);
         } catch (SQLException e) {
             if(add.equals(Location.Place.STORAGE))
                 storageAmount--;
-
             else
                 storeAmount--;
         }
@@ -155,7 +152,7 @@ public class Product
     }
 
     public List<Item> getDamagedItems(){
-        return items.getDamagedItemsOfProduct(this);
+        return itemsDAO.getDamagedItemsOfProduct(this);
     }
     public void calcMinAmount(){
         double calc=daysForResupply*timesBought;
@@ -169,20 +166,20 @@ public class Product
     }
 
     public boolean canBuy(int amount){
-        if(items.getAllItemsOfProduct(this).size()<amount)
+        if(itemsDAO.getAllItemsOfProduct(this).size()<amount)
             return false;
         else{
             int canBuy=0;
-            for(Item i : items.getAllItemsOfProduct(this)) {
+            for(Item i : itemsDAO.getAllItemsOfProduct(this)) {
                 if (i.validDate())
                     canBuy++;
                 else {
                     try {
-                        items.setItemDamaged(productId, i.getExpDate(), i.getLoc().getPlace().toString(), i.getLoc().getShelf(), "expired date");
+                        itemsDAO.setItemDamaged(productId, i.getExpDate(), i.getLoc().getPlace().toString(), i.getLoc().getShelf(), "expired date");
                     } catch (SQLException ignored) {
+                        return false;
                     }
                 }
-
             }
             return canBuy>=amount;
         }
@@ -190,7 +187,7 @@ public class Product
 
     public double buyAmount(int amount){
         if(canBuy(amount)) {
-            List<Item> inStock=items.getAllItemsOfProduct(this);
+            List<Item> inStock= itemsDAO.getAllItemsOfProduct(this);
             for (int i = 0; i < amount&& i<inStock.size(); i++) {
                 String check;
                 if(inStock.get(i).getLoc().getPlace().equals(Location.Place.STORAGE))
@@ -205,7 +202,7 @@ public class Product
     }
 
     public Item findItem(String ed, String curPlace, int curShelf){
-        return items.getItem(this, curPlace, curShelf, ed);
+        return itemsDAO.getItem(this, curPlace, curShelf, ed);
     }
 
     public void transferItem(String ed, String curPlace, int curShelf, String toPlace, int toShelf){
@@ -221,6 +218,7 @@ public class Product
             }
             Location.Place check=stringToPlace(toPlace);
             i.transferPlace(check, toShelf);
+            //update item in DAO
         }
 
     }
@@ -234,7 +232,7 @@ public class Product
 
     public void moveToStore(int amount){
         try {
-            items.moveSection(this, "STORE", amount);
+            itemsDAO.moveSection(this, "STORE", amount);
         } catch (SQLException ignored) {
         }
     }
@@ -295,7 +293,7 @@ public class Product
 
     public void setItemDamaged(int productId, String expirationDate, String place, int shelf, String damageDescription){
         try {
-            items.setItemDamaged(productId, expirationDate, place, shelf, damageDescription);
+            itemsDAO.setItemDamaged(productId, expirationDate, place, shelf, damageDescription);
         } catch (SQLException ignored) {
         }
     }

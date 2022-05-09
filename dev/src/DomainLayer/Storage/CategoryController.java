@@ -8,49 +8,50 @@ import java.util.List;
 
 public class CategoryController
 {
-    private CategoryToProductDAO categories;
+    private CategoryToProductDAO categoriesDAO;
 
 
     public CategoryController(){
-        categories=new CategoryToProductDAO();
+        categoriesDAO =new CategoryToProductDAO();
     }
 
-    public void addCategory(String cName, double discount){
-        categories.insertIntoDiscount(cName, discount);
+    public void addCategory(String categoryName, double discount){
+        categoriesDAO.insertIntoDiscount(categoryName, discount);
     }
 
-    public void addProductToCat(int id, String cat, String sub, String subSub){
-        categories.insertIntoProduct(getProductWithId(id), cat, sub, subSub);
-
+    public void addProductToCategory(int id, String cat, String sub, String subSub){
+        categoriesDAO.insertIntoProduct(getProductWithId(id), cat, sub, subSub);
     }
 
-    public void addSubCat(String cName, String subName){
-        categories.insertIntoSubCategory(cName, subName);
-    }
-    public void addSubSubCat(String cName, String subName, String subSub){
-
-        categories.insertIntoSubSubCategory(cName, subName, subSub);
+    public void addSubCategory(String cName, String subName){
+        categoriesDAO.insertIntoSubCategory(cName, subName);
     }
 
-    public void setDiscount(String cName, double discount){
-        categories.updateDiscount(cName, discount);
-        List<Product> products=categories.getProductsOfCategory(cName);
+    public void addSubSubCategory(String cName, String subName, String subSub){
+
+        categoriesDAO.insertIntoSubSubCategory(cName, subName, subSub);
+    }
+
+    public void setDiscount(String categoryName, double discount){
+        categoriesDAO.updateDiscount(categoryName, discount);
+        List<Product> products= categoriesDAO.getProductsOfCategory(categoryName);
         for(Product p : products) {
             p.setDiscount(discount);
-            categories.updateProduct(p);
+            categoriesDAO.updateProduct(p);
         }
     }
+
     public List<Category> makeReport(List<String> catNames){
         List<Category> cats=new LinkedList<>();
         for(String name : catNames){
-            if(categories.hasCategory(name)) {
-                List<String> subCategories = categories.getSubCategories(name);
+            if(categoriesDAO.hasCategory(name)) {
+                List<String> subCategories = categoriesDAO.getSubCategories(name);
                 List<SubCategory> add = new LinkedList<>();
                 for (String subName : subCategories) {
-                    List<String> subSubCategories = categories.getSubSubCategories(name, subName);
+                    List<String> subSubCategories = categoriesDAO.getSubSubCategories(name, subName);
                     List<SubSubCategory> addSub = new LinkedList<>();
                     for (String subSubName : subSubCategories) {
-                        List<Product> products = categories.getProductsOfSubSubCategory(name, subName, subSubName);
+                        List<Product> products = categoriesDAO.getProductsOfSubSubCategory(name, subName, subSubName);
                         SubSubCategory subSubCategory = new SubSubCategory(subSubName, products);
                         addSub.add(subSubCategory);
                     }
@@ -64,28 +65,28 @@ public class CategoryController
         return cats;
     }
 
-    public void transferProduct(int id,String catAdd, String subAdd, String subSubAdd){
-        categories.updateCategoriesForProduct(id, catAdd, subAdd, subSubAdd);
+    public void transferProduct(int productId, String newCategory, String newSubCategory, String newSubSubCategory){
+        categoriesDAO.updateCategoriesForProduct(productId, newCategory, newSubCategory, newSubSubCategory);
     }
 
     public void removeFromCatalog(int id){
-        categories.removeProduct(id);
+        categoriesDAO.removeProduct(id);
     }
 
     public void removeCat(String catName){
-        categories.removeCategory(catName);
+        categoriesDAO.removeCategory(catName);
     }
 
 
     public Product getProductWithId(int productId)
     {
-        return categories.getProduct(productId);
+        return categoriesDAO.getProduct(productId);
     }
 
     public void addNewProduct(int productId, String productName, String desc,
                               double price, String maker, String catName, String subCatName, String subSubName){
-        if(validId(productId) && categories.hasSubSubCategory(catName, subCatName, subSubName)) {
-            categories.insertIntoProduct(new Product(productId, productName, desc, price, maker), catName, subCatName, subSubName);
+        if(validId(productId) && categoriesDAO.hasSubSubCategory(catName, subCatName, subSubName)) {
+            categoriesDAO.insertIntoProduct(new Product(productId, productName, desc, price, maker), catName, subCatName, subSubName);
         }
     }
 
@@ -93,7 +94,7 @@ public class CategoryController
         Product p=getProductWithId(id);
         if(p!=null) {
             p.setPriceSupplier(priceSupplier);
-            categories.updateProduct(p);
+            categoriesDAO.updateProduct(p);
         }
     }
 
@@ -101,14 +102,14 @@ public class CategoryController
         Product p=getProductWithId(id);
         if(p!=null) {
             p.setDaysForResupply(daysForResupply);
-            categories.updateProduct(p);
+            categoriesDAO.updateProduct(p);
         }
     }
     public void addItemToProduct(int id, String loc, int shelf, String ed){
         Product p = getProductWithId(id);
         if(p != null) {
             p.addItem(loc, shelf, ed);
-            categories.updateProduct(p);
+            categoriesDAO.updateProduct(p);
         }
     }
 
@@ -144,7 +145,7 @@ public class CategoryController
         Product p = getProductWithId(productId);
         if(p != null) {
             p.setDiscount(discount);
-            categories.updateProduct(p);
+            categoriesDAO.updateProduct(p);
         }
     }
 
@@ -183,7 +184,7 @@ public class CategoryController
         if(p!=null) {
             if(p.canBuy(amount)) {
                 double ans=p.buyAmount(amount);
-                categories.updateProduct(p);
+                categoriesDAO.updateProduct(p);
                 return ans;
             }
         }
@@ -199,7 +200,7 @@ public class CategoryController
             } else if (p.getRefill() == 0) {
                 p.setNeedsRefill(false);
             }
-            categories.updateProduct(p);
+            categoriesDAO.updateProduct(p);
         }
         return false;
     }
@@ -208,7 +209,7 @@ public class CategoryController
         Product p=getProductWithId(id);
         if(p!=null) {
             p.transferItem(ed, curePlace, curShelf, toPlace, toShelf);
-            categories.updateProduct(p);
+            categoriesDAO.updateProduct(p);
         }
     }
 
@@ -216,26 +217,26 @@ public class CategoryController
         Product p=getProductWithId(id);
         if(p!=null) {
             p.addAllItems(amount, ed, shelf);
-            categories.updateProduct(p);
+            categoriesDAO.updateProduct(p);
         }
     }
 
     public int getProductIdWithName(String name){
-        return categories.getProduct(name).getId();
+        return categoriesDAO.getProduct(name).getId();
     }
 
     public void moveItemsToStore(int id, int amount){
         Product p=getProductWithId(id);
         if(p!=null) {
             p.moveToStore(amount);
-            categories.updateProduct(p);
+            categoriesDAO.updateProduct(p);
         }
     }
 
 
 
     public List<Product> getAllProducts(){
-        return categories.getAllProducts();
+        return categoriesDAO.getAllProducts();
     }
 
     private boolean validId(int id){

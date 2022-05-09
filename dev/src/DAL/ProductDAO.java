@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ProductDAO {
     private Connect connect;
-    private static HashMap<Integer, Product> IMProduct;
-    private static HashMap<Pair<Pair<String, String>, String>, List<Product>> IMProductByCategory;
+    private static HashMap<Integer, Product> IMProducts;
+    //private static HashMap<Pair<Pair<String, String>, String>, List<Product>> IMProductByCategory;
 
     /**
      * constructor
@@ -21,7 +21,7 @@ public class ProductDAO {
      */
     public ProductDAO() {
         connect = Connect.getInstance();
-        IMProduct = new HashMap<>();
+        IMProducts = new HashMap<>();
         IMProductByCategory = new HashMap<>();
     }
 
@@ -35,7 +35,7 @@ public class ProductDAO {
             } catch (SQLException e) {
                 return false;
             } finally {
-                IMProduct.put(p.getId(), p);
+                IMProducts.put(p.getId(), p);
                 Pair<Pair<String, String>, String> key=new Pair<>(new Pair<>(catName, subCatName), subSubCatName);
                 if(!IMProductByCategory.containsKey(key))
                     IMProductByCategory.put(key, new LinkedList<>());
@@ -49,8 +49,8 @@ public class ProductDAO {
 
     public Product get(int productId) throws SQLException {
         int key = productId;
-        if (IMProduct.containsKey(key)) {
-            return IMProduct.get(key);
+        if (IMProducts.containsKey(key)) {
+            return IMProducts.get(key);
         }
         String query = "SELECT * FROM Products WHERE " +
                 String.format("productId=%d", productId);
@@ -66,7 +66,7 @@ public class ProductDAO {
                 p.setDayAdded(rs.getString("dayAdded"));
                 String needsRefill=rs.getString("needsRefill");
                 p.setNeedsRefill(!needsRefill.equals("false"));
-                IMProduct.put(p.getId(), p);
+                IMProducts.put(p.getId(), p);
                 return p;
             }
             return null;
@@ -93,7 +93,7 @@ public class ProductDAO {
                 p.setDayAdded(rs.getString("dayAdded"));
                 String needsRefill=rs.getString("needsRefill");
                 p.setNeedsRefill(!needsRefill.equals("false"));
-                IMProduct.put(p.getId(), p);
+                IMProducts.put(p.getId(), p);
                 return p;
             }
             return null;
@@ -121,7 +121,7 @@ public class ProductDAO {
                     String needsRefill = rs.getString("needsRefill");
                     p.setNeedsRefill(!needsRefill.equals("false"));
                     ans.add(p);
-                    IMProduct.put(p.getId(), p);
+                    IMProducts.put(p.getId(), p);
                     rs.next();
                 }
             return ans;
@@ -150,8 +150,8 @@ public class ProductDAO {
                     p.setDayAdded(rs.getString("dayAdded"));
                     String needsRefill=rs.getString("needsRefill");
                     p.setNeedsRefill(!needsRefill.equals("false"));
-                    if (!IMProduct.containsKey(p.getId()))
-                        IMProduct.put(p.getId(), p);
+                    if (!IMProducts.containsKey(p.getId()))
+                        IMProducts.put(p.getId(), p);
                     ans.add(p);
                     rs.next();
                 }
@@ -182,8 +182,8 @@ public class ProductDAO {
                     p.setDayAdded(rs.getString("dayAdded"));
                     String needsRefill=rs.getString("needsRefill");
                     p.setNeedsRefill(!needsRefill.equals("false"));
-                    if (!IMProduct.containsKey(p.getId()))
-                        IMProduct.put(p.getId(), p);
+                    if (!IMProducts.containsKey(p.getId()))
+                        IMProducts.put(p.getId(), p);
                     ans.add(p);
                     rs.next();
                 }
@@ -218,8 +218,8 @@ public class ProductDAO {
                     p.setDayAdded(rs.getString("dayAdded"));
                     String needsRefill=rs.getString("needsRefill");
                     p.setNeedsRefill(!needsRefill.equals("false"));
-                    if (!IMProduct.containsKey(p.getId()))
-                        IMProduct.put(p.getId(), p);
+                    if (!IMProducts.containsKey(p.getId()))
+                        IMProducts.put(p.getId(), p);
                     IMProductByCategory.get(key).add(p);
 
                     ans.add(p);

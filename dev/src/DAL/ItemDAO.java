@@ -14,6 +14,7 @@ public class ItemDAO {
     private Connect connect;
     private static int itemId;
 
+
     /**
      * constructor
      * the connect is singleton
@@ -96,11 +97,11 @@ public class ItemDAO {
     }
 
 
-    public Item getItem(Product p, String location, int shelf, String expirationDate){
+    public Item getItem(Product p, String place, int shelf, String expirationDate){
         int key = p.getId();
         String query = "SELECT * FROM Items WHERE " +
                 String.format("productId=%d AND place=\"%s\" AND shelf=%d AND expirationDate=\"%s\" AND isDamaged=\"%s\"", key,
-                        location, shelf, expirationDate, "false");
+                        place, shelf, expirationDate, "false");
         Item i=null;
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
@@ -124,6 +125,7 @@ public class ItemDAO {
 
 
     public void removeItem(int productId, Item i) throws SQLException {
+        //get item id - take 1 and remove
         String query = String.format("DELETE FROM Items WHERE productId=%d AND place=\"%s\" AND shelf=%d AND expirationDate=\"%s\" AND isDamaged=\"%s\"",
                 productId, i.getLoc().getPlace().toString(), i.getLoc().getShelf(), i.getExpDate(), i.getIsDamaged());
         try (Statement stmt = connect.createStatement()) {

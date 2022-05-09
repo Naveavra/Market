@@ -288,11 +288,11 @@ public class Facade {
     }
 
     public void addSubCat(String cName, String subName) {
-        categoryController.addSubCat(cName, subName);
+        categoryController.addSubCategory(cName, subName);
     }
 
     public void addSubSubCat(String cName, String subName, String subsub) {
-        categoryController.addSubSubCat(cName, subName, subsub);
+        categoryController.addSubSubCategory(cName, subName, subsub);
     }
 
 

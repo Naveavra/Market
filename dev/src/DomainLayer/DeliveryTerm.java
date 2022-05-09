@@ -29,7 +29,6 @@ public class DeliveryTerm {
     //private boolean isSupplierDeliver;
 
     public DeliveryTerm(DaysInWeek[] daysInWeek){
-
         this.daysInWeeks=new DaysInWeek[daysInWeek.length];
         System.arraycopy(daysInWeek, 0, this.daysInWeeks, 0, daysInWeek.length);
     }

@@ -11,6 +11,7 @@ public class SubSubCategory {
         this.name=name;
         products=new LinkedList<>();
     }
+
     public SubSubCategory(String name, List<Product> addProducts){
         this.name=name;
         products=new LinkedList<>();

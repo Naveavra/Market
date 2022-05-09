@@ -11,6 +11,9 @@ public class CategoryDAO {
 
     private Connect connect;
     private static HashMap<String, Double> IMDiscount;
+    private static HashMap<String, Double> IMCategories;
+    private static HashMap<String, Double> IMSubCategories;
+    private static HashMap<String, Double> IMSubSubCategories;
 
     /**
      * constructor

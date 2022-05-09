@@ -6,7 +6,7 @@ public class Item {
     private String name;
     private Location loc;
     private String expirationDate;
-    private String defectiveDescription;
+    private String defectiveDescription;//if why damage
     private transient boolean isDamaged;
 
     public Item(String name, Location loc, String ed){
