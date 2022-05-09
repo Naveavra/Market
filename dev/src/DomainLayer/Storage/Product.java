@@ -39,37 +39,18 @@ public class Product
         this.productId = productId;
         this.name = pName;
         this.description=desc;
-        this.priceSupplier = 0;
         this.price = price;
         this.storeAmount = 0;
         this.storageAmount = 0;
-        this.daysForResupply=0;
         this.timesBought=0;
         this.dayAdded= LocalDate.now().toString();
-        this.minAmount=0;
-        this.amountToRefill=0;
         this.discount=0;
         this.maker=maker;
         this.itemsDAO = new ItemDAO();
-        this.needsRefill=false;
-    }
-
-
-
-    public double getPriceSupplier() {
-        return priceSupplier;
-    }
-
-    public void setDaysForResupply(int change){
-        daysForResupply=change;
     }
 
     public double getPrice() {
         return price;
-    }
-
-    public int getMinAmount() {
-        return minAmount;
     }
 
 
@@ -80,20 +61,13 @@ public class Product
     public int getCurAmount() {
         return storeAmount+storageAmount;
     }
-    public int getRefill(){
-        return amountToRefill;
-    }
 
-    public void setPriceSupplier(int priceSupplier) {
-        this.priceSupplier = priceSupplier;
+    public int getRefill(){
+        return calcMinAmount()+timesBought/getDaysPassed()-getCurAmount();
     }
 
     public void setPrice(int price) {
         this.price = price;
-    }
-
-    public void setMinAmount(int minAmount) {
-        this.minAmount = minAmount;
     }
 
     public void setDiscount(double discount)
@@ -123,7 +97,6 @@ public class Product
             if(bought)
                 timesBought++;
         }
-        toRefill();
         return i;
 
     }
@@ -154,17 +127,11 @@ public class Product
     public List<Item> getDamagedItems(){
         return itemsDAO.getDamagedItemsOfProduct(this);
     }
-    public void calcMinAmount(){
-        double calc=daysForResupply*timesBought;
-        minAmount= (int) (Math.ceil(calc/getDaysPassed()));
-    }
-    public void toRefill(){
-        calcMinAmount();
-        amountToRefill=minAmount+timesBought/getDaysPassed()-getCurAmount();
-        if(amountToRefill<0)
-            amountToRefill=0;
-    }
 
+    public int calcMinAmount(){
+        double calc=daysForResupply*timesBought;//get days from past order through productDAO
+        return (int) (Math.ceil(calc/getDaysPassed()));
+    }
     public boolean canBuy(int amount){
         if(itemsDAO.getAllItemsOfProduct(this).size()<amount)
             return false;
@@ -216,8 +183,7 @@ public class Product
                 storeAmount--;
                 storageAmount++;
             }
-            Location.Place check=stringToPlace(toPlace);
-            i.transferPlace(check, toShelf);
+            itemsDAO.updateItemPlace(productId, i, toPlace, toShelf);
             //update item in DAO
         }
 
@@ -227,7 +193,6 @@ public class Product
         for(int i=0;i<amount;i++){
             addItem("STORAGE", shelf, ed);
         }
-        toRefill();
     }
 
     public void moveToStore(int amount){
@@ -237,22 +202,13 @@ public class Product
         }
     }
 
-    public void setNeedsRefill(boolean ans){
-        needsRefill=ans;
-    }
     public boolean getNeedsRefill(){
-        return needsRefill;
+        return getRefill()>0;
     }
 
     public double getDiscount(){
         return discount;
     }
-
-    public double getDaysForResupply() {
-        return this.daysForResupply;
-    }
-
-
     private static Location.Place stringToPlace(String s)
     {
         if(s.equals("STORAGE"))
@@ -278,10 +234,6 @@ public class Product
 
     public int getTimesBought(){
         return timesBought;
-    }
-
-    public void setPriceSupplier(double price){
-        priceSupplier=price;
     }
 
     public void setTimesBought(int times){

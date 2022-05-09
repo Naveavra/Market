@@ -126,10 +126,19 @@ public class ItemDAO {
 
     public void removeItem(int productId, Item i) throws SQLException {
         //get item id - take 1 and remove
-        String query = String.format("DELETE FROM Items WHERE productId=%d AND place=\"%s\" AND shelf=%d AND expirationDate=\"%s\" AND isDamaged=\"%s\"",
-                productId, i.getLoc().getPlace().toString(), i.getLoc().getShelf(), i.getExpDate(), i.getIsDamaged());
+        int key = productId;
+        String query = "SELECT itemId FROM Items WHERE " +
+                String.format("productId=%d AND place=\"%s\" AND shelf=%d AND expirationDate=\"%s\" AND isDamaged=\"%s\"", key,
+                        i.getLoc().getPlace().toString(), i.getLoc().getShelf(), i.getExpDate(), i.getIsDamaged());
         try (Statement stmt = connect.createStatement()) {
-            stmt.execute(query);
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            if(!rs.isClosed()) {
+                int id=rs.getInt("itemId");
+                query = String.format("DELETE FROM Items WHERE itemId=%d",
+                        id);
+                stmt.execute(query);
+            }
         } catch (SQLException e) {
             throw e;
         }
@@ -234,6 +243,9 @@ public class ItemDAO {
         }
         return ans+1;
     }
+
+
+    public
 
     private boolean productExists(int productId) throws SQLException {
         String query = "SELECT * FROM Products WHERE " +

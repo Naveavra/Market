@@ -13,7 +13,6 @@ import java.util.List;
 public class ProductDAO {
     private Connect connect;
     private static HashMap<Integer, Product> IMProducts;
-    //private static HashMap<Pair<Pair<String, String>, String>, List<Product>> IMProductByCategory;
 
     /**
      * constructor
@@ -22,7 +21,6 @@ public class ProductDAO {
     public ProductDAO() {
         connect = Connect.getInstance();
         IMProducts = new HashMap<>();
-        IMProductByCategory = new HashMap<>();
     }
 
     public boolean insert(Product p, String catName, String subCatName, String subSubCatName) throws SQLException {
@@ -37,9 +35,6 @@ public class ProductDAO {
             } finally {
                 IMProducts.put(p.getId(), p);
                 Pair<Pair<String, String>, String> key=new Pair<>(new Pair<>(catName, subCatName), subSubCatName);
-                if(!IMProductByCategory.containsKey(key))
-                    IMProductByCategory.put(key, new LinkedList<>());
-                IMProductByCategory.get(key).add(p);
                 connect.closeConnect();
             }
             return true;
@@ -132,6 +127,10 @@ public class ProductDAO {
         }
     }
 
+//    public int getDayForResupply(Product p){
+//
+//    }
+
     //functions to get products of categories
     public List<Product> getAllByCategory(String category) throws SQLException {
         List<Product> ans=new LinkedList<>();
@@ -197,9 +196,6 @@ public class ProductDAO {
     }
     public List<Product> getAllBySubSubCategory(String category, String subCategory, String subSubCategory) throws SQLException {
         Pair<Pair<String , String>, String> key = new Pair<>(new Pair<>(category, subCategory), subSubCategory);
-        if (IMProductByCategory.containsKey(key)) {
-            return IMProductByCategory.get(key);
-        }
         String query = "SELECT * FROM Products WHERE " +
                 String.format("categoryName=\"%s\" AND subCategoryName=\"%s\" AND subSubCategoryName=\"%s\"", category, subCategory
                 ,subSubCategory);
@@ -208,7 +204,6 @@ public class ProductDAO {
             ResultSet rs = stmt.executeQuery(query);
             rs.next();
             if(!rs.isClosed()) {
-                IMProductByCategory.put(key, new LinkedList<>());
                 while (!rs.isClosed()) {
                     Product p = new Product(rs.getInt("productId"), rs.getString("name"),
                             rs.getString("description"), rs.getInt("price"), rs.getString("maker"));
@@ -220,7 +215,6 @@ public class ProductDAO {
                     p.setNeedsRefill(!needsRefill.equals("false"));
                     if (!IMProducts.containsKey(p.getId()))
                         IMProducts.put(p.getId(), p);
-                    IMProductByCategory.get(key).add(p);
 
                     ans.add(p);
                     rs.next();
