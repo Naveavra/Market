@@ -1,33 +1,33 @@
 package ServiceLayer;
 
+import DomainLayer.Facade;
 import DomainLayer.Storage.ReportController;
 
-import java.io.IOException;
 import java.util.List;
 
 public class ReportService {
-    private ReportController reportCon;
+    private Facade facade;
 
-    public ReportService(ReportController reportCon){
-        this.reportCon=reportCon;
+    public ReportService(){
+        facade=new Facade();
     }
 
 
     public boolean makeReport(List<String> catNames){
-        return reportCon.makeReport(catNames);
+        return facade.makeReport(catNames);
     }
 
-    public boolean makeDamagedReport() throws IOException {
-        return reportCon.makeDamagedReport();
+    public boolean makeDamagedReport(){
+        return facade.makeDamagedReport();
     }
 
 
     public boolean makeRefillReport(){
-        return reportCon.makeRefillReport();
+        return facade.makeRefillReport();
     }
 
     public boolean makeProductReport(int id){
-        return reportCon.makeProductReport(id);
+        return facade.makeProductReport(id);
     }
 }
 

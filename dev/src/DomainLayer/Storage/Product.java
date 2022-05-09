@@ -1,7 +1,9 @@
 package DomainLayer.Storage;
 
+import DAL.ItemDAO;
+
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Product
@@ -13,7 +15,7 @@ public class Product
     private int storeAmount;
     private int storageAmount;
     private transient int timesBought;//remove
-    private transient int daysPassed;//remove
+    private String dayAdded;//remove
     private int daysForResupply;
     private int minAmount;
     private int amountToRefill;
@@ -21,38 +23,34 @@ public class Product
     private double priceSupplier;//remove
     private double discount;
     private transient boolean needsRefill;
-    private List<Item> items;
-    private transient List<Item> damagedItems;
-    private transient List<Product> productSuppliers;//all the supplier that supplier the product
+    private transient ItemDAO items;
+    private transient List<Integer> productSuppliers;//all the supplier that supplier the product
 
     /**
      *
      * @param productId
      * @param pName
      * @param desc
-     * @param daysForResupply
-     * @param priceSupplier
      * @param price
      * @param maker
      */
-    public Product(int productId, String pName, String desc, int daysForResupply, double priceSupplier, double price, String maker)
+    public Product(int productId, String pName, String desc, double price, String maker)
     {
         this.productId = productId;
         this.name = pName;
         this.description=desc;
-        this.priceSupplier = priceSupplier;
+        this.priceSupplier = 0;
         this.price = price;
         this.storeAmount = 0;
         this.storageAmount = 0;
-        this.daysForResupply=daysForResupply;
+        this.daysForResupply=0;
         this.timesBought=0;
-        this.daysPassed=1;
+        this.dayAdded= LocalDate.now().toString();
         this.minAmount=0;
         this.amountToRefill=0;
         this.discount=0;
         this.maker=maker;
-        this.items = new LinkedList<>();
-        this.damagedItems=new LinkedList<>();
+        this.items = new ItemDAO();
         this.needsRefill=false;
     }
 
@@ -76,13 +74,8 @@ public class Product
 
 
     public boolean hasItem(String loc, int shelf, String ed){
-        Location.Place check=stringToPlace(loc);
-        for(Item i : this.items) {
-            if (i.getLoc().getPlace().equals(check) && shelf == i.getLoc().getShelf() && ed.equals(i.getExpDate())) {
-                return true;
-            }
-        }
-        return false;
+        Item i =items.getItem(this, loc, shelf, ed);
+        return i != null;
     }
 
     public int getCurAmount() {
@@ -110,20 +103,24 @@ public class Product
     }
 
     public List<Item> getItems() {
-        return items;
+        return items.getAllItemsOfProduct(this);
     }
 
-    public Item removeItem(String loc, int shelf, String ed, boolean bought)
-    {
-        Item i=null;
-        if(hasItem(loc, shelf, ed))
-            i=findItem(ed, loc, shelf);
+    public Item removeItem(String loc, int shelf, String ed, boolean bought){
+        Item i=findItem(ed, loc, shelf);
         if(i!=null) {
             if (i.getLoc().getPlace() == Location.Place.STORAGE)
                 this.storageAmount--;
             else
                 this.storeAmount--;
-            this.items.remove(i);
+            try {
+                this.items.removeItem(productId, i);
+            } catch (SQLException e) {
+                if (i.getLoc().getPlace() == Location.Place.STORAGE)
+                    this.storageAmount++;
+                else
+                    this.storeAmount++;
+            }
             if(bought)
                 timesBought++;
         }
@@ -139,8 +136,15 @@ public class Product
 
         else
             storeAmount++;
+        try {
+            items.insert(new Item(name, new Location(add, shelf), ed), productId);
+        } catch (SQLException e) {
+            if(add.equals(Location.Place.STORAGE))
+                storageAmount--;
 
-        items.add(new Item(name, new Location(add, shelf), ed));
+            else
+                storeAmount--;
+        }
     }
     public int getId() {
         return productId;
@@ -151,51 +155,49 @@ public class Product
     }
 
     public List<Item> getDamagedItems(){
-        return damagedItems;
-    }
-    public void removeDamagedItems(){
-        damagedItems=new LinkedList<>();
+        return items.getDamagedItemsOfProduct(this);
     }
     public void calcMinAmount(){
         double calc=daysForResupply*timesBought;
-        minAmount= (int) (Math.ceil(calc/daysPassed));
+        minAmount= (int) (Math.ceil(calc/getDaysPassed()));
     }
     public void toRefill(){
         calcMinAmount();
-        amountToRefill=minAmount+timesBought/daysPassed-getCurAmount();
+        amountToRefill=minAmount+timesBought/getDaysPassed()-getCurAmount();
         if(amountToRefill<0)
             amountToRefill=0;
     }
 
     public boolean canBuy(int amount){
-        if(items.size()<amount)
+        if(items.getAllItemsOfProduct(this).size()<amount)
             return false;
         else{
-            String date=LocalDate.now().toString();
             int canBuy=0;
-            for(Item i : items) {
-                if (i.validDate(date))
+            for(Item i : items.getAllItemsOfProduct(this)) {
+                if (i.validDate())
                     canBuy++;
-                else
-                    damagedItems.add(i);
+                else {
+                    try {
+                        items.setItemDamaged(productId, i.getExpDate(), i.getLoc().getPlace().toString(), i.getLoc().getShelf(), "expired date");
+                    } catch (SQLException ignored) {
+                    }
+                }
 
             }
-
-            for(int i=0;i<damagedItems.size();i++)
-                items.remove(damagedItems.get(i));
             return canBuy>=amount;
         }
     }
 
     public double buyAmount(int amount){
         if(canBuy(amount)) {
-            for (int i = 0; i < amount&& i<items.size(); i++) {
+            List<Item> inStock=items.getAllItemsOfProduct(this);
+            for (int i = 0; i < amount&& i<inStock.size(); i++) {
                 String check;
-                if(items.get(i).getLoc().getPlace().equals(Location.Place.STORAGE))
-                    check= "Storage";
+                if(inStock.get(i).getLoc().getPlace().equals(Location.Place.STORAGE))
+                    check= "STORAGE";
                 else
-                    check= "Store";
-                removeItem(check, items.get(i).getLoc().getShelf(), items.get(i).getExpDate(), true);
+                    check= "STORE";
+                removeItem(check, inStock.get(i).getLoc().getShelf(), inStock.get(i).getExpDate(), true);
             }
             return (price - (price * discount / 100)) * amount;
         }
@@ -203,18 +205,11 @@ public class Product
     }
 
     public Item findItem(String ed, String curPlace, int curShelf){
-
-        for(Item i : items)
-            if(i.getLoc().getPlace().equals(stringToPlace(curPlace)) && i.getLoc().getShelf()==curShelf && i.getExpDate().equals(ed))
-                return i;
-        return null;
+        return items.getItem(this, curPlace, curShelf, ed);
     }
 
     public void transferItem(String ed, String curPlace, int curShelf, String toPlace, int toShelf){
-        Item i=null;
-
-        if(hasItem(curPlace, curShelf, ed))
-            i=findItem(ed, curPlace, curShelf);
+        Item i=findItem(ed, curPlace, curShelf);
         if(i!=null) {
             if(i.getLoc().getPlace().equals(Location.Place.STORAGE)) {
                 storageAmount--;
@@ -230,20 +225,18 @@ public class Product
 
     }
 
-    public void addAllItems(int amount, String ed, int shelf){
+    public void addAllItems(int amount, String ed, int shelf) {
         for(int i=0;i<amount;i++){
-            addItem("Storage", shelf, ed);
+            addItem("STORAGE", shelf, ed);
         }
         toRefill();
     }
 
     public void moveToStore(int amount){
-        for(int i=0;i<amount&&i<items.size();i++)
-            if (items.get(i).getLoc().getPlace().equals(Location.Place.STORAGE)) {
-                items.get(i).transferPlace(Location.Place.STORE, items.get(i).getLoc().getShelf());
-                storeAmount++;
-                storageAmount--;
-            }
+        try {
+            items.moveSection(this, "STORE", amount);
+        } catch (SQLException ignored) {
+        }
     }
 
     public void setNeedsRefill(boolean ans){
@@ -251,9 +244,6 @@ public class Product
     }
     public boolean getNeedsRefill(){
         return needsRefill;
-    }
-    public void setDaysPassed(int days){
-        daysPassed=days;
     }
 
     public double getDiscount(){
@@ -265,12 +255,68 @@ public class Product
     }
 
 
-    public static Location.Place stringToPlace(String s)
+    private static Location.Place stringToPlace(String s)
     {
-        if(s.equals("STORE"))
-            return Location.Place.STORE;
-        else
+        if(s.equals("STORAGE"))
             return Location.Place.STORAGE;
+        else
+            return Location.Place.STORE;
+    }
+
+
+    public String getDescription(){
+        return description;
+    }
+    public String getMaker(){
+        return maker;
+    }
+
+    public int getStoreAmount(){
+        return storeAmount;
+    }
+    public int getStorageAmount(){
+        return storageAmount;
+    }
+
+    public int getTimesBought(){
+        return timesBought;
+    }
+
+    public void setPriceSupplier(double price){
+        priceSupplier=price;
+    }
+
+    public void setTimesBought(int times){
+        timesBought=times;
+    }
+    public void setStoreAmount(int storeAmount){this.storeAmount=storeAmount;}
+    public void setStorageAmount(int storageAmount){this.storageAmount=storageAmount;}
+
+
+    public void setItemDamaged(int productId, String expirationDate, String place, int shelf, String damageDescription){
+        try {
+            items.setItemDamaged(productId, expirationDate, place, shelf, damageDescription);
+        } catch (SQLException ignored) {
+        }
+    }
+
+    private int getDaysPassed(){
+        String curDate= LocalDate.now().toString();
+        int curYear=Integer.parseInt(curDate.substring(0, 4));
+        int curMonth=Integer.parseInt(curDate.substring(5, 7));
+        int curDay=Integer.parseInt(curDate.substring(8, 10));
+        int year=Integer.parseInt(dayAdded.substring(0, 4));
+        int month=Integer.parseInt(dayAdded.substring(5, 7));
+        int day=Integer.parseInt(dayAdded.substring(8, 10));
+        return (curYear-year)*365+(curMonth-month)*30+(curDay-day)+1;
+    }
+
+    public String getDayAdded(){
+        return dayAdded;
+    }
+
+    public void setDayAdded(String dayAdded){
+        this.dayAdded=dayAdded;
     }
 
 }

@@ -1,11 +1,11 @@
 package PresentationLayer.Storage;
 
-import DomainLayer.Storage.Location;
 import ServiceLayer.CategoryService;
 import ServiceLayer.ReportService;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 
 
 public class CLI
@@ -14,7 +14,7 @@ public class CLI
     public static void main(String[]args)
     {
         CategoryService cC=new CategoryService();
-        ReportService rC=cC.createReportService();
+        ReportService rC=new ReportService();
         String command;
         String detail;
         String line = "";
@@ -35,19 +35,12 @@ public class CLI
                             int id = Integer.parseInt(fields[0]);
                             String name = fields[1];
                             String desc = fields[2];
-                            int daysForResupply = Integer.parseInt(fields[3]);
-                            double priceSupplier = Double.parseDouble(fields[4]);
-                            double price = Double.parseDouble(fields[5]);
-                            String maker = fields[6];
+                            double price = Double.parseDouble(fields[3]);
+                            String maker = fields[4];
                             System.out.println("write the Category,subCategory,subSubCategory of the product in that format");
                             line = in.nextLine();
                             String[] cats = line.split(",");
-                            if(cC.findCat(cats[0])!=null && cC.findCat(cats[0]).findSub(cats[1])!=null &&
-                                    cC.findCat(cats[0]).findSub(cats[1]).findSubSub(cats[2])!=null) {
-                                cC.addNewProduct(id, name, desc, daysForResupply, priceSupplier, price, maker, cats[0], cats[1], cats[2]);
-                            }
-                            else
-                                System.out.println("wrong input or one of the categories does not exists");
+                            cC.addNewProduct(id, name, desc, price, maker, cats[0], cats[1], cats[2]);
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -238,7 +231,7 @@ public class CLI
                             String catAdd = fields[2];
                             String subAdd = fields[3];
                             String subSubAdd = fields[4];
-                            cC.transferProduct(id, catRemove, catAdd, subAdd, subSubAdd);
+                            cC.transferProduct(id, catAdd, subAdd, subSubAdd);
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
@@ -341,7 +334,6 @@ public class CLI
                     }
                     case ("19"): {
                         try {
-
                             System.out.println("creating a scenario");
                             cC.addCategory("first");
                             cC.addSubCat("first", "first1");
@@ -349,14 +341,16 @@ public class CLI
                             cC.addCategory("second");
                             cC.addSubCat("second", "second1");
                             cC.addSubSubCat("second", "second1", "second11");
-                            cC.addNewProduct(1, "milk", "from cow", 2, 1, 3, "me"
+                            cC.addNewProduct(1, "milk", "from cow", 3, "me"
                                     , "first", "first1", "first11");
-                            cC.addNewProduct(2, "eggs", "from chicken", 3, 2, 5, "me",
+                            cC.setDaysForResupply(1, 2);
+                            cC.setPriceSupplier(1, 3);
+                            cC.addNewProduct(2, "eggs", "from chicken", 5, "me",
                                     "second", "second1", "second11");
+                            cC.setDaysForResupply(2, 3);
+                            cC.setPriceSupplier(1, 2);
                             cC.addAllItems(1, 7, "2022-06-01", 1);
                             cC.addAllItems(2, 3, "2019-06-01", 1);
-                            cC.changeDaysPassed(1, 5);
-                            cC.changeDaysPassed(2, 3);
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
