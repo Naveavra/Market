@@ -1,5 +1,7 @@
 package DomainLayer;
 
+import DomainLayer.Storage.CategoryController;
+import DomainLayer.Storage.ReportController;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -10,7 +12,17 @@ import java.util.Map;
 public class Facade {
     private OrdersController ordersController;
     private SupplierController supplierController;
+    private CategoryController categoryController;
+    private ReportController reportController;
     private Gson gson;
+
+    public Facade(){
+        ordersController=new OrdersController();
+        supplierController=new SupplierController();
+        categoryController=new CategoryController();
+        reportController=new ReportController(categoryController);
+        gson=new Gson();
+    }
 
     //Order service
     public String createOrder(int supplierNumber){
@@ -254,6 +266,118 @@ public class Facade {
         List<PastOrderSupplier> pastOrderList=new ArrayList<>();
         pastOrderList=ordersController.getFinalOrders(supplierNumber);
         return gson.toJson(pastOrderList);
+    }
+
+
+    //categoryService
+    public void addCategory(String cName) {
+        categoryController.addCategory(cName, 0);
+    }
+
+    public void addNewProduct(int pId, String pName, String desc, double price,
+                              String maker, String cat, String sub, String subSub) {
+        categoryController.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
+    }
+
+    public void setDaysForResupply(int id, int daysForResupply){
+        categoryController.setDaysForResupply(id, daysForResupply);
+    }
+
+    public void setPriceSupplier(int id, double priceSupplier){
+        categoryController.setPriceSupplier(id, priceSupplier);
+    }
+
+    public void addSubCat(String cName, String subName) {
+        categoryController.addSubCategory(cName, subName);
+    }
+
+    public void addSubSubCat(String cName, String subName, String subsub) {
+        categoryController.addSubSubCategory(cName, subName, subsub);
+    }
+
+
+    public void setDiscount(String cName, double discount) {
+        categoryController.setDiscount(cName, discount);
+    }
+
+    public void transferProduct(int id, String catAdd, String subAdd, String subSubAdd) {
+        categoryController.transferProduct(id, catAdd, subAdd, subSubAdd);
+    }
+
+
+    public void removeFromCatalog(int id) {
+        categoryController.removeFromCatalog(id);
+    }
+
+
+    public void removeCat(String catName){
+        categoryController.removeCat(catName);
+    }
+
+
+    public String getNameWithId(int id)
+    {
+        return categoryController.getProductWithId(id).getName();
+    }
+
+    public void changeDaysForResupply(int id, int days){
+        categoryController.setDaysForResupply(id, days);
+    }
+
+    public void setDiscountToOneItem(int id, double discount){
+        categoryController.setDiscountToOneItem(id, discount);
+    }
+
+    public void defineAsDamaged(int id, String description,String place, int shelf, String ed)
+    {
+        categoryController.defineAsDamaged(id, description, place, shelf, ed);
+    }
+
+
+    public double buyItems(int id, int amount){
+        return categoryController.buyItems(id, amount);
+    }
+
+    public boolean needsRefill(int id){
+        return categoryController.needsRefill(id);
+    }
+
+    public void transferItem(int id, String ed, String curePlace, int curShelf, String toPlace, int toShelf){
+        categoryController.transferItem(id, ed, curePlace, curShelf, toPlace, toShelf);
+    }
+
+    public void addAllItems(int id, int amount, String ed, int shelf){
+        categoryController.addAllItems(id, amount, ed, shelf);
+    }
+
+    public int getProductIdWithName(String name){
+        return categoryController.getProductIdWithName(name);
+    }
+
+    public void moveItemsToStore(int id, int amount){
+        categoryController.moveItemsToStore(id, amount);
+    }
+
+    public String printAllProducts(){
+        return categoryController.printAllProducts();
+    }
+
+    // report service
+    public boolean makeReport(List<String> catNames){
+        return reportController.makeReport(catNames);
+    }
+
+    public boolean makeDamagedReport(){
+        return reportController.makeDamagedReport();
+    }
+
+
+    public boolean makeRefillReport(){
+        return reportController.makeRefillReport();
+    }
+
+    public boolean makeProductReport(int id){
+        return reportController.makeProductReport(id);
     }
 
 }

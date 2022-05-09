@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ReportController {
 
     }
 
-    public boolean makeDamagedReport() throws IOException {
+    public boolean makeDamagedReport(){
         File path= new File("./damagedItems.json");
         try (PrintWriter out = new PrintWriter(new FileWriter(path.getCanonicalPath()))) {
             Gson gson = new Gson();

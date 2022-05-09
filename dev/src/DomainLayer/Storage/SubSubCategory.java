@@ -5,12 +5,13 @@ import java.util.List;
 
 public class SubSubCategory {
     private String name;
-    private List<Product> products;//products
+    private List<Product> products;
 
     public SubSubCategory(String name){
         this.name=name;
         products=new LinkedList<>();
     }
+
     public SubSubCategory(String name, List<Product> addProducts){
         this.name=name;
         products=new LinkedList<>();

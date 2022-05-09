@@ -13,7 +13,7 @@ public class Connect {
      * Connect to a sample database
      */
     public Connection conn = null;
-    public final String url = "jdbc:sqlite:superli.db";
+    public final String url = "jdbc:sqlite:../dev/superli.db";
     private static Connect instance;
     public static Connect getInstance(){
         if(instance==null){
@@ -24,7 +24,7 @@ public class Connect {
     private Connect() {
         try {
             // db parameters
-            String url = "jdbc:sqlite:superli.db";
+            String url = "jdbc:sqlite:../dev/superli.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
             System.out.println("Connection to SQLite has been established.");
@@ -58,8 +58,56 @@ public class Connect {
     }
     public void createTables() throws SQLException {
         try (Statement stmt = createStatement()) {
+            //table products
+            String query = "CREATE TABLE IF NOT EXISTS \"Products\"  (\n" +
+                    "\t\"productId\"\tINTEGER,\n" +
+                    "\t\"name\"\tTEXT,\n" +
+                    "\t\"description\"\tTEXT,\n"+
+                    "\t\"maker\"\tTEXT,\n"+
+                    "\t\"storageAmount\"\tINTEGER,\n"+
+                    "\t\"storeAmount\"\tINTEGER,\n"+
+                    "\t\"timesBought\"\tINTEGER,\n"+
+                    "\t\"price\"\tInteger,\n"+
+                    "\t\"discount\"\tInteger,\n"+
+                    "\t\"dayAdded\"\tTEXT,\n" +
+                    "\t\"needsRefill\"\tTEXT,\n" +
+                    "\t\"categoryName\"\tTEXT,\n" +
+                    "\t\"subCategoryName\"\tTEXT,\n"+
+                    "\t\"subSubCategoryName\"\tTEXT,\n"+
+                    "\tPRIMARY KEY(\"productId\")\n"+ ")";
+            stmt.execute(query);
+            //table category discount
+            query = "CREATE TABLE IF NOT EXISTS \"CategoryDiscount\"  (\n" +
+                    "\t\"categoryName\"\tTEXT,\n" +
+                    "\t\"discount\"\tInteger,\n"+
+                    "\tPRIMARY KEY(\"categoryName\")\n"+ ")";
+            stmt.execute(query);
+            //table category subCategory
+            query = "CREATE TABLE IF NOT EXISTS \"SubCategories\"  (\n" +
+                    "\t\"categoryName\"\tTEXT,\n" +
+                    "\t\"subCategoryName\"\tTEXT,\n"+
+                    "\tPRIMARY KEY(\"categoryName\", \"subCategoryName\")\n"+ ")";
+            stmt.execute(query);
+            //table subCategory subSubCategory
+            query = "CREATE TABLE IF NOT EXISTS \"SubSubCategories\"  (\n" +
+                    "\t\"categoryName\"\tTEXT,\n" +
+                    "\t\"subCategoryName\"\tTEXT,\n" +
+                    "\t\"subSubCategoryName\"\tTEXT,\n"+
+                    "\tPRIMARY KEY(\"categoryName\", \"subCategoryName\", \"subSubCategoryName\")\n"+ ")";
+            stmt.execute(query);
+            //table items
+            query = "CREATE TABLE IF NOT EXISTS \"Items\"  (\n" +
+                    "\t\"itemId\"\tINTEGER,\n" +
+                    "\t\"productId\"\tINTEGER,\n" +
+                    "\t\"expirationDate\"\tTEXT,\n"+
+                    "\t\"place\"\tTEXT,\n"+
+                    "\t\"shelf\"\tINTEGER,\n"+
+                    "\t\"isDamaged\"\tTEXT,\n"+
+                    "\t\"defectiveDescription\"\tTEXT,\n"+
+                    "\tPRIMARY KEY(\"itemId\")\n"+ ")";
+            stmt.execute(query);
             //table product supplier
-            String query = "CREATE TABLE IF NOT EXISTS \"ProductSupplier\"  (\n" +
+            query = "CREATE TABLE IF NOT EXISTS \"ProductSupplier\"  (\n" +
                     "\t\"productId\"\tInteger,\n" +
                     "\t\"supplierNumber\"\tInteger,\n" +
                     "\t\"catalogNumber\"\tINTEGER,\n" +
@@ -102,7 +150,7 @@ public class Connect {
             stmt.execute(query);
             //table orderFromSupplier
             query = "CREATE TABLE IF NOT EXISTS \"OrdersFromSupplier\"  (\n" +
-                    "\t\"orderId\"\tINTEGER Identity(1000, 1) Unique,\n" +
+                    "\t\"orderId\"\tINTEGER Identity(100, 1) Unique,\n" +
                     "\t\"date\"\tTEXT,\n" +
                     "\t\"supplierNumber\"\tTEXT,\n" +
                     "\tPRIMARY KEY(\"orderId\")\n"+ ")";

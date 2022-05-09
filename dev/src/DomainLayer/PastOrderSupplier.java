@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class PastOrderSupplier extends OrderFromSupplier {
     private double totalPrice;
-    private String finishDate;
+    private String finishDate;//the day the order arrived to destination
 
     public PastOrderSupplier(OrderFromSupplier order, double totalPrice) {
         super(order);
