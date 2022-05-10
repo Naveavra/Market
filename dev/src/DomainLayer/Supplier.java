@@ -118,7 +118,7 @@ public class Supplier {
         if(isProductExist(catalogNumber, supplierNumber)){
             return false;
         }
-        ProductSupplier productSupplier = new ProductSupplier(catalogNumber, price, productId);
+        ProductSupplier productSupplier = new ProductSupplier(supplierNumber,catalogNumber, price, productId);
         productsDAO.insert(productSupplier);
         //products.put(catalogNumber, productSupplier);
         return true;

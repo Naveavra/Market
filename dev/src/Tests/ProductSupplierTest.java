@@ -11,23 +11,11 @@ private ProductSupplier p;
 private ProductSupplier p1;
     @Before
     public void setUp() throws Exception {
-        p=new ProductSupplier(0, 5, 10);
-        p1=new ProductSupplier(1,5, 50);
+        p=new ProductSupplier(p.getSupplierNumber(),0, 5, 10);
+        p1=new ProductSupplier(p.getSupplierNumber(),1,5, 50);
 
     }
-
     @Test
-    public void setName() {
-       // p.setName("pen");
-//        assertEquals("pen", p.getName());
-    }
-
-    //@Test
-//    public void getName() {
-//        assertEquals("chair", p.getName());
-//    }
-
-   // @Test
     public void setPrice() {
         p.setPrice(5);
         assertEquals(5, p.getPrice(), 0.0);

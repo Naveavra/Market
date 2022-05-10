@@ -16,7 +16,8 @@ public class ProductSupplier {
 
 
 
-    public ProductSupplier(int catalogNumber, double price, int productId){
+    public ProductSupplier(int supplierNumber,int catalogNumber, double price, int productId){
+        this.supplierNumber=supplierNumber;
         this.catalogNumber =catalogNumber;
         this.price=price;
         this.productId = productId;
@@ -25,6 +26,7 @@ public class ProductSupplier {
     }
     public ProductSupplier(ProductSupplier productSupplier){
         this.catalogNumber = productSupplier.catalogNumber;
+        this.supplierNumber=productSupplier.supplierNumber;
         this.price= productSupplier.price;
         discount=new HashMap<>();
         discount.put(0, 1.0);// keep it sorted

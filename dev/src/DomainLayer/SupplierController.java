@@ -46,7 +46,6 @@ public class SupplierController {
                 return false;
             }
             Supplier s = new Supplier(supplierNumber,supplierName, bankAccount, contacts,isDeliver,true);
-
             suppliersDAO.insertSupplier(s);
         }
         catch (Exception e){

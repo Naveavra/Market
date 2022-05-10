@@ -243,10 +243,6 @@ public class ItemDAO {
         }
         return ans+1;
     }
-
-
-    public
-
     private boolean productExists(int productId) throws SQLException {
         String query = "SELECT * FROM Products WHERE " +
                 String.format("productId=%d", productId);
