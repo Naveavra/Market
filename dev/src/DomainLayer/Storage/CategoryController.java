@@ -2,6 +2,7 @@ package DomainLayer.Storage;
 
 
 import DAL.CategoryToProductDAO;
+import javafx.util.Pair;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -229,6 +230,10 @@ public class CategoryController
             ans+="Product id is: " +p.getId()+"\tProduct name is: "+p.getName()+"\tthe current amount is:"+p.getCurAmount()+'\n';
         }
         return ans;
+    }
+
+    public List<Pair<Integer, Integer>> getCatalogNumbers(){
+        return categoriesDAO.getCatalogNumbers();
     }
 
 }

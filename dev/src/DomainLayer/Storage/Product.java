@@ -56,7 +56,10 @@ public class Product
     }
 
     public int getRefill(){
-        return 2*calcMinAmount()-getCurAmount();
+        int ans=2*calcMinAmount()-getCurAmount();
+        if(ans<0)
+            ans=0;
+        return ans;
     }
 
     public void setPrice(int price) {

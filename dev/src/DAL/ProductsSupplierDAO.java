@@ -109,20 +109,22 @@ public class ProductsSupplierDAO {
         }
     }
 
-    public ProductSupplier getProductByCatalogNumber(int supplierNumber, int catalogNumber) throws SQLException {
+    public ProductSupplier getProductByCatalogNumber(int catalogNumber) throws SQLException {
         String query = "SELECT * FROM ProductSupplier WHERE " +
-                String.format("supplierNumber=%d and catalogNumber=%d", supplierNumber, catalogNumber);
+                String.format("catalogNumber=%d", catalogNumber);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs =stmt.executeQuery(query);
             if (!rs.next())
                 return null;
-            ProductSupplier p = new ProductSupplier(rs.getInt("supplierNumber"),rs.getInt("catalogNumber"),rs.getDouble("price"),rs.getInt("productId"));
-            Pair<Integer,Integer> keySet =new Pair<>(supplierNumber,p.getProductId());
-            if(IMProductSupplier.containsKey(keySet)) {
-                return IMProductSupplier.get(keySet);
+            ProductSupplier ans=null;
+            while(!rs.isClosed()) {
+                ProductSupplier p = new ProductSupplier(rs.getInt("supplierNumber"), rs.getInt("catalogNumber"), rs.getDouble("price"), rs.getInt("productId"));
+                if(ans==null || ans.getPrice()>p.getPrice())
+                    ans=p;
+                IMProductSupplier.put(new Pair<>(p.getProductId(), p.getCatalogNumber()), p);
+                rs.next();
             }
-            IMProductSupplier.put(new Pair<>(p.getProductId(), p.getCatalogNumber()), p);
-            return p;
+            return ans;
         } catch (SQLException e) {
             throw e;
         }
@@ -185,6 +187,23 @@ public class ProductsSupplierDAO {
                 discounts.put(rs.getInt("quantity"),rs.getDouble("discount"));
             }
             return discounts;
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+    public int getProductIdByCatalogId(int catalogNumber) throws SQLException {
+        String query = "SELECT * FROM ProductSupplier WHERE " +
+                String.format("catalogNumber=%d", catalogNumber);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs =stmt.executeQuery(query);
+            if (!rs.next())
+                return -1;
+            else
+                return rs.getInt("productId");
         } catch (SQLException e) {
             throw e;
         }

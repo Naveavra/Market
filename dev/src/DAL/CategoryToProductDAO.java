@@ -156,6 +156,14 @@ public class CategoryToProductDAO {
             return new LinkedList<>();
         }
     }
+
+    public List<Pair<Integer, Integer>> getCatalogNumbers(){
+        try {
+            return productDAO.getCatalogNumbers();
+        } catch (SQLException e) {
+            return new LinkedList<>();
+        }
+    }
     //functions to get products of categories
     public List<Product> getProductsOfCategory(String category){
         try {

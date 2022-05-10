@@ -115,7 +115,7 @@ public class Supplier {
         if (isProductExist(productId)) {
             return false;
         }
-        if(isProductExist(catalogNumber, supplierNumber)){
+        if(isProductExistByCatalogNumber(catalogNumber)){
             return false;
         }
         ProductSupplier productSupplier = new ProductSupplier(supplierNumber,catalogNumber, price, productId);
@@ -128,7 +128,7 @@ public class Supplier {
         }
     }
     public boolean removeProduct(int catalogNumber){
-        if (!isProductExist(catalogNumber,supplierNumber)) {
+        if (!isProductExistByCatalogNumber(catalogNumber)) {
             return false;
         }
         try {
@@ -140,9 +140,9 @@ public class Supplier {
         return true;
     }
 
-    private boolean isProductExist(int catalogNumber, int supplierNumber) {
+    private boolean isProductExistByCatalogNumber(int catalogNumber) {
         try{
-            return (productsDAO.getProductByCatalogNumber(supplierNumber, catalogNumber) != null);
+            return (productsDAO.getProductByCatalogNumber(catalogNumber) != null);
         }
         catch (Exception e){
             return false;
@@ -151,7 +151,7 @@ public class Supplier {
 
     public ProductSupplier getProduct(int catalogNumber){
         try{
-            return productsDAO.getProductByCatalogNumber(supplierNumber,catalogNumber);
+            return productsDAO.getProductByCatalogNumber(catalogNumber);
         }
         catch (Exception e){
             return null;
