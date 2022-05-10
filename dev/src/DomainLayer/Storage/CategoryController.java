@@ -89,22 +89,6 @@ public class CategoryController
             categoriesDAO.insertIntoProduct(new Product(productId, productName, desc, price, maker), catName, subCatName, subSubName);
         }
     }
-
-    public void setPriceSupplier(int id, double priceSupplier){
-        Product p=getProductWithId(id);
-        if(p!=null) {
-            p.setPriceSupplier(priceSupplier);
-            categoriesDAO.updateProduct(p);
-        }
-    }
-
-    public void setDaysForResupply(int id, int daysForResupply){
-        Product p=getProductWithId(id);
-        if(p!=null) {
-            p.setDaysForResupply(daysForResupply);
-            categoriesDAO.updateProduct(p);
-        }
-    }
     public void addItemToProduct(int id, String loc, int shelf, String ed){
         Product p = getProductWithId(id);
         if(p != null) {
@@ -172,6 +156,13 @@ public class CategoryController
         return refill;
     }
 
+    public boolean needsRefill(int productId){
+        Product p=getProductWithId(productId);
+        if(p!=null)
+            return p.getNeedsRefill();
+        return false;
+    }
+
     public boolean canBuyItems(int id, int amount){
         boolean ans=false;
         Product p=getProductWithId(id);
@@ -190,21 +181,6 @@ public class CategoryController
         }
         return -1;
     }
-
-    public boolean needsRefill(int id){
-        Product p=getProductWithId(id);
-        if(p!=null) {
-            if (p.getRefill() > 0 && !p.getNeedsRefill()) {
-                p.setNeedsRefill(true);
-                return true;
-            } else if (p.getRefill() == 0) {
-                p.setNeedsRefill(false);
-            }
-            categoriesDAO.updateProduct(p);
-        }
-        return false;
-    }
-
     public void transferItem(int id, String ed, String curePlace, int curShelf, String toPlace, int toShelf){
         Product p=getProductWithId(id);
         if(p!=null) {

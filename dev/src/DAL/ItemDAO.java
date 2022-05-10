@@ -12,7 +12,6 @@ import java.util.List;
 public class ItemDAO {
 
     private Connect connect;
-    private static int itemId;
 
 
     /**
@@ -21,13 +20,12 @@ public class ItemDAO {
      */
     public ItemDAO() {
         connect = Connect.getInstance();
-        itemId=getLastId();
     }
 
     public boolean insert(Item item, int productId) throws SQLException {
         if (productExists(productId)) {
-            String query = "INSERT INTO Items (itemId, productId,expirationDate,place,shelf,isDamaged, defectiveDescription)" +
-                    " VALUES " + String.format("(%d,%d,\"%s\",\"%s\",%d,\"%s\",\"%s\")", itemId, productId, item.getExpDate(),
+            String query = "INSERT INTO Items (productId,expirationDate,place,shelf,isDamaged, defectiveDescription)" +
+                    " VALUES " + String.format("(%d,\"%s\",\"%s\",%d,\"%s\",\"%s\")", productId, item.getExpDate(),
                     item.getLoc().getPlace().toString(), item.getLoc().getShelf(), item.getIsDamaged(), item.getDefectiveDescription());
             try (Statement stmt = connect.createStatement()) {
                 stmt.execute(query);
@@ -36,7 +34,6 @@ public class ItemDAO {
             } finally {
                 connect.closeConnect();
             }
-            itemId++;
             return true;
         }
         return false;
@@ -179,20 +176,20 @@ public class ItemDAO {
         return new LinkedList<>();
     }
 
-    public void moveToPlace(Product product, String place, int shelf, int amount) throws SQLException {
+    public void moveToPlace(Product product, Item item, String place, int shelf) throws SQLException {
             String query = "SELECT itemId FROM Items WHERE " +
-                    String.format("productId=%d",product.getId());
+                    String.format("productId=%d AND place=\"%s\" AND shelf=%d AND expirationDate=\"%s\" AND isDamaged=\"%s\"",
+                            product.getId(), item.getLoc().getPlace().toString(), item.getLoc().getShelf(), item.getExpDate(),
+                            item.getIsDamaged());
             int itemId = -1;
             try (Statement stmt = connect.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 rs.next();
-                    for (int i = 0; i < amount && !rs.isClosed(); i++) {
                         itemId = rs.getInt("itemId");
                         query = "UPDATE Items" +
                                 String.format(" SET place=\"%s\", shelf=%d", place, shelf) +
                                 String.format(" WHERE itemId=%d", itemId);
                         stmt.execute(query);
-                    }
             } catch (SQLException throwable) {
                 throw throwable;
             } finally {
@@ -243,6 +240,7 @@ public class ItemDAO {
         }
         return ans+1;
     }
+
     private boolean productExists(int productId) throws SQLException {
         String query = "SELECT * FROM Products WHERE " +
                 String.format("productId=%d", productId);

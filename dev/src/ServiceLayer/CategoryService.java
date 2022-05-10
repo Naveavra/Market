@@ -21,14 +21,6 @@ public class CategoryService {
         facade.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
     }
 
-    public void setDaysForResupply(int id, int daysForResupply){
-        facade.setDaysForResupply(id, daysForResupply);
-    }
-
-    public void setPriceSupplier(int id, double priceSupplier){
-        facade.setPriceSupplier(id, priceSupplier);
-    }
-
     public void addSubCat(String cName, String subName) {
         facade.addSubCat(cName, subName);
     }
@@ -61,9 +53,9 @@ public class CategoryService {
     {
         return facade.getNameWithId(id);
     }
+    public boolean needsRefill(int productId){
+        return facade.needsRefill(productId);
 
-    public void changeDaysForResupply(int id, int days){
-        facade.setDaysForResupply(id, days);
     }
 
     public void setDiscountToOneItem(int id, double discount){
@@ -78,10 +70,6 @@ public class CategoryService {
 
     public double buyItems(int id, int amount){
         return facade.buyItems(id, amount);
-    }
-
-    public boolean needsRefill(int id){
-        return facade.needsRefill(id);
     }
 
     public void transferItem(int id, String ed, String curePlace, int curShelf, String toPlace, int toShelf){

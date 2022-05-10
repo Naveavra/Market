@@ -15,6 +15,7 @@ public class Facade {
     private CategoryController categoryController;
     private ReportController reportController;
     private Gson gson;
+    private static boolean needsUpdateOrders=true;
 
     public Facade(){
         ordersController=new OrdersController();
@@ -22,6 +23,11 @@ public class Facade {
         categoryController=new CategoryController();
         reportController=new ReportController(categoryController);
         gson=new Gson();
+        if(needsUpdateOrders){
+            updateOrders();
+            needsUpdateOrders=false;
+        }
+
     }
 
     //Order service
@@ -282,15 +288,6 @@ public class Facade {
                               String maker, String cat, String sub, String subSub) {
         categoryController.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
     }
-
-    public void setDaysForResupply(int id, int daysForResupply){
-        categoryController.setDaysForResupply(id, daysForResupply);
-    }
-
-    public void setPriceSupplier(int id, double priceSupplier){
-        categoryController.setPriceSupplier(id, priceSupplier);
-    }
-
     public void addSubCat(String cName, String subName) {
         categoryController.addSubCategory(cName, subName);
     }
@@ -324,10 +321,6 @@ public class Facade {
         return categoryController.getProductWithId(id).getName();
     }
 
-    public void changeDaysForResupply(int id, int days){
-        categoryController.setDaysForResupply(id, days);
-    }
-
     public void setDiscountToOneItem(int id, double discount){
         categoryController.setDiscountToOneItem(id, discount);
     }
@@ -339,15 +332,18 @@ public class Facade {
 
 
     public double buyItems(int id, int amount){
-        return categoryController.buyItems(id, amount);
-    }
-
-    public boolean needsRefill(int id){
-        return categoryController.needsRefill(id);
+        double price=categoryController.buyItems(id, amount);
+        if(categoryController.needsRefill(id))
+            //find supplier with the lowest price and make an order
+        return price;
     }
 
     public void transferItem(int id, String ed, String curePlace, int curShelf, String toPlace, int toShelf){
         categoryController.transferItem(id, ed, curePlace, curShelf, toPlace, toShelf);
+    }
+
+    public boolean needsRefill(int productId){
+        return categoryController.needsRefill(productId);
     }
 
     public void addAllItems(int id, int amount, String ed, int shelf){
