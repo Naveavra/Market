@@ -42,8 +42,8 @@ public class ProductSupplier {
         this.discount.put(count,discount);
         try {
             productsSupplierDAO.insertDiscountOnProduct(this,count,discount);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return true;
     }
@@ -53,7 +53,13 @@ public class ProductSupplier {
         }
         this.discount.remove(count);
         try {
-            productsSupplierDAO.removeDiscountOnProduct(this,count);
+            if(productsSupplierDAO.getDiscountOnProduct(this,count)!=null){
+                productsSupplierDAO.removeDiscountOnProduct(this,count);
+                return true;
+            }
+            else{
+                return false;
+            }
         } catch (SQLException e) {
            e.printStackTrace();
         }

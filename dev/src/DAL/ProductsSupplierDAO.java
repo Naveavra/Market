@@ -62,7 +62,6 @@ public class ProductsSupplierDAO {
     }
 
     public void updateProduct(ProductSupplier productSupplier) throws SQLException {
-
         String query = String.format("UPDATE ProductSupplier SET price = %f and catalogNumber = %d WHERE productId = %d and supplierNumber = %d",
                 productSupplier.getPrice(),productSupplier.getCatalogNumber(),productSupplier.getProductId(),
                                 productSupplier.getSupplierNumber());
@@ -150,6 +149,42 @@ public class ProductsSupplierDAO {
                 productSupplier.getSupplierNumber(),productSupplier.getProductId(),count);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+    public Double getDiscountOnProduct(ProductSupplier productSupplier, int count) throws SQLException {
+        String query = "SELECT * FROM DiscountProductSupplier WHERE " +
+                String.format("supplierNumber=%d and productId=%d and quantity=%d", productSupplier.getSupplierNumber(), productSupplier.getProductId(),count);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs =stmt.executeQuery(query);
+            if (!rs.next())
+                return null;
+            Double discount =rs.getDouble("discount");
+            return discount;
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+    public Map<Integer,Double> getDiscountsOnProduct(ProductSupplier productSupplier) throws SQLException {
+        String query = "SELECT * FROM DiscountProductSupplier WHERE " +
+                String.format("supplierNumber=%d and productId=%d", productSupplier.getSupplierNumber(), productSupplier.getProductId());
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs =stmt.executeQuery(query);
+            if (!rs.next())
+                return null;
+            Map<Integer,Double> discounts =new HashMap<>();
+            while(rs.next()){
+                discounts.put(rs.getInt("quantity"),rs.getDouble("discount"))
+            }
+            return discounts;
         } catch (SQLException e) {
             throw e;
         }

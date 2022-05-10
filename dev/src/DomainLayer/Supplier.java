@@ -3,6 +3,7 @@ package DomainLayer;
 
 import DAL.ProductsSupplierDAO;
 import DAL.SuppliersDAO;
+import PresentationLayer.Supplier.Product;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -221,6 +222,15 @@ public class Supplier {
     }
     public Map<Integer,Double> getDiscounts(){
         return discountByAmount;
+    }
+
+    public void updateProductPrice(int catalogNumber, int price) {
+        getProduct(catalogNumber).setPrice(price);
+        try {
+            productsDAO.updateProduct(getProduct(catalogNumber));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

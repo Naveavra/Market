@@ -152,7 +152,8 @@ public class Facade {
         if(!supplierController.getSupplier(supplierNumber).isProductExist(productId)){
             return false;
         }
-        supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).setPrice(price);
+        supplierController.getSupplier(supplierNumber).updateProductPrice(catalogNumber,price);
+
         return true;
     }
     public boolean removeProduct(int supplierNumber, int catalogNumber){
