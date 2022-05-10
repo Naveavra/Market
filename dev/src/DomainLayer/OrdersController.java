@@ -24,7 +24,7 @@ public class OrdersController {
     }
 
     public OrderFromSupplier createOrder(int supplierNumber){
-        OrderFromSupplier order = new OrderFromSupplier();
+        OrderFromSupplier order = new OrderFromSupplier(supplierNumber);
         try {
             ordersDAO.createOrderFromSupplier(order);
         } catch (SQLException e) {

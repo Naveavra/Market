@@ -75,6 +75,9 @@ public class OrderService {
     public boolean sendOrder(int supplierNumber, int orderId){
       return facade.sendOrder(supplierNumber, orderId);
     }
+    public String getOrderDetails(int orderId) {
+        return facade.getOrderTotalDetails(orderId);
+    }
 
     /**
      * the function get the order from the supplier
@@ -95,4 +98,6 @@ public class OrderService {
     public String getProductsInOrder(int supplierNumber, int orderID) {
         return facade.getProductsInOrder(supplierNumber, orderID);
     }
+
+
 }

@@ -245,6 +245,7 @@ public class OrderMenu {
     }
 
     private void sendOrders(int orderId) {
+        printOrderDetailsBeforeClose(orderId);
         boolean send=orderService.sendOrder(supplier.getSupplierNumber(), orderId);
         if(send){
          System.out.println("Order sent successfully");
@@ -252,6 +253,11 @@ public class OrderMenu {
         else{
           System.out.println("The order wasn't found");
         }
+    }
+
+    private void printOrderDetailsBeforeClose(int orderId) {
+        String print=orderService.getOrderDetails(orderId);
+        System.out.println("the final price of the order is:"+print);
     }
 
     private void watchFixedDaysOrders() {

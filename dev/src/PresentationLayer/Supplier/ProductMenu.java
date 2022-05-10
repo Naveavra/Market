@@ -86,8 +86,16 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
         }
-        System.out.println("Enter name of product:");
-        String name = sc.next();
+        System.out.println("Enter product id:");
+        int productId=0;
+        try{
+            choiceStr = sc.next();
+            productId=Integer.parseInt(choiceStr);
+        }
+        catch (Exception e){
+            System.out.println("you must enter only number");
+            manageProductsSupplierMenu();
+        }
         System.out.println("Enter price:");
         int price =0;
         try{
@@ -98,7 +106,7 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
         }
-        boolean added=ps.addProduct(supplier.getSupplierNumber(), catalogNum,name,price, price);
+        boolean added=ps.addProduct(supplier.getSupplierNumber(), catalogNum,price, productId);
         if(added) {
             System.out.println("product added");
         }
@@ -145,8 +153,16 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             updateProduct(supplier);
         }
-        System.out.println("Enter new name for product:");
-        String newName = sc.next();
+        System.out.println("Enter product id of the product:");
+        int productId =0;
+        try{
+            choiceStr = sc.next();
+            productId=Integer.parseInt(choiceStr);
+        }
+        catch (Exception e){
+            System.out.println("you must enter only number");
+            updateProduct(supplier);
+        }
         System.out.println("Enter new price for product:");
         choiceStr = "";
         int price =0;
@@ -158,7 +174,7 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             updateProduct(supplier);
         }
-        boolean updated=ps.updateProduct(supplier.getSupplierNumber(),catalogNum, newName, price);
+        boolean updated=ps.updateProduct(supplier.getSupplierNumber(),catalogNum, productId,price);
         if(updated) {
             System.out.println("product updated");
         }

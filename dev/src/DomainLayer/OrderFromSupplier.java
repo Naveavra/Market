@@ -5,6 +5,7 @@ import DAL.ProductsSupplierDAO;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
@@ -20,8 +21,8 @@ public class OrderFromSupplier {
     private Map<ProductSupplier,Integer> products;//product and count
 
 
-    public OrderFromSupplier(int orderId){
-        this.orderId = orderId;
+    public OrderFromSupplier(int supplierNumber){
+       this.supplierNumber=supplierNumber;
         //products = new HashMap<>();
         String pattern = "MM-dd-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -72,7 +73,28 @@ public class OrderFromSupplier {
         }
         //products.put(p, products.getOrDefault(p,0)+count);
         return true;
-
+    }
+    public boolean addProductToOrder(ProductSupplier p,int count){
+        if(count<=0){
+            return false;
+        }
+        if(p==null){
+            return false;
+        }
+        try {
+            Map<ProductSupplier,Integer> products=ordersDAO.getAllProductsOfOrder(orderId);
+            if(products.containsKey(p)){
+                count=count+products.get(p);
+                ordersDAO.updateCountProductToOrder(p.getProductId(), orderId, count);
+            }
+            else {
+                ordersDAO.addProductToOrder(p, orderId, count);
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+        //products.put(p, products.getOrDefault(p,0)+count);
+        return true;
     }
     public int getOrderId(){
             return orderId;
@@ -136,13 +158,24 @@ public class OrderFromSupplier {
     public DeliveryTerm getDaysToDeliver(){
         return daysToDeliver;
     }
-    public boolean addDeliveryDays(String[] daysInWeeks){
-       this.daysToDeliver.updateFixedDeliveryDays(daysInWeeks);
-       return true;
+    public boolean addDeliveryDays(String[] daysInWeek) {
+        this.daysToDeliver.updateFixedDeliveryDays(daysInWeek);
+        try {
+            ordersDAO.addDeliveryTermsToOrder(orderId,daysInWeek);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
-
     public boolean updateDeliveryDays(String[] daysInWeek) {
         this.daysToDeliver.updateFixedDeliveryDays(daysInWeek);
+        try {
+            ordersDAO.updateDeliveryTermsInOrder(orderId,daysInWeek);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 
@@ -153,4 +186,6 @@ public class OrderFromSupplier {
     public void setOrderId(int orderId) {
         this.orderId = orderId;
     }
+
+
 }
