@@ -25,16 +25,15 @@ public class ProductDAO {
 
     public boolean insert(Product p, String catName, String subCatName, String subSubCatName) throws SQLException {
         if (get(p.getId()) == null) {
-            String query = "INSERT INTO Products (productId,name,description,maker,storageAmount,storeAmount,timesBought,price,discount,dayAdded, needsRefill, categoryName,subCategoryName,subSubCategoryName)" +
-                    " VALUES " + String.format("(%d,\"%s\",\"%s\",\"%s\",%d,%d,%d,%f,%f,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\")", p.getId(), p.getName(), p.getDescription(), p.getMaker(),
-                    p.getStorageAmount(), p.getStoreAmount(), p.getTimesBought(), p.getPrice(), p.getDiscount(),p.getDayAdded(), p.getNeedsRefill()+"", catName, subCatName, subSubCatName);
+            String query = "INSERT INTO Products (productId,name,description,maker,storageAmount,storeAmount,timesBought,price,discount,dayAdded, categoryName,subCategoryName,subSubCategoryName)" +
+                    " VALUES " + String.format("(%d,\"%s\",\"%s\",\"%s\",%d,%d,%d,%f,%f,\"%s\",\"%s\",\"%s\",\"%s\")", p.getId(), p.getName(), p.getDescription(), p.getMaker(),
+                    p.getStorageAmount(), p.getStoreAmount(), p.getTimesBought(), p.getPrice(), p.getDiscount(),p.getDayAdded(), catName, subCatName, subSubCatName);
             try (Statement stmt = connect.createStatement()) {
                 stmt.execute(query);
             } catch (SQLException e) {
                 return false;
             } finally {
                 IMProducts.put(p.getId(), p);
-                Pair<Pair<String, String>, String> key=new Pair<>(new Pair<>(catName, subCatName), subSubCatName);
                 connect.closeConnect();
             }
             return true;
@@ -59,8 +58,6 @@ public class ProductDAO {
                 p.setStorageAmount(rs.getInt("storageAmount"));
                 p.setStoreAmount(rs.getInt("storeAmount"));
                 p.setDayAdded(rs.getString("dayAdded"));
-                String needsRefill=rs.getString("needsRefill");
-                p.setNeedsRefill(!needsRefill.equals("false"));
                 IMProducts.put(p.getId(), p);
                 return p;
             }
@@ -86,8 +83,6 @@ public class ProductDAO {
                 p.setStorageAmount(rs.getInt("storageAmount"));
                 p.setStoreAmount(rs.getInt("storeAmount"));
                 p.setDayAdded(rs.getString("dayAdded"));
-                String needsRefill=rs.getString("needsRefill");
-                p.setNeedsRefill(!needsRefill.equals("false"));
                 IMProducts.put(p.getId(), p);
                 return p;
             }
@@ -113,8 +108,6 @@ public class ProductDAO {
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
                     p.setDayAdded(rs.getString("dayAdded"));
-                    String needsRefill = rs.getString("needsRefill");
-                    p.setNeedsRefill(!needsRefill.equals("false"));
                     ans.add(p);
                     IMProducts.put(p.getId(), p);
                     rs.next();
@@ -147,8 +140,6 @@ public class ProductDAO {
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
                     p.setDayAdded(rs.getString("dayAdded"));
-                    String needsRefill=rs.getString("needsRefill");
-                    p.setNeedsRefill(!needsRefill.equals("false"));
                     if (!IMProducts.containsKey(p.getId()))
                         IMProducts.put(p.getId(), p);
                     ans.add(p);
@@ -179,8 +170,6 @@ public class ProductDAO {
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
                     p.setDayAdded(rs.getString("dayAdded"));
-                    String needsRefill=rs.getString("needsRefill");
-                    p.setNeedsRefill(!needsRefill.equals("false"));
                     if (!IMProducts.containsKey(p.getId()))
                         IMProducts.put(p.getId(), p);
                     ans.add(p);
@@ -195,7 +184,6 @@ public class ProductDAO {
         }
     }
     public List<Product> getAllBySubSubCategory(String category, String subCategory, String subSubCategory) throws SQLException {
-        Pair<Pair<String , String>, String> key = new Pair<>(new Pair<>(category, subCategory), subSubCategory);
         String query = "SELECT * FROM Products WHERE " +
                 String.format("categoryName=\"%s\" AND subCategoryName=\"%s\" AND subSubCategoryName=\"%s\"", category, subCategory
                 ,subSubCategory);
@@ -211,8 +199,6 @@ public class ProductDAO {
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
                     p.setDayAdded(rs.getString("dayAdded"));
-                    String needsRefill=rs.getString("needsRefill");
-                    p.setNeedsRefill(!needsRefill.equals("false"));
                     if (!IMProducts.containsKey(p.getId()))
                         IMProducts.put(p.getId(), p);
 
@@ -232,9 +218,9 @@ public class ProductDAO {
     public void updateProduct(Product p) throws SQLException {
         int key=p.getId();
         String query = "UPDATE Products" +
-                String.format(" SET name=\"%s\", description=\"%s\", maker=\"%s\",storageAmount=%d, storeAmount=%d,timesBought=%d, price=%f, discount=%f, dayAdded=\"%s\", needsRefill=\"%s\"",
+                String.format(" SET name=\"%s\", description=\"%s\", maker=\"%s\",storageAmount=%d, storeAmount=%d,timesBought=%d, price=%f, discount=%f, dayAdded=\"%s\"",
                         p.getName(), p.getDescription(), p.getMaker(), p.getStorageAmount(), p.getStoreAmount(), p.getTimesBought(),
-                        p.getPrice(), p.getDiscount(), p.getDayAdded(), p.getNeedsRefill()+"") +
+                        p.getPrice(), p.getDiscount(), p.getDayAdded()) +
                 String.format(" WHERE productId=%d", key);
         try (Statement stmt = connect.createStatement()) {
             stmt.executeQuery(query);

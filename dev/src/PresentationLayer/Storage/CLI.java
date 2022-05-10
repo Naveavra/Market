@@ -99,7 +99,6 @@ public class CLI
                                 String exp = fields[2];
                                 int shelf = Integer.parseInt(fields[3]);
                                 cC.addAllItems(id, amount, exp, shelf);
-                                cC.needsRefill(id);
                             } else
                                 System.out.println("no such product exists");
                         }
@@ -290,26 +289,6 @@ public class CLI
                     }
                     case ("16"): {
                         try {
-                            System.out.println("enter the id/name, daysForResupply");
-                            detail = in.nextLine();
-                            String[] fields = detail.split(",");
-                            int id = -1;
-                            if (checkId(fields[0]))
-                                id = Integer.parseInt(fields[0]);
-                            else
-                                id = cC.getProductIdWithName(fields[0]);
-                            int days = Integer.parseInt(fields[1]);
-                            if (id != -1)
-                                cC.changeDaysForResupply(id, days);
-                        }
-                        catch (Exception e){
-                            System.out.println("wrong input");
-                        }
-                        break;
-                    }
-
-                    case ("17"): {
-                        try {
 
                             System.out.println("enter the id/name of product");
                             detail = in.nextLine();
@@ -328,11 +307,11 @@ public class CLI
                         }
                         break;
                     }
-                    case("18"):{
+                    case("17"):{
                         System.out.println(cC.printAllProducts());
                         break;
                     }
-                    case ("19"): {
+                    case ("18"): {
                         try {
                             System.out.println("creating a scenario");
                             cC.addCategory("first");
@@ -343,12 +322,8 @@ public class CLI
                             cC.addSubSubCat("second", "second1", "second11");
                             cC.addNewProduct(1, "milk", "from cow", 3, "me"
                                     , "first", "first1", "first11");
-                            cC.setDaysForResupply(1, 2);
-                            cC.setPriceSupplier(1, 3);
                             cC.addNewProduct(2, "eggs", "from chicken", 5, "me",
                                     "second", "second1", "second11");
-                            cC.setDaysForResupply(2, 3);
-                            cC.setPriceSupplier(1, 2);
                             cC.addAllItems(1, 7, "2022-06-01", 1);
                             cC.addAllItems(2, 3, "2019-06-01", 1);
                         }
