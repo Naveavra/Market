@@ -18,8 +18,8 @@ public class ProductSupplierService {
      * @param productId unique number to product in the system
      * @return true if succeed, false if failed
      */
-    public boolean addProduct(int supplierNumber, int catalogNumber, String name, int price, int productId){
-       return facade.addProduct(supplierNumber, catalogNumber, name, price, productId);
+    public boolean addProduct(int supplierNumber, int catalogNumber, int price, int productId){
+       return facade.addProduct(supplierNumber, catalogNumber, price, productId);
     }
 
     /**
@@ -39,8 +39,8 @@ public class ProductSupplierService {
      * @param price the new price (>0) (if u want to change)
      * @return true if succeed, false if failed
      */
-    public boolean updateProduct(int supplierNumber, int catalogNumber, String name, int price){
-     return facade.updateProduct(supplierNumber, catalogNumber, name, price);
+    public boolean updateProduct(int supplierNumber, int catalogNumber,int productId, int price){
+     return facade.updateProduct(supplierNumber, catalogNumber,productId, price);
     }
 
     /**

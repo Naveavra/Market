@@ -33,7 +33,7 @@ public class Facade {
         if(p==null){
             return false;
         }
-        boolean ans = ordersController.getOrder(orderId).updateProductToOrder(p, count);
+        boolean ans = ordersController.getOrder(orderId).addProductToOrder(p, count);
         return ans;
     }
 
@@ -50,7 +50,6 @@ public class Facade {
 
     public String getActiveOrders(int supplierNumber){
         Map<Integer, OrderFromSupplier> orders = ordersController.getActiveOrders(supplierNumber);
-        List<OrderFromSupplier> orders1=new ArrayList<>(orders.values());
         return gson.toJson(orders);
     }
 
@@ -73,6 +72,9 @@ public class Facade {
             return false;
         }
         return ordersController.finishOrder(orderId);
+    }
+    public String getOrderTotalDetails(int orderId) {
+        return String.valueOf(ordersController.updateTotalIncludeDiscounts(orderId));
     }
 
     public String getOrder(int supplierNumber, int orderId) {
@@ -130,8 +132,8 @@ public class Facade {
     }
 
     //Product supplier service
-    public boolean addProduct(int supplierNumber, int catalogNumber, String name, int price, int productId){
-        return supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, price, productId, supplierNumber);
+    public boolean addProduct(int supplierNumber, int catalogNumber, int price, int productId){
+        return supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, price, productId);
     }
     public String getProductsOfSupplier(int supplierNumber){
         if(supplierController.getSupplier(supplierNumber)==null){
@@ -140,14 +142,14 @@ public class Facade {
         Map<Integer, ProductSupplier> products = supplierController.getSupplier(supplierNumber).getProducts();
         return gson.toJson(products);
     }
-    public boolean updateProduct(int supplierNumber, int catalogNumber, String name, int price){
+    public boolean updateProduct(int supplierNumber, int catalogNumber, int productId, int price){
         if(price<=0){
             return false;
         }
-        if(!supplierController.getSupplier(supplierNumber).isProductExist(catalogNumber)){
+        if(productId<0){
             return false;
         }
-        if(name.equals("")){
+        if(!supplierController.getSupplier(supplierNumber).isProductExist(productId)){
             return false;
         }
         supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).setPrice(price);
@@ -185,6 +187,7 @@ public class Facade {
         }
         return supplierController.getSupplier(supplierNumber).updateAccount(supplierName,bankAccount,contacts);
     }
+    //discount on amount of specific product
     public boolean addDiscount(int supplierNumber,int catalogNumber,int count,double discount){
         if(supplierController.getSupplier(supplierNumber)==null){
             return false;
@@ -192,7 +195,6 @@ public class Facade {
         if(!supplierController.getSupplier(supplierNumber).isActive()){
             return false;
         }
-
         if(catalogNumber<0){
             return false;
         }
@@ -207,6 +209,7 @@ public class Facade {
         }
         return supplierController.getSupplier(supplierNumber).getProduct(catalogNumber).addDiscount(count, discount);
     }
+    //discount on sum of products in order
     public boolean addDiscount(int supplierNumber,int count,double discount){
         if(supplierController.getSupplier(supplierNumber)==null){
             return false;

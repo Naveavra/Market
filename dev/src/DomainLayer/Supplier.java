@@ -1,7 +1,6 @@
 package DomainLayer;
 
 
-import DAL.PastOrdersSupplierDAO;
 import DAL.ProductsSupplierDAO;
 import DAL.SuppliersDAO;
 
@@ -82,7 +81,7 @@ public class Supplier {
         }
         this.discountByAmount.put(count, discount);
         try {
-            suppliersDAO.updateSupplier(this);
+            suppliersDAO.insertDiscountOnAmount(this,count,discount);
             return true;
         } catch (SQLException e) {
             return false;
@@ -98,13 +97,13 @@ public class Supplier {
         }
         this.discountByAmount.remove(count);
         try {
-            suppliersDAO.updateSupplier(this);
-            return true;
-        } catch (SQLException e) {
-            return false;
+            suppliersDAO.removeDiscountOnAmount(this,count);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+        return true;
     }
-    public boolean addProduct(int catalogNumber, double price, int productId, int supplierNumber){
+    public boolean addProduct(int catalogNumber, double price, int productId){
         if(catalogNumber<0){
             return false;
         }
@@ -112,20 +111,23 @@ public class Supplier {
             return false;
         }
         try {
-            if (isProductExist(productId)) {
-                return false;
-            }
-            ProductSupplier productSupplier = new ProductSupplier(catalogNumber, price, productId);
-            productsDAO.insert(productSupplier);
-            //products.put(catalogNumber, productSupplier);
-            return true;
+        if (isProductExist(productId)) {
+            return false;
+        }
+        if(isProductExist(catalogNumber, supplierNumber)){
+            return false;
+        }
+        ProductSupplier productSupplier = new ProductSupplier(catalogNumber, price, productId);
+        productsDAO.insert(productSupplier);
+        //products.put(catalogNumber, productSupplier);
+        return true;
         }
         catch (Exception e){
             return false;
         }
     }
     public boolean removeProduct(int catalogNumber){
-        if (isProductExist(catalogNumber,supplierNumber)) {
+        if (!isProductExist(catalogNumber,supplierNumber)) {
             return false;
         }
         try {

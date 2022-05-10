@@ -121,6 +121,7 @@ public class Connect {
                     "\t\"quantity\"\tInteger,\n" +
                     "\t\"discount\"\tInteger,\n"+
                     "\tPRIMARY KEY(\"supplierNumber\",\"productId\",\"quantity\")\n"+ ")";
+            // amount discount on specific product to supplier
             stmt.execute(query);
 
             //table suppliers
@@ -147,6 +148,8 @@ public class Connect {
                     "\t\"quantity\"\tInteger,\n" +
                     "\t\"discount\"\tInteger,\n"+
                     "\tPRIMARY KEY(\"supplierNumber\",\"quantity\")\n"+ ")";
+            //amount discount on sum of products in order
+
             stmt.execute(query);
             //table orderFromSupplier
             query = "CREATE TABLE IF NOT EXISTS \"OrdersFromSupplier\"  (\n" +

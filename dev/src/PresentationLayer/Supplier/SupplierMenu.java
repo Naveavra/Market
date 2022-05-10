@@ -15,7 +15,6 @@ public class SupplierMenu {
     private DeliveryService ds =new DeliveryService();
 
     public void chooseSupplierMenu() {
-        CharSequence charSequence ="qwertyuiopasdfghjklzxcvbnm";
         System.out.println("***You enter to Suppliers page:***");
         System.out.println("Please choose what you whant to do:");
         System.out.println("\t1. Open new Supplier");

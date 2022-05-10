@@ -1,5 +1,8 @@
 package DomainLayer;
 
+import DAL.ProductsSupplierDAO;
+
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,14 +10,14 @@ public class ProductSupplier {
     private int catalogNumber;//unique number in supplier
     private int productId;//unique number to product in the system
     private int supplierNumber;
-    //private String name;//remove
     private double price;
     private Map<Integer,Double> discount;//sum of specific product
+    private ProductsSupplierDAO productsSupplierDAO = new ProductsSupplierDAO();
+
 
 
     public ProductSupplier(int catalogNumber, double price, int productId){
         this.catalogNumber =catalogNumber;
-        //this.name=name;
         this.price=price;
         this.productId = productId;
         discount =new HashMap<>();
@@ -22,7 +25,6 @@ public class ProductSupplier {
     }
     public ProductSupplier(ProductSupplier productSupplier){
         this.catalogNumber = productSupplier.catalogNumber;
-        //this.name= product.name;
         this.price= productSupplier.price;
         discount=new HashMap<>();
         discount.put(0, 1.0);// keep it sorted
@@ -30,13 +32,6 @@ public class ProductSupplier {
              discount.put(x, productSupplier.discount.get(x));
         }
     }
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//    public String getName(){
-//        return name;
-//    }
-
     public void setPrice(int price) {
         this.price = price;
     }
@@ -45,6 +40,11 @@ public class ProductSupplier {
             return false;
         }
         this.discount.put(count,discount);
+        try {
+            productsSupplierDAO.insertDiscountOnProduct(this,count,discount);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return true;
     }
     public boolean removeDiscountOnProduct( int count){
@@ -52,6 +52,11 @@ public class ProductSupplier {
             return false;
         }
         this.discount.remove(count);
+        try {
+            productsSupplierDAO.removeDiscountOnProduct(this,count);
+        } catch (SQLException e) {
+           e.printStackTrace();
+        }
         return true;
     }
 

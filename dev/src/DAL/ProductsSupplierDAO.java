@@ -131,5 +131,31 @@ public class ProductsSupplierDAO {
             connect.closeConnect();
         }
     }
+
+    public void insertDiscountOnProduct(ProductSupplier productSupplier, int count, double discount) throws SQLException {
+        String query =String.format("INSERT INTO DiscountProductSupplier (supplierNumber,productId,quantity,discount) " +
+                "VALUES (%d,%d,%d,%f)",productSupplier.getSupplierNumber(),count,discount);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+    public void removeDiscountOnProduct(ProductSupplier productSupplier, int count) throws SQLException {
+        String query =String.format("DELETE from DiscountProductSupplier WHERE supplierNumber = %d and productId = %d quantity = %d ",
+                productSupplier.getSupplierNumber(),productSupplier.getProductId(),count);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
 }
 

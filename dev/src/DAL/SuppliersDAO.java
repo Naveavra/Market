@@ -85,7 +85,18 @@ public class SuppliersDAO {
             connect.closeConnect();
         }
     }
-
+    public void insertDiscountOnAmount(Supplier s,int count,double discount) throws SQLException{
+        String query =String.format("INSERT INTO DiscountSupplier (supplierNumber,quantity,discount) " +
+                "VALUES (%d,%d,%f)", s.getSupplierNumber(),count,discount);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
 
     public Supplier getSupplier(int supplierNumber) throws SQLException {
         if(IMSuppliers.containsKey(supplierNumber)){
@@ -135,6 +146,19 @@ public class SuppliersDAO {
                 discounts.put(rs.getInt("quantity"),rs.getDouble("discount"));
             }
             return discounts;
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+    public void removeDiscountOnAmount(Supplier supplier, int count) throws SQLException {
+        String query =String.format("DELETE from DiscountSupplier WHERE supplierNumber = %d and quantity = %d ",
+                supplier.getSupplierNumber(),count);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
         } catch (SQLException e) {
             throw e;
         }
