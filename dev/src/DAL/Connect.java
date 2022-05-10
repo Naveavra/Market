@@ -70,7 +70,6 @@ public class Connect {
                     "\t\"price\"\tInteger,\n"+
                     "\t\"discount\"\tInteger,\n"+
                     "\t\"dayAdded\"\tTEXT,\n" +
-                    "\t\"needsRefill\"\tTEXT,\n" +
                     "\t\"categoryName\"\tTEXT,\n" +
                     "\t\"subCategoryName\"\tTEXT,\n"+
                     "\t\"subSubCategoryName\"\tTEXT,\n"+
@@ -97,15 +96,15 @@ public class Connect {
             stmt.execute(query);
             //table items
             query = "CREATE TABLE IF NOT EXISTS \"Items\"  (\n" +
-                    "\t\"itemId\"\tINTEGER,\n" +
+                    "\t\"itemId\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                     "\t\"productId\"\tINTEGER,\n" +
                     "\t\"expirationDate\"\tTEXT,\n"+
                     "\t\"place\"\tTEXT,\n"+
                     "\t\"shelf\"\tINTEGER,\n"+
                     "\t\"isDamaged\"\tTEXT,\n"+
-                    "\t\"defectiveDescription\"\tTEXT,\n"+
-                    "\tPRIMARY KEY(\"itemId\")\n"+ ")";
+                    "\t\"defectiveDescription\"\tTEXT)";
             stmt.execute(query);
+
             //table product supplier
             query = "CREATE TABLE IF NOT EXISTS \"ProductSupplier\"  (\n" +
                     "\t\"productId\"\tInteger,\n" +
@@ -150,10 +149,9 @@ public class Connect {
             stmt.execute(query);
             //table orderFromSupplier
             query = "CREATE TABLE IF NOT EXISTS \"OrdersFromSupplier\"  (\n" +
-                    "\t\"orderId\"\tINTEGER Identity(100, 1) Unique,\n" +
+                    "\t\"orderId\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                     "\t\"date\"\tTEXT,\n" +
-                    "\t\"supplierNumber\"\tTEXT,\n" +
-                    "\tPRIMARY KEY(\"orderId\")\n"+ ")";
+                    "\t\"supplierNumber\"\tTEXT)";
             stmt.execute(query);
 
             //table productsInOrder
