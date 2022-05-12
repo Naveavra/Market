@@ -28,13 +28,19 @@ public class OrdersFromSupplierDAO {
 
     public void createOrderFromSupplier(OrderFromSupplier order) throws SQLException {
         String query =String.format("INSERT INTO OrdersFromSupplier (date ,supplierNumber) " +
-                "VALUES ('%s',%d)", order.getDate(), order.getSupplierNumber());
+                "VALUES (\"%s\",%d)", order.getDate(), order.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
-            query = String.format("SELECT MAX(orderId) from OrdersFromSupplier");
+            query ="SELECT orderId from OrdersFromSupplier";
+            int orderId=0;
             ResultSet rs = stmt.executeQuery(query);
-            order.setOrderId(rs.getInt(0));
-            IMOrdersFromSupplier.put(order.getOrderId(), order);
+            while(!rs.isClosed()) {
+                orderId++;
+                rs.next();
+            }
+            orderId--;
+            order.setOrderId(orderId);
+            IMOrdersFromSupplier.put(orderId, order);
         } catch (SQLException e) {
             throw e;
         }
@@ -45,7 +51,7 @@ public class OrdersFromSupplierDAO {
 
     public void addProductToOrder(ProductSupplier p, int orderId, int count) throws SQLException {
         String query =String.format("INSERT INTO ProductsInOrder (orderId ,productId, count) " +
-                "VALUES (%d,%d)",orderId , p.getProductId(), count);
+                "VALUES (%d,%d,%d)",orderId , p.getProductId(), count);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
             //IMOrdersFromSupplier.put(order.getOrderId(), order);
@@ -156,9 +162,12 @@ public class OrdersFromSupplierDAO {
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             Map<Integer,OrderFromSupplier> orders = new HashMap<>();
+            int i=0;
             while (rs.next()){
                 OrderFromSupplier order = new OrderFromSupplier(rs.getInt("orderId"), rs.getString("date")
                         ,getDeliveryTermOfOrder(rs.getInt("orderId")));
+                orders.put(i,order);
+                i++;
             }
             return orders;
         } catch (SQLException e) {
@@ -180,6 +189,58 @@ public class OrdersFromSupplierDAO {
             throw e;
         }
         finally {
+            connect.closeConnect();
+        }
+    }
+
+    public void updateDeliveryTermsInOrder(int orderId, String[] daysInWeek) throws SQLException {
+        StringBuilder days= new StringBuilder();
+        for(String s:daysInWeek){
+            days.append(s).append(", ");
+        }
+        days.substring(0, days.length()-1);
+        days.substring(0, days.length()-1);
+        String query =String.format("UPDATE DeliveryTerms SET daysToDeliver = %s where orderId = %d "
+                ,days, orderId);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+    public void addDeliveryTermsToOrder(int orderId, String[] daysInWeek) throws SQLException {
+        StringBuilder days= new StringBuilder();
+        for(String s:daysInWeek){
+            days.append(s).append(", ");
+        }
+        days.substring(0, days.length()-1);
+        days.substring(0, days.length()-1);
+        String query =String.format("INSERT INTO DeliveryTerms (orderId,daysToDeliver)"+
+                "VALUES (%d,%s)",orderId, days);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+
+    public void updateCount(int productId, int count) throws SQLException {
+        String query = "UPDATE ProductsInOrder" +
+                String.format(" SET count=%d", count) +
+                String.format(" WHERE productId=%d", productId);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.executeQuery(query);
+        } catch (SQLException throwable) {
+            throw throwable;
+        } finally {
             connect.closeConnect();
         }
     }

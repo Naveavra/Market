@@ -123,10 +123,8 @@ public class CategoryToProductDAO {
     //product table
     public boolean insertIntoProduct(Product p, String category, String subCategory, String subSubCategory){
         try {
-            if(categoryDAO.hasSubSubCategory(category, subCategory, subSubCategory))
-                if(productDAO.insert(p, category, subCategory, subSubCategory)) {
-                    Pair<Pair<String , String>, String> key = new Pair<>(new Pair<>(category, subCategory), subSubCategory);
-                    return true;
+            if(productDAO.insert(p, category, subCategory, subSubCategory)) {
+                return true;
                 }
         } catch (SQLException e) {
             return false;
@@ -154,6 +152,14 @@ public class CategoryToProductDAO {
     public List<Product> getAllProducts(){
         try {
             return productDAO.getAllProducts();
+        } catch (SQLException e) {
+            return new LinkedList<>();
+        }
+    }
+
+    public List<Pair<Integer, Integer>> getCatalogNumbers(){
+        try {
+            return productDAO.getCatalogNumbers();
         } catch (SQLException e) {
             return new LinkedList<>();
         }

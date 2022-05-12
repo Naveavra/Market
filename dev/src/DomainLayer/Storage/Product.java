@@ -14,18 +14,11 @@ public class Product
     private String maker;// brand of the product
     private int storeAmount;
     private int storageAmount;
-    private transient int timesBought;//how much the product sells
-    private String dayAdded;// day passed from the product added to the system
-    //private int daysForResupply;
-    //private int minAmount;
-    //private int amountToRefill;
+    private transient int timesBought;
+    private String dayAdded;
     private double price;
-    //private double priceSupplier;//remove
     private double discount;
-    //private transient boolean needsRefill;
     private transient ItemDAO itemsDAO;
-    //private transient List<Integer> productSuppliers;//all the supplier that supplier the product
-
     /**
      *
      * @param productId
@@ -63,7 +56,10 @@ public class Product
     }
 
     public int getRefill(){
-        return calcMinAmount()+timesBought/getDaysPassed()-getCurAmount();
+        int ans=2*calcMinAmount()-getCurAmount();
+        if(ans<0)
+            ans=0;
+        return ans;
     }
 
     public void setPrice(int price) {
@@ -110,6 +106,7 @@ public class Product
         try {
             itemsDAO.insert(new Item(name, new Location(add, shelf), ed), productId);
         } catch (SQLException e) {
+            System.out.println("oh no");
             if(add.equals(Location.Place.STORAGE))
                 storageAmount--;
             else
@@ -129,7 +126,7 @@ public class Product
     }
 
     public int calcMinAmount(){
-        double calc=daysForResupply*timesBought;//get days from past order through productDAO
+        double calc=timesBought;
         return (int) (Math.ceil(calc/getDaysPassed()));
     }
     public boolean canBuy(int amount){
@@ -183,7 +180,18 @@ public class Product
                 storeAmount--;
                 storageAmount++;
             }
-            itemsDAO.updateItemPlace(productId, i, toPlace, toShelf);
+            try {
+                itemsDAO.moveToPlace(this, i, toPlace, toShelf);
+            } catch (SQLException e) {
+                if(i.getLoc().getPlace().equals(Location.Place.STORAGE)) {
+                    storageAmount++;
+                    storeAmount--;
+                }
+                else {
+                    storeAmount++;
+                    storageAmount--;
+                }
+            }
             //update item in DAO
         }
 

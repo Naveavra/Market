@@ -70,7 +70,6 @@ public class Connect {
                     "\t\"price\"\tInteger,\n"+
                     "\t\"discount\"\tInteger,\n"+
                     "\t\"dayAdded\"\tTEXT,\n" +
-                    "\t\"needsRefill\"\tTEXT,\n" +
                     "\t\"categoryName\"\tTEXT,\n" +
                     "\t\"subCategoryName\"\tTEXT,\n"+
                     "\t\"subSubCategoryName\"\tTEXT,\n"+
@@ -97,15 +96,15 @@ public class Connect {
             stmt.execute(query);
             //table items
             query = "CREATE TABLE IF NOT EXISTS \"Items\"  (\n" +
-                    "\t\"itemId\"\tINTEGER,\n" +
+                    "\t\"itemId\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                     "\t\"productId\"\tINTEGER,\n" +
                     "\t\"expirationDate\"\tTEXT,\n"+
                     "\t\"place\"\tTEXT,\n"+
                     "\t\"shelf\"\tINTEGER,\n"+
                     "\t\"isDamaged\"\tTEXT,\n"+
-                    "\t\"defectiveDescription\"\tTEXT,\n"+
-                    "\tPRIMARY KEY(\"itemId\")\n"+ ")";
+                    "\t\"defectiveDescription\"\tTEXT)";
             stmt.execute(query);
+
             //table product supplier
             query = "CREATE TABLE IF NOT EXISTS \"ProductSupplier\"  (\n" +
                     "\t\"productId\"\tInteger,\n" +
@@ -119,8 +118,9 @@ public class Connect {
                     "\t\"supplierNumber\"\tINTEGER,\n" +
                     "\t\"productId\"\tINTEGER,\n" +
                     "\t\"quantity\"\tInteger,\n" +
-                    "\t\"discount\"\tInteger,\n"+
+                    "\t\"discount\"\tREAL ,\n"+
                     "\tPRIMARY KEY(\"supplierNumber\",\"productId\",\"quantity\")\n"+ ")";
+            // amount discount on specific product to supplier
             stmt.execute(query);
 
             //table suppliers
@@ -128,8 +128,8 @@ public class Connect {
                     "\t\"supplierNumber\"\tINTEGER,\n" +
                     "\t\"name\"\tTEXT ,\n" +
                     "\t\"bankAccount\"\tInteger,\n" +
-                    "\t\"active\"\tInteger,\n"+
-                    "\t\"isDeliver\"\tInteger,\n"+
+                    "\t\"active\"\tINTEGER ,\n"+
+                    "\t\"isDeliver\"\tINTEGER,\n"+
                     "\tPRIMARY KEY(\"supplierNumber\")\n"+ ")";
             stmt.execute(query);
 
@@ -145,15 +145,16 @@ public class Connect {
             query = "CREATE TABLE IF NOT EXISTS \"DiscountSupplier\"  (\n" +
                     "\t\"supplierNumber\"\tINTEGER,\n" +
                     "\t\"quantity\"\tInteger,\n" +
-                    "\t\"discount\"\tInteger,\n"+
+                    "\t\"discount\"\tDOUBLE ,\n"+
                     "\tPRIMARY KEY(\"supplierNumber\",\"quantity\")\n"+ ")";
+            //amount discount on sum of products in order
+
             stmt.execute(query);
             //table orderFromSupplier
             query = "CREATE TABLE IF NOT EXISTS \"OrdersFromSupplier\"  (\n" +
-                    "\t\"orderId\"\tINTEGER Identity(100, 1) Unique,\n" +
+                    "\t\"orderId\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                     "\t\"date\"\tTEXT,\n" +
-                    "\t\"supplierNumber\"\tTEXT,\n" +
-                    "\tPRIMARY KEY(\"orderId\")\n"+ ")";
+                    "\t\"supplierNumber\"\tTEXT)";
             stmt.execute(query);
 
             //table productsInOrder

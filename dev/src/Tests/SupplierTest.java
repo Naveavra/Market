@@ -26,10 +26,10 @@ private ProductSupplier p2;
         sMap.put("eyal", "eya;@gmail.com");
         s1Map=new HashMap<>();
         s1Map.put("ziv", "ziv@gmail.com");
-//        s=new Supplier(1, "ziv", 11,sMap,true);
-//        s1=new Supplier(2, "eyal", 12, s1Map,true);
-//        p1=new ProductSupplier(0,6, 100);
-//        p2=new ProductSupplier(1,7, 100);
+        s=new Supplier(1, "ziv", 11,sMap,true,true);
+        s1=new Supplier(2, "eyal", 12, s1Map,true,true);
+        p1=new ProductSupplier(1,1, 100,1);
+        p2=new ProductSupplier(2,1,100, 2);
     }
 
     @Test
@@ -43,8 +43,8 @@ private ProductSupplier p2;
 
     @Test
     public void addContact() {
-        assertTrue(s.addContact("tamir", "tamir@gmail.com"));
-        assertFalse(s.addContact("tamir", "tamir@gmail.com"));
+      assertTrue(s.addContact("tamir", "tamir@gmail.com"));
+      assertFalse(s.addContact("tamir", "tamir@gmail.com"));
     }
 
     @Test
@@ -65,41 +65,30 @@ private ProductSupplier p2;
 
     @Test
     public void addProduct() {
-//        assertTrue(s.addProduct(p1.getCatalogNumber(), p1.getName(), p1.getPrice())) ;
-//        assertFalse(s.addProduct(p1.getCatalogNumber(), p1.getName(), p1.getPrice()));
-//        assertFalse(s.addProduct(-334, p1.getName(), p1.getPrice()));
-//        assertFalse(s.addProduct(p1.getCatalogNumber(), p1.getName(), -50));
+        assertTrue(s.addProduct(p1.getCatalogNumber(), p1.getPrice(),p1.getProductId())) ;
+        assertFalse(s.addProduct(p1.getCatalogNumber(), p1.getPrice(),p1.getProductId()));
+        assertFalse(s.addProduct(-334, p1.getPrice(), p1.getProductId()+1));
+        assertFalse(s.addProduct(p1.getCatalogNumber()+1, p1.getPrice(), -50));
 
 
     }
 
     @Test
     public void removeProduct() {
-//        s.addProduct(p1.getCatalogNumber(), p1.getName(), p1.getPrice());
-//        assertTrue(s.removeProduct(p1.getCatalogNumber()));
-//        assertFalse(s.removeProduct(p1.getCatalogNumber()));
-    }
-
-    @Test
-    public void createOrder() {
-//        s.createOrder();
-//        assertTrue(s.getActiveOrders().containsKey(0));
-//        s.createOrder();
-//        assertTrue(s.getActiveOrders().containsKey(1));
-//        s.createOrder();
-//        assertFalse(s.getActiveOrders().containsKey(3));
-
+        s.addProduct(p1.getCatalogNumber(), p1.getPrice(),p1.getProductId());
+        assertTrue(s.removeProduct(p1.getCatalogNumber()));
+        assertFalse(s.removeProduct(p1.getCatalogNumber()));
     }
 
     @Test
     public void getProduct() {
-      //  s.addProduct(p1.getCatalogNumber(), p1.getName(),p1.getPrice());
-//        ProductSupplier p2=s.getProduct(p1.getCatalogNumber());
-//        assertEquals(p2.getName(), p1.getName());
-//        assertTrue(p2.getPrice()==p1.getPrice());
-//        assertSame(p2.getCatalogNumber(), p1.getCatalogNumber());
-//        s.removeProduct(p1.getCatalogNumber());
-//        assertNull(s.getProduct(p1.getCatalogNumber()));
+        s.addProduct(p1.getCatalogNumber(),p1.getPrice(),p1.getProductId());
+        ProductSupplier p2=s.getProduct(p1.getCatalogNumber());
+        assertEquals(p2.getProductId(), p1.getProductId());
+        assertEquals(p2.getPrice(), p1.getPrice(), 0.0);
+        assertSame(p2.getCatalogNumber(), p1.getCatalogNumber());
+        s.removeProduct(p1.getCatalogNumber());
+        assertNull(s.getProduct(p1.getCatalogNumber()));
     }
 
     @Test
@@ -126,12 +115,12 @@ private ProductSupplier p2;
 
     @Test
     public void isProductExist() {
-//        s.addProduct(1, "ziv", 100);
-//        assertTrue(s.isProductExist(1));
-//        assertFalse(s.isProductExist(12));
-//        s.removeProduct(1);
-//        assertFalse(s.isProductExist(1));
-//        assertFalse(s.isProductExist(-1));
+        s.addProduct(p1.getCatalogNumber(),p1.getPrice(),p1.getProductId());
+        assertTrue(s.isProductExist(p1.getProductId()));
+        assertFalse(s.isProductExist(12));
+        s.removeProduct(p1.getCatalogNumber());
+        assertFalse(s.isProductExist(p1.getProductId()));
+        assertFalse(s.isProductExist(p1.getProductId()));
     }
 
     @Test

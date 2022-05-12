@@ -5,29 +5,24 @@ import java.util.Map;
 public class Product {
     private int catalogNumber;
     private int productId;
-    private String name;
     private double price;
     private Map<Integer,Double> discount;//sum of specific product
 
 
-    public Product(int catalogNumber, String name, double price){
+    public Product(int catalogNumber,int productId,double price){
         this.catalogNumber =catalogNumber;
-        this.name=name;
+        this.productId=productId;
         this.price=price;
         discount =new HashMap<>();// keep it sorted
     }
     public Product(Product product){
         this.catalogNumber = product.catalogNumber;
-        this.name= product.name;
+        this.productId= product.productId;
         this.price=product.price;
         discount=new HashMap<>();
         for(int x: product.discount.keySet()){
              discount.put(x,product.discount.get(x));
         }
-    }
-    public void setName(String name) {
-        this.name = name;
-
     }
 
     public void setPrice(int price) {
@@ -47,7 +42,7 @@ public class Product {
 
     public String toString(){
         String ans = "catalog Number: " + catalogNumber;
-        ans += ", name: "+ name;
+        ans+= ", product Id: " +productId;
         ans+= ", price: "+ price;
         return ans;
     }

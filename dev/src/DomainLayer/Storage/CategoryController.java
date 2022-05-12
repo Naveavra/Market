@@ -2,6 +2,7 @@ package DomainLayer.Storage;
 
 
 import DAL.CategoryToProductDAO;
+import javafx.util.Pair;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,25 +42,31 @@ public class CategoryController
         }
     }
 
-    public List<Category> makeReport(List<String> catNames){
-        List<Category> cats=new LinkedList<>();
+    public List<Pair<Category, Pair<Category, Pair<Category, List<Product>>>>> makeReport(List<String> catNames){
+        List<Pair<Category, Pair<Category, Pair<Category, List<Product>>>>> cats=new LinkedList<>();
+        Pair<Category, Pair<Category, List<Product>>> sub=null;
+        Pair<Category, List<Product>> productsInCat=null;
         for(String name : catNames){
+            sub=null;
+            productsInCat=null;
             if(categoriesDAO.hasCategory(name)) {
                 List<String> subCategories = categoriesDAO.getSubCategories(name);
-                List<SubCategory> add = new LinkedList<>();
+                List<Category> add = new LinkedList<>();
                 for (String subName : subCategories) {
                     List<String> subSubCategories = categoriesDAO.getSubSubCategories(name, subName);
-                    List<SubSubCategory> addSub = new LinkedList<>();
+                    List<Category> addSub = new LinkedList<>();
                     for (String subSubName : subSubCategories) {
                         List<Product> products = categoriesDAO.getProductsOfSubSubCategory(name, subName, subSubName);
-                        SubSubCategory subSubCategory = new SubSubCategory(subSubName, products);
+                        Category subSubCategory = new Category(subSubName);
+                        productsInCat=new Pair<>(subSubCategory, products);
                         addSub.add(subSubCategory);
                     }
-                    SubCategory subCategory = new SubCategory(subName, addSub);
+                    Category subCategory = new Category(subName);
+                    sub=new Pair<>(subCategory, productsInCat);
                     add.add(subCategory);
                 }
-                Category c = new Category(name, add);
-                cats.add(c);
+                Category c = new Category(name);
+                cats.add(new Pair<>(c, sub));
             }
         }
         return cats;
@@ -87,22 +94,6 @@ public class CategoryController
                               double price, String maker, String catName, String subCatName, String subSubName){
         if(validId(productId) && categoriesDAO.hasSubSubCategory(catName, subCatName, subSubName)) {
             categoriesDAO.insertIntoProduct(new Product(productId, productName, desc, price, maker), catName, subCatName, subSubName);
-        }
-    }
-
-    public void setPriceSupplier(int id, double priceSupplier){
-        Product p=getProductWithId(id);
-        if(p!=null) {
-            p.setPriceSupplier(priceSupplier);
-            categoriesDAO.updateProduct(p);
-        }
-    }
-
-    public void setDaysForResupply(int id, int daysForResupply){
-        Product p=getProductWithId(id);
-        if(p!=null) {
-            p.setDaysForResupply(daysForResupply);
-            categoriesDAO.updateProduct(p);
         }
     }
     public void addItemToProduct(int id, String loc, int shelf, String ed){
@@ -172,6 +163,13 @@ public class CategoryController
         return refill;
     }
 
+    public boolean needsRefill(int productId){
+        Product p=getProductWithId(productId);
+        if(p!=null)
+            return p.getNeedsRefill();
+        return false;
+    }
+
     public boolean canBuyItems(int id, int amount){
         boolean ans=false;
         Product p=getProductWithId(id);
@@ -190,21 +188,6 @@ public class CategoryController
         }
         return -1;
     }
-
-    public boolean needsRefill(int id){
-        Product p=getProductWithId(id);
-        if(p!=null) {
-            if (p.getRefill() > 0 && !p.getNeedsRefill()) {
-                p.setNeedsRefill(true);
-                return true;
-            } else if (p.getRefill() == 0) {
-                p.setNeedsRefill(false);
-            }
-            categoriesDAO.updateProduct(p);
-        }
-        return false;
-    }
-
     public void transferItem(int id, String ed, String curePlace, int curShelf, String toPlace, int toShelf){
         Product p=getProductWithId(id);
         if(p!=null) {
@@ -253,6 +236,10 @@ public class CategoryController
             ans+="Product id is: " +p.getId()+"\tProduct name is: "+p.getName()+"\tthe current amount is:"+p.getCurAmount()+'\n';
         }
         return ans;
+    }
+
+    public List<Pair<Integer, Integer>> getCatalogNumbers(){
+        return categoriesDAO.getCatalogNumbers();
     }
 
 }
