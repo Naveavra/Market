@@ -232,17 +232,13 @@ public class SupplierMenu {
         switch (choice){
             case 1:
                 String newSupplierName = "";
-                System.out.println("Enter Supplier's name: ");
+                System.out.println("Enter Supplier's new name: ");
                 newSupplierName = sc.next();
                 boolean updateAccount=ss.updateAccount(s.getSupplierNumber(),newSupplierName, s.getBankNumber());
-                boolean updateContact = true;
-                for(Contact c:s.getContacts()){
-                    updateContact=updateContact&ss.updateContact(s.getSupplierNumber(),c.getName(),c.getEmail(),c.getTelephone());
-                }
                 s.setSupplierName(newSupplierName);
                 break;
             case 2:
-                System.out.println("Enter Supplier's bankNumber: ");
+                System.out.println("Enter Supplier's new bankNumber: ");
                 choiceStr = "";
                 int bankNumber =0;
                 try{
@@ -253,10 +249,7 @@ public class SupplierMenu {
                     System.out.println("you must enter only digits number");
                     openNewAccountSupplier();
                 }
-                ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), s.getBankNumber());
-                for(Contact c:s.getContacts()){
-                    ss.updateContact(s.getSupplierNumber(),c.getName(),c.getEmail(),c.getTelephone());
-                }
+                ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), bankNumber);
                 s.setBankAccount(bankNumber);
                 break;
             case 3://contacts
@@ -271,17 +264,20 @@ public class SupplierMenu {
                     System.out.println("you must enter only digits number");
                     openNewAccountSupplier();
                 }
-                Map<String,String> contacts = new HashMap<>();
+                LinkedList<Contact> contacts=new LinkedList<>();
                 for (int i=1; i<=countContacts; i++){
-                    System.out.println(i + ". name: ");
+                    System.out.println(i + ". enter the name: ");
                     String name = sc.next();
                     System.out.println(i + ". email: ");
                     String email = sc.next();
-                    contacts.put(name,email);
+                    System.out.println(i + ". telephone: ");
+                    String telephone = sc.next();
+                    contacts.add(new Contact(name,email,telephone));
                 }
-                ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), s.getBankNumber());
-                for(Contact c:s.getContacts()){
+               // ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), s.getBankNumber());
+                for(Contact c:contacts){
                     ss.updateContact(s.getSupplierNumber(),c.getName(),c.getEmail(),c.getTelephone());
+                    s.setContact(c);
                 }
                 break;
             case 4:

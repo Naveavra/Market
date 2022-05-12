@@ -241,7 +241,19 @@ public class Supplier {
     }
 
     public boolean updateContact(String name, String email, String telephone) {
-        return true;
+       for(Contact c:contacts){
+           if(c.getName().equals(name)){
+               c.setEmail(email);
+               c.setTel(telephone);
+           }
+       }
+        try {
+            suppliersDAO.updateSupplierContacts(this);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+       return false;
     }
 
 

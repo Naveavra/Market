@@ -70,4 +70,12 @@ public class Supplier {
         return active;
     }
 
+    public void setContact(Contact c) {
+        for(Contact contact:contacts){
+                 if(contact.getName().equals(c.getName())){
+                     contact.setEmail(c.getEmail());
+                     contact.setTel(c.getEmail());
+                 }
+        }
+    }
 }

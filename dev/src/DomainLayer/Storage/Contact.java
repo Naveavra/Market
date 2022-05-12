@@ -24,4 +24,11 @@ public class Contact {
         return telephone;
     }
 
+    public void setEmail(String e) {
+        this.email=e;
+    }
+
+    public void setTel(String tel) {
+        this.telephone=tel;
+    }
 }
