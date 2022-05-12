@@ -30,6 +30,7 @@ public class OrderFromSupplier {
         DeliveryTerm.DaysInWeek[] daysInWeek = {};
         daysToDeliver=new DeliveryTerm(daysInWeek);
         productsDAO = new ProductsSupplierDAO();
+        ordersDAO=new OrdersFromSupplierDAO();
     }
 
 

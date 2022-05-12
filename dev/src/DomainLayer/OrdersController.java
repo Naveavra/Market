@@ -4,9 +4,11 @@ import DAL.OrdersFromSupplierDAO;
 import DAL.PastOrdersSupplierDAO;
 import DAL.ProductsSupplierDAO;
 import DAL.SuppliersDAO;
+import DomainLayer.Storage.Discount;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -68,24 +70,24 @@ public class OrdersController {
         return price*findMaxUnder(count,order.getSupplierNumber());
     }
     private double findMaxUnder(int count,int supplierNumber){
-        int out=0;
-        Map<Integer,Double> discountByAmount;
+        Double out= 0.0;
+        LinkedList<Discount> discountByAmount;
         try {
             discountByAmount = suppliersDAO.getDiscountsSupplier(supplierNumber);
 
-        } catch (SQLException throwables) {
+        } catch (SQLException e) {
             return -1;
         }
-        for(int s:discountByAmount.keySet()){
-            if(s<=count){
-                out=s;
+        for(Discount d:discountByAmount){
+            if(d.getAmount()<=count){
+                out=d.getDiscount();
             }
             else{
-                return discountByAmount.get(out);
+                return out;
             }
         }
 
-        return discountByAmount.get(out);
+        return 1;
     }
 
     public Map<Integer, OrderFromSupplier> getActiveOrders(int supplierNumber) {

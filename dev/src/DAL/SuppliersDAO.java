@@ -1,6 +1,7 @@
 package DAL;
 
 import DomainLayer.Storage.Contact;
+import DomainLayer.Storage.Discount;
 import DomainLayer.Supplier;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -59,9 +60,9 @@ public class SuppliersDAO {
                 s.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
-            for(Map.Entry<Integer,Double> k:s.getDiscounts().entrySet()){
+            for(Discount k:s.getDiscounts()){
                 query = String.format("INSERT INTO DiscountSupplier (supplierNumber,quantity,discount)"+ "VALUES" +
-                        String.format("(%d,%d,%f)",s.getSupplierNumber(),k.getKey(),k.getValue()));
+                        "(%d,%d,%f)",s.getSupplierNumber(),k.getAmount(),k.getDiscount());
                 stmt.execute(query);
             }
         } catch (SQLException e) {
@@ -142,13 +143,13 @@ public class SuppliersDAO {
     }
 
 
-    public Map<Integer,Double> getDiscountsSupplier(int supplierNumber) throws SQLException {
+    public LinkedList<Discount> getDiscountsSupplier(int supplierNumber) throws SQLException {
         String query =String.format("SELECT * from DiscountSupplier WHERE supplierNumber =%d", supplierNumber);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
-            Map<Integer,Double> discounts =new HashMap<>();
+            LinkedList<Discount> discounts=new LinkedList<>();
             while(rs.next())  {
-                discounts.put(rs.getInt("quantity"),rs.getDouble("discount"));
+                discounts.add(new Discount(rs.getInt("quantity"),rs.getDouble("discount")));
             }
             return discounts;
         } catch (SQLException e) {

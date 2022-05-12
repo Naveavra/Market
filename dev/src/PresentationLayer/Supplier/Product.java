@@ -1,38 +1,39 @@
 package PresentationLayer.Supplier;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class Product {
     private int catalogNumber;
     private int productId;
     private double price;
-    private Map<Integer,Double> discount;//sum of specific product
+    private LinkedList<Discount> discounts;//sum of specific product
 
 
     public Product(int catalogNumber,int productId,double price){
         this.catalogNumber =catalogNumber;
         this.productId=productId;
         this.price=price;
-        discount =new HashMap<>();// keep it sorted
+        discounts = new LinkedList<>();// keep it sorted
     }
     public Product(Product product){
         this.catalogNumber = product.catalogNumber;
         this.productId= product.productId;
         this.price=product.price;
-        discount=new HashMap<>();
-        for(int x: product.discount.keySet()){
-             discount.put(x,product.discount.get(x));
-        }
+        discounts=new LinkedList<>();
+        this.discounts.addAll(product.discounts);
     }
 
     public void setPrice(int price) {
         this.price = price;
     }
     public boolean addDiscount(int count,double discount){
-        if(this.discount.containsKey(count)){
-            return false;
+        for(Discount d:discounts){
+            if(d.getAmount()==count){
+                return false;
+            }
         }
-        this.discount.put(count,discount);
+        this.discounts.add(new Discount(count, discount));
         return true;
     }
 

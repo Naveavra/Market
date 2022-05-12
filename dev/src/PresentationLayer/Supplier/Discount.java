@@ -1,4 +1,4 @@
-package DomainLayer.Storage;
+package PresentationLayer.Supplier;
 
 public class Discount {
     private int amount;

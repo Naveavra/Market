@@ -46,7 +46,7 @@ public class PastOrdersSupplierDAO {
 
     public void insertPastOrder(PastOrderSupplier order) throws SQLException {
         String query =String.format("INSERT INTO PastOrdersSupplier (orderId, date ,totalPrice) " +
-                "VALUES ('%s',%d)", order.getOrderId() ,order.getDate(), order.getTotalPrice());
+                "VALUES (%d,'%s',%f)", order.getOrderId() ,order.getDate(), order.getTotalPrice());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
             IMPastOrdersFromSupplier.put(new Pair<>(order.getOrderId(), order.getDate()), order);

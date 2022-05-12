@@ -28,19 +28,13 @@ public class OrdersFromSupplierDAO {
 
     public void createOrderFromSupplier(OrderFromSupplier order) throws SQLException {
         String query =String.format("INSERT INTO OrdersFromSupplier (date ,supplierNumber) " +
-                "VALUES (\"%s\",%d)", order.getDate(), order.getSupplierNumber());
+                "VALUES ('%s',%d)", order.getDate(), order.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
-            query ="SELECT orderId from OrdersFromSupplier";
-            int orderId=0;
+            query ="SELECT * FROM OrdersFromSupplier ORDER BY orderId DESC LIMIT 1";
             ResultSet rs = stmt.executeQuery(query);
-            while(!rs.isClosed()) {
-                orderId++;
-                rs.next();
-            }
-            orderId--;
-            order.setOrderId(orderId);
-            IMOrdersFromSupplier.put(orderId, order);
+            order.setOrderId(rs.getInt("orderId"));
+            IMOrdersFromSupplier.put(order.getOrderId(), order);
         } catch (SQLException e) {
             throw e;
         }
@@ -108,6 +102,7 @@ public class OrdersFromSupplierDAO {
             if (!rs.next())
                 return null;
             DeliveryTerm dt = getDeliveryTermOfOrder(orderId);
+
             OrderFromSupplier order = new OrderFromSupplier(orderId,rs.getString("date"), dt);
             IMOrdersFromSupplier.put(orderId, order);
             return order;
@@ -138,7 +133,7 @@ public class OrdersFromSupplierDAO {
     }
 
     public Map<ProductSupplier,Integer> getAllProductsOfOrder(int orderId) throws SQLException {
-        String query =String.format("SELECT * FROM ProductsInOrder p, OrdersFromSupplier o WHERE o.orderId = p.orderId and orderId = %d"
+        String query =String.format("SELECT * FROM ProductsInOrder p INNER JOIN OrdersFromSupplier o ON o.orderId = p.orderId and o.orderId = %d"
                 , orderId);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
@@ -213,12 +208,11 @@ public class OrdersFromSupplierDAO {
     }
 
     public void addDeliveryTermsToOrder(int orderId, String[] daysInWeek) throws SQLException {
-        StringBuilder days= new StringBuilder();
+        String days= new String();
         for(String s:daysInWeek){
-            days.append(s).append(", ");
+            days+=s;
         }
-        days.substring(0, days.length()-1);
-        days.substring(0, days.length()-1);
+        days=days.substring(0, days.length()-2);
         String query =String.format("INSERT INTO DeliveryTerms (orderId,daysToDeliver)"+
                 "VALUES (%d,%s)",orderId, days);
         try (Statement stmt = connect.createStatement()) {
@@ -227,20 +221,6 @@ public class OrdersFromSupplierDAO {
             throw e;
         }
         finally {
-            connect.closeConnect();
-        }
-    }
-
-
-    public void updateCount(int productId, int count) throws SQLException {
-        String query = "UPDATE ProductsInOrder" +
-                String.format(" SET count=%d", count) +
-                String.format(" WHERE productId=%d", productId);
-        try (Statement stmt = connect.createStatement()) {
-            stmt.executeQuery(query);
-        } catch (SQLException throwable) {
-            throw throwable;
-        } finally {
             connect.closeConnect();
         }
     }
