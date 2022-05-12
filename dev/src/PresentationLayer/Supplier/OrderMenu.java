@@ -1,6 +1,5 @@
 package PresentationLayer.Supplier;
 
-import ServiceLayer.DeliveryService;
 import ServiceLayer.OrderService;
 import ServiceLayer.ProductSupplierService;
 import com.google.gson.Gson;
@@ -20,14 +19,13 @@ public class OrderMenu {
     private OrderService orderService;
     private Gson gson;
     private SupplierMenu sm ;
-    private DeliveryService ds;
 
     public OrderMenu(Supplier s) {
         this.supplier = s;
         orderService = new OrderService();
         gson = new Gson();
         sm =new SupplierMenu();
-        ds =new DeliveryService();
+
 
     }
 
@@ -167,7 +165,7 @@ public class OrderMenu {
             System.out.println("invalid input");
             addDeliveryDays(o);
         }
-        boolean added=ds.addFixedDeliveryDaysForOrder(supplier.getSupplierNumber(), o.getOrderId(), Days);
+        boolean added=orderService.addFixedDeliveryDaysForOrder(supplier.getSupplierNumber(), o.getOrderId(), Days);
         if(added){
             System.out.println("days added!");
         }
@@ -429,7 +427,7 @@ public class OrderMenu {
             System.out.println("invalid input");
             updateDeliverDaysInOrder(orderID);
         }
-        boolean added=ds.updateFixedDeliveryDaysForOrder(supplier.getSupplierNumber(), orderID, Days);
+        boolean added=orderService.updateFixedDeliveryDaysForOrder(supplier.getSupplierNumber(), orderID, Days);
         if(added){
             System.out.println("days changed!");
         }

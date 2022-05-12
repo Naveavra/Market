@@ -138,6 +138,7 @@ public class Connect {
                     "\t\"supplierNumber\"\tINTEGER,\n" +
                     "\t\"name\"\tTEXT,\n" +
                     "\t\"email\"\tTEXT,\n"+
+                    "\t\"telephone\"\tTEXT,\n"+
                     "\tPRIMARY KEY(\"supplierNumber\",\"name\")\n"+ ")";
             stmt.execute(query);
 

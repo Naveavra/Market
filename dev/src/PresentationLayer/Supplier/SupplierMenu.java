@@ -1,9 +1,9 @@
 package PresentationLayer.Supplier;
 
-import ServiceLayer.DeliveryService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -12,7 +12,6 @@ public class SupplierMenu {
 
     private Scanner sc=new Scanner(System.in);
     private SupplierService ss = new SupplierService();
-    private DeliveryService ds =new DeliveryService();
 
     public void chooseSupplierMenu() {
         System.out.println("***You enter to Suppliers page:***");
@@ -121,7 +120,7 @@ public class SupplierMenu {
                 om6.watchOrdersMenu();
                 break;
             case 8:
-                boolean close =ss.closeAccount(supplierNumber);
+                boolean close = ss.closeAccount(supplierNumber);
                 if(close){
                     System.out.println("account closed!");
                 }
@@ -235,7 +234,11 @@ public class SupplierMenu {
                 String newSupplierName = "";
                 System.out.println("Enter Supplier's name: ");
                 newSupplierName = sc.next();
-                ss.updateAccount(s.getSupplierNumber(),newSupplierName, s.getBankNumber(), s.getContacts());
+                boolean updateAccount=ss.updateAccount(s.getSupplierNumber(),newSupplierName, s.getBankNumber());
+                boolean updateContact = true;
+                for(Contact c:s.getContacts()){
+                    updateContact=updateContact&ss.updateContact(s.getSupplierNumber(),c.getName(),c.getEmail(),c.getTelephone());
+                }
                 s.setSupplierName(newSupplierName);
                 break;
             case 2:
@@ -250,7 +253,10 @@ public class SupplierMenu {
                     System.out.println("you must enter only digits number");
                     openNewAccountSupplier();
                 }
-                ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), bankNumber, s.getContacts());
+                ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), s.getBankNumber());
+                for(Contact c:s.getContacts()){
+                    ss.updateContact(s.getSupplierNumber(),c.getName(),c.getEmail(),c.getTelephone());
+                }
                 s.setBankAccount(bankNumber);
                 break;
             case 3://contacts
@@ -273,7 +279,10 @@ public class SupplierMenu {
                     String email = sc.next();
                     contacts.put(name,email);
                 }
-                ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), s.getBankNumber(), contacts);
+                ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), s.getBankNumber());
+                for(Contact c:s.getContacts()){
+                    ss.updateContact(s.getSupplierNumber(),c.getName(),c.getEmail(),c.getTelephone());
+                }
                 break;
             case 4:
                 System.out.println("Choose who responsible for Future orders");
@@ -373,18 +382,20 @@ public class SupplierMenu {
             System.out.println("you must enter only digits number");
             openNewAccountSupplier();
         }
-        Map<String,String> contacts = new HashMap<>();
+        LinkedList<Contact> contacts = new LinkedList<>();
         for (int i=1; i<=countContacts; i++){
             System.out.println(i + ". name: ");
             String name = sc.next();
             System.out.println(i + ". email: ");
             String email = sc.next();
+            System.out.println(i + ". telephone: ");
+            String telephone = sc.next();
             if(!checkEmail(email)){
                 System.out.println("you must enter a valid email");
                 i=i-1;
             }
             else {
-                contacts.put(name, email);
+                contacts.add(new Contact(name, email,telephone));
             }
         }
         System.out.println("Choose who responsible for Future orders");
@@ -407,9 +418,17 @@ public class SupplierMenu {
         //
         boolean deliver=supNum==2;
 
-        boolean open=ss.openAccount(supNumber,supName, bankNumber,contacts,deliver);
-        if(open) {
-            System.out.println("The account opened");
+        boolean open=ss.openAccount(supNumber,supName, bankNumber,deliver);
+        boolean addContact =true;
+        for(Contact c:contacts) {
+            addContact=addContact & ss.addContact(supNumber,c.getName(),c.getEmail(),c.getTelephone());
+        }
+        if(open & addContact) {
+            System.out.println("The account opened and contacts created");
+            chooseSupplierMenu();
+        }
+        if(open & !addContact) {
+            System.out.println("The account opened but contacts was not created");
             chooseSupplierMenu();
         }
         else{

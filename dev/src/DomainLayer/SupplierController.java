@@ -1,12 +1,10 @@
 package DomainLayer;
 
 import DAL.SuppliersDAO;
+import DomainLayer.Storage.Contact;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SupplierController {
     //private static Map<Integer,Supplier> suppliers = new HashMap<>();
@@ -30,11 +28,10 @@ public class SupplierController {
      * @param supplierNumber  the id of the supplier
      * @param supplierName  the name of the supplier
      * @param bankAccount  the bunk number of the supplier
-     * @param contacts  dictionary between name of contact and email
      * @param isDeliver  boolean var which specify who is responsible for delivery the SUPERLI or the supplier
      * @return true if succeed, false if failed
      */
-    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts,boolean isDeliver){
+    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, boolean isDeliver){
         if(supplierNumber<0){
             return false;
         }
@@ -45,7 +42,7 @@ public class SupplierController {
             if(suppliersDAO.getSupplier(supplierNumber) != null){
                 return false;
             }
-            Supplier s = new Supplier(supplierNumber,supplierName, bankAccount, contacts,isDeliver,true);
+            Supplier s = new Supplier(supplierNumber,supplierName, bankAccount,new LinkedList<Contact>(),isDeliver,true);
             suppliersDAO.insertSupplier(s);
         }
         catch (Exception e){

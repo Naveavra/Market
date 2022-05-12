@@ -12,26 +12,27 @@ public class ProductSupplier {
     private int supplierNumber;
     private double price;
     private Map<Integer,Double> discount;//sum of specific product
-    private ProductsSupplierDAO productsSupplierDAO = new ProductsSupplierDAO();
+    private transient ProductsSupplierDAO productsSupplierDAO = new ProductsSupplierDAO();
 
 
 
-    public ProductSupplier(int supplierNumber,int catalogNumber, double price, int productId){
+    public ProductSupplier(int supplierNumber,int catalogNumber, double price, int productId,Map<Integer,Double> discount){
         this.supplierNumber=supplierNumber;
         this.catalogNumber =catalogNumber;
         this.price=price;
         this.productId = productId;
-        discount =new HashMap<>();
+        this.discount=discount;
         discount.put(0, 1.0);// keep it sorted
     }
     public ProductSupplier(ProductSupplier productSupplier){
         this.catalogNumber = productSupplier.catalogNumber;
+        this.productId=productSupplier.productId;
         this.supplierNumber=productSupplier.supplierNumber;
         this.price= productSupplier.price;
         discount=new HashMap<>();
         discount.put(0, 1.0);// keep it sorted
         for(int x: productSupplier.discount.keySet()){
-             discount.put(x, productSupplier.discount.get(x));
+            discount.put(x, productSupplier.discount.get(x));
         }
     }
     public void setPrice(int price) {
@@ -50,9 +51,6 @@ public class ProductSupplier {
         return true;
     }
     public boolean removeDiscountOnProduct( int count){
-        if(!this.discount.containsKey(count)){
-            return false;
-        }
         this.discount.remove(count);
         try {
             if(productsSupplierDAO.getDiscountOnProduct(this,count)!=null){
@@ -63,16 +61,23 @@ public class ProductSupplier {
                 return false;
             }
         } catch (SQLException e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
         return true;
     }
 
     public double getPriceAfterDiscount(int count) {
-        return this.price*count*findMaxUnder(count);
+        return this.price*count*findMaxUnder(this,count);
     }
-    private double findMaxUnder(int count){
+    private double findMaxUnder(ProductSupplier p,int count){
         int out=0;
+        if(discount.size()!=0) {
+            try {
+                return productsSupplierDAO.getDiscountOnProduct(p, count);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         for(int s:discount.keySet()){
             if(s<=count){
                 out=s;
@@ -93,11 +98,6 @@ public class ProductSupplier {
     public int getCatalogNumber(){
         return catalogNumber;
     }
-
-//    public String getName() {
-//        return "";
-//    }
-
     public int getProductId() {
         return productId;
     }

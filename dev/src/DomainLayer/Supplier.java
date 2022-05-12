@@ -3,6 +3,7 @@ package DomainLayer;
 
 import DAL.ProductsSupplierDAO;
 import DAL.SuppliersDAO;
+import DomainLayer.Storage.Contact;
 import PresentationLayer.Supplier.Product;
 
 import java.sql.SQLException;
@@ -16,7 +17,8 @@ public class Supplier {
     private int bankAccount;
     private boolean isDeliver;
     private boolean active;
-    private Map<String,String> contacts;//<name,email>
+    private LinkedList<Contact> contacts;
+    //private Map<String,String> contacts;//<name,email>
     private Map<Integer,Double> discountByAmount;//sum of products in order
     //DAO to db
     private ProductsSupplierDAO productsDAO;
@@ -26,14 +28,12 @@ public class Supplier {
 //    private List<PastOrderSupplier> finalOrders;//remove
 
 
-    public Supplier(int supplierNumber, String name,int bankAccount,Map<String,String> contacts,boolean isDeliver,boolean active){
+    public Supplier(int supplierNumber, String name,int bankAccount,LinkedList<Contact> contacts,boolean isDeliver,boolean active){
         this.supplierNumber=supplierNumber;
         this.name=name;
         this.bankAccount=bankAccount;
-        this.contacts=new HashMap<>();
-        for(String n: contacts.keySet()){
-            this.contacts.put(n,contacts.get(n));
-        }
+        this.contacts=new LinkedList<>();
+        this.contacts.addAll(contacts);
         discountByAmount=new TreeMap<>();
         discountByAmount.put(0,1.0);
         this.active =active;
@@ -46,14 +46,11 @@ public class Supplier {
 //        products =new HashMap<>();
     }
 
-    public boolean updateAccount(String supplierName,int bankAccount,Map<String,String>contacts){
+    public boolean updateAccount(String supplierName,int bankAccount){
         this.name=supplierName;
         this.bankAccount=bankAccount;
-       // this.isDeliver=isDeliver;
-        this.contacts=new HashMap<>();
-        for(String n: contacts.keySet()){
-            this.contacts.put(n,contacts.get(n));
-        }
+        // this.isDeliver=isDeliver;
+        this.contacts=new LinkedList<>();
         try {
             suppliersDAO.updateSupplier(this);
             return true;
@@ -61,18 +58,28 @@ public class Supplier {
             return false;
         }
     }
-    public boolean addContact(String name,String email){
-        if(contacts.containsKey(name)){
+    public boolean addContact(String name,String email,String telephone){
+        if(contains(contacts,name)){
             return false;
         }
-        contacts.put(name, email);
+        contacts.add(new Contact(name, email,telephone));
         try {
-            suppliersDAO.updateSupplier(this);
+            suppliersDAO.addContact(this,name,email,telephone);
             return true;
         } catch (SQLException e) {
             return false;
         }
     }
+
+    private boolean contains(LinkedList<Contact> contacts, String name) {
+        for(Contact c:contacts){
+            if(c.getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean addDiscount( int count,double discount){
         if(count<0|discount<0|discount>1){
             return false;
@@ -112,23 +119,23 @@ public class Supplier {
             return false;
         }
         try {
-        if (isProductExist(productId)) {
-            return false;
-        }
-        if(isProductExistByCatalogNumber(catalogNumber)){
-            return false;
-        }
-        ProductSupplier productSupplier = new ProductSupplier(supplierNumber,catalogNumber, price, productId);
-        productsDAO.insert(productSupplier);
-        //products.put(catalogNumber, productSupplier);
-        return true;
+            if (isProductExist(productId)) {
+                return false;
+            }
+            if(isProductExist(catalogNumber, supplierNumber)){
+                return false;
+            }
+            ProductSupplier productSupplier = new ProductSupplier(supplierNumber,catalogNumber, price, productId,new HashMap<>());
+            productsDAO.insert(productSupplier);
+            //products.put(catalogNumber, productSupplier);
+            return true;
         }
         catch (Exception e){
             return false;
         }
     }
     public boolean removeProduct(int catalogNumber){
-        if (!isProductExistByCatalogNumber(catalogNumber)) {
+        if (!isProductExist(catalogNumber,supplierNumber)) {
             return false;
         }
         try {
@@ -140,9 +147,9 @@ public class Supplier {
         return true;
     }
 
-    private boolean isProductExistByCatalogNumber(int catalogNumber) {
+    private boolean isProductExist(int catalogNumber, int supplierNumber) {
         try{
-            return (productsDAO.getProductByCatalogNumber(catalogNumber) != null);
+            return (productsDAO.getProductByCatalogNumber(supplierNumber, catalogNumber) != null);
         }
         catch (Exception e){
             return false;
@@ -151,7 +158,7 @@ public class Supplier {
 
     public ProductSupplier getProduct(int catalogNumber){
         try{
-            return productsDAO.getProductByCatalogNumber(catalogNumber);
+            return productsDAO.getProductByCatalogNumber(supplierNumber,catalogNumber);
         }
         catch (Exception e){
             return null;
@@ -191,7 +198,7 @@ public class Supplier {
     public int getBankAccount(){
         return bankAccount;
     }
-    public Map<String,String> getContacts(){
+    public LinkedList<Contact> getContacts(){
         return contacts;
     }
 
@@ -227,10 +234,14 @@ public class Supplier {
     public void updateProductPrice(int catalogNumber, int price) {
         getProduct(catalogNumber).setPrice(price);
         try {
-            productsDAO.updateProduct(getProduct(catalogNumber));
+            productsDAO.updateProduct(getProduct(catalogNumber),price);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean updateContact(String name, String email, String telephone) {
+        return true;
     }
 
 

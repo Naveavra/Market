@@ -1,13 +1,12 @@
 package DAL;
 
-import DomainLayer.ProductSupplier;
+import DomainLayer.Storage.Contact;
 import DomainLayer.Supplier;
-import javafx.util.Pair;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class SuppliersDAO {
@@ -24,9 +23,8 @@ public class SuppliersDAO {
 
     public void updateSupplier(Supplier s) throws SQLException {
         Integer isDeliver = s.getIsDeliver() ? 1 : 0;
-        Integer isActive = s.getActive() ? 1:0;
-        String query = String.format("UPDATE Suppliers SET name = \"%s\" and bankAccount = %d and active = %d and isDeliver = %d " +
-                        "WHERE supplierNumber = %d",
+        Integer isActive = s.getActive() ? 1 : 0;
+        String query = String.format("UPDATE Suppliers SET name = %s and bankAccount = %d and active = %d and isDeliver = %d WHERE supplierNumber = %d",
                 s.getName(),s.getBankAccount(),isActive, isDeliver,
                 s.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
@@ -44,9 +42,9 @@ public class SuppliersDAO {
                 s.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
-            for(Map.Entry<String,String> k:s.getContacts().entrySet()){
-                query = String.format("INSERT INTO ContactsSupplier (supplierNumber,name,email)"+ "VALUES" +
-                        String.format("(%d,'%s','%s')",s.getSupplierNumber(),k.getKey(),k.getValue()));
+            for(Contact c:s.getContacts()){
+                query = String.format("INSERT INTO ContactsSupplier (supplierNumber,name,email,telephone)"+ "VALUES" +
+                        String.format("(%d,'%s','%s','%s')",s.getSupplierNumber(),c.getName(),c.getEmail(),c.getTelephone()));
                 stmt.execute(query);
             }
         } catch (SQLException e) {
@@ -77,7 +75,7 @@ public class SuppliersDAO {
         Integer isDeliver = s.getIsDeliver() ? 1 : 0;
         Integer isActive = s.getActive() ? 1:0;
         String query =String.format("INSERT INTO Suppliers (supplierNumber,name,bankAccount,active,isDeliver) " +
-                        "VALUES (%d,'%s',%d,%d,%d)", s.getSupplierNumber(),s.getName(),s.getBankAccount(),isActive,isDeliver);
+                "VALUES (%d,'%s',%d,%d,%d)", s.getSupplierNumber(),s.getName(),s.getBankAccount(),isActive,isDeliver);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
             IMSuppliers.put(s.getSupplierNumber(), s);
@@ -106,13 +104,14 @@ public class SuppliersDAO {
         if(IMSuppliers.containsKey(supplierNumber)){
             return IMSuppliers.get(supplierNumber);
         }
+        LinkedList<Contact> contacts=getContacts(supplierNumber);
         String query =String.format("SELECT * from Suppliers WHERE supplierNumber =%d", supplierNumber);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             if (!rs.next())
                 return null;
-            Supplier supplier =new Supplier(supplierNumber, rs.getNString("name"),rs.getInt("bankAccount"),getContacts(supplierNumber),
-                    Boolean.parseBoolean(rs.getInt("isDeliver")+""),rs.getBoolean("active"));
+            Supplier supplier =new Supplier(supplierNumber, rs.getString("name"),rs.getInt("bankAccount"),contacts,
+                    parseIntToBool(rs.getInt("isDeliver")),parseIntToBool(rs.getInt("active")));
             supplier.addDiscounts(getDiscountsSupplier(supplierNumber));
             return supplier;
         } catch (SQLException e) {
@@ -122,14 +121,16 @@ public class SuppliersDAO {
             connect.closeConnect();
         }
     }
-
-    private Map<String, String> getContacts(int supplierNumber) throws SQLException {
+    private boolean parseIntToBool(int i){
+        return i == 1;
+    }
+    private LinkedList<Contact> getContacts(int supplierNumber) throws SQLException {
         String query =String.format("SELECT * from ContactsSupplier WHERE supplierNumber =%d", supplierNumber);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
-            Map<String,String> contacts =new HashMap<>();
+            LinkedList<Contact> contacts=new LinkedList<>();
             while(rs.next())  {
-                contacts.put(rs.getString("name"),rs.getString("email"));
+                contacts.add(new Contact(rs.getString("name"),rs.getString("email"),rs.getString("telephone")));
             }
             return contacts;
         } catch (SQLException e) {
@@ -161,6 +162,19 @@ public class SuppliersDAO {
     public void removeDiscountOnAmount(Supplier supplier, int count) throws SQLException {
         String query =String.format("DELETE from DiscountSupplier WHERE supplierNumber = %d and quantity = %d ",
                 supplier.getSupplierNumber(),count);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+    public void addContact(Supplier supplier, String name, String email, String telephone) throws SQLException {
+        String query =String.format("INSERT INTO ContactsSupplier (supplierNumber,name,email,telephone) " +
+                "VALUES (%d,'%s','%s','%s')", supplier.getSupplierNumber(),name,email,telephone);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
         } catch (SQLException e) {

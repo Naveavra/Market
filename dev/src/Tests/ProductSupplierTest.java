@@ -11,8 +11,8 @@ private ProductSupplier p;
 private ProductSupplier p1;
     @Before
     public void setUp() throws Exception {
-        p=new ProductSupplier(p.getSupplierNumber(),0, 5, 10);
-        p1=new ProductSupplier(p.getSupplierNumber(),1,5, 50);
+//        p=new ProductSupplier(p.getSupplierNumber(),0, 5, 10);
+//        p1=new ProductSupplier(p.getSupplierNumber(),1,5, 50);
 
     }
     @Test

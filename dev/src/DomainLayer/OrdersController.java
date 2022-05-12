@@ -4,9 +4,9 @@ import DAL.OrdersFromSupplierDAO;
 import DAL.PastOrdersSupplierDAO;
 import DAL.ProductsSupplierDAO;
 import DAL.SuppliersDAO;
-import javafx.util.Pair;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,11 +67,12 @@ public class OrdersController {
         double price = order.getTotalIncludeDiscounts();
         return price*findMaxUnder(count,order.getSupplierNumber());
     }
-    private double findMaxUnder(int count,int supplierId){
+    private double findMaxUnder(int count,int supplierNumber){
         int out=0;
-        Map<Integer,Double> discountByAmount = null;
+        Map<Integer,Double> discountByAmount;
         try {
-            discountByAmount = suppliersDAO.getDiscountsSupplier(supplierId);
+            discountByAmount = suppliersDAO.getDiscountsSupplier(supplierNumber);
+
         } catch (SQLException throwables) {
             return -1;
         }
@@ -83,6 +84,7 @@ public class OrdersController {
                 return discountByAmount.get(out);
             }
         }
+
         return discountByAmount.get(out);
     }
 
@@ -103,45 +105,5 @@ public class OrdersController {
         }
     }
 
-    public void updateOrders(List<Pair<Integer, Integer>> catalogNumbers){
-        for(Pair<Integer, Integer> catalogNumber : catalogNumbers){
-            int productId;
-            try {
-                productId= productsDAO.getProductIdByCatalogId(catalogNumber.getKey());
-            } catch (SQLException e) {
-                productId=-1;
-            }
-            if (productId!=-1) {
-                try {
-                    ordersDAO.updateCount(productId, catalogNumber.getValue());
-                } catch (SQLException ignored) {
-                }
-            }
-        }
-    }
-
-
-    public void createOrderWithMinPrice(int catalogNumber, int amount){
-        ProductSupplier ps=getProductWithMinPrice(catalogNumber);
-
-        if(ps!=null) {
-            OrderFromSupplier order = createOrder(ps.getSupplierNumber());
-            if(order!=null) {
-                try {
-                    ordersDAO.addProductToOrder(ps, order.getOrderId(), amount);
-                } catch (SQLException ignored) {
-
-                }
-            }
-        }
-    }
-
-    public ProductSupplier getProductWithMinPrice(int catalogNumber){
-        try {
-            return productsDAO.getProductByCatalogNumber(catalogNumber);
-        } catch (SQLException e) {
-            return null;
-        }
-    }
 
 }

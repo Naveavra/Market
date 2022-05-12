@@ -3,12 +3,8 @@ package DomainLayer;
 import DomainLayer.Storage.CategoryController;
 import DomainLayer.Storage.ReportController;
 import com.google.gson.Gson;
-import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Facade {
     private OrdersController ordersController;
@@ -25,7 +21,7 @@ public class Facade {
         reportController=new ReportController(categoryController);
         gson=new Gson();
         if(needsUpdateOrders){
-            updateOrders();
+            //updateOrders();
             needsUpdateOrders=false;
         }
 
@@ -81,6 +77,9 @@ public class Facade {
         return ordersController.finishOrder(orderId);
     }
     public String getOrderTotalDetails(int orderId) {
+        if(ordersController.getOrder(orderId)==null){
+            return "fail";
+        }
         return String.valueOf(ordersController.updateTotalIncludeDiscounts(orderId));
     }
 
@@ -167,17 +166,12 @@ public class Facade {
         return supplierController.getSupplier(supplierNumber).removeProduct(catalogNumber);
     }
 
-    public void updateOrders(){
-        List<Pair<Integer, Integer>> catalogNumbers=categoryController.getCatalogNumbers();
-        ordersController.updateOrders(catalogNumbers);
-    }
-
     //SupplierService
-    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts,boolean isDeliver){
+    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, boolean isDeliver){
         if(supplierNumber<=0){
             return false;
         }
-        return supplierController.openAccount(supplierNumber, supplierName,bankAccount,contacts,isDeliver);
+        return supplierController.openAccount(supplierNumber, supplierName,bankAccount,isDeliver);
     }
     public boolean closeAccount(int supplierNumber){
         if(supplierController.getSupplier(supplierNumber)==null){
@@ -188,7 +182,7 @@ public class Facade {
         }
         return supplierController.closeAccount(supplierNumber);
     }
-    public boolean updateAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts){
+    public boolean updateAccount(int supplierNumber, String supplierName, int bankAccount){
         if(supplierController.getSupplier(supplierNumber)==null){
             return false;
         }
@@ -198,7 +192,7 @@ public class Facade {
         if(bankAccount<0){
             return false;
         }
-        return supplierController.getSupplier(supplierNumber).updateAccount(supplierName,bankAccount,contacts);
+        return supplierController.getSupplier(supplierNumber).updateAccount(supplierName,bankAccount);
     }
     //discount on amount of specific product
     public boolean addDiscount(int supplierNumber,int catalogNumber,int count,double discount){
@@ -339,10 +333,8 @@ public class Facade {
 
     public double buyItems(int id, int amount){
         double price=categoryController.buyItems(id, amount);
-        if(categoryController.needsRefill(id)) {
-            //find supplier with the lowest price and make an order
-            ordersController.createOrderWithMinPrice(id, categoryController.getProductWithId(id).getRefill());
-        }
+        if(categoryController.needsRefill(id)){}
+        //find supplier with the lowest price and make an order
         return price;
     }
 
@@ -388,4 +380,11 @@ public class Facade {
         return reportController.makeProductReport(id);
     }
 
+    public boolean addContact(int supplierNumber,String name, String email, String telephone) {
+        return supplierController.getSupplier(supplierNumber).addContact(name, email, telephone);
+    }
+
+    public boolean updateContact(int supplierNumber, String name, String email, String telephone) {
+        return supplierController.getSupplier(supplierNumber).updateContact(name,email,telephone);
+    }
 }

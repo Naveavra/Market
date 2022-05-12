@@ -1,29 +1,24 @@
 package PresentationLayer.Supplier;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Supplier {
     private int supplierNumber;
     private String name;
     private int bankAccount;
-    private Map<String,String> contacts =new HashMap<>();//<name,email>
-    private List<String> namesOfContacts;
+    private LinkedList<Contact> contacts;//<name,email>
     private boolean active;
 //    private Map<Integer, Product> products =new HashMap<>();
 //    private Map<Integer,Double> discountByAmount;//sum of products in order
 //    private Map<Integer, Order> orders;
 //    private Map<Integer,Order> pastOrders;
 
-    public Supplier(int supplierNumber, String name, int bankAccount, Map<String,String> contacts){
+    public Supplier(int supplierNumber, String name, int bankAccount,LinkedList<Contact> contacts){
         this.supplierNumber=supplierNumber;
         this.name=name;
         this.bankAccount=bankAccount;
-        contacts.replaceAll((n,v) -> v);
-        namesOfContacts=new ArrayList<>();
-        namesOfContacts.addAll(this.contacts.keySet());
+        this.contacts=new LinkedList<>();
+        this.contacts.addAll(contacts);
         active =true;
 //        discountByAmount=new TreeMap<>();
 //        orders = new TreeMap<>();
@@ -44,8 +39,8 @@ public class Supplier {
         ans+= "\nBank Account: "+ bankAccount;
         ans+= "\nContacts:";
         int i=1;
-        for( Map.Entry<String,String> e: contacts.entrySet()){
-            ans+= "\n\t "+i+". "+ e.getKey() + ": " + e.getValue();
+        for( Contact c: contacts){
+            ans+= "\n\t "+i+". "+ c.getName() + ": " + c.getEmail() +" , "+ c.getTelephone();
             i++;
         }
         return ans;
@@ -57,7 +52,7 @@ public class Supplier {
 
 
 
-    public Map<String, String> getContacts() {
+    public LinkedList<Contact> getContacts() {
         return contacts;
     }
 
@@ -69,7 +64,7 @@ public class Supplier {
         this.bankAccount=bankNumber;
     }
     public int numOfContacts(){
-        return namesOfContacts.size();
+        return contacts.size();
     }
     public boolean isActive(){
         return active;

@@ -16,9 +16,9 @@ public class OrderTest {
     private ProductSupplier p1;
     @org.junit.Before
     public void setUp() throws Exception {
-         order =new OrderFromSupplier(0);
-         p=new ProductSupplier(1,1,100,1);
-         p1=new ProductSupplier(1,2,50,2);
+//         order =new OrderFromSupplier(0);
+//         p=new ProductSupplier(1,1,100,1);
+//         p1=new ProductSupplier(1,2,50,2);
     }
 
     @org.junit.Test

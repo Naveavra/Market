@@ -331,7 +331,7 @@ public class CLI
                                     "second", "second1", "second11");
                             cC.addAllItems(1, 7, "2022-06-01", 1);
                             cC.addAllItems(2, 3, "2019-06-01", 1);
-                            ss.openAccount(1,"eli", 1, new HashMap<>(), true);
+                            //ss.openAccount(1,"eli", 1, new HashMap<>(), true);
                             pss.addProduct(1, 1, 2, 1);
                         }
                         catch (Exception e){

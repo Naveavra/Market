@@ -1,12 +1,10 @@
 package ServiceLayer;
 
 
-import DomainLayer.Facade;
-import DomainLayer.PastOrderSupplier;
-import DomainLayer.Supplier;
-import DomainLayer.SupplierController;
+import DomainLayer.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
@@ -25,12 +23,11 @@ public class SupplierService {
      *@param supplierNumber  the id of the supplier
      *@param supplierName  the name of the supplier
      *@param bankAccount  the bunk number of the supplier
-     *@param contacts  dictionary between name of contact and email
      *@param isDeliver  boolean var which specify who is responsible for delivery the SUPERLI or the supplier
      *@return true if succeed, false if failed
      */
-    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts,boolean isDeliver){
-        return facade.openAccount(supplierNumber, supplierName, bankAccount, contacts, isDeliver);
+    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, boolean isDeliver){
+        return facade.openAccount(supplierNumber, supplierName, bankAccount,isDeliver);
     }
 
     /**
@@ -39,7 +36,7 @@ public class SupplierService {
      * @return true if succeed, false if failed
      */
     public boolean closeAccount(int supplierNumber){
-       return facade.closeAccount(supplierNumber);
+        return facade.closeAccount(supplierNumber);
     }
 
     /**
@@ -47,11 +44,10 @@ public class SupplierService {
      * @param supplierNumber the id of the supplier
      * @param supplierName the name of the supplier
      * @param bankAccount the bank account number of the supplier
-     * @param contacts dictionary between name of contact and his email
      * @return
      */
-    public boolean updateAccount(int supplierNumber, String supplierName, int bankAccount, Map<String,String> contacts){
-      return facade.updateAccount(supplierNumber, supplierName, bankAccount, contacts);
+    public boolean updateAccount(int supplierNumber, String supplierName, int bankAccount){
+        return facade.updateAccount(supplierNumber, supplierName, bankAccount);
     }
 
     /**
@@ -63,7 +59,7 @@ public class SupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addDiscount(int supplierNumber,int catalogNumber,int count,double discount){
-      return facade.addDiscount(supplierNumber, catalogNumber, count, discount);
+        return facade.addDiscount(supplierNumber, catalogNumber, count, discount);
     }
 
     /**
@@ -74,7 +70,7 @@ public class SupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addDiscount(int supplierNumber,int count,double discount){
-      return facade.addDiscount(supplierNumber, count, discount);
+        return facade.addDiscount(supplierNumber, count, discount);
     }
 
     /**
@@ -99,7 +95,7 @@ public class SupplierService {
     }
 
     public String getSupplier(int supplierNumber) {
-      return facade.getSupplier(supplierNumber);
+        return facade.getSupplier(supplierNumber);
     }
 
     /**
@@ -109,8 +105,8 @@ public class SupplierService {
      * @return A Boolean variable that defines who is responsible for transports, true -the supplier,false - SUPERLI
      */
     public boolean updateDeliveration(int supplierNumber,boolean isDeliver) {
-         return facade.updateDeliveration(supplierNumber, isDeliver);
-      }
+        return facade.updateDeliveration(supplierNumber, isDeliver);
+    }
 
     /**
      * the function gets the past orders (Those sent) of a supplier
@@ -118,7 +114,15 @@ public class SupplierService {
      * @return Json string which wrappers the list of past order
      */
     public String  watchPastOrders(int supplierNumber) {
-       return facade.watchPastOrders(supplierNumber);
+        return facade.watchPastOrders(supplierNumber);
+    }
+
+    public boolean addContact(int supplierNumber,String name, String email, String telephone) {
+        return facade.addContact(supplierNumber,name,email,telephone);
+    }
+
+    public boolean updateContact(int supplierNumber, String name, String email, String telephone) {
+        return facade.updateContact(supplierNumber, name, email, telephone);
     }
 //    public void addContact(int supplierNumber,String name,String email){
 //        supplierController.getSupplier(supplierNumber).
