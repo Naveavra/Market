@@ -3,6 +3,7 @@ package DomainLayer;
 import DomainLayer.Storage.CategoryController;
 import DomainLayer.Storage.ReportController;
 import com.google.gson.Gson;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,6 +165,11 @@ public class Facade {
     }
     public boolean removeProduct(int supplierNumber, int catalogNumber){
         return supplierController.getSupplier(supplierNumber).removeProduct(catalogNumber);
+    }
+
+    public void updateOrders(){
+        List<Pair<Integer, Integer>> catalogNumbers=categoryController.getCatalogNumbers();
+        ordersController.updateOrders(catalogNumbers);
     }
 
     //SupplierService
@@ -333,8 +339,10 @@ public class Facade {
 
     public double buyItems(int id, int amount){
         double price=categoryController.buyItems(id, amount);
-        if(categoryController.needsRefill(id))
+        if(categoryController.needsRefill(id)) {
             //find supplier with the lowest price and make an order
+            ordersController.createOrderWithMinPrice(id, categoryController.getProductWithId(id).getRefill());
+        }
         return price;
     }
 

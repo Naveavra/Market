@@ -120,9 +120,13 @@ public class ProductDAO {
         }
     }
 
-//    public int getDayForResupply(Product p){
-//
-//    }
+    public List<Pair<Integer, Integer>> getCatalogNumbers() throws SQLException {
+        List<Product> allProducts=getAllProducts();
+        List<Pair<Integer, Integer>> ans=new LinkedList<>();
+        for(Product p : allProducts)
+            ans.add(new Pair<>(p.getId(), p.getRefill()));
+        return ans;
+    }
 
     //functions to get products of categories
     public List<Product> getAllByCategory(String category) throws SQLException {

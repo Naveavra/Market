@@ -28,13 +28,19 @@ public class OrdersFromSupplierDAO {
 
     public void createOrderFromSupplier(OrderFromSupplier order) throws SQLException {
         String query =String.format("INSERT INTO OrdersFromSupplier (date ,supplierNumber) " +
-                "VALUES ('%s',%d)", order.getDate(), order.getSupplierNumber());
+                "VALUES (\"%s\",%d)", order.getDate(), order.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
-            query = String.format("SELECT MAX(orderId) from OrdersFromSupplier");
+            query ="SELECT orderId from OrdersFromSupplier";
+            int orderId=0;
             ResultSet rs = stmt.executeQuery(query);
-            order.setOrderId(rs.getInt(0));
-            IMOrdersFromSupplier.put(order.getOrderId(), order);
+            while(!rs.isClosed()) {
+                orderId++;
+                rs.next();
+            }
+            orderId--;
+            order.setOrderId(orderId);
+            IMOrdersFromSupplier.put(orderId, order);
         } catch (SQLException e) {
             throw e;
         }
@@ -221,6 +227,20 @@ public class OrdersFromSupplierDAO {
             throw e;
         }
         finally {
+            connect.closeConnect();
+        }
+    }
+
+
+    public void updateCount(int productId, int count) throws SQLException {
+        String query = "UPDATE ProductsInOrder" +
+                String.format(" SET count=%d", count) +
+                String.format(" WHERE productId=%d", productId);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.executeQuery(query);
+        } catch (SQLException throwable) {
+            throw throwable;
+        } finally {
             connect.closeConnect();
         }
     }

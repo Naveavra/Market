@@ -1,8 +1,6 @@
 package DAL;
 
 import DomainLayer.Storage.Category;
-import DomainLayer.Storage.SubCategory;
-import DomainLayer.Storage.SubSubCategory;
 import javafx.util.Pair;
 
 import java.sql.ResultSet;
@@ -11,14 +9,13 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 public class CategoryDAO {
 
     private Connect connect;
     private static HashMap<String, Category> IMCategories;
-    private static HashMap<Pair<String, String>, SubCategory> IMSubCategories;
-    private static HashMap<Pair<Pair<String, String>, String>, SubSubCategory> IMSubSubCategories;
+    private static HashMap<Pair<String, String>, Category> IMSubCategories;
+    private static HashMap<Pair<Pair<String, String>, String>, Category> IMSubSubCategories;
 
     /**
      * constructor
@@ -128,7 +125,7 @@ public class CategoryDAO {
             } catch (SQLException e) {
                 return false;
             } finally {
-                IMSubCategories.put(new Pair<>(category, subCategory), new SubCategory(subCategory));
+                IMSubCategories.put(new Pair<>(category, subCategory), new Category(subCategory));
                 connect.closeConnect();
             }
             return true;
@@ -148,7 +145,7 @@ public class CategoryDAO {
                 rs.next();
                 if(!rs.isClosed()){
                     ans=true;
-                    IMSubCategories.put(new Pair<>(category, subCategory), new SubCategory(subCategory));
+                    IMSubCategories.put(new Pair<>(category, subCategory), new Category(subCategory));
                 }
                 else
                     ans=false;
@@ -223,7 +220,7 @@ public class CategoryDAO {
             } catch (SQLException e) {
                 return false;
             } finally {
-                IMSubSubCategories.put(new Pair<>(new Pair<>(category, subCategory), subSubCategory), new SubSubCategory(subSubCategory));
+                IMSubSubCategories.put(new Pair<>(new Pair<>(category, subCategory), subSubCategory), new Category(subSubCategory));
                 connect.closeConnect();
             }
             return true;

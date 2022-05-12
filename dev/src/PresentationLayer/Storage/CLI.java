@@ -1,8 +1,11 @@
 package PresentationLayer.Storage;
 
 import ServiceLayer.CategoryService;
+import ServiceLayer.ProductSupplierService;
 import ServiceLayer.ReportService;
+import ServiceLayer.SupplierService;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,6 +18,8 @@ public class CLI
     {
         CategoryService cC=new CategoryService();
         ReportService rC=new ReportService();
+        ProductSupplierService pss=new ProductSupplierService();
+        SupplierService ss=new SupplierService();
         String command;
         String detail;
         String line = "";
@@ -326,6 +331,8 @@ public class CLI
                                     "second", "second1", "second11");
                             cC.addAllItems(1, 7, "2022-06-01", 1);
                             cC.addAllItems(2, 3, "2019-06-01", 1);
+                            ss.openAccount(1,"eli", 1, new HashMap<>(), true);
+                            pss.addProduct(1, 1, 2, 1);
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
