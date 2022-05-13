@@ -1,4 +1,4 @@
-package DomainLayer.Storage;
+package DomainLayer.Supplier;
 
 public class Contact {
 

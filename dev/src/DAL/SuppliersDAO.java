@@ -1,14 +1,13 @@
 package DAL;
 
-import DomainLayer.Storage.Contact;
-import DomainLayer.Storage.Discount;
-import DomainLayer.Supplier;
+import DomainLayer.Supplier.Contact;
+import DomainLayer.Supplier.Discount;
+import DomainLayer.Supplier.Supplier;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 public class SuppliersDAO {
     private Connect connect;
@@ -25,7 +24,7 @@ public class SuppliersDAO {
     public void updateSupplier(Supplier s) throws SQLException {
         Integer isDeliver = s.getIsDeliver() ? 1 : 0;
         Integer isActive = s.getActive() ? 1 : 0;
-        String query = String.format("UPDATE Suppliers SET name = %s and bankAccount = %d and active = %d and isDeliver = %d WHERE supplierNumber = %d",
+        String query = String.format("UPDATE Suppliers SET name = '%s' and bankAccount = %d and active = %d and isDeliver = %d WHERE supplierNumber = %d",
                 s.getName(),s.getBankAccount(),isActive, isDeliver,
                 s.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
@@ -178,6 +177,20 @@ public class SuppliersDAO {
                 "VALUES (%d,'%s','%s','%s')", supplier.getSupplierNumber(),name,email,telephone);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+    public void closeAccount(Supplier s) throws SQLException {
+        String query = String.format("UPDATE Suppliers SET active = %d WHERE supplierNumber = %d",
+                0,s.getSupplierNumber());
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+            IMSuppliers.put(s.getSupplierNumber(),s);
         } catch (SQLException e) {
             throw e;
         }

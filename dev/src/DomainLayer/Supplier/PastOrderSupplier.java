@@ -1,4 +1,4 @@
-package DomainLayer;
+package DomainLayer.Supplier;
 
 import java.time.LocalDateTime;
 

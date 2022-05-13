@@ -255,7 +255,9 @@ public class OrderMenu {
 
     private void printOrderDetailsBeforeClose(int orderId) {
         String print=orderService.getOrderDetails(orderId);
-        System.out.println("the final price of the order is:"+print);
+        if(!print.equals("fail")){
+            System.out.println("the final price of the order is:"+print);
+        }
     }
 
     private void watchFixedDaysOrders() {
@@ -263,6 +265,9 @@ public class OrderMenu {
         Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
         orders = Menu.fromJson(json, orders.getClass());
         List<Integer> list = new LinkedList<>();
+        if(orders.isEmpty()){
+            System.out.println("there is no orders to show");
+        }
         for(Object x: orders.keySet()){
          Integer integer=Menu.fromJson(x.toString(),Integer.class);
          list.add(integer);
@@ -310,7 +315,6 @@ public class OrderMenu {
            watchOrdersMenu();
            return;
         }
-        Order o = gson.fromJson(json,Order.class);
         System.out.println("Order: "+ orderID);
         System.out.println("Choose what you want:");
         System.out.println("\t1. add new product.");
@@ -438,7 +442,7 @@ public class OrderMenu {
     }
 
     private void updateProductInOrder(int orderID) {
-        watchOrdersMenu();
+        //watchOrdersMenu();
         System.out.println("choose product you want to edit and enter the catalog number:");
         String choiceStr = "";
         int catalogNum =0;

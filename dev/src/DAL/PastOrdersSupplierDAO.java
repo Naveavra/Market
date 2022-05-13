@@ -1,7 +1,7 @@
 package DAL;
 
-import DomainLayer.OrderFromSupplier;
-import DomainLayer.PastOrderSupplier;
+import DomainLayer.Supplier.OrderFromSupplier;
+import DomainLayer.Supplier.PastOrderSupplier;
 import javafx.util.Pair;
 
 import java.sql.ResultSet;
@@ -10,7 +10,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class PastOrdersSupplierDAO {
     private Connect connect;
@@ -45,7 +44,7 @@ public class PastOrdersSupplierDAO {
     }
 
     public void insertPastOrder(PastOrderSupplier order) throws SQLException {
-        String query =String.format("INSERT INTO PastOrdersSupplier (orderId, date ,totalPrice) " +
+        String query =String.format("INSERT INTO PastOrdersSupplier (orderId,finishDate,totalPrice) " +
                 "VALUES (%d,'%s',%f)", order.getOrderId() ,order.getDate(), order.getTotalPrice());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);

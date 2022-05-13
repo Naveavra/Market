@@ -1,8 +1,8 @@
 package DAL;
 
-import DomainLayer.DeliveryTerm;
-import DomainLayer.OrderFromSupplier;
-import DomainLayer.ProductSupplier;
+import DomainLayer.Supplier.DeliveryTerm;
+import DomainLayer.Supplier.OrderFromSupplier;
+import DomainLayer.Supplier.ProductSupplier;
 
 
 import java.sql.ResultSet;
@@ -119,11 +119,12 @@ public class OrdersFromSupplierDAO {
                 , orderId);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
-            List<String> days = new ArrayList<>();
+            String days = "";
             while (rs.next()){
-                days.add(rs.getString(1));
+                days+=(rs.getString("daysToDeliver"));
             }
-            return new DeliveryTerm(days);
+            DeliveryTerm d =new DeliveryTerm(days);
+            return d;
         } catch (SQLException e) {
             throw e;
         }
@@ -189,21 +190,24 @@ public class OrdersFromSupplierDAO {
     }
 
     public void updateDeliveryTermsInOrder(int orderId, String[] daysInWeek) throws SQLException {
-        StringBuilder days= new StringBuilder();
-        for(String s:daysInWeek){
-            days.append(s).append(", ");
+        DeliveryTerm d=getDeliveryTermOfOrder(orderId);
+        if(d.isEmpty()) {
+            addDeliveryTermsToOrder(orderId, daysInWeek);
         }
-        days.substring(0, days.length()-1);
-        days.substring(0, days.length()-1);
-        String query =String.format("UPDATE DeliveryTerms SET daysToDeliver = %s where orderId = %d "
-                ,days, orderId);
-        try (Statement stmt = connect.createStatement()) {
-            stmt.execute(query);
-        } catch (SQLException e) {
-            throw e;
-        }
-        finally {
-            connect.closeConnect();
+        else {
+            StringBuilder days = new StringBuilder();
+            for (String s : daysInWeek) {
+                days.append(s);
+            }
+            String query = String.format("UPDATE DeliveryTerms SET daysToDeliver = %s where orderId = %d "
+                    , days, orderId);
+            try (Statement stmt = connect.createStatement()) {
+                stmt.execute(query);
+            } catch (SQLException e) {
+                throw e;
+            } finally {
+                connect.closeConnect();
+            }
         }
     }
 
@@ -212,7 +216,6 @@ public class OrdersFromSupplierDAO {
         for(String s:daysInWeek){
             days+=s;
         }
-        days=days.substring(0, days.length()-2);
         String query =String.format("INSERT INTO DeliveryTerms (orderId,daysToDeliver)"+
                 "VALUES (%d,%s)",orderId, days);
         try (Statement stmt = connect.createStatement()) {

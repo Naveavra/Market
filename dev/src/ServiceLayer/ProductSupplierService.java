@@ -1,6 +1,6 @@
 package ServiceLayer;
 
-import DomainLayer.Facade;
+import DomainLayer.Supplier.Facade;
 
 public class ProductSupplierService {
     private Facade facade;
@@ -13,7 +13,6 @@ public class ProductSupplierService {
      * the function adds a new product to a supplier to supply
      * @param supplierNumber the id of the supplier
      * @param catalogNumber unique number of the product in specific supplier
-     * @param name the name of the new product
      * @param price the price of the product
      * @param productId unique number to product in the system
      * @return true if succeed, false if failed
@@ -35,7 +34,6 @@ public class ProductSupplierService {
      * the function update the fields of the product
      * @param supplierNumber the id of the supplier
      * @param catalogNumber unique number of the product in specific supplier
-     * @param name the new name (if u want to change)
      * @param price the new price (>0) (if u want to change)
      * @return true if succeed, false if failed
      */

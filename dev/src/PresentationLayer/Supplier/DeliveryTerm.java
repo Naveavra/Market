@@ -1,5 +1,5 @@
 package PresentationLayer.Supplier;
-
+import DomainLayer.Supplier.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,23 +13,31 @@ public class DeliveryTerm {
         Friday,
         Saturday
     }
-    Map<String, DomainLayer.DeliveryTerm.DaysInWeek> M  = new HashMap<String, DomainLayer.DeliveryTerm.DaysInWeek>() {{
-        put("1", DomainLayer.DeliveryTerm.DaysInWeek.Sunday);
-        put("2", DomainLayer.DeliveryTerm.DaysInWeek.monday);
-        put("3", DomainLayer.DeliveryTerm.DaysInWeek.Tuesday);
-        put("4", DomainLayer.DeliveryTerm.DaysInWeek.Wednesday);
-        put("5", DomainLayer.DeliveryTerm.DaysInWeek.Thursday);
-        put("6", DomainLayer.DeliveryTerm.DaysInWeek.Friday);
-        put("7", DomainLayer.DeliveryTerm.DaysInWeek.Saturday);
+    Map<String, DaysInWeek> M  = new HashMap<String, DaysInWeek>() {{
+        put("1", DaysInWeek.Sunday);
+        put("2", DaysInWeek.monday);
+        put("3", DaysInWeek.Tuesday);
+        put("4", DaysInWeek.Wednesday);
+        put("5", DaysInWeek.Thursday);
+        put("6", DaysInWeek.Friday);
+        put("7", DaysInWeek.Saturday);
 
     }};
 
-    private DomainLayer.DeliveryTerm.DaysInWeek[] daysInWeeks;
+    private DaysInWeek[] daysInWeeks;
     //private boolean isSupplierDeliver;
 
-    public DeliveryTerm(DomainLayer.DeliveryTerm.DaysInWeek[] daysInWeek){
+    public DeliveryTerm(DaysInWeek[] daysInWeek){
 
-        this.daysInWeeks=new DomainLayer.DeliveryTerm.DaysInWeek[daysInWeek.length];
+        this.daysInWeeks=new DaysInWeek[daysInWeek.length];
         System.arraycopy(daysInWeek, 0, this.daysInWeeks, 0, daysInWeek.length);
     }
+    public String toString(){
+        StringBuilder out= new StringBuilder();
+        for(DaysInWeek a: daysInWeeks){
+            out.append(a.toString()).append(",");
+        }
+        return out.substring(0, out.toString().length()-1);
+    }
+
 }

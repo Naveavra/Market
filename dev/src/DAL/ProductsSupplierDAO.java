@@ -1,12 +1,14 @@
 package DAL;
 
-import DomainLayer.ProductSupplier;
+import DomainLayer.Supplier.Discount;
+import DomainLayer.Supplier.ProductSupplier;
 import javafx.util.Pair;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class ProductsSupplierDAO {
@@ -25,9 +27,9 @@ public class ProductsSupplierDAO {
                 " VALUES (%d,%d,%d,%f)",ps.getProductId(),ps.getCatalogNumber(), ps.getSupplierNumber(),ps.getPrice());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
-            for(Map.Entry<Integer,Double> k:ps.getDiscount().entrySet()){
+            for(Discount k:ps.getDiscount()){
                 query =String.format( "INSERT INTO DiscountProductSupplier (supplierNumber,productId,quantity,discount)"+
-                        "VALUES (%d,%d,%d,%f) ",ps.getSupplierNumber(),ps.getProductId(), k.getKey(), k.getValue());
+                        "VALUES (%d,%d,%d,%f) ",ps.getSupplierNumber(),ps.getProductId(), k.getAmount(), k.getDiscount());
                 stmt.execute(query);
             }
         } catch (SQLException e) {
@@ -96,10 +98,22 @@ public class ProductsSupplierDAO {
     }
 
     public void removeProduct(int catalogNumber, int supplierNumber) throws SQLException {
-        String query = String.format("DELETE FROM ProductSupplier WHERE catalogNumber = %d and supplierNumber = %d",
+        String query = String.format("SELECT productId FROM ProductSupplier WHERE catalogNumber = %d and supplierNumber = %d",
                 catalogNumber, supplierNumber);
+        int productId=0;
+        try(Statement stmt = connect.createStatement()){
+            ResultSet rs =stmt.executeQuery(query);
+            while (rs.next()){
+                 productId=rs.getInt("productId");
+            }
+        }
+        String query1 = String.format("DELETE FROM ProductSupplier WHERE catalogNumber = %d and supplierNumber = %d",
+                catalogNumber, supplierNumber);
+        String query2 =String.format("DELETE FROM DiscountProductSupplier WHERE supplierNumber = %d and productId = %d " ,
+                 supplierNumber,productId);
         try (Statement stmt = connect.createStatement()) {
-            stmt.execute(query);
+            stmt.execute(query1);
+            stmt.execute(query2);
             Pair<Integer,Integer> key =new Pair<>(catalogNumber, supplierNumber);
             IMProductSupplier.remove(key);
         } catch (SQLException e) {
@@ -159,14 +173,13 @@ public class ProductsSupplierDAO {
     }
 
     public Double getDiscountOnProduct(ProductSupplier productSupplier, int count) throws SQLException {
-        String query =String.format("SELECT * FROM DiscountProductSupplier WHERE supplierNumber= %d and productId=%d and quantity <= %d ORDER BY discount ASC LIMIT 1 "
+        String query =String.format("SELECT * FROM DiscountProductSupplier WHERE supplierNumber= %d and productId=%d and quantity <= %d ORDER BY discount DESC LIMIT 1 "
                 , productSupplier.getSupplierNumber(), productSupplier.getProductId(),count);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs =stmt.executeQuery(query);
             if (!rs.next())
                 return null;
-            Double discount =rs.getDouble("discount");
-            return discount;
+            return rs.getDouble("discount");
         } catch (SQLException e) {
             throw e;
         }
@@ -174,16 +187,16 @@ public class ProductsSupplierDAO {
             connect.closeConnect();
         }
     }
-    public Map<Integer,Double> getDiscountsOnProduct(int supplierNumber,int productId) throws SQLException {
+    public LinkedList<Discount> getDiscountsOnProduct(int supplierNumber, int productId) throws SQLException {
         String query = String.format("SELECT * FROM DiscountProductSupplier WHERE supplierNumber=%d and productId=%d "
                 ,supplierNumber, productId);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs =stmt.executeQuery(query);
             if (!rs.next())
                 return null;
-            Map<Integer,Double> discounts =new HashMap<>();
+            LinkedList<Discount> discounts =new LinkedList<>();
             while(rs.next()){
-                discounts.put(rs.getInt("quantity"),rs.getDouble("discount"));
+                discounts.add(new Discount(rs.getInt("quantity"),rs.getDouble("discount")));
             }
             return discounts;
         } catch (SQLException e) {

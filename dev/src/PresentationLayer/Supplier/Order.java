@@ -7,27 +7,29 @@ import java.util.Date;
 public class Order {
     private int orderId;
     private String date;
-    //  private Map<Product,Integer> products;//product and count
+    private DeliveryTerm daysToDeliver;
+    private int supplierNumber;
 
-    public Order(int orderId){
+
+    public Order(int orderId,DeliveryTerm daysToDeliver,int supplierNumber){
         this.orderId = orderId;
-        //products = new HashMap<>();
         String pattern = "MM-dd-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         date = simpleDateFormat.format(new Date());
+        this.daysToDeliver=daysToDeliver;
+        this.supplierNumber=supplierNumber;
     }
     public Order(Order order){
         this.date=order.date;
         this.orderId=order.orderId;
-//        this.products = new HashMap<>();
-//        for(Product p:order.products.keySet()){
-//            this.products.put(new Product(p),order.products.get(p));
-//        }
+        this.supplierNumber=order.supplierNumber;
+        this.daysToDeliver= order.daysToDeliver;
+//
     }
 
     public String toString(){
         String ans = "Order number: "+ orderId;
-        ans += ", date: " + date;
+        ans += ", date: " + date ;
         return ans;
     }
     public int getOrderId(){

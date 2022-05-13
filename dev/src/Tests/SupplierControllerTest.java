@@ -1,13 +1,11 @@
 package Tests;
 
-import DomainLayer.SupplierController;
+import DomainLayer.Supplier.SupplierController;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 public class SupplierControllerTest {
 private SupplierController sc;

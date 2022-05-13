@@ -1,8 +1,8 @@
 package Tests;
 
 
-import DomainLayer.OrderFromSupplier;
-import DomainLayer.ProductSupplier;
+import DomainLayer.Supplier.OrderFromSupplier;
+import DomainLayer.Supplier.ProductSupplier;
 
 import java.util.HashMap;
 import java.util.Map;

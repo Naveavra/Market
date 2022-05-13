@@ -1,4 +1,4 @@
-package DomainLayer;
+package DomainLayer.Supplier;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,15 +26,25 @@ public class DeliveryTerm {
     }};
 
     private DaysInWeek[] daysInWeeks;
-    //private boolean isSupplierDeliver;
 
+    public  DaysInWeek[] getDaysInWeeks(){
+        return daysInWeeks;
+    }
     public DeliveryTerm(DaysInWeek[] daysInWeek){
         this.daysInWeeks=new DaysInWeek[daysInWeek.length];
         System.arraycopy(daysInWeek, 0, this.daysInWeeks, 0, daysInWeek.length);
     }
-
+    public DeliveryTerm (String days)  {
+        this.daysInWeeks=new DaysInWeek[days.length()];
+        char[] arr=days.toCharArray();
+        int i=0;
+        for(char c:arr){
+            daysInWeeks[i]=fromStringToDays(String.valueOf(c));
+            i++;
+        }
+    }
     public DeliveryTerm(List<String> days){
-        daysInWeeks = new DaysInWeek[days.size()];
+        this.daysInWeeks = new DaysInWeek[days.size()];
         for(int i=0; i< days.size(); i++){
             daysInWeeks[i] = fromStringToDays(days.get(i));
         }

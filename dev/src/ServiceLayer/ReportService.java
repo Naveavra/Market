@@ -1,7 +1,6 @@
 package ServiceLayer;
 
-import DomainLayer.Facade;
-import DomainLayer.Storage.ReportController;
+import DomainLayer.Supplier.Facade;
 
 import java.util.List;
 

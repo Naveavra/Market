@@ -1,11 +1,8 @@
-package DomainLayer;
+package DomainLayer.Supplier;
 
 
 import DAL.ProductsSupplierDAO;
 import DAL.SuppliersDAO;
-import DomainLayer.Storage.Contact;
-import DomainLayer.Storage.Discount;
-import PresentationLayer.Supplier.Product;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -126,7 +123,7 @@ public class Supplier {
             if(isProductExist(catalogNumber, supplierNumber)){
                 return false;
             }
-            ProductSupplier productSupplier = new ProductSupplier(supplierNumber,catalogNumber, price, productId,new HashMap<>());
+            ProductSupplier productSupplier = new ProductSupplier(supplierNumber,catalogNumber, price, productId,new LinkedList<>());
             productsDAO.insert(productSupplier);
             //products.put(catalogNumber, productSupplier);
             return true;

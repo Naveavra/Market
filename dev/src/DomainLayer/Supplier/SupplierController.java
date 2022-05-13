@@ -1,9 +1,7 @@
-package DomainLayer;
+package DomainLayer.Supplier;
 
 import DAL.SuppliersDAO;
-import DomainLayer.Storage.Contact;
 
-import java.sql.SQLException;
 import java.util.*;
 
 public class SupplierController {
@@ -70,7 +68,8 @@ public class SupplierController {
                 return false;
             }
             s.closeAccount();
-            suppliersDAO.updateSupplier(s);
+            //suppliersDAO.updateSupplier(s);
+            suppliersDAO.closeAccount(s);
             return true;
         }
         catch (Exception e){

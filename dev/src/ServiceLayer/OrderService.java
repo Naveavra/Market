@@ -1,6 +1,6 @@
 package ServiceLayer;
 
-import DomainLayer.*;
+import DomainLayer.Supplier.Facade;
 
 
 public class OrderService {

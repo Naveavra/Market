@@ -1,4 +1,4 @@
-package DomainLayer;
+package DomainLayer.Supplier;
 
 import DomainLayer.Storage.CategoryController;
 import DomainLayer.Storage.ReportController;

@@ -1,11 +1,10 @@
-package DomainLayer;
+package DomainLayer.Supplier;
 
 import DAL.OrdersFromSupplierDAO;
 import DAL.ProductsSupplierDAO;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
@@ -15,15 +14,11 @@ public class OrderFromSupplier {
     private DeliveryTerm daysToDeliver;
     private int supplierNumber;
     //DAO
-    private ProductsSupplierDAO productsDAO;
-    private OrdersFromSupplierDAO ordersDAO;
+    private transient ProductsSupplierDAO productsDAO;
+    private transient OrdersFromSupplierDAO ordersDAO;
 
-    private Map<ProductSupplier,Integer> products;//product and count
-
-
-    public OrderFromSupplier(int supplierNumber){
+      public OrderFromSupplier(int supplierNumber){
        this.supplierNumber=supplierNumber;
-        //products = new HashMap<>();
         String pattern = "MM-dd-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         date = simpleDateFormat.format(new Date());
@@ -36,19 +31,17 @@ public class OrderFromSupplier {
 
     public OrderFromSupplier(int orderId, String date, DeliveryTerm deliveryTerm){
         this.orderId = orderId;
-        //products = new HashMap<>();
         this.date = date;
-        daysToDeliver = deliveryTerm;
+        this.daysToDeliver=new DeliveryTerm(deliveryTerm.getDaysInWeeks());
+        ordersDAO=new OrdersFromSupplierDAO();
+
     }
 
     public OrderFromSupplier(OrderFromSupplier order){
         this.date=order.date;
         this.orderId=order.orderId;
-//        this.products = new HashMap<>();
-//        for(ProductSupplier p:order.products.keySet()){
-//            this.products.put(new ProductSupplier(p),order.products.get(p));
-//        }
-        this.daysToDeliver=order.daysToDeliver;
+        this.daysToDeliver=new DeliveryTerm(order.daysToDeliver.getDaysInWeeks());
+        ordersDAO=new OrdersFromSupplierDAO();
     }
 
     public OrderFromSupplier() {
@@ -142,11 +135,6 @@ public class OrderFromSupplier {
         } catch (Exception e) {
             return false;
         }
-//        if(products.containsKey(p)) {
-//            products.remove(p);
-//            return true;
-//        }
-//        return false;
     }
 
     public Map<ProductSupplier,Integer> getProducts() {

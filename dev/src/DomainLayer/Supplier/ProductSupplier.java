@@ -1,9 +1,11 @@
-package DomainLayer;
+package DomainLayer.Supplier;
 
 import DAL.ProductsSupplierDAO;
+import com.oracle.webservices.internal.api.message.DistributedPropertySet;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class ProductSupplier {
@@ -11,38 +13,36 @@ public class ProductSupplier {
     private int productId;//unique number to product in the system
     private int supplierNumber;
     private double price;
-    private Map<Integer,Double> discount;//sum of specific product
+    private LinkedList<Discount> discounts;//sum of specific product
     private transient ProductsSupplierDAO productsSupplierDAO = new ProductsSupplierDAO();
 
 
 
-    public ProductSupplier(int supplierNumber,int catalogNumber, double price, int productId,Map<Integer,Double> discount){
+    public ProductSupplier(int supplierNumber,int catalogNumber, double price, int productId,LinkedList<Discount> discount){
         this.supplierNumber=supplierNumber;
         this.catalogNumber =catalogNumber;
         this.price=price;
         this.productId = productId;
-        this.discount=discount;
-        discount.put(0, 1.0);// keep it sorted
+        this.discounts=discount;
+        discounts.add(new Discount(0,1));// keep it sorted
     }
     public ProductSupplier(ProductSupplier productSupplier){
         this.catalogNumber = productSupplier.catalogNumber;
         this.productId=productSupplier.productId;
         this.supplierNumber=productSupplier.supplierNumber;
         this.price= productSupplier.price;
-        discount=new HashMap<>();
-        discount.put(0, 1.0);// keep it sorted
-        for(int x: productSupplier.discount.keySet()){
-            discount.put(x, productSupplier.discount.get(x));
-        }
+        discounts=new LinkedList<>();
+        discounts.add(new Discount(0,1));// keep it sorted
+        discounts.addAll(productSupplier.discounts);
     }
     public void setPrice(int price) {
         this.price = price;
     }
     public boolean addDiscount(int count,double discount){
-        if(this.discount.containsKey(count)){
+        if(contains(discounts,count )){
             return false;
         }
-        this.discount.put(count,discount);
+        this.discounts.add(new Discount(count,discount));
         try {
             productsSupplierDAO.insertDiscountOnProduct(this,count,discount);
         } catch (SQLException e) {
@@ -51,7 +51,7 @@ public class ProductSupplier {
         return true;
     }
     public boolean removeDiscountOnProduct( int count){
-        this.discount.remove(count);
+        remove(this.discounts,count);
         try {
             if(productsSupplierDAO.getDiscountOnProduct(this,count)!=null){
                 productsSupplierDAO.removeDiscountOnProduct(this,count);
@@ -70,30 +70,31 @@ public class ProductSupplier {
         return this.price*count*findMaxUnder(this,count);
     }
     private double findMaxUnder(ProductSupplier p,int count){
-        int out=0;
-        if(discount.size()!=0) {
+        double discount=findMaxUnder(discounts,count);
+        if(discount==-1) {
             try {
                 return productsSupplierDAO.getDiscountOnProduct(p, count);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        for(int s:discount.keySet()){
-            if(s<=count){
-                out=s;
-            }
-            else{
-                return discount.get(out);
+        return discount;
+    }
+    public double findMaxUnder(LinkedList<Discount> d,int amount){
+        double out=-1;
+        for(Discount discount:d){
+            if(discount.getAmount()<=amount){
+                out=discount.getDiscount();
             }
         }
-        return discount.get(out);
+        return out;
     }
 
     public double getPrice() {
         return price;
     }
-    public Map<Integer,Double> getDiscount(){
-        return discount;
+    public LinkedList<Discount> getDiscount(){
+        return discounts;
     }
     public int getCatalogNumber(){
         return catalogNumber;
@@ -104,5 +105,16 @@ public class ProductSupplier {
 
     public int getSupplierNumber() {
         return supplierNumber;
+    }
+    public boolean contains(LinkedList<Discount> discounts,int amount){
+        for(Discount discount:discounts){
+            if(discount.getAmount()==amount){
+                return true;
+            }
+        }
+        return false;
+    }
+    public void remove(LinkedList<Discount> discounts,int amount){
+        discounts.removeIf(d -> d.getAmount() == amount);
     }
 }

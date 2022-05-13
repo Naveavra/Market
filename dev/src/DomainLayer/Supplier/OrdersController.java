@@ -1,13 +1,11 @@
-package DomainLayer;
+package DomainLayer.Supplier;
 
 import DAL.OrdersFromSupplierDAO;
 import DAL.PastOrdersSupplierDAO;
 import DAL.ProductsSupplierDAO;
 import DAL.SuppliersDAO;
-import DomainLayer.Storage.Discount;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;

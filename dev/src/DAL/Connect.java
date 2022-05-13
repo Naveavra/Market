@@ -1,7 +1,5 @@
 package DAL;
 
-import DomainLayer.ProductSupplier;
-
 import java.sql.*;
 
 /**

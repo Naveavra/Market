@@ -1,13 +1,11 @@
 package Tests;
 
-import DomainLayer.OrderFromSupplier;
-import DomainLayer.ProductSupplier;
-import DomainLayer.Supplier;
+import DomainLayer.Supplier.ProductSupplier;
+import DomainLayer.Supplier.Supplier;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.*;
