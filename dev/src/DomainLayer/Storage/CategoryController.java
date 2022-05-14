@@ -6,6 +6,7 @@ import javafx.util.Pair;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class CategoryController
 {
@@ -222,8 +223,8 @@ public class CategoryController
         return ans;
     }
 
-    public List<Pair<Integer, Integer>> getCatalogNumbers(){
-        return categoriesDAO.getCatalogNumbers();
+    public Map<Integer, Integer> getProductIds(){
+        return categoriesDAO.getProductIds();
     }
 
 }

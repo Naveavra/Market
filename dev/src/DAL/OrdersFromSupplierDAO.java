@@ -8,10 +8,7 @@ import DomainLayer.Supplier.ProductSupplier;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OrdersFromSupplierDAO {
     private Connect connect;
@@ -228,10 +225,10 @@ public class OrdersFromSupplierDAO {
         }
     }
 
-    public void updateCount(int productId, int count) throws SQLException {
+    public void updateCount(int productId, int count, int orderId) throws SQLException {
         String query = "UPDATE ProductsInOrder" +
                 String.format(" SET count=%d", count) +
-                String.format(" WHERE productId=%d", productId);
+                String.format(" WHERE productId=%d AND orderId=%d", productId, orderId);
         try (Statement stmt = connect.createStatement()) {
             stmt.executeQuery(query);
         } catch (SQLException throwable) {
@@ -241,4 +238,18 @@ public class OrdersFromSupplierDAO {
         }
     }
 
+    public List<Integer> getRegularOrdersIds() throws SQLException {
+        String query ="SELECT orderId FROM daysToDeliver";
+        List<Integer> ans=new LinkedList<>();
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs= stmt.executeQuery(query);
+            while(rs.next())
+                ans.add(rs.getInt("orderId"));
+        } catch (SQLException throwable) {
+            throw throwable;
+        } finally {
+            connect.closeConnect();
+        }
+        return ans;
+    }
 }

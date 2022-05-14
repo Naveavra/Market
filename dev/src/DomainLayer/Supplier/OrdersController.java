@@ -107,34 +107,31 @@ public class OrdersController {
     }
 
 
-    public void updateOrders(List<Pair<Integer, Integer>> catalogNumbers){
-        for(Pair<Integer, Integer> catalogNumber : catalogNumbers){
-            int productId;
-            try {
-                productId= productsDAO.getProductIdByCatalogId(catalogNumber.getKey());
-            } catch (SQLException e) {
-                productId=-1;
-            }
-            if (productId!=-1) {
-                try {
-                    ordersDAO.updateCount(productId, catalogNumber.getValue());
-                } catch (SQLException ignored) {
+    public void updateOrders(Map<Integer, Integer> productIds){
+        try {
+            List<Integer> orderIds=ordersDAO.getRegularOrdersIds();
+            for(Integer orderId: orderIds) {
+                Map<ProductSupplier,Integer> products=ordersDAO.getAllProductsOfOrder(orderId);
+                for(ProductSupplier product: products.keySet()) {
+                    int productId=product.getProductId();
+                    ordersDAO.updateCount(productId, productIds.get(productId), orderId);
                 }
             }
+        } catch (SQLException ignored) {
         }
     }
 
 
 
 
-    public void createOrderWithMinPrice(int catalogNumber, int amount){
-        ProductSupplier ps=getProductWithMinPrice(catalogNumber, amount);
-
+    public void createOrderWithMinPrice(int productId, int amount){
+        ProductSupplier ps=getProductWithMinPrice(productId, amount);
         if(ps!=null) {
             OrderFromSupplier order = createOrder(ps.getSupplierNumber());
             if(order!=null) {
                 try {
                     ordersDAO.addProductToOrder(ps, order.getOrderId(), amount);
+                    finishOrder(order.getOrderId());
                 } catch (SQLException ignored) {
 
                 }
@@ -142,9 +139,9 @@ public class OrdersController {
         }
     }
 
-    public ProductSupplier getProductWithMinPrice(int catalogNumber, int amount){
+    public ProductSupplier getProductWithMinPrice(int productId, int amount){
         try {
-            return productsDAO.getMinProductByCatalogNumber(catalogNumber, amount);
+            return productsDAO.getMinProductByCatalogNumber(productId, amount);
         } catch (SQLException e) {
             return null;
         }

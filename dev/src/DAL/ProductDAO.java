@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class ProductDAO {
     private Connect connect;
@@ -121,11 +122,11 @@ public class ProductDAO {
         }
     }
 
-    public List<Pair<Integer, Integer>> getCatalogNumbers() throws SQLException {
+    public Map<Integer, Integer> getProductIds() throws SQLException {
         List<Product> allProducts=getAllProducts();
-        List<Pair<Integer, Integer>> ans=new LinkedList<>();
+        Map<Integer, Integer> ans=new HashMap<>();
         for(Product p : allProducts)
-            ans.add(new Pair<>(p.getId(), p.getRefill()));
+            ans.put(p.getId(), p.getRefill());
         return ans;
     }
 
