@@ -146,32 +146,18 @@ public class ProductsSupplierDAO {
         }
     }
 
-    public ProductSupplier getMinProductByCatalogNumber(int catalogNumber, int amount) throws SQLException {
+    public ProductSupplier getMinProductByCatalogNumber(int productId, int amount) throws SQLException {
         String query = "SELECT * FROM ProductSupplier WHERE " +
-                String.format("catalogNumber=%d", catalogNumber);
+                String.format("productId=%d", productId);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs =stmt.executeQuery(query);
-            if (rs.isClosed())
-                return null;
             ProductSupplier ans=null;
-            while(!rs.isClosed()) {
-                int productId=rs.getInt("productId");
+            while(rs.next()) {
                 int supplierNumber=rs.getInt("supplierNumber");
-                double price=rs.getDouble("price");
-                LinkedList<Discount> discounts=new LinkedList<>();
-                query = "SELECT * FROM DiscountProductSupplier WHERE " +
-                        String.format("supplierNumber=%d AND productId=%d", supplierNumber, productId);
-                rs = stmt.executeQuery(query);
-                while(!rs.isClosed()) {
-                        Discount discount = new Discount(rs.getInt("quantity"), rs.getDouble("discount"));
-                        discounts.add(discount);
-                        rs.next();
-                }
-                ProductSupplier p = new ProductSupplier(supplierNumber,catalogNumber, price, productId, discounts);
+                ProductSupplier p = getProduct(supplierNumber, productId);
                 if(ans==null || ans.getPriceAfterDiscount(amount)>p.getPriceAfterDiscount(amount))
                     ans=p;
                 IMProductSupplier.put(new Pair<>(p.getProductId(), p.getCatalogNumber()), p);
-                rs.next();
             }
             return ans;
         } catch (SQLException e) {

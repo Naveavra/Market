@@ -4,8 +4,10 @@ import DomainLayer.Storage.Product;
 import javafx.util.Pair;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class CategoryToProductDAO {
     private static CategoryDAO categoryDAO;
@@ -157,11 +159,11 @@ public class CategoryToProductDAO {
         }
     }
 
-    public List<Pair<Integer, Integer>> getCatalogNumbers(){
+    public Map<Integer, Integer> getProductIds(){
         try {
-            return productDAO.getCatalogNumbers();
+            return productDAO.getProductIds();
         } catch (SQLException e) {
-            return new LinkedList<>();
+            return new HashMap<>();
         }
     }
     //functions to get products of categories

@@ -170,8 +170,8 @@ public class Facade {
     }
 
     public void updateOrders(){
-        List<Pair<Integer, Integer>> catalogNumbers=categoryController.getCatalogNumbers();
-        ordersController.updateOrders(catalogNumbers);
+        Map<Integer, Integer> productIds=categoryController.getProductIds();
+        ordersController.updateOrders(productIds);
     }
 
 
