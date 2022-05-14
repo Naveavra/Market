@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class CLI
 {
     static Scanner in = new Scanner(System.in);
-    public static void main(String[]args)
+    public void startStorageModel ()
     {
         CategoryService cC=new CategoryService();
         ReportService rC=new ReportService();

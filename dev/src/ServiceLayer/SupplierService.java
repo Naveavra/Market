@@ -104,15 +104,6 @@ public class SupplierService {
         return facade.updateDeliveration(supplierNumber, isDeliver);
     }
 
-    /**
-     * the function gets the past orders (Those sent) of a supplier
-     * @param supplierNumber the id of the supplier
-     * @return Json string which wrappers the list of past order
-     */
-    public String  watchPastOrders(int supplierNumber) {
-        return facade.watchPastOrders(supplierNumber);
-    }
-
     public boolean addContact(int supplierNumber,String name, String email, String telephone) {
         return facade.addContact(supplierNumber,name,email,telephone);
     }

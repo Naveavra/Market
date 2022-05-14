@@ -7,6 +7,7 @@ import DAL.SuppliersDAO;
 import javafx.util.Pair;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -36,23 +37,13 @@ public class OrdersController {
         return order;
     }
     public boolean finishOrder(int orderId){
-        if(orderId<0){
-            return false;
-        }
-        OrderFromSupplier o = getOrder(orderId);
-        if(o == null){
-            return false;
-        }
-        //do something with isDeliver
-        double totalPrice = 0;
+        boolean finish =finishFixedDaysDeliveryOrder(orderId);
         try {
-            totalPrice = updateTotalIncludeDiscounts(orderId);
-            pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
             ordersDAO.removeOrder(orderId);
-            return true;
-        } catch (SQLException e) {
+        } catch (SQLException throwables) {
             return false;
         }
+        return finish;
 
     }
     public OrderFromSupplier getOrder(int orderId) {
@@ -98,7 +89,7 @@ public class OrdersController {
     }
 
 
-    public List<PastOrderSupplier> getFinalOrders(int supplierNumber) {
+    public Map<Integer,PastOrderSupplier> getFinalOrders(int supplierNumber) {
         try {
             return pastOrdersDAO.getAllPastOrders(supplierNumber);
         } catch (SQLException e) {
@@ -111,17 +102,49 @@ public class OrdersController {
         try {
             List<Integer> orderIds=ordersDAO.getRegularOrdersIds();
             for(Integer orderId: orderIds) {
-                Map<ProductSupplier,Integer> products=ordersDAO.getAllProductsOfOrder(orderId);
-                for(ProductSupplier product: products.keySet()) {
-                    int productId=product.getProductId();
-                    ordersDAO.updateCount(productId, productIds.get(productId), orderId);
+                DeliveryTerm d =ordersDAO.getDeliveryTermOfOrder(orderId);
+                if(checkDays(d)) {
+                    Map<ProductSupplier, Integer> products = ordersDAO.getAllProductsOfOrder(orderId);
+                    for (ProductSupplier product : products.keySet()) {
+                        int productId = product.getProductId();
+                        ordersDAO.updateCount(productId, productIds.get(productId), orderId);
+                    }
+                    boolean send=finishFixedDaysDeliveryOrder(orderId);
                 }
             }
         } catch (SQLException ignored) {
         }
     }
 
+    private boolean finishFixedDaysDeliveryOrder(Integer orderId) {
+        if(orderId<0){
+            return false;
+        }
+        OrderFromSupplier o = getOrder(orderId);
+        if(o == null){
+            return false;
+        }
+        //do something with isDeliver
+        double totalPrice = 0;
+        try {
+            totalPrice = updateTotalIncludeDiscounts(orderId);
+            pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
 
+    }
+
+    private boolean checkDays(DeliveryTerm d) {
+        Date today =new Date();
+        for(DeliveryTerm.DaysInWeek day:d.getDaysInWeeks() ){
+             if(d.getDayValue(day)==today.getDay()-1){
+                 return true;
+             }
+        }
+        return false;
+    }
 
 
     public void createOrderWithMinPrice(int productId, int amount){

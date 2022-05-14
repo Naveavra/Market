@@ -14,7 +14,7 @@ public class DeliveryTerm {
         Friday,
         Saturday
     }
-    public static Map<String, DaysInWeek> M  = new HashMap<String, DaysInWeek>() {{
+    public static Map<String, DaysInWeek> intToEnum  = new HashMap<String, DaysInWeek>() {{
         put("1", DaysInWeek.Sunday);
         put("2", DaysInWeek.monday);
         put("3", DaysInWeek.Tuesday);
@@ -24,25 +24,40 @@ public class DeliveryTerm {
         put("7", DaysInWeek.Saturday);
 
     }};
+    public static Map<DaysInWeek,Integer> daysToInt = new HashMap<DaysInWeek,Integer>() {{
+        put(DaysInWeek.Sunday,7);
+        put(DaysInWeek.monday,1);
+        put(DaysInWeek.Tuesday,2);
+        put(DaysInWeek.Wednesday,3);
+        put(DaysInWeek.Thursday,4);
+        put(DaysInWeek.Friday,5);
+        put(DaysInWeek.Saturday,6);
+
+    }};
 
     private DaysInWeek[] daysInWeeks;
 
     public  DaysInWeek[] getDaysInWeeks(){
         return daysInWeeks;
     }
-    public DeliveryTerm(DaysInWeek[] daysInWeek){
-        this.daysInWeeks=new DaysInWeek[daysInWeek.length];
-        System.arraycopy(daysInWeek, 0, this.daysInWeeks, 0, daysInWeek.length);
-    }
-    public DeliveryTerm (String days)  {
-        this.daysInWeeks=new DaysInWeek[days.length()];
-        char[] arr=days.toCharArray();
-        int i=0;
-        for(char c:arr){
-            daysInWeeks[i]=fromStringToDays(String.valueOf(c));
-            i++;
+    public DeliveryTerm(DaysInWeek[] daysInWeek) {
+        if (daysInWeek != null) {
+            this.daysInWeeks = new DaysInWeek[daysInWeek.length];
+            System.arraycopy(daysInWeek, 0, this.daysInWeeks, 0, daysInWeek.length);
         }
     }
+    public DeliveryTerm (String days)  {
+        if(days.length()!=0) {
+            this.daysInWeeks = new DaysInWeek[days.length()];
+            char[] arr = days.toCharArray();
+            int i = 0;
+            for (char c : arr) {
+                daysInWeeks[i] = fromStringToDays(String.valueOf(c));
+                i++;
+            }
+        }
+    }
+
     public DeliveryTerm(List<String> days){
         this.daysInWeeks = new DaysInWeek[days.size()];
         for(int i=0; i< days.size(); i++){
@@ -64,7 +79,7 @@ public class DeliveryTerm {
     }
 
     private DaysInWeek fromStringToDays(String day) {
-        return M.get(day);
+        return intToEnum.get(day);
     }
 
     public boolean stopFixedDeliveryDays(){
@@ -81,5 +96,8 @@ public class DeliveryTerm {
             out.append(a.toString()).append(",");
         }
         return out.substring(0, out.toString().length()-1);
+    }
+    public int getDayValue(DaysInWeek d){
+        return daysToInt.get(d);
     }
 }

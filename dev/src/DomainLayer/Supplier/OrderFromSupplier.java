@@ -29,10 +29,15 @@ public class OrderFromSupplier {
     }
 
 
-    public OrderFromSupplier(int orderId, String date, DeliveryTerm deliveryTerm){
-        this.orderId = orderId;
+    public OrderFromSupplier(int supplierNumber,int orderId, String date, DeliveryTerm deliveryTerm){
+        this.supplierNumber=supplierNumber;
+          this.orderId = orderId;
         this.date = date;
-        this.daysToDeliver=new DeliveryTerm(deliveryTerm.getDaysInWeeks());
+        if(deliveryTerm==null){
+            this.daysToDeliver=null;
+        }
+        else { this.daysToDeliver = new DeliveryTerm(deliveryTerm.getDaysInWeeks());
+        }
         ordersDAO=new OrdersFromSupplierDAO();
 
     }
@@ -42,6 +47,7 @@ public class OrderFromSupplier {
         this.orderId=order.orderId;
         this.daysToDeliver=new DeliveryTerm(order.daysToDeliver.getDaysInWeeks());
         ordersDAO=new OrdersFromSupplierDAO();
+        this.supplierNumber=order.getSupplierNumber();
     }
 
     public OrderFromSupplier() {

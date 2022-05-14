@@ -4,11 +4,8 @@ import ServiceLayer.OrderService;
 import ServiceLayer.ProductSupplierService;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.LinkedList;
+
+import java.util.*;
 
 
 public class OrderMenu {
@@ -181,8 +178,9 @@ public class OrderMenu {
         System.out.println("\t1. Update order.");
         System.out.println("\t2. See all your wait orders.");
         System.out.println("\t3. See all your orders in fixed days delivery.");
-        System.out.println("\t4. Send orders.");
-        System.out.println("\t5. Return to supplier page");
+        System.out.println("\t4. See all your past orders..");
+        System.out.println("\t5. Send orders.");
+        System.out.println("\t6. Return to supplier page");
         String choiceStr = "";
         int choice =0;
         try{
@@ -218,6 +216,9 @@ public class OrderMenu {
                 watchFixedDaysOrders();
                 break;
             case 4:
+                watchPastOrders();
+                break;
+            case 5:
                 System.out.println("Enter orderID:");
                 choiceStr = "";
                 int orderId =0;
@@ -232,7 +233,7 @@ public class OrderMenu {
                 }
                 sendOrders(orderId);
                 break;
-            case 5:
+            case 6:
                 sm.inSupplierMenu(supplier.getSupplierNumber());
             default:
                 System.out.println("You must type number between 1 to 5");
@@ -240,6 +241,24 @@ public class OrderMenu {
 
         }
         sm.inSupplierMenu(supplier.getSupplierNumber());
+    }
+
+    private void watchPastOrders() {
+        String json =orderService.getPastOrders(supplier.getSupplierNumber());
+        Map<Integer,LinkedTreeMap> pastOrders =new HashMap<>();
+        pastOrders = Menu.fromJson(json, pastOrders.getClass());
+        if(pastOrders.isEmpty()){
+            System.out.println("there is no past orders to display");
+        }
+        for(LinkedTreeMap p :pastOrders.values()){
+            PastOrder pastOrder =Menu.fromJson(p.toString(), PastOrder.class);
+            System.out.println(pastOrder.toString());
+        }
+//        for(LinkedTreeMap o: orders.values()){
+//            Order order = Menu.fromJson(o.toString(), Order.class);
+//            System.out.println(order.toString());
+//        }
+
     }
 
     private void sendOrders(int orderId) {

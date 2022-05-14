@@ -175,6 +175,7 @@ public class Connect {
                     "\t\"orderId\"\tINTEGER,\n" +
                     "\t\"finishDate\"\tTEXT,\n" +
                     "\t\"totalPrice\"\tREAL,\n" +
+                    "\t\"supplierNumber\"\tINTEGER,\n" +
                     "\tPRIMARY KEY(\"orderId\", \"finishDate\")\n"+ ")";
             stmt.execute(query);
 

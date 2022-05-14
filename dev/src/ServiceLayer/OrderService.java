@@ -1,6 +1,9 @@
 package ServiceLayer;
 
 import DomainLayer.Facade;
+import PresentationLayer.Supplier.PastOrder;
+
+import java.util.List;
 
 
 public class OrderService {
@@ -121,5 +124,12 @@ public class OrderService {
         return facade.updateFixedDeliveryDaysForOrder(supplierNumber, orderId, daysInWeek);
     }
 
-
+    /**
+     * the function gets the past orders (Those sent) of a supplier
+     * @param supplierNumber the id of the supplier
+     * @return Json string which wrappers the list of past order
+     */
+    public String getPastOrders(int supplierNumber) {
+        return facade.watchPastOrders(supplierNumber);
+    }
 }

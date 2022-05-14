@@ -1,6 +1,10 @@
 package PresentationLayer.Supplier;
 
+import PresentationLayer.Storage.CLI;
 import com.google.gson.Gson;
+
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Menu {
@@ -11,11 +15,12 @@ public class Menu {
         m.initialMenu();
     }
     public void initialMenu(){
+
         int choice = 0;
-        System.out.println("Welcome to Supplier Model!!");
+        System.out.println("Welcome to Supper LI!!");
         System.out.println("How do you want to start?");
-        System.out.println("\t1. with empty data ");
-        System.out.println("\t2. with initial data");
+        System.out.println("\t1.Supplier Model");
+        System.out.println("\t2.Storage Model");
         String choiceStr = "";
         try{
             choiceStr = sc.next();
@@ -25,11 +30,16 @@ public class Menu {
             System.out.println("you must enter only 1 digit number");
             initialMenu();
         }
-        if (choice==2){
-            //loadInitialData();
+        switch (choice) {
+            case 1:
+                SupplierMenu sm = new SupplierMenu();
+                sm.chooseSupplierMenu();
+                break;
+            case 2:
+                CLI cli=new CLI();
+                cli.startStorageModel();
+                break;
         }
-        SupplierMenu sm = new SupplierMenu();
-        sm.chooseSupplierMenu();
 
     }
 

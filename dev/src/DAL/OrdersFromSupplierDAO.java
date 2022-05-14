@@ -99,8 +99,7 @@ public class OrdersFromSupplierDAO {
             if (!rs.next())
                 return null;
             DeliveryTerm dt = getDeliveryTermOfOrder(orderId);
-
-            OrderFromSupplier order = new OrderFromSupplier(orderId,rs.getString("date"), dt);
+            OrderFromSupplier order = new OrderFromSupplier(rs.getInt("supplierNumber"),orderId,rs.getString("date"), dt);
             IMOrdersFromSupplier.put(orderId, order);
             return order;
         } catch (SQLException e) {
@@ -111,7 +110,7 @@ public class OrdersFromSupplierDAO {
         }
     }
 
-    private DeliveryTerm getDeliveryTermOfOrder(int orderId) throws SQLException {
+    public DeliveryTerm getDeliveryTermOfOrder(int orderId) throws SQLException {
         String query =String.format("SELECT * FROM DeliveryTerms WHERE orderId = %d"
                 , orderId);
         try (Statement stmt = connect.createStatement()) {
@@ -157,7 +156,7 @@ public class OrdersFromSupplierDAO {
             Map<Integer,OrderFromSupplier> orders = new HashMap<>();
             int i=0;
             while (rs.next()){
-                OrderFromSupplier order = new OrderFromSupplier(rs.getInt("orderId"), rs.getString("date")
+                OrderFromSupplier order = new OrderFromSupplier(rs.getInt("supplierNumber"),rs.getInt("orderId"), rs.getString("date")
                         ,getDeliveryTermOfOrder(rs.getInt("orderId")));
                 orders.put(i,order);
                 i++;
@@ -251,5 +250,24 @@ public class OrdersFromSupplierDAO {
             connect.closeConnect();
         }
         return ans;
+    }
+
+    public OrderFromSupplier getPastOrder(int orderId) throws SQLException {
+        String query =String.format("SELECT * FROM PastOrdersSupplier WHERE orderId = %d"
+                , orderId);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            if (!rs.next())
+                return null;
+            DeliveryTerm dt = getDeliveryTermOfOrder(orderId);
+            OrderFromSupplier order = new OrderFromSupplier(rs.getInt("supplierNumber"),orderId,rs.getString("date"), dt);
+            IMOrdersFromSupplier.put(orderId, order);
+            return order;
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
     }
 }

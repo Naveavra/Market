@@ -1,5 +1,6 @@
 package DAL;
 
+import DomainLayer.Supplier.DeliveryTerm;
 import DomainLayer.Supplier.OrderFromSupplier;
 import DomainLayer.Supplier.PastOrderSupplier;
 import javafx.util.Pair;
@@ -10,6 +11,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class PastOrdersSupplierDAO {
     private Connect connect;
@@ -22,17 +24,21 @@ public class PastOrdersSupplierDAO {
     public PastOrdersSupplierDAO(){
         connect = Connect.getInstance();
         IMPastOrdersFromSupplier = new HashMap<>();
+        ordersDAO= new OrdersFromSupplierDAO();
     }
 
-    public List<PastOrderSupplier> getAllPastOrders(int supplierNumber) throws SQLException {
+    public Map<Integer,PastOrderSupplier> getAllPastOrders(int supplierNumber) throws SQLException {
         String query =String.format("SELECT * FROM PastOrdersSupplier WHERE supplierNumber = %d"
                 , supplierNumber);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
-            List<PastOrderSupplier> orders = new LinkedList<>();
+            Map<Integer,PastOrderSupplier> orders = new HashMap<>();
+            int i=0;
             while (rs.next()){
-                OrderFromSupplier order = ordersDAO.getOrder(rs.getInt("orderId"));
+                OrderFromSupplier order = new OrderFromSupplier(rs.getInt("supplierNumber"),rs.getInt("orderId"),rs.getString("finishDate"),new DeliveryTerm(""));
                 PastOrderSupplier p = new PastOrderSupplier(order, rs.getDouble("totalPrice"),  rs.getString("finishDate"));
+                orders.put(i,p);
+                i++;
             }
             return orders;
         } catch (SQLException e) {
@@ -44,8 +50,8 @@ public class PastOrdersSupplierDAO {
     }
 
     public void insertPastOrder(PastOrderSupplier order) throws SQLException {
-        String query =String.format("INSERT INTO PastOrdersSupplier (orderId,finishDate,totalPrice) " +
-                "VALUES (%d,'%s',%f)", order.getOrderId() ,order.getDate(), order.getTotalPrice());
+        String query =String.format("INSERT INTO PastOrdersSupplier (orderId,finishDate,totalPrice,supplierNumber) " +
+                "VALUES (%d,'%s',%f,%d)", order.getOrderId() ,order.getDate(), order.getTotalPrice(),order.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
             IMPastOrdersFromSupplier.put(new Pair<>(order.getOrderId(), order.getDate()), order);

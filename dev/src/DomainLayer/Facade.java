@@ -282,7 +282,7 @@ public class Facade {
         return supplierController.getSupplier(supplierNumber).updateDeliveration(isDeliver);
     }
     public String  watchPastOrders(int supplierNumber) {
-        List<PastOrderSupplier> pastOrderList=new ArrayList<>();
+        Map<Integer,PastOrderSupplier> pastOrderList=new HashMap<>();
         pastOrderList=ordersController.getFinalOrders(supplierNumber);
         return gson.toJson(pastOrderList);
     }
