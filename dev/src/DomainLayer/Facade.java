@@ -375,8 +375,8 @@ public class Facade {
     }
 
     // report service
-    public boolean makeReport(List<String> catNames){
-        return reportController.makeReport(catNames);
+    public boolean makeCatReport(List<String> catNames){
+        return reportController.makeCatReport(catNames);
     }
 
     public boolean makeDamagedReport(){

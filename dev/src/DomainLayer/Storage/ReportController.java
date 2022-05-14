@@ -14,7 +14,7 @@ public class ReportController {
         categoryCon=cat;
     }
 
-    public boolean makeReport(List<String> catNames){
+    public boolean makeCatReport(List<String> catNames){
         File path= new File("./categoryReport.json");
         try (PrintWriter out = new PrintWriter(new FileWriter(path.getCanonicalPath()))) {
             Gson gson = new Gson();

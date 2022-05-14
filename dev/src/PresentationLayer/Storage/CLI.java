@@ -165,7 +165,7 @@ public class CLI
                             List<String> cats = new LinkedList<String>();
                             for (String s : fields)
                                 cats.add(s);
-                            if(rC.makeReport(cats))
+                            if(rC.makeCatReport(cats))
                                 System.out.println("made category report");
                             else
                                 System.out.println("failed while making report");

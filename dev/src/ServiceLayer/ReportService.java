@@ -12,8 +12,8 @@ public class ReportService {
     }
 
 
-    public boolean makeReport(List<String> catNames){
-        return facade.makeReport(catNames);
+    public boolean makeCatReport(List<String> catNames){
+        return facade.makeCatReport(catNames);
     }
 
     public boolean makeDamagedReport(){

@@ -16,6 +16,7 @@ public class Product
     private int storeAmount;
     private int storageAmount;
     private transient int timesBought;
+    private int amountNeededForRefill;
     private String dayAdded;
     private double price;
     private double discount;
@@ -37,6 +38,7 @@ public class Product
         this.storeAmount = 0;
         this.storageAmount = 0;
         this.timesBought=0;
+        this.amountNeededForRefill=0;
         this.dayAdded= LocalDate.now().toString();
         this.discount=0;
         this.maker=maker;
@@ -57,10 +59,10 @@ public class Product
     }
 
     public int getRefill(){
-        int ans=2*calcMinAmount()-getCurAmount();
-        if(ans<0)
-            ans=0;
-        return ans;
+        amountNeededForRefill=2*calcMinAmount()-getCurAmount();
+        if(amountNeededForRefill<0)
+            amountNeededForRefill=0;
+        return amountNeededForRefill;
     }
 
     public void setPrice(int price) {
