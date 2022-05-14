@@ -1,8 +1,10 @@
-package DomainLayer.Supplier;
+package DomainLayer;
 
 import DomainLayer.Storage.CategoryController;
 import DomainLayer.Storage.ReportController;
+import DomainLayer.Supplier.*;
 import com.google.gson.Gson;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -14,6 +16,7 @@ public class Facade {
     private Gson gson;
     private static boolean needsUpdateOrders=true;
 
+
     public Facade(){
         ordersController=new OrdersController();
         supplierController=new SupplierController();
@@ -21,7 +24,7 @@ public class Facade {
         reportController=new ReportController(categoryController);
         gson=new Gson();
         if(needsUpdateOrders){
-            //updateOrders();
+            updateOrders();
             needsUpdateOrders=false;
         }
 
@@ -165,6 +168,12 @@ public class Facade {
     public boolean removeProduct(int supplierNumber, int catalogNumber){
         return supplierController.getSupplier(supplierNumber).removeProduct(catalogNumber);
     }
+
+    public void updateOrders(){
+        List<Pair<Integer, Integer>> catalogNumbers=categoryController.getCatalogNumbers();
+        ordersController.updateOrders(catalogNumbers);
+    }
+
 
     //SupplierService
     public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, boolean isDeliver){
@@ -333,8 +342,11 @@ public class Facade {
 
     public double buyItems(int id, int amount){
         double price=categoryController.buyItems(id, amount);
-        if(categoryController.needsRefill(id)){}
-        //find supplier with the lowest price and make an order
+        if(categoryController.needsRefill(id)) {
+            //find supplier with the lowest price and make an order
+            ordersController.createOrderWithMinPrice(id, categoryController.getProductWithId(id).getRefill());
+        }
+
         return price;
     }
 

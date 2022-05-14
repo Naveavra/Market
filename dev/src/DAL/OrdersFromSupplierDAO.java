@@ -227,4 +227,18 @@ public class OrdersFromSupplierDAO {
             connect.closeConnect();
         }
     }
+
+    public void updateCount(int productId, int count) throws SQLException {
+        String query = "UPDATE ProductsInOrder" +
+                String.format(" SET count=%d", count) +
+                String.format(" WHERE productId=%d", productId);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.executeQuery(query);
+        } catch (SQLException throwable) {
+            throw throwable;
+        } finally {
+            connect.closeConnect();
+        }
+    }
+
 }

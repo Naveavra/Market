@@ -1,7 +1,7 @@
 package ServiceLayer;
 
 
-import DomainLayer.Supplier.Facade;
+import DomainLayer.Facade;
 import DomainLayer.Supplier.SupplierController;
 import com.google.gson.Gson;
 

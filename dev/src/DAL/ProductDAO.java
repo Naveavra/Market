@@ -58,6 +58,7 @@ public class ProductDAO {
                 p.setStorageAmount(rs.getInt("storageAmount"));
                 p.setStoreAmount(rs.getInt("storeAmount"));
                 p.setDayAdded(rs.getString("dayAdded"));
+                p.setDiscount(rs.getDouble("discount"));
                 IMProducts.put(p.getId(), p);
                 return p;
             }

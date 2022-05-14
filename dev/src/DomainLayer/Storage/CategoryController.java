@@ -119,12 +119,6 @@ public class CategoryController
         return -1;
     }
 
-    public void removeItem(String place, int shelf, String ed, int pId){
-        Product p = getProductWithId(pId);
-        if(p!=null)
-            if(p.hasItem(place, shelf, ed))
-                p.removeItem(place, shelf, ed, false);
-    }
     public boolean hasItem(String place, int shelf, String ed, int pId){
         if(getProductWithId(pId)!=null)
             return getProductWithId(pId).hasItem(place, shelf, ed);
@@ -169,24 +163,14 @@ public class CategoryController
             return p.getNeedsRefill();
         return false;
     }
-
-    public boolean canBuyItems(int id, int amount){
-        boolean ans=false;
-        Product p=getProductWithId(id);
-        if(p!=null)
-            ans=p.canBuy(amount);
-        return ans;
-    }
     public double buyItems(int id, int amount){
         Product p=getProductWithId(id);
+        double ans=-1;
         if(p!=null) {
-            if(p.canBuy(amount)) {
-                double ans=p.buyAmount(amount);
-                categoriesDAO.updateProduct(p);
-                return ans;
-            }
+            ans=p.buyAmount(amount);
+            categoriesDAO.updateProduct(p);
         }
-        return -1;
+        return ans;
     }
     public void transferItem(int id, String ed, String curePlace, int curShelf, String toPlace, int toShelf){
         Product p=getProductWithId(id);
