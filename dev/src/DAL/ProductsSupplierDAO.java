@@ -146,6 +146,43 @@ public class ProductsSupplierDAO {
         }
     }
 
+    public ProductSupplier getMinProductByCatalogNumber(int catalogNumber, int amount) throws SQLException {
+        String query = "SELECT * FROM ProductSupplier WHERE " +
+                String.format("catalogNumber=%d", catalogNumber);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs =stmt.executeQuery(query);
+            if (rs.isClosed())
+                return null;
+            ProductSupplier ans=null;
+            while(!rs.isClosed()) {
+                int productId=rs.getInt("productId");
+                int supplierNumber=rs.getInt("supplierNumber");
+                double price=rs.getDouble("price");
+                LinkedList<Discount> discounts=new LinkedList<>();
+                query = "SELECT * FROM DiscountProductSupplier WHERE " +
+                        String.format("supplierNumber=%d AND productId=%d", supplierNumber, productId);
+                rs = stmt.executeQuery(query);
+                while(!rs.isClosed()) {
+                        Discount discount = new Discount(rs.getInt("quantity"), rs.getDouble("discount"));
+                        discounts.add(discount);
+                        rs.next();
+                }
+                ProductSupplier p = new ProductSupplier(supplierNumber,catalogNumber, price, productId, discounts);
+                if(ans==null || ans.getPriceAfterDiscount(amount)>p.getPriceAfterDiscount(amount))
+                    ans=p;
+                IMProductSupplier.put(new Pair<>(p.getProductId(), p.getCatalogNumber()), p);
+                rs.next();
+            }
+            return ans;
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
+
     public void insertDiscountOnProduct(ProductSupplier productSupplier, int count, double discount) throws SQLException {
         String query =String.format("INSERT INTO DiscountProductSupplier (supplierNumber,productId,quantity,discount) " +
                 "VALUES (%d,%d,%d,%f)",productSupplier.getSupplierNumber(),productSupplier.getProductId(),count,discount);
@@ -206,5 +243,23 @@ public class ProductsSupplierDAO {
             connect.closeConnect();
         }
     }
+
+    public int getProductIdByCatalogId(int catalogNumber) throws SQLException {
+        String query = "SELECT * FROM ProductSupplier WHERE " +
+                String.format("catalogNumber=%d", catalogNumber);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs =stmt.executeQuery(query);
+            if (!rs.next())
+                return -1;
+            else
+                return rs.getInt("productId");
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
 }
 

@@ -4,6 +4,7 @@ import DAL.ItemDAO;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Product
@@ -75,8 +76,7 @@ public class Product
         return itemsDAO.getAllItemsOfProduct(this);
     }
 
-    public Item removeItem(String place, int shelf, String ed, boolean bought){
-        Item i=findItem(ed, place, shelf);
+    public Item removeItem(Item i, boolean bought){
         if(i!=null) {
             if (i.getLoc().getPlace() == Location.Place.STORAGE)
                 this.storageAmount--;
@@ -129,38 +129,42 @@ public class Product
         double calc=timesBought;
         return (int) (Math.ceil(calc/getDaysPassed()));
     }
-    public boolean canBuy(int amount){
-        if(itemsDAO.getAllItemsOfProduct(this).size()<amount)
-            return false;
-        else{
-            int canBuy=0;
-            for(Item i : itemsDAO.getAllItemsOfProduct(this)) {
+    private List<Item> canBuy(int amount){
+        List<Item> allItems=itemsDAO.getAllItemsOfProduct(this);
+        List<Item> ans=new LinkedList<>();
+        if(allItems.size()>=amount) {
+            for (Item i : allItems) {
                 if (i.validDate())
-                    canBuy++;
+                    ans.add(i);
                 else {
                     try {
                         itemsDAO.setItemDamaged(productId, i.getExpDate(), i.getLoc().getPlace().toString(), i.getLoc().getShelf(), "expired date");
+                        if (i.getLoc().getPlace().equals(Location.Place.STORAGE))
+                            storageAmount--;
+                        else
+                            storeAmount--;
                     } catch (SQLException ignored) {
-                        return false;
+                        if (i.getLoc().getPlace().equals(Location.Place.STORAGE))
+                            storageAmount++;
+                        else
+                            storeAmount++;
                     }
                 }
             }
-            return canBuy>=amount;
         }
+        return ans;
     }
 
     public double buyAmount(int amount){
-        if(canBuy(amount)) {
-            List<Item> inStock= itemsDAO.getAllItemsOfProduct(this);
-            for (int i = 0; i < amount&& i<inStock.size(); i++) {
-                String check;
-                if(inStock.get(i).getLoc().getPlace().equals(Location.Place.STORAGE))
-                    check= "STORAGE";
-                else
-                    check= "STORE";
-                removeItem(check, inStock.get(i).getLoc().getShelf(), inStock.get(i).getExpDate(), true);
+        List<Item> inStock=canBuy(amount);
+        if(inStock.size()>=amount) {
+            double ans = 0;
+            for (int i = 0; i < amount && i < inStock.size(); i++) {
+                Item item=inStock.get(i);
+                removeItem(item, true);
+                ans += (price - (price * discount / 100));
             }
-            return (price - (price * discount / 100)) * amount;
+            return ans;
         }
         return -1;
     }
