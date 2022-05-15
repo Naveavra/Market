@@ -91,7 +91,7 @@ public class DeliveryTerm {
     public int getDayValue(DaysInWeek d){
         return daysToInt.get(d);
     }
-    public static Map<DaysInWeek,Integer> daysToInt = new HashMap<DaysInWeek,Integer>() {{
+    public Map<DaysInWeek,Integer> daysToInt = new HashMap<DaysInWeek,Integer>() {{
         put(DaysInWeek.Sunday,7);
         put(DaysInWeek.monday,1);
         put(DaysInWeek.Tuesday,2);
