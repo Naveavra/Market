@@ -24,16 +24,7 @@ public class DeliveryTerm {
         put("7", DaysInWeek.Saturday);
 
     }};
-    public static Map<DaysInWeek,Integer> daysToInt = new HashMap<DaysInWeek,Integer>() {{
-        put(DaysInWeek.Sunday,7);
-        put(DaysInWeek.monday,1);
-        put(DaysInWeek.Tuesday,2);
-        put(DaysInWeek.Wednesday,3);
-        put(DaysInWeek.Thursday,4);
-        put(DaysInWeek.Friday,5);
-        put(DaysInWeek.Saturday,6);
 
-    }};
 
     private DaysInWeek[] daysInWeeks;
 
@@ -100,4 +91,14 @@ public class DeliveryTerm {
     public int getDayValue(DaysInWeek d){
         return daysToInt.get(d);
     }
+    public static Map<DaysInWeek,Integer> daysToInt = new HashMap<DaysInWeek,Integer>() {{
+        put(DaysInWeek.Sunday,7);
+        put(DaysInWeek.monday,1);
+        put(DaysInWeek.Tuesday,2);
+        put(DaysInWeek.Wednesday,3);
+        put(DaysInWeek.Thursday,4);
+        put(DaysInWeek.Friday,5);
+        put(DaysInWeek.Saturday,6);
+
+    }};
 }

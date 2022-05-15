@@ -239,11 +239,16 @@ public class Supplier {
     }
 
     public boolean updateContact(String name, String email, String telephone) {
+        boolean exist=false;
        for(Contact c:contacts){
            if(c.getName().equals(name)){
                c.setEmail(email);
                c.setTel(telephone);
+               exist=true;
            }
+       }
+       if(!exist){
+           contacts.add(new Contact(name,email,telephone));
        }
         try {
             suppliersDAO.updateSupplierContacts(this);

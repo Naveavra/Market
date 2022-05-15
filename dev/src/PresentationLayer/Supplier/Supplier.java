@@ -71,11 +71,16 @@ public class Supplier {
     }
 
     public void setContact(Contact c) {
+        boolean exist=false;
         for(Contact contact:contacts){
                  if(contact.getName().equals(c.getName())){
                      contact.setEmail(c.getEmail());
                      contact.setTel(c.getEmail());
+                     exist=true;
                  }
+        }
+        if(!exist){
+            contacts.add(new Contact(c.getName(),c.getEmail(),c.getTelephone()));
         }
     }
 }

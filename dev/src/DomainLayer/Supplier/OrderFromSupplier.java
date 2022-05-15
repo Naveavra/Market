@@ -23,7 +23,7 @@ public class OrderFromSupplier {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         date = simpleDateFormat.format(new Date());
         DeliveryTerm.DaysInWeek[] daysInWeek = {};
-        daysToDeliver=new DeliveryTerm(daysInWeek);
+        daysToDeliver=new DeliveryTerm("");
         productsDAO = new ProductsSupplierDAO();
         ordersDAO=new OrdersFromSupplierDAO();
     }
