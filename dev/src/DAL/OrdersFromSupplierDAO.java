@@ -13,7 +13,7 @@ import java.util.*;
 public class OrdersFromSupplierDAO {
     private Connect connect;
     private ProductsSupplierDAO productSupplierDAO;
-    private static HashMap<Integer, OrderFromSupplier> IMOrdersFromSupplier = new HashMap<>();;//key: orderId
+    private static HashMap<Integer, OrderFromSupplier> IMOrdersFromSupplier = new HashMap<>();//key: orderId
 
     /**
      * constructor
@@ -21,6 +21,10 @@ public class OrdersFromSupplierDAO {
     public OrdersFromSupplierDAO(){
         connect=Connect.getInstance();
         productSupplierDAO = new ProductsSupplierDAO();
+    }
+
+    public static void reset() {
+        IMOrdersFromSupplier = new HashMap<>();
     }
 
     public void createOrderFromSupplier(OrderFromSupplier order) throws SQLException {

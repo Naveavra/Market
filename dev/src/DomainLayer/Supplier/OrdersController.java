@@ -58,7 +58,7 @@ public class OrdersController {
         return price*findMaxUnder(count,order.getSupplierNumber());
     }
     private double findMaxUnder(int count,int supplierNumber){
-        Double out= 0.0;
+        Double out= 1.0;
         LinkedList<Discount> discountByAmount;
         try {
             discountByAmount = suppliersDAO.getDiscountsSupplier(supplierNumber);
@@ -75,7 +75,7 @@ public class OrdersController {
             }
         }
 
-        return 1;
+        return out;
     }
 
     public Map<Integer, OrderFromSupplier> getActiveOrders(int supplierNumber) {

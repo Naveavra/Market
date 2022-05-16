@@ -43,9 +43,6 @@ public class ProductDAO {
 
     public Product get(int productId) throws SQLException {
         int key = productId;
-        if (IMProducts.containsKey(key)) {
-            return IMProducts.get(key);
-        }
         String query = "SELECT * FROM Products WHERE " +
                 String.format("productId=%d", productId);
         try (Statement stmt = connect.createStatement()) {
@@ -109,6 +106,7 @@ public class ProductDAO {
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
                     p.setDayAdded(rs.getString("dayAdded"));
+                    p.setDiscount(rs.getDouble("discount"));
                     ans.add(p);
                     IMProducts.put(p.getId(), p);
                     rs.next();
@@ -145,6 +143,7 @@ public class ProductDAO {
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
                     p.setDayAdded(rs.getString("dayAdded"));
+                    p.setDiscount(rs.getDouble("discount"));
                     if (!IMProducts.containsKey(p.getId()))
                         IMProducts.put(p.getId(), p);
                     ans.add(p);
@@ -204,6 +203,7 @@ public class ProductDAO {
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
                     p.setDayAdded(rs.getString("dayAdded"));
+                    p.setDiscount(rs.getDouble("discount"));
                     if (!IMProducts.containsKey(p.getId()))
                         IMProducts.put(p.getId(), p);
 
@@ -261,5 +261,8 @@ public class ProductDAO {
         finally {
             connect.closeConnect();
         }
+    }
+    public static void reset(){
+        IMProducts=new HashMap<>();
     }
 }

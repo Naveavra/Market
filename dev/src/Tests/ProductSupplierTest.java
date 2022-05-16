@@ -3,9 +3,7 @@ package Tests;
 import DAL.Connect;
 import DomainLayer.Facade;
 import DomainLayer.Supplier.Discount;
-import DomainLayer.Supplier.ProductSupplier;
 import DomainLayer.Supplier.SupplierController;
-import ServiceLayer.ProductSupplierService;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -21,15 +19,23 @@ private Facade facade;
 private static boolean setUpIsDone = false;
 private SupplierController supplierController;
     @Before
-    public void setUp(){
+    public void setUp() throws SQLException {
         if(!setUpIsDone) {
-            File file=new File("..\\dev\\superli.db");
-            file.delete();
+            Connect.getInstance().deleteRecordsOfTables();
             facade=new Facade();
             supplierController=new SupplierController();
+            facade.addCategory("first");
+            facade.addSubCat("first", "first1");
+            facade.addSubSubCat("first", "first1", "first11");
+            facade.addCategory("second");
+            facade.addSubCat("second", "second1");
+            facade.addSubSubCat("second", "second1", "second11");
+            facade.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
+            facade.addNewProduct(2,"eggs","hello",4,"me","first","first1", "first11");
+            facade.addAllItems(1,4,"2022-06-01",12);
             facade.openAccount(1, "eli", 3, true);
-            facade.addProduct(1, 1, 5, 1);
-            setUpIsDone=true;
+            facade.addProductToSupplier(1, 1, 5, 1);
+            //setUpIsDone=true;
         }
         else{
             facade=new Facade();

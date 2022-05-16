@@ -21,6 +21,10 @@ public class SuppliersDAO {
         IMSuppliers = new HashMap<>();
     }
 
+    public static void reset() {
+        IMSuppliers = new HashMap<>();
+    }
+
     public void updateSupplier(Supplier s) throws SQLException {
         Integer isDeliver = s.getIsDeliver() ? 1 : 0;
         Integer isActive = s.getActive() ? 1 : 0;

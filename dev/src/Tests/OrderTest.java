@@ -3,12 +3,17 @@ package Tests;
 
 import DAL.Connect;
 import DomainLayer.Facade;
+import DomainLayer.Supplier.OrderFromSupplier;
 import DomainLayer.Supplier.OrdersController;
 import DomainLayer.Supplier.ProductSupplier;
+import PresentationLayer.Supplier.Menu;
+import PresentationLayer.Supplier.Order;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
 import java.io.File;
+import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
@@ -17,22 +22,34 @@ public class OrderTest {
     private Facade facade;
     private OrdersController ordersController;
     private static boolean setUpIsDone = false;
-    @org.junit.Before
-    public void setUp(){
+    @Before
+    public void setUp() throws SQLException {
         if(!setUpIsDone) {
-            File file=new File("..\\dev\\superli.db");
-            file.delete();
+//            File file=new File("..\\dev\\superli.db");
+//            file.delete();
+            Connect.getInstance().deleteRecordsOfTables();
+
             facade = new Facade();
+            facade.addCategory("first");
+            facade.addSubCat("first", "first1");
+            facade.addSubSubCat("first", "first1", "first11");
+            facade.addCategory("second");
+            facade.addSubCat("second", "second1");
+            facade.addSubSubCat("second", "second1", "second11");
+            facade.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
+            facade.addNewProduct(2,"eggs","hello",4,"me","first","first1", "first11");
+            facade.addAllItems(1,4,"2022-06-01",12);
             ordersController = new OrdersController();
             facade.openAccount(1, "eli", 1, true);
             facade.openAccount(2, "eli2", 2, true);
-            facade.addProduct(1, 1, 4, 1);
-            facade.addProduct(2, 2, 3, 2);
-            facade.createOrder(1);
-            facade.addProductToOrder(1, 1, 1, 3);
-            facade.createOrder(2);
-            facade.addProductToOrder(2, 2, 2, 5);
-            setUpIsDone=true;
+            facade.addProductToSupplier(1, 1, 4, 1);
+            facade.addProductToSupplier(2, 2, 3, 2);
+//            facade.createOrder(1);
+//            facade.addProductToOrder(1, 1, 1, 3);
+//            facade.createOrder(2);
+//            facade.addProductToOrder(2, 2, 2, 5);
+            facade.addDiscount(1,10,0.8);
+           // setUpIsDone=true;
         }
         else {
             facade = new Facade();
@@ -44,7 +61,10 @@ public class OrderTest {
     @org.junit.Test
     public void stage1_updateProductToOrder() {
         boolean ans=false;
-        for(ProductSupplier p : ordersController.getOrder(1).getProducts().keySet()) {
+        String json =facade.createOrder(1);
+        OrderFromSupplier order = Menu.fromJson(json,OrderFromSupplier.class);
+        facade.addProductToOrder(1, order.getOrderId(), 1,10);
+        for(ProductSupplier p : order.getProducts().keySet()) {
             ans = ans || p.getProductId() == 1;
         }
         assertTrue(ans);
@@ -53,20 +73,29 @@ public class OrderTest {
     }
     @org.junit.Test
     public void stage2_getTotalIncludeDiscounts() {
-        assertEquals(12.0, ordersController.getOrder(1).getTotalIncludeDiscounts(), 0.0);
+        String json =facade.createOrder(1);
+        Order order = Menu.fromJson(json,Order.class);
+        facade.addProductToOrder(1, order.getOrderId(), 1,10);
+        assertEquals(32.0, ordersController.updateTotalIncludeDiscounts(order.getOrderId()), 0.0);
 
     }
 
     @org.junit.Test
     public void stage3_getCountProducts() {
-        assertEquals(3,ordersController.getOrder(1).getCountProducts());
+        String json =facade.createOrder(1);
+        OrderFromSupplier order = Menu.fromJson(json,OrderFromSupplier.class);
+        facade.addProductToOrder(1, order.getOrderId(), 1,10);
+        assertEquals(10,order.getCountProducts());
     }
 
     @org.junit.Test
     public void stage4_removeProductFromOrder() {
-        for(ProductSupplier p : ordersController.getOrder(1).getProducts().keySet()) {
-            assertTrue(ordersController.getOrder(1).removeProductFromOrder(p));
+        String json =facade.createOrder(1);
+        OrderFromSupplier order = Menu.fromJson(json,OrderFromSupplier.class);
+        facade.addProductToOrder(1, order.getOrderId(), 1,10);
+        for(ProductSupplier p : order.getProducts().keySet()) {
+            assertTrue(order.removeProductFromOrder(p));
         }
-        assertEquals(0, ordersController.getOrder(1).getCountProducts());
+        assertEquals(0, order.getCountProducts());
     }
 }

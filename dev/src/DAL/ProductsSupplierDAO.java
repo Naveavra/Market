@@ -21,6 +21,11 @@ public class ProductsSupplierDAO {
     public ProductsSupplierDAO(){
         connect=Connect.getInstance();
     }
+
+    public static void reset() {
+        IMProductSupplier =new HashMap<>();
+    }
+
     public void insert(ProductSupplier ps) throws SQLException {
         String query = String.format("INSERT INTO ProductSupplier (productId,catalogNumber,supplierNumber,price)" +
                 " VALUES (%d,%d,%d,%f)",ps.getProductId(),ps.getCatalogNumber(), ps.getSupplierNumber(),ps.getPrice());

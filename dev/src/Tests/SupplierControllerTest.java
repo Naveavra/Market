@@ -21,10 +21,9 @@ private SupplierController sc;
 private static boolean setUpIsDone = false;
 
     @Before
-    public void setUp(){
+    public void setUp() throws SQLException {
         if(!setUpIsDone){
-            File file=new File("..\\dev\\superli.db");
-            file.delete();
+            Connect.getInstance().deleteRecordsOfTables();
             sc=new SupplierController();
             sc.openAccount(1, "ziv", 12, true);
             sc.openAccount(2, "ziv", 12, true);

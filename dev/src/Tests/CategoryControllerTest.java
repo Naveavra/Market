@@ -12,28 +12,21 @@ import static org.junit.Assert.*;
 public class CategoryControllerTest {
 
     private CategoryController cC;
-    private static boolean setUpIsDone = false;
     @Before
     public void setUp()
     {
-        if(!setUpIsDone) {
-            File file=new File("..\\dev\\superli.db");
-            file.delete();
-            cC = new CategoryController();
-            cC.addCategory("first", 0);
-            cC.addSubCategory("first", "first1");
-            cC.addSubSubCategory("first", "first1", "first11");
-            cC.addCategory("second", 0);
-            cC.addSubCategory("second", "second1");
-            cC.addSubSubCategory("second", "second1", "second11");
-            cC.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
-            cC.addNewProduct(2,"eggs","hello",4,"me","first","first1", "first11");
-            cC.addAllItems(1,4,"2022-06-01",12);
-            setUpIsDone=true;
-        }
-        else {
-            cC = new CategoryController();
-        }
+        File file=new File("..\\dev\\superli.db");
+        file.delete();
+        cC = new CategoryController();
+        cC.addCategory("first", 0);
+        cC.addSubCategory("first", "first1");
+        cC.addSubSubCategory("first", "first1", "first11");
+        cC.addCategory("second", 0);
+        cC.addSubCategory("second", "second1");
+        cC.addSubSubCategory("second", "second1", "second11");
+        cC.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
+        cC.addAllItems(1,4,"2022-06-01",12);
+
     }
 
     @org.junit.Test
@@ -72,14 +65,14 @@ public class CategoryControllerTest {
     }
 
     @org.junit.Test
-    public void stage6_setDiscountToCategory() {
-        cC.setDiscount("first", 30);
+    public void stage7_setDiscountToCategory() {
+        cC.setDiscount("first", 30.0D);
         assertEquals("the discount was not set", 30, cC.getProductWithId(1).getDiscount(), 0.0);
-        cC.setDiscount("first", 0);
     }
 
     @org.junit.Test
-    public void stage7_transferProductToAnotherCategory() {
+    public void stage8_transferProductToAnotherCategory() {
+        cC.addNewProduct(2, "eggs", "yes", 4, "me", "first", "first1", "first11");
         assertEquals("products were not inserted correctly", 2, cC.getProductsOfCategory("first").size());
         assertEquals("products were not inserted correctly", 0, cC.getProductsOfCategory("second").size());
         cC.transferProduct(2, "second", "second1", "second11");
@@ -89,19 +82,20 @@ public class CategoryControllerTest {
     }
 
     @org.junit.Test
-    public void stage8_removeCategoryFromManu() {
+    public void stage9_removeCategoryFromManu() {
         cC.removeCat("first");
         assertTrue("the category was removed when not needed", cC.hasCategory("first"));
     }
 
     @org.junit.Test
-    public void stage9_removeProductFromManu() {
+    public void stage9z_removeProductFromManu() {
         cC.removeFromCatalog(1);
         assertNull("the product was not removed", cC.getProductWithId(1));
     }
 
     @org.junit.Test
-    public void stage9z_removeCategoryFromManu() {
+    public void stage9zz_removeCategoryFromManu() {
+        cC.removeFromCatalog(1);
         cC.removeCat("first");
         assertFalse("the category was not removed when needed", cC.hasCategory("first"));
     }

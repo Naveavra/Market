@@ -27,6 +27,12 @@ public class CategoryDAO {
         IMSubSubCategories=new HashMap<>();
     }
 
+    public static void reset() {
+        IMCategories=new HashMap<>();
+        IMSubCategories=new HashMap<>();
+        IMSubSubCategories=new HashMap<>();
+    }
+
     public boolean insertIntoDiscount(String category, double discount) throws SQLException {
             String query = "INSERT INTO CategoryDiscount (categoryName,discount)" +
                     " VALUES " + String.format("(\"%s\",%f)", category, discount);

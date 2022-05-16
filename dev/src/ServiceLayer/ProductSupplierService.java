@@ -18,7 +18,7 @@ public class ProductSupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addProduct(int supplierNumber, int catalogNumber, int price, int productId){
-       return facade.addProduct(supplierNumber, catalogNumber, price, productId);
+       return facade.addProductToSupplier(supplierNumber, catalogNumber, price, productId);
     }
 
     /**

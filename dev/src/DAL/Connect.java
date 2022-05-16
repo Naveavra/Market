@@ -182,5 +182,76 @@ public class Connect {
     public void closeConnect() throws SQLException {
         conn.close();
     }
+    public void deleteRecordsOfTables() throws SQLException {
+        try (Statement stmt = createStatement()) {
+            //table products
+            String query = "DELETE from Products";
+            stmt.execute(query);
+            ProductDAO.reset();
+            //table category discount
+            query = "DELETE from CategoryDiscount";
+            stmt.execute(query);
+            CategoryDAO.reset();
+            OrdersFromSupplierDAO.reset();
+            ProductsSupplierDAO.reset();
+            SuppliersDAO.reset();
+            //table category subCategory
+            query = "DELETE from SubCategories";
+            stmt.execute(query);
+            //table subCategory subSubCategory
+            query = "DELETE from SubSubCategories";
+            stmt.execute(query);
+            //table items
+            query = "DELETE from Items";
+            stmt.execute(query);
+
+            //table product supplier
+            query = "DELETE from ProductSupplier";
+            stmt.execute(query);
+            //table DiscountProductSupplier
+            query = "DELETE from DiscountProductSupplier";
+            // amount discount on specific product to supplier
+            stmt.execute(query);
+
+            //table suppliers
+            query = "DELETE from Suppliers";
+            stmt.execute(query);
+
+            //add table contacts
+            query = "DELETE from ContactsSupplier";
+            stmt.execute(query);
+
+            //table discount
+            query = "DELETE from DiscountSupplier";
+            //amount discount on sum of products in order
+
+            stmt.execute(query);
+            //table orderFromSupplier
+            query = "DELETE from OrdersFromSupplier";
+            stmt.execute(query);
+
+            //table productsInOrder
+            query = "DELETE from ProductsInOrder";
+            stmt.execute(query);
+            //table deliveryTerms
+            query = "DELETE from DeliveryTerms";
+            stmt.execute(query);
+
+            //table pastOrder
+            query = "DELETE from PastOrdersSupplier";
+            stmt.execute(query);
+
+
+
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            closeConnect();
+        }
+
+    }
+
+
 
 }

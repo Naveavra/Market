@@ -85,6 +85,7 @@ public class Facade {
         return String.valueOf(ordersController.updateTotalIncludeDiscounts(orderId));
     }
 
+
     public String getOrder(int supplierNumber, int orderId) {
         if(supplierController.getSupplier(supplierNumber)==null){
             return "fail";
@@ -140,7 +141,13 @@ public class Facade {
     }
 
     //Product supplier service
-    public boolean addProduct(int supplierNumber, int catalogNumber, int price, int productId){
+    public boolean addProductToSupplier(int supplierNumber, int catalogNumber, int price, int productId){
+        if(supplierController.getSupplier(supplierNumber)==null){
+            return false;
+        }
+        if(categoryController.getProductWithId(productId)==null){
+            return false;
+        }
         return supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, price, productId);
     }
     public String getProductsOfSupplier(int supplierNumber){
