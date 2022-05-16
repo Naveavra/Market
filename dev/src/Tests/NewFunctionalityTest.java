@@ -55,9 +55,6 @@ public class NewFunctionalityTest {
     }
 
 
-
-
-
     @org.junit.Test
     public void stage1_checkNotOrderingWhenNotDayBeforeOrder(){
         assertEquals(0, ordersController.getFinalOrders(1).size());
