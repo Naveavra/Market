@@ -50,6 +50,10 @@ public class Menu {
                 CLI cli=new CLI();
                 cli.startStorageModel();
                 break;
+            default:
+                System.out.println("You must type digit 1 to 2");
+                initialMenu();
+
         }
 
     }
