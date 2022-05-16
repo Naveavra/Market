@@ -1,5 +1,6 @@
 package PresentationLayer.Supplier;
 
+import DAL.Connect;
 import PresentationLayer.Storage.CLI;
 import ServiceLayer.*;
 import com.google.gson.Gson;
@@ -61,7 +62,11 @@ public class Menu {
     private void loadInitialData() {
 
         Gson gson = new Gson();
-
+        try {
+            Connect.getInstance().deleteRecordsOfTables();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         SupplierService ss =  new SupplierService();
         ProductSupplierService ps =new ProductSupplierService();
         OrderService os = new OrderService();

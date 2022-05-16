@@ -145,7 +145,12 @@ public class OrderMenu {
                 System.out.println("invalid input");
                 addDeliveryDays(o);
             }
-            if(Integer.parseInt(day)<1|Integer.parseInt(day)>7){
+            try {
+                if (Integer.parseInt(day) < 1 | Integer.parseInt(day) > 7) {
+                    System.out.println("invalid input");
+                    addDeliveryDays(o);
+                }
+            }catch (Exception e){
                 System.out.println("invalid input");
                 addDeliveryDays(o);
             }
