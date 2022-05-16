@@ -123,6 +123,11 @@ public class Product
         return itemsDAO.getDamagedItemsOfProduct(this);
     }
 
+    public List<Item> getExpiredItems(){
+        return itemsDAO.getExpiredItemsOfProduct(this);
+    }
+
+
     public int calcMinAmount(){
         double calc=timesBought;
         return (int) (Math.ceil(calc/getDaysPassed()));

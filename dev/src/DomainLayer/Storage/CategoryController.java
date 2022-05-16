@@ -148,6 +148,16 @@ public class CategoryController
         return damagedItems;
     }
 
+    public List<Item> getExpiredItems(){
+        List<Item> expiredItems=new LinkedList<>();
+        for(Product p: getAllProducts()){
+            expiredItems.addAll(p.getExpiredItems());
+        }
+        return expiredItems;
+    }
+
+
+
     public List<Product> makeRefillReport(){
         List<Product> refill=new LinkedList<>();
         for(Product p : getAllProducts())

@@ -150,7 +150,39 @@ public class ItemDAO {
     public List<Item> getDamagedItemsOfProduct(Product product){
         int key = product.getId();
         String query = "SELECT * FROM Items WHERE " +
-                String.format("productId=%d AND isDamaged=\"%s\"", key, "true");
+                String.format("productId=%d AND isDamaged=\"%s\" AND defectiveDescription !=\"%s\"", key, "true", "expired date");
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            if(!rs.isClosed()) {
+                List<Item> ans=new LinkedList<>();
+                while (!rs.isClosed()) {
+                    Item i = new Item(product.getName(), rs.getString("place"), rs.getInt("shelf"), rs.getString("expirationDate"));
+                    String isDamaged=rs.getString("isDamaged");
+                    i.setDefectiveDescription(rs.getString("defectiveDescription"));
+                    i.setDamaged(!isDamaged.equals(false+""));
+                    ans.add(i);
+                    rs.next();
+                }
+                return ans;
+            }
+        } catch (SQLException throwable) {
+            return new LinkedList<>();
+        } finally {
+            try {
+                connect.closeConnect();
+            } catch (SQLException ignored) {
+
+            }
+        }
+        return new LinkedList<>();
+    }
+
+
+    public List<Item> getExpiredItemsOfProduct(Product product){
+        int key = product.getId();
+        String query = "SELECT * FROM Items WHERE " +
+                String.format("productId=%d AND isDamaged=\"%s\" AND defectiveDescription =\"%s\"", key, "true", "expired date");
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             rs.next();

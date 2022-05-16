@@ -39,6 +39,16 @@ public class ReportController {
         } catch (Exception e) {
             return false;
         }
+        File path2= new File("./expiredItems.json");
+        try (PrintWriter out = new PrintWriter(new FileWriter(path2.getCanonicalPath()))) {
+            Gson gson = new Gson();
+            if(this.categoryCon.getExpiredItems().size()>0) {
+                String jsonString = gson.toJson(this.categoryCon.getExpiredItems());
+                out.write(jsonString);
+            }
+        } catch (Exception e) {
+            return false;
+        }
         return true;
     }
 
