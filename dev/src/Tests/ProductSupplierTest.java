@@ -1,57 +1,67 @@
 package Tests;
 
+import DAL.Connect;
+import DomainLayer.Facade;
+import DomainLayer.Supplier.Discount;
 import DomainLayer.Supplier.ProductSupplier;
+import DomainLayer.Supplier.SupplierController;
+import ServiceLayer.ProductSupplierService;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
+import java.io.File;
+import java.sql.SQLException;
 
 import static org.junit.Assert.*;
-
+@FixMethodOrder( MethodSorters.NAME_ASCENDING ) // force name ordering
 public class ProductSupplierTest {
-private ProductSupplier p;
-private ProductSupplier p1;
+private Facade facade;
+private static boolean setUpIsDone = false;
+private SupplierController supplierController;
     @Before
-    public void setUp() throws Exception {
-//        p=new ProductSupplier(p.getSupplierNumber(),0, 5, 10);
-//        p1=new ProductSupplier(p.getSupplierNumber(),1,5, 50);
+    public void setUp(){
+        if(!setUpIsDone) {
+            File file=new File("..\\dev\\superli.db");
+            file.delete();
+            facade=new Facade();
+            supplierController=new SupplierController();
+            facade.openAccount(1, "eli", 3, true);
+            facade.addProduct(1, 1, 5, 1);
+            setUpIsDone=true;
+        }
+        else{
+            facade=new Facade();
+            supplierController=new SupplierController();
+        }
 
-    }
-    @Test
-    public void setPrice() {
-        p.setPrice(5);
-        assertEquals(5, p.getPrice(), 0.0);
-    }
-
-    @Test
-    public void addDiscount() {
-//        p.addDiscount(15,0.5);
-//        assertTrue(p.getDiscount().containsKey(15));
-//        p1.addDiscount(20, 0.4);
-//        assertFalse(p1.getDiscount().containsKey(15));
     }
 
     @Test
-    public void removeDiscountOnProduct() {
-//        assertFalse(p.getDiscount().containsKey(15));
-//        p.addDiscount(15,0.5);
-//        p.removeDiscountOnProduct(15);
-//        assertFalse(p.getDiscount().containsKey(15));
+    public void stage1_addDiscount() {
+        facade.addDiscount(1, 1, 2,0.5);
+        boolean ans=false;
+        for( Discount discount : supplierController.getSupplier(1).getProduct(1).getDiscount())
+            ans= discount.getDiscount() == 0.5 || ans;
+        assertTrue(ans);
     }
 
     @Test
-    public void getPriceAfterDiscount() {
-        double total =p.getPriceAfterDiscount(5);
-        assertEquals(50, total, 0.0);
-        p.addDiscount(15,0.5);
-        total =p.getPriceAfterDiscount(5);
-        assertEquals(50, total, 0.0);
-        p.addDiscount(4,0.5);
-        total=p.getPriceAfterDiscount(5);
-        assertEquals(25, total, 0.0);
+    public void stage2_removeDiscountOnProduct() {
+        facade.removeDiscountOnProduct(1, 1, 2);
+        assertEquals(1, supplierController.getSupplier(1).getProduct(1).getDiscount().size());
     }
 
     @Test
-    public void getPrice() {
-        assertEquals(10, p.getPrice(), 0.0);
-        assertEquals(50, p1.getPrice(), 0.0);
+    public void stage3_getPriceAfterDiscount() {
+        facade.addDiscount(1, 1, 2,0.5);
+        double total =supplierController.getSupplier(1).getProduct(1).getPriceAfterDiscount(2);
+        assertEquals(5, total, 0.0);
+    }
+
+    @Test
+    public void stage4_getPrice() {
+        assertEquals(5, supplierController.getSupplier(1).getProduct(1).getPrice(), 0.0);
     }
 }

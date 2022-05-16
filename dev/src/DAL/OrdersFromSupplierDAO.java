@@ -175,7 +175,7 @@ public class OrdersFromSupplierDAO {
                 , orderId);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
-
+            IMOrdersFromSupplier.remove(1);
             return true;
         } catch (SQLException e) {
             throw e;
@@ -229,21 +229,22 @@ public class OrdersFromSupplierDAO {
                 String.format(" SET count=%d", count) +
                 String.format(" WHERE productId=%d AND orderId=%d", productId, orderId);
         try (Statement stmt = connect.createStatement()) {
-            stmt.executeQuery(query);
+            stmt.execute(query);
         } catch (SQLException throwable) {
-            throw throwable;
+            System.out.println(throwable.getMessage());
         } finally {
             connect.closeConnect();
         }
     }
 
     public List<Integer> getRegularOrdersIds() throws SQLException {
-        String query ="SELECT orderId FROM daysToDeliver";
+        String query ="SELECT orderId FROM DeliveryTerms";
         List<Integer> ans=new LinkedList<>();
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs= stmt.executeQuery(query);
-            while(rs.next())
+            while(rs.next()) {
                 ans.add(rs.getInt("orderId"));
+            }
         } catch (SQLException throwable) {
             throw throwable;
         } finally {

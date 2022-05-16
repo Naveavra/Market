@@ -39,7 +39,8 @@ public class OrdersController {
     public boolean finishOrder(int orderId){
         boolean finish =finishFixedDaysDeliveryOrder(orderId);
         try {
-            ordersDAO.removeOrder(orderId);
+            if(!finish)
+                ordersDAO.removeOrder(orderId);
         } catch (SQLException throwables) {
             return false;
         }
@@ -109,8 +110,9 @@ public class OrdersController {
                         int productId = product.getProductId();
                         ordersDAO.updateCount(productId, productIds.get(productId), orderId);
                     }
-                    boolean send=finishFixedDaysDeliveryOrder(orderId);
                 }
+                if(checkDays(d))
+                    finishFixedDaysDeliveryOrder(orderId);
             }
         } catch (SQLException ignored) {
         }
@@ -129,7 +131,7 @@ public class OrdersController {
         try {
             totalPrice = updateTotalIncludeDiscounts(orderId);
             pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
-            return true;
+            return o.getDaysToDeliver().getDaysInWeeks().length > 0;
         } catch (SQLException e) {
             return false;
         }
@@ -139,7 +141,7 @@ public class OrdersController {
     private boolean checkDays(DeliveryTerm d) {
         Date today =new Date();
         for(DeliveryTerm.DaysInWeek day:d.getDaysInWeeks() ){
-             if(d.getDayValue(day)==today.getDay()-1){
+             if(d.getDayValue(day)%7==(today.getDay()-1)%7){
                  return true;
              }
         }

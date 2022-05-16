@@ -78,11 +78,13 @@ public class CategoryController
     }
 
     public void removeFromCatalog(int id){
+        Product p=getProductWithId(id);
+        p.removeAllItems();
         categoriesDAO.removeProduct(id);
     }
 
-    public void removeCat(String catName){
-        categoriesDAO.removeCategory(catName);
+    public boolean removeCat(String catName){
+        return categoriesDAO.removeCategory(catName);
     }
 
 
@@ -101,6 +103,7 @@ public class CategoryController
         Product p = getProductWithId(id);
         if(p != null) {
             p.addItem(loc, shelf, ed);
+            p.getRefill();
             categoriesDAO.updateProduct(p);
         }
     }
@@ -119,13 +122,6 @@ public class CategoryController
             return p.getCurAmount();
         return -1;
     }
-
-    public boolean hasItem(String place, int shelf, String ed, int pId){
-        if(getProductWithId(pId)!=null)
-            return getProductWithId(pId).hasItem(place, shelf, ed);
-        return false;
-    }
-
     public void setDiscountToOneItem(int productId, double discount)
     {
         Product p = getProductWithId(productId);
@@ -139,6 +135,8 @@ public class CategoryController
         Product p=getProductWithId(id);
         if(p!=null) {
             p.setItemDamaged(id, ed, place, shelf, description);
+            p.getRefill();
+            categoriesDAO.updateProduct(p);
         }
     }
 
@@ -169,6 +167,7 @@ public class CategoryController
         double ans=-1;
         if(p!=null) {
             ans=p.buyAmount(amount);
+            p.getRefill();
             categoriesDAO.updateProduct(p);
         }
         return ans;
@@ -177,6 +176,7 @@ public class CategoryController
         Product p=getProductWithId(id);
         if(p!=null) {
             p.transferItem(ed, curePlace, curShelf, toPlace, toShelf);
+            p.getRefill();
             categoriesDAO.updateProduct(p);
         }
     }

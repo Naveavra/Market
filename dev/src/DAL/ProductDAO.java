@@ -224,12 +224,12 @@ public class ProductDAO {
     public void updateProduct(Product p) throws SQLException {
         int key=p.getId();
         String query = "UPDATE Products" +
-                String.format(" SET name=\"%s\", description=\"%s\", maker=\"%s\",storageAmount=%d, storeAmount=%d,timesBought=%d, price=%f, discount=%f, dayAdded=\"%s\"",
-                        p.getName(), p.getDescription(), p.getMaker(), p.getStorageAmount(), p.getStoreAmount(), p.getTimesBought(),
+                String.format(" SET name=\"%s\", description=\"%s\", maker=\"%s\",storageAmount=%d, storeAmount=%d,timesBought=%d, amountNeededForRefill=%d, price=%f, discount=%f, dayAdded=\"%s\"",
+                        p.getName(), p.getDescription(), p.getMaker(), p.getStorageAmount(), p.getStoreAmount(), p.getTimesBought(), p.getRefill(),
                         p.getPrice(), p.getDiscount(), p.getDayAdded()) +
                 String.format(" WHERE productId=%d", key);
         try (Statement stmt = connect.createStatement()) {
-            stmt.executeQuery(query);
+            stmt.execute(query);
         } catch (SQLException throwable) {
             throw throwable;
         } finally {
@@ -242,7 +242,7 @@ public class ProductDAO {
                 String.format(" SET categoryName=\"%s\", subCategoryName=\"%s\", subSubCategoryName=\"%s\"", catName, subCatName, subSubCatName)+
                 String.format(" WHERE productId=%d", productId);
         try (Statement stmt = connect.createStatement()) {
-            stmt.executeQuery(query);
+            stmt.execute(query);
         } catch (SQLException throwable) {
             throw throwable;
         } finally {
@@ -255,6 +255,7 @@ public class ProductDAO {
                 productId);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
+            IMProducts.remove(1);
         } catch (SQLException e) {
             throw e;
         }

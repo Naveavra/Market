@@ -49,7 +49,7 @@ public class CategoryDAO {
                 String.format(" SET discount=%f", discount)+
                 String.format(" WHERE categoryName=\"%s\"", category);
         try (Statement stmt = connect.createStatement()) {
-            stmt.executeQuery(query);
+            stmt.execute(query);
             if(IMCategories.containsKey(category))
                 IMCategories.get(category).setDiscount(discount);
         } catch (SQLException throwable) {

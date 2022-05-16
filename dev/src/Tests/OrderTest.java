@@ -1,62 +1,72 @@
 package Tests;
 
 
-import DomainLayer.Supplier.OrderFromSupplier;
+import DAL.Connect;
+import DomainLayer.Facade;
+import DomainLayer.Supplier.OrdersController;
 import DomainLayer.Supplier.ProductSupplier;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
-
+@FixMethodOrder( MethodSorters.NAME_ASCENDING ) // force name ordering
 public class OrderTest {
-    private OrderFromSupplier order;
-    private ProductSupplier p;
-    private ProductSupplier p1;
+    private Facade facade;
+    private OrdersController ordersController;
+    private static boolean setUpIsDone = false;
     @org.junit.Before
-    public void setUp() throws Exception {
-//         order =new OrderFromSupplier(0);
-//         p=new ProductSupplier(1,1,100,1);
-//         p1=new ProductSupplier(1,2,50,2);
+    public void setUp(){
+        if(!setUpIsDone) {
+            File file=new File("..\\dev\\superli.db");
+            file.delete();
+            facade = new Facade();
+            ordersController = new OrdersController();
+            facade.openAccount(1, "eli", 1, true);
+            facade.openAccount(2, "eli2", 2, true);
+            facade.addProduct(1, 1, 4, 1);
+            facade.addProduct(2, 2, 3, 2);
+            facade.createOrder(1);
+            facade.addProductToOrder(1, 1, 1, 3);
+            facade.createOrder(2);
+            facade.addProductToOrder(2, 2, 2, 5);
+            setUpIsDone=true;
+        }
+        else {
+            facade = new Facade();
+            ordersController = new OrdersController();
+        }
+    }
+
+
+    @org.junit.Test
+    public void stage1_updateProductToOrder() {
+        boolean ans=false;
+        for(ProductSupplier p : ordersController.getOrder(1).getProducts().keySet()) {
+            ans = ans || p.getProductId() == 1;
+        }
+        assertTrue(ans);
+
+
+    }
+    @org.junit.Test
+    public void stage2_getTotalIncludeDiscounts() {
+        assertEquals(12.0, ordersController.getOrder(1).getTotalIncludeDiscounts(), 0.0);
+
     }
 
     @org.junit.Test
-    public void updateProductToOrder() {
-        assertTrue(order.updateProductToOrder(p,10));
-        assertTrue(order.getProducts().containsKey(p));
-
+    public void stage3_getCountProducts() {
+        assertEquals(3,ordersController.getOrder(1).getCountProducts());
     }
 
     @org.junit.Test
-    public void getTotalIncludeDiscounts() {
-        order.updateProductToOrder(p,10);
-        order.updateProductToOrder(p1,10);
-        assertEquals(1250.0, order.getTotalIncludeDiscounts(), 0.0);
-
-    }
-
-    @org.junit.Test
-    public void getCountProducts() {
-        order.updateProductToOrder(p,10);
-        assertEquals(10,order.getCountProducts());
-        order.removeProductFromOrder(p);
-        assertEquals(0,order.getCountProducts());
-    }
-
-    @org.junit.Test
-    public void removeProductFromOrder() {
-        order.updateProductToOrder(p,10);
-        assertTrue(order.removeProductFromOrder(p));
-        assertFalse(order.getProducts().containsKey(p));
-    }
-
-    @org.junit.Test
-    public void getProducts() {
-        order.updateProductToOrder(p,10);
-        Map<ProductSupplier,Integer> tmp=new HashMap<>();
-        tmp.put(p,10);
-        assertEquals(tmp,order.getProducts());
-
+    public void stage4_removeProductFromOrder() {
+        for(ProductSupplier p : ordersController.getOrder(1).getProducts().keySet()) {
+            assertTrue(ordersController.getOrder(1).removeProductFromOrder(p));
+        }
+        assertEquals(0, ordersController.getOrder(1).getCountProducts());
     }
 }

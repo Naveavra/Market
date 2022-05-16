@@ -2,18 +2,18 @@ package DomainLayer.Supplier;
 
 public class Discount {
     private int amount;
-    private Double discount;
+    private double discount;
 
     public Discount(int amount,double discount) {
         this.amount = amount;
         this.discount = discount;
     }
 
-    public Double getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Double discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 

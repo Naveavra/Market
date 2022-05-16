@@ -18,8 +18,6 @@ public class CLI
     {
         CategoryService cC=new CategoryService();
         ReportService rC=new ReportService();
-        ProductSupplierService pss=new ProductSupplierService();
-        SupplierService ss=new SupplierService();
         String command;
         String detail;
         String line = "";
@@ -314,29 +312,6 @@ public class CLI
                     }
                     case("17"):{
                         System.out.println(cC.printAllProducts());
-                        break;
-                    }
-                    case ("18"): {
-                        try {
-                            System.out.println("creating a scenario");
-                            cC.addCategory("first");
-                            cC.addSubCat("first", "first1");
-                            cC.addSubSubCat("first", "first1", "first11");
-                            cC.addCategory("second");
-                            cC.addSubCat("second", "second1");
-                            cC.addSubSubCat("second", "second1", "second11");
-                            cC.addNewProduct(1, "milk", "from cow", 3, "me"
-                                    , "first", "first1", "first11");
-                            cC.addNewProduct(2, "eggs", "from chicken", 5, "me",
-                                    "second", "second1", "second11");
-                            cC.addAllItems(1, 7, "2022-06-01", 1);
-                            cC.addAllItems(2, 3, "2019-06-01", 1);
-                            ss.openAccount(1,"eli", 1, true);
-                            pss.addProduct(1, 1, 2, 1);
-                        }
-                        catch (Exception e){
-                            System.out.println("wrong input");
-                        }
                         break;
                     }
                 }

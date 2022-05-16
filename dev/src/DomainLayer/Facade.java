@@ -151,6 +151,7 @@ public class Facade {
         Map<Integer, ProductSupplier> products = supplierController.getSupplier(supplierNumber).getProducts();
         return gson.toJson(products);
     }
+
     public boolean updateProduct(int supplierNumber, int catalogNumber, int productId, int price){
         if(price<=0){
             return false;

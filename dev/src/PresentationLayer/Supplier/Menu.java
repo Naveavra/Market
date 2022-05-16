@@ -1,27 +1,38 @@
 package PresentationLayer.Supplier;
 
 import PresentationLayer.Storage.CLI;
+import ServiceLayer.*;
 import com.google.gson.Gson;
-
-import java.time.LocalDate;
-import java.util.Date;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Menu {
     private Scanner sc=new Scanner(System.in);
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws SQLException {
         Menu m = new Menu();
         m.initialMenu();
     }
-    public void initialMenu(){
+    public void initialMenu() throws SQLException {
 
         int choice = 0;
         System.out.println("Welcome to Supper LI!!");
-        System.out.println("How do you want to start?");
+        System.out.println("Load Initial Data?");
+        System.out.println("\t1.yes");
+        System.out.println("\t2.no");
+        String choiceStr = "";
+        try{
+            choiceStr = sc.next();
+            choice=Integer.parseInt(choiceStr);
+        }
+        catch (Exception e){
+            System.out.println("you must enter only 1 digit number");
+            initialMenu();
+        }
+        if(choice==1)
+            loadInitialData();
         System.out.println("\t1.Supplier Model");
         System.out.println("\t2.Storage Model");
-        String choiceStr = "";
         try{
             choiceStr = sc.next();
             choice=Integer.parseInt(choiceStr);
@@ -43,52 +54,52 @@ public class Menu {
 
     }
 
-////    private void loadInitialData() {
-////
-////        Gson gson = new Gson();
-////
-////        SupplierService ss =  new SupplierService();
-////        ProductSupplierService ps =new ProductSupplierService();
-////        OrderService os = new OrderService();
-////        SupplierMenu sm =new SupplierMenu();
-////
-////        HashMap<String,String> contacts = new HashMap<>();
-////        contacts.put("eyal", "eyal@gmail.com");
-////        contacts.put("eldad","eldad@gmail.com");
-////        contacts.put("ziv", "ziv@gmail.com");
-////
-////        ss.openAccount(1,"OSEM", 5555, contacts,true);
-//////        ps.addProduct(1, 1,"ptitim", 15);
-//////        ps.addProduct(1, 2, "spageti", 6);
-//////        ps.addProduct(1, 3, "bamba", 10);
-////
-////        contacts = new HashMap<>();
-////        contacts.put("Dan", "dan@gmail.com");
-////        contacts.put("nave","nave@gmail.com");
-////        contacts.put("itay", "itay@gmail.com");
-////
-////        ss.openAccount(2,"TNUVA", 456, contacts,false);
-//        ps.addProduct(2, 3, "Milk 3%", 10);
-//        ps.addProduct(2, 5, "Cheeze", 20);
-//        ps.addProduct(2, 6, "Dani", 7);
-//
-//        ss.addDiscount(1, 5, 0.8);
-//
-//        ss.addDiscount(2, 10, 0.6);
-//
-//
-//        String json = os.createOrder(1);
-//        Order o1 = gson.fromJson(json,Order.class);
-//        os.addProductToOrder(1, o1.getOrderId(), 1 ,1000);
-//        os.addProductToOrder(1, o1.getOrderId(), 2,200);
-//        os.sendOrder(1, o1.getOrderId());
-//        String json1 = os.createOrder(2);
-//        Order o2 = gson.fromJson(json1,Order.class);
-//        os.addProductToOrder(2,1,3,100);
-//        os.addProductToOrder(2,1,5,200);
-//
-//
-//    }
+    private void loadInitialData() {
+
+        Gson gson = new Gson();
+
+        SupplierService ss =  new SupplierService();
+        ProductSupplierService ps =new ProductSupplierService();
+        OrderService os = new OrderService();
+        CategoryService cC=new CategoryService();
+
+        cC.addCategory("first");
+        cC.addSubCat("first", "first1");
+        cC.addSubSubCat("first", "first1", "first11");
+        cC.addCategory("second");
+        cC.addSubCat("second", "second1");
+        cC.addSubSubCat("second", "second1", "second11");
+        cC.addNewProduct(1, "milk", "from cow", 3, "me"
+                , "first", "first1", "first11");
+        cC.addNewProduct(2, "eggs", "from chicken", 5, "me",
+                "second", "second1", "second11");
+        cC.addAllItems(1, 7, "2022-06-01", 1);
+        cC.addAllItems(2, 3, "2019-06-01", 1);
+
+        ss.openAccount(1,"OSEM", 5555, true);
+        ss.openAccount(2,"TNUVA", 456, false);
+
+        ss.addContact(1, "Dan", "dan@gmail.com", "0501234567");
+        ss.addContact(1, "nave","nave@gmail.com", "0501234567");
+        ss.addContact(2, "itay", "itay@gmail.com", "0501234567");
+
+        ps.addProduct(1, 1, 2, 1);
+        ps.addProduct(2, 2,3, 2);
+
+        ss.addDiscount(1, 5, 0.8);
+
+        ss.addDiscount(2, 10, 0.6);
+
+
+        String json = os.createOrder(1);
+        Order o1 = gson.fromJson(json,Order.class);
+        os.addProductToOrder(1, o1.getOrderId(), 1 ,5);
+        String[] days={"1", "2", "3", "4", "5", "6", "7"};
+        os.addFixedDeliveryDaysForOrder(1, 1, days);
+        os.sendOrder(1, 1);
+
+
+    }
 
     public static<T> T fromJson(String json, Class<T> c){
         Gson gson = new Gson();

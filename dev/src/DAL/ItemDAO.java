@@ -39,7 +39,7 @@ public class ItemDAO {
         return false;
     }
 
-    public void setItemDamaged(int productId, String expirationDate, String place, int shelf, String damageDescription) throws SQLException {
+    public boolean setItemDamaged(int productId, String expirationDate, String place, int shelf, String damageDescription) throws SQLException {
         String query = "SELECT itemId FROM Items WHERE " +
                 String.format("productId=%d AND expirationDate=\"%s\" AND place=\"%s\" AND shelf=%d AND isDamaged=\"%s\"",
                         productId, expirationDate, place, shelf, "false");
@@ -53,12 +53,14 @@ public class ItemDAO {
                         String.format(" SET isDamaged=\"%s\", defectiveDescription=\"%s\"", "true", damageDescription)+
                         String.format(" WHERE itemId=%d", itemId);
                 stmt.execute(query);
+                return true;
             }
         } catch (SQLException throwable) {
-            throw throwable;
+            return false;
         } finally {
             connect.closeConnect();
         }
+        return false;
     }
 
 
@@ -197,14 +199,16 @@ public class ItemDAO {
             }
     }
 
-    public void moveSection(Product product, String place, int amount) throws SQLException {
+    public int moveSection(Product product, String place, int amount) throws SQLException {
         String query = "SELECT itemId FROM Items WHERE " +
-                String.format("productId=%d",product.getId());
+                String.format("productId=%d AND isDamaged=\"%s\"",product.getId(), "false");
+        int count=0;
         int itemId = -1;
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             rs.next();
             for (int i = 0; i < amount && !rs.isClosed(); i++) {
+                count++;
                 itemId = rs.getInt("itemId");
                 query = "UPDATE Items" +
                         String.format(" SET place=\"%s\"", place) +
@@ -212,10 +216,11 @@ public class ItemDAO {
                 stmt.execute(query);
             }
         } catch (SQLException throwable) {
-            throw throwable;
+            return count;
         } finally {
             connect.closeConnect();
         }
+        return count;
     }
 
     private int getLastId(){
@@ -256,5 +261,17 @@ public class ItemDAO {
             connect.closeConnect();
         }
         return false;
+    }
+
+    public void removeAllItems(int productId) throws SQLException {
+        String query = String.format("DELETE FROM Items WHERE productId=%d",productId);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+            }
+        catch (SQLException ignored) {
+        }
+        finally {
+            connect.closeConnect();
+        }
     }
 }

@@ -50,10 +50,6 @@ public class Product
     }
 
 
-    public boolean hasItem(String place, int shelf, String ed){
-        return findItem(ed, place, shelf) != null;
-    }
-
     public int getCurAmount() {
         return storeAmount+storageAmount;
     }
@@ -207,11 +203,17 @@ public class Product
         for(int i=0;i<amount;i++){
             addItem("STORAGE", shelf, ed);
         }
+        getRefill();
     }
 
     public void moveToStore(int amount){
         try {
-            itemsDAO.moveSection(this, "STORE", amount);
+            int count=itemsDAO.moveSection(this, "STORE", amount);
+            while(count>0){
+                storeAmount++;
+                storageAmount--;
+                count--;
+            }
         } catch (SQLException ignored) {
         }
     }
@@ -259,7 +261,13 @@ public class Product
 
     public void setItemDamaged(int productId, String expirationDate, String place, int shelf, String damageDescription){
         try {
-            itemsDAO.setItemDamaged(productId, expirationDate, place, shelf, damageDescription);
+            if(itemsDAO.setItemDamaged(productId, expirationDate, place, shelf, damageDescription)) {
+                if (place.equals("STORAGE"))
+                    storageAmount--;
+                else
+                    storeAmount--;
+            }
+
         } catch (SQLException ignored) {
         }
     }
@@ -283,4 +291,12 @@ public class Product
         this.dayAdded=dayAdded;
     }
 
+    public boolean removeAllItems() {
+        try {
+            itemsDAO.removeAllItems(productId);
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
 }

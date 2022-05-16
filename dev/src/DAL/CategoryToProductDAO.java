@@ -43,13 +43,15 @@ public class CategoryToProductDAO {
         }
     }
 
-    public void removeCategory(String category){
+    public boolean removeCategory(String category){
         if(canRemoveCategory(category)) {
             try {
                 categoryDAO.removeCategory(category);
+                return true;
             } catch (SQLException ignored) {
             }
         }
+        return false;
     }
 
     //subCategory table

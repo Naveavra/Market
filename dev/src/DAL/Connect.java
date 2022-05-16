@@ -1,5 +1,6 @@
 package DAL;
 
+import java.io.File;
 import java.sql.*;
 
 /**
@@ -25,7 +26,6 @@ public class Connect {
             String url = "jdbc:sqlite:../dev/superli.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
-            System.out.println("Connection to SQLite has been established.");
             createTables();
 
         } catch (SQLException e) {
@@ -40,20 +40,7 @@ public class Connect {
             }
         }
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws SQLException {
-        Connect connect =new Connect();
-//        ProductSupplierDAO productSupplierMapper=new ProductSupplierDAO();
-//        ProductSupplier p1=new ProductSupplier(16,100,5);
-//        p1.addDiscount(10,0.5);
-//        productSupplierMapper.insert(p1);
-//        ProductSupplier p = productSupplierMapper.getProduct(14, 5);
-//        System.out.println(p.getPrice());
-//        ProductSupplier p2 = productSupplierMapper.getProduct(14, 5);
-//        System.out.println(p2.getPrice());
-    }
+
     public void createTables() throws SQLException {
         try (Statement stmt = createStatement()) {
             //table products
@@ -65,6 +52,7 @@ public class Connect {
                     "\t\"storageAmount\"\tINTEGER,\n"+
                     "\t\"storeAmount\"\tINTEGER,\n"+
                     "\t\"timesBought\"\tINTEGER,\n"+
+                    "\t\"amountNeededForRefill\"\tINTEGER,\n"+
                     "\t\"price\"\tInteger,\n"+
                     "\t\"discount\"\tInteger,\n"+
                     "\t\"dayAdded\"\tTEXT,\n" +
@@ -196,4 +184,5 @@ public class Connect {
     public void closeConnect() throws SQLException {
         conn.close();
     }
+
 }

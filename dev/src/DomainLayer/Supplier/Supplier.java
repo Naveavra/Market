@@ -116,6 +116,8 @@ public class Supplier {
         if(price<=0){
             return false;
         }
+        if(productId<=0)
+            return false;
         try {
             if (isProductExist(productId)) {
                 return false;
