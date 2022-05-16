@@ -14,7 +14,6 @@ import java.util.Map;
 public class OrdersController {
     private OrdersFromSupplierDAO ordersDAO;
     private ProductsSupplierDAO productsDAO;
-    private static int orderNum=0;
     private PastOrdersSupplierDAO pastOrdersDAO;
     private SuppliersDAO suppliersDAO;
 
@@ -32,7 +31,6 @@ public class OrdersController {
         } catch (SQLException e) {
             return null;
         }
-        //orderNum++;
         return order;
     }
     public boolean finishOrder(int orderId){

@@ -57,11 +57,11 @@ private SupplierController supplierController;
     public void stage3_getPriceAfterDiscount() {
         facade.addDiscount(1, 1, 2,0.5);
         double total =supplierController.getSupplier(1).getProduct(1).getPriceAfterDiscount(2);
-        assertEquals(5, total, 0.0);
+        assertEquals(5, total, 0.1);//total = 2.0
     }
 
     @Test
     public void stage4_getPrice() {
-        assertEquals(5, supplierController.getSupplier(1).getProduct(1).getPrice(), 0.0);
+        assertEquals(5, supplierController.getSupplier(1).getProduct(1).getPrice(), 0.1);
     }
 }
