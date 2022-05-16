@@ -28,15 +28,13 @@ public class Connect {
             conn = DriverManager.getConnection(url);
             createTables();
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException ignored) {
         } finally {
             try {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+            } catch (SQLException ignored) {
             }
         }
     }
