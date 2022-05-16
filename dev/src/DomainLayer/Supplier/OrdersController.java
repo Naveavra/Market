@@ -4,7 +4,6 @@ import DAL.OrdersFromSupplierDAO;
 import DAL.PastOrdersSupplierDAO;
 import DAL.ProductsSupplierDAO;
 import DAL.SuppliersDAO;
-import javafx.util.Pair;
 
 import java.sql.SQLException;
 import java.util.Date;

@@ -4,7 +4,6 @@ import DomainLayer.Storage.CategoryController;
 import DomainLayer.Storage.ReportController;
 import DomainLayer.Supplier.*;
 import com.google.gson.Gson;
-import javafx.util.Pair;
 
 import java.util.*;
 

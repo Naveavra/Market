@@ -1,7 +1,6 @@
 package DAL;
 
 import DomainLayer.Storage.Category;
-import javafx.util.Pair;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,8 +13,8 @@ public class CategoryDAO {
 
     private Connect connect;
     private static HashMap<String, Category> IMCategories;
-    private static HashMap<Pair<String, String>, Category> IMSubCategories;
-    private static HashMap<Pair<Pair<String, String>, String>, Category> IMSubSubCategories;
+    private static HashMap<String[], Category> IMSubCategories;
+    private static HashMap<String[], Category> IMSubSubCategories;
 
     /**
      * constructor
@@ -78,6 +77,26 @@ public class CategoryDAO {
         return ans;
     }
 
+    public List<Category> getCategories() throws SQLException {
+        String query = "SELECT * FROM CategoryDiscount";
+        List<Category> ans=new LinkedList<>();
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            while (!rs.isClosed()){
+                Category c=new Category(rs.getString("categoryName"));
+                c.setDiscount(rs.getDouble("discount"));
+                ans.add(c);
+                rs.next();
+            }
+            return ans;
+        } catch (SQLException throwable) {
+            throw throwable;
+        } finally {
+            connect.closeConnect();
+        }
+    }
+
     public void removeCategory(String category) throws SQLException {
         String query = String.format("DELETE FROM CategoryDiscount WHERE categoryName=\"%s\"",
                 category);
@@ -91,18 +110,18 @@ public class CategoryDAO {
             stmt.execute(query3);
             IMCategories.remove(category);
 
-            List<Pair<String, String >> sub=new LinkedList<>();
-            for(Pair<String, String> key : IMSubCategories.keySet())
-                if(key.getKey().equals(category))
+            List<String[]> sub=new LinkedList<>();
+            for(String[] key : IMSubCategories.keySet())
+                if(key[0].equals(category))
                     sub.add(key);
-            for(Pair<String, String> key : sub)
+            for(String[] key : sub)
                 IMSubCategories.remove(key);
 
-            List<Pair<Pair<String, String>, String>>subSub=new LinkedList<>();
-            for(Pair<Pair<String, String>, String> key : IMSubSubCategories.keySet())
-                if(key.getKey().getKey().equals(category))
+            List<String[]>subSub=new LinkedList<>();
+            for(String[] key : IMSubSubCategories.keySet())
+                if(key[0].equals(category))
                     subSub.add(key);
-            for(Pair<Pair<String, String>, String> key : subSub)
+            for(String[] key : subSub)
                 IMSubSubCategories.remove(key);
 
         } catch (SQLException e) {
@@ -125,7 +144,10 @@ public class CategoryDAO {
             } catch (SQLException e) {
                 return false;
             } finally {
-                IMSubCategories.put(new Pair<>(category, subCategory), new Category(subCategory));
+                String[] sub=new String[2];
+                sub[0]=category;
+                sub[1]=subCategory;
+                IMSubCategories.put(sub, new Category(subCategory));
                 connect.closeConnect();
             }
             return true;
@@ -134,8 +156,8 @@ public class CategoryDAO {
     }
 
     public boolean hasSubCategory(String category, String subCategory) throws SQLException {
-        for(Pair<String, String> key : IMSubCategories.keySet())
-            if(key.getKey().equals(category) && key.getValue().equals(subCategory))
+        for(String[] key : IMSubCategories.keySet())
+            if(key[0].equals(category) && key[1].equals(subCategory))
                 return true;
             String query = "SELECT * FROM SubCategories WHERE " +
                     String.format("categoryName=\"%s\" AND subCategoryName=\"%s\"", category, subCategory);
@@ -145,7 +167,10 @@ public class CategoryDAO {
                 rs.next();
                 if(!rs.isClosed()){
                     ans=true;
-                    IMSubCategories.put(new Pair<>(category, subCategory), new Category(subCategory));
+                    String[] sub=new String[2];
+                    sub[0]=category;
+                    sub[1]=subCategory;
+                    IMSubCategories.put(sub, new Category(subCategory));
                 }
                 else
                     ans=false;
@@ -157,15 +182,16 @@ public class CategoryDAO {
             return ans;
     }
 
-    public List<String> getSubCategories(String category) throws SQLException {
+    public List<Category> getSubCategories(String category) throws SQLException {
         String query = "SELECT * FROM SubCategories WHERE " +
                 String.format("categoryName=\"%s\"", category);
-        List<String> ans=new LinkedList<>();
+        List<Category> ans=new LinkedList<>();
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             rs.next();
             while (!rs.isClosed()){
-                ans.add(rs.getString("subCategoryName"));
+                Category c=new Category(rs.getString("subCategoryName"));
+                ans.add(c);
                 rs.next();
             }
             return ans;
@@ -186,18 +212,18 @@ public class CategoryDAO {
             stmt.execute(query);
             stmt.execute(query2);
 
-            List<Pair<String, String >> sub=new LinkedList<>();
-            for(Pair<String, String> key : IMSubCategories.keySet())
-                if(key.getKey().equals(category) && key.getValue().equals(subCategory))
+            List<String[]> sub=new LinkedList<>();
+            for(String[] key : IMSubCategories.keySet())
+                if(key[0].equals(category) && key[1].equals(subCategory))
                     sub.add(key);
-            for(Pair<String, String> key : sub)
+            for(String[] key : sub)
                 IMSubCategories.remove(key);
 
-            List<Pair<Pair<String, String>, String>>subSub=new LinkedList<>();
-            for(Pair<Pair<String, String>, String> key : IMSubSubCategories.keySet())
-                if(key.getKey().getKey().equals(category) && key.getKey().getValue().equals(subCategory))
+            List<String[]>subSub=new LinkedList<>();
+            for(String[] key : IMSubSubCategories.keySet())
+                if(key[0].equals(category) && key[1].equals(subCategory))
                     subSub.add(key);
-            for(Pair<Pair<String, String>, String> key : subSub)
+            for(String[] key : subSub)
                 IMSubSubCategories.remove(key);
 
         } catch (SQLException e) {
@@ -220,7 +246,11 @@ public class CategoryDAO {
             } catch (SQLException e) {
                 return false;
             } finally {
-                IMSubSubCategories.put(new Pair<>(new Pair<>(category, subCategory), subSubCategory), new Category(subSubCategory));
+                String[] sub=new String[3];
+                sub[0]=category;
+                sub[1]=subCategory;
+                sub[2]=subSubCategory;
+                IMSubSubCategories.put(sub, new Category(subSubCategory));
                 connect.closeConnect();
             }
             return true;
@@ -230,12 +260,12 @@ public class CategoryDAO {
 
 
     public boolean hasSubSubCategory(String category, String subCategory, String subSubCategory) throws SQLException {
-        for(Pair<Pair<String, String>, String> key : IMSubSubCategories.keySet())
-            if(key.getKey().getKey().equals(category) && key.getKey().getValue().equals(subCategory) && key.getValue().equals(subSubCategory))
+        for(String[] key : IMSubSubCategories.keySet())
+            if(key[0].equals(category) && key[1].equals(subCategory) && key[2].equals(subSubCategory))
                 return true;
             String query = "SELECT * FROM SubSubCategories WHERE " +
                     String.format("categoryName=\"%s\" AND subCategoryName=\"%s\" AND subSubCategoryName=\"%s\"", category, subCategory, subSubCategory);
-            boolean ans = false;
+            boolean ans;
             try (Statement stmt = connect.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 rs.next();
@@ -248,15 +278,16 @@ public class CategoryDAO {
             return ans;
     }
 
-    public List<String> getSubSubCategories(String category, String subCategory) throws SQLException {
+    public List<Category> getSubSubCategories(String category, String subCategory) throws SQLException {
         String query = "SELECT * FROM SubSubCategories WHERE " +
                 String.format("categoryName=\"%s\" AND subCategoryName=\"%s\"", category, subCategory);
-        List<String> ans=new LinkedList<>();
+        List<Category> ans=new LinkedList<>();
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             rs.next();
             while (!rs.isClosed()){
-                ans.add(rs.getString("subSubCategoryName"));
+                Category c=new Category(rs.getString("subSubCategoryName"));
+                ans.add(c);
                 rs.next();
             }
             return ans;
@@ -274,11 +305,11 @@ public class CategoryDAO {
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
 
-            List<Pair<Pair<String, String>, String>>subSub=new LinkedList<>();
-            for(Pair<Pair<String, String>, String> key : IMSubSubCategories.keySet())
-                if(key.getKey().getKey().equals(category) && key.getKey().getValue().equals(subCategory) && key.getValue().equals(subSubCategory))
+            List<String[]>subSub=new LinkedList<>();
+            for(String[] key : IMSubSubCategories.keySet())
+                if(key[0].equals(category) && key[1].equals(subCategory) && key[2].equals(subSubCategory))
                     subSub.add(key);
-            for(Pair<Pair<String, String>, String> key : subSub)
+            for(String[] key : subSub)
                 IMSubSubCategories.remove(key);
 
         } catch (SQLException e) {

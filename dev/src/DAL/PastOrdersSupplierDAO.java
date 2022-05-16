@@ -3,20 +3,17 @@ package DAL;
 import DomainLayer.Supplier.DeliveryTerm;
 import DomainLayer.Supplier.OrderFromSupplier;
 import DomainLayer.Supplier.PastOrderSupplier;
-import javafx.util.Pair;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class PastOrdersSupplierDAO {
     private Connect connect;
     private OrdersFromSupplierDAO ordersDAO;
-    private static HashMap<Pair<Integer,String>, PastOrderSupplier> IMPastOrdersFromSupplier;//key: orderId and finish date
+    private static HashMap<HashMap<Integer, String>, PastOrderSupplier> IMPastOrdersFromSupplier;//key: orderId and finish date
 
     /**
      * constructor
@@ -54,7 +51,9 @@ public class PastOrdersSupplierDAO {
                 "VALUES (%d,'%s',%f,%d)", order.getOrderId() ,order.getDate(), order.getTotalPrice(),order.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
-            IMPastOrdersFromSupplier.put(new Pair<>(order.getOrderId(), order.getDate()), order);
+            HashMap<Integer, String> add=new HashMap<>();
+            add.put(order.getOrderId(), order.getDate());
+            IMPastOrdersFromSupplier.put(add, order);
         } catch (SQLException e) {
             throw e;
         }

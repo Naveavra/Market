@@ -2,7 +2,6 @@ package DomainLayer.Storage;
 
 
 import com.google.gson.Gson;
-import javafx.util.Pair;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,6 +19,8 @@ public class ReportController {
         try (PrintWriter out = new PrintWriter(new FileWriter(path.getCanonicalPath()))) {
             Gson gson = new Gson();
             String jsonString = gson.toJson(categoryCon.makeReport(catNames));
+            out.write(jsonString);
+            jsonString = gson.toJson(categoryCon.getDiscounts(catNames));
             out.write(jsonString);
         } catch (Exception e) {
             return false;

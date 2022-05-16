@@ -17,4 +17,5 @@ public class Category {
     public double getDiscount(){
         return discount;
     }
+    public String getName(){return name;}
 }

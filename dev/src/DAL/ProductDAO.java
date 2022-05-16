@@ -1,7 +1,6 @@
 package DAL;
 
 import DomainLayer.Storage.Product;
-import javafx.util.Pair;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

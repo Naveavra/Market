@@ -2,8 +2,8 @@ package DomainLayer.Storage;
 
 
 import DAL.CategoryToProductDAO;
-import javafx.util.Pair;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -43,34 +43,40 @@ public class CategoryController
         }
     }
 
-    public List<Pair<Category, Pair<Category, Pair<Category, List<Product>>>>> makeReport(List<String> catNames){
-        List<Pair<Category, Pair<Category, Pair<Category, List<Product>>>>> cats=new LinkedList<>();
-        Pair<Category, Pair<Category, List<Product>>> sub=null;
-        Pair<Category, List<Product>> productsInCat=null;
+    public List<HashMap<String, HashMap<String, HashMap<String, List<Product>>>>> makeReport(List<String> catNames){
+        List<HashMap<String, HashMap<String, HashMap<String, List<Product>>>>> cats=new LinkedList<>();
+        HashMap<String, HashMap<String, List<Product>>> sub;
+        HashMap<String, List<Product>> productsInCat;
+        List<Category> categories=categoriesDAO.getCategories();
         for(String name : catNames){
             sub=null;
             productsInCat=null;
-            if(categoriesDAO.hasCategory(name)) {
-                List<String> subCategories = categoriesDAO.getSubCategories(name);
-                List<Category> add = new LinkedList<>();
-                for (String subName : subCategories) {
-                    List<String> subSubCategories = categoriesDAO.getSubSubCategories(name, subName);
-                    List<Category> addSub = new LinkedList<>();
-                    for (String subSubName : subSubCategories) {
-                        List<Product> products = categoriesDAO.getProductsOfSubSubCategory(name, subName, subSubName);
-                        Category subSubCategory = new Category(subSubName);
-                        productsInCat=new Pair<>(subSubCategory, products);
-                        addSub.add(subSubCategory);
+            Category c=null;
+            for(Category category :categories)
+                if(category.getName().equals(name))
+                    c=category;
+            if(c!=null) {
+                List<Category> subCategories = categoriesDAO.getSubCategories(name);
+                for (Category subName : subCategories) {
+                    List<Category> subSubCategories = categoriesDAO.getSubSubCategories(name, subName.getName());
+                    for (Category subSubName : subSubCategories) {
+                        List<Product> products = categoriesDAO.getProductsOfSubSubCategory(name, subName.getName(), subSubName.getName());
+                        productsInCat=new HashMap<>();
+                        productsInCat.put(subSubName.getName(), products);
                     }
-                    Category subCategory = new Category(subName);
-                    sub=new Pair<>(subCategory, productsInCat);
-                    add.add(subCategory);
+                    sub=new HashMap<>();
+                    sub.put(subName.getName(), productsInCat);
                 }
-                Category c = new Category(name);
-                cats.add(new Pair<>(c, sub));
+                HashMap<String, HashMap<String, HashMap<String, List<Product>>>> addCats=new HashMap<>();
+                addCats.put(c.getName(), sub);
+                cats.add(addCats);
             }
         }
         return cats;
+    }
+
+    public List<Category> getDiscounts(List<String> catNames) {
+        return categoriesDAO.getCategories();
     }
 
     public void transferProduct(int productId, String newCategory, String newSubCategory, String newSubSubCategory){

@@ -1,7 +1,7 @@
 package DAL;
 
+import DomainLayer.Storage.Category;
 import DomainLayer.Storage.Product;
-import javafx.util.Pair;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -63,7 +63,15 @@ public class CategoryToProductDAO {
         }
     }
 
-    public List<String> getSubCategories(String category){
+    public List<Category> getCategories(){
+        try {
+            return categoryDAO.getCategories();
+        } catch (SQLException e) {
+            return new LinkedList<>();
+        }
+    }
+
+    public List<Category> getSubCategories(String category){
         try {
             return categoryDAO.getSubCategories(category);
         } catch (SQLException e) {
@@ -96,7 +104,7 @@ public class CategoryToProductDAO {
             return false;
         }
     }
-    public List<String> getSubSubCategories(String category, String subCategory){
+    public List<Category> getSubSubCategories(String category, String subCategory){
         try {
             return categoryDAO.getSubSubCategories(category, subCategory);
         } catch (SQLException e) {
