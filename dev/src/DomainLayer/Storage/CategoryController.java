@@ -243,4 +243,11 @@ public class CategoryController
         return categoriesDAO.getProductIds();
     }
 
+    public boolean hasCategory(String name){
+        return categoriesDAO.hasCategory(name);
+    }
+    public List<Product> getProductsOfCategory(String name){
+        return categoriesDAO.getProductsOfCategory(name);
+    }
+
 }

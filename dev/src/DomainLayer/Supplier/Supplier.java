@@ -18,8 +18,8 @@ public class Supplier {
     private LinkedList<Contact> contacts;
     private LinkedList<Discount> discountByAmount;//sum of products in order
     //DAO to db
-    private ProductsSupplierDAO productsDAO;
-    private SuppliersDAO suppliersDAO;
+    private transient ProductsSupplierDAO productsDAO;
+    private transient SuppliersDAO suppliersDAO;
 
 
     public Supplier(int supplierNumber, String name,int bankAccount,LinkedList<Contact> contacts,boolean isDeliver,boolean active){

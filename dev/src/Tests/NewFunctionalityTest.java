@@ -30,11 +30,21 @@ public class NewFunctionalityTest {
             cC.addSubCategory("first", "first1");
             cC.addSubSubCategory("first", "first1", "first11");
             cC.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
-            cC.addAllItems(1,3,"2022-06-01",12);
+            cC.addAllItems(1,7,"2022-06-01",12);
             facade.openAccount(1,"eli", 1, true);
+            facade.openAccount(2,"eli2", 2, true);
             facade.addProduct(1, 1, 2, 1);
+            facade.addProduct(2, 2, 4, 1);
             facade.createOrder(1);
+            facade.createOrder(1);
+            String[]days=new String[1];
+            days[0]="4";
+            facade.addFixedDeliveryDaysForOrder(1, 2, days);
+            facade.updateOrders();
             facade.addProductToOrder(1, 1, 1, 2);
+            facade.addProductToOrder(1, 2, 1, 2);
+            days[0]="1";
+            facade.addFixedDeliveryDaysForOrder(1, 1, days);
             setUpIsDone=true;
         }
         else {
@@ -46,31 +56,68 @@ public class NewFunctionalityTest {
 
 
 
+
+
     @org.junit.Test
-    public void stage1_checkRequestingAnOrderAfterShortage() {
-        facade.buyItems(1, 3);
+    public void stage1_checkNotOrderingWhenNotDayBeforeOrder(){
+        assertEquals(0, ordersController.getFinalOrders(1).size());
+    }
+
+    @org.junit.Test
+    public void stage2_checkNotOrderingWhenRefillNotNeeded(){
+        facade.buyItems(1, 1);
+        assertEquals(0, ordersController.getFinalOrders(1).size());
+    }
+    @org.junit.Test
+    public void stage3_checkRequestingAnOrderAfterShortage() {
+        facade.buyItems(1, 6);
         assertEquals(1, ordersController.getFinalOrders(1).size());
 
     }
 
     @org.junit.Test
-    public void stage2_checkSendingRegularOrder() {
-        String[]days=new String[1];
-        days[0]="1";
-        facade.addFixedDeliveryDaysForOrder(1, 1, days);
+    public void stage4_checkUpdatingRegularOrdersCount(){
         facade.updateOrders();
+        assertEquals(cC.getProductWithId(1).getRefill(), ordersController.getOrder(1).getCountProducts());
+    }
+
+
+    @org.junit.Test
+    public void stage5_checkSendingRegularOrder() {
         assertTrue(ordersController.getFinalOrders(1).containsKey(1));
     }
 
     @org.junit.Test
-    public void stage3_checkUpdatingRegularOrders(){
-        cC.addAllItems(1,3,"2022-06-01",12);
-        facade.updateOrders();
-        assertEquals(cC.getProductWithId(1).getRefill(), ordersController.getOrder(1).getCountProducts());
-        cC.buyItems(1, 3);
-        facade.updateOrders();
-        assertEquals(cC.getProductWithId(1).getRefill(), ordersController.getOrder(1).getCountProducts());
+    public void stage6_checkSendingOrderWhenRefillIsNotEnough() {
+        facade.addAllItems(1,1,"2022-06-01",12);
+        assertEquals(3, ordersController.getFinalOrders(1).size());
+
     }
+
+    @org.junit.Test
+    public void stage7_checkStopSendingOrderAfterRefill() {
+        cC.addAllItems(1,100,"2022-06-01",12);
+        assertEquals(3, ordersController.getFinalOrders(1).size());// one order before and one order because of regular
+
+    }
+
+    @org.junit.Test
+    public void stage8_checkUpdatingRegularOrdersAfterRefillTo0(){
+        facade.updateOrders();
+        assertEquals(0, ordersController.getOrder(1).getCountProducts());
+    }
+
+    @org.junit.Test
+    public void stage9_checkSendingRegularOrderWhenCountIs0() {
+        assertEquals(3, ordersController.getFinalOrders(1).size());//2 were already there, checking no other order was added
+    }
+
+    @org.junit.Test
+    public void stage9z_checkGotMinPriceForProduct(){
+        assertEquals(2, ordersController.getProductWithMinPrice(1, 5).getPrice(), 0.0);
+    }
+
+
 
 
 }

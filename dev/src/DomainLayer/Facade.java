@@ -313,7 +313,9 @@ public class Facade {
     public void transferProduct(int id, String catAdd, String subAdd, String subSubAdd) {
         categoryController.transferProduct(id, catAdd, subAdd, subSubAdd);
     }
-
+    public boolean hasCategory(String cat){
+        return categoryController.hasCategory(cat);
+    }
 
     public void removeFromCatalog(int id) {
         categoryController.removeFromCatalog(id);
@@ -360,6 +362,10 @@ public class Facade {
 
     public void addAllItems(int id, int amount, String ed, int shelf){
         categoryController.addAllItems(id, amount, ed, shelf);
+        if(categoryController.needsRefill(id)) {
+            //find supplier with the lowest price and make an order
+            ordersController.createOrderWithMinPrice(id, categoryController.getProductWithId(id).getRefill());
+        }
     }
 
     public int getProductIdWithName(String name){

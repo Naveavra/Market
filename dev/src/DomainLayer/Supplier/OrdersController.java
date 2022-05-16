@@ -129,7 +129,8 @@ public class OrdersController {
         double totalPrice = 0;
         try {
             totalPrice = updateTotalIncludeDiscounts(orderId);
-            pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
+            if(o.getCountProducts()>0)
+                pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
             return o.getDaysToDeliver().getDaysInWeeks().length > 0;
         } catch (SQLException e) {
             return false;
@@ -165,7 +166,7 @@ public class OrdersController {
 
     public ProductSupplier getProductWithMinPrice(int productId, int amount){
         try {
-            return productsDAO.getMinProductByCatalogNumber(productId, amount);
+            return productsDAO.getMinProductByProductId(productId, amount);
         } catch (SQLException e) {
             return null;
         }

@@ -150,7 +150,7 @@ public class ProductsSupplierDAO {
         }
     }
 
-    public ProductSupplier getMinProductByCatalogNumber(int productId, int amount) throws SQLException {
+    public ProductSupplier getMinProductByProductId(int productId, int amount) throws SQLException {
         String query = "SELECT * FROM ProductSupplier WHERE " +
                 String.format("productId=%d", productId);
         try (Statement stmt = connect.createStatement()) {
