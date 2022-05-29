@@ -1,7 +1,10 @@
-package PresentationLayer.Supplier;
+package PresentationLayer;
 
 import DAL.Connect;
 import PresentationLayer.Storage.CLI;
+import PresentationLayer.Supplier.Order;
+import PresentationLayer.Supplier.SupplierMenu;
+import PresentationLayer.Transport_Emploees.MainCLI;
 import ServiceLayer.*;
 import com.google.gson.Gson;
 import java.sql.SQLException;
@@ -34,6 +37,7 @@ public class Menu {
             loadInitialData();
         System.out.println("\t1.Supplier Model");
         System.out.println("\t2.Storage Model");
+        System.out.println("\t3.Employee/Transport Model");
         try{
             choiceStr = sc.next();
             choice=Integer.parseInt(choiceStr);
@@ -47,10 +51,13 @@ public class Menu {
                 SupplierMenu sm = new SupplierMenu();
                 sm.chooseSupplierMenu();
                 break;
-            case 2:
-                CLI cli=new CLI();
+            case 2://storage
+                CLI cli=new CLI();//storage
                 cli.startStorageModel();
                 break;
+            case 3://emploees - transport
+                MainCLI cli2 = new MainCLI();
+                cli2.start();
             default:
                 System.out.println("You must type digit 1 to 2");
                 initialMenu();

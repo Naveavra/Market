@@ -5,12 +5,11 @@ import DomainLayer.Facade;
 import DomainLayer.Storage.CategoryController;
 import DomainLayer.Supplier.OrderFromSupplier;
 import DomainLayer.Supplier.OrdersController;
-import PresentationLayer.Supplier.Menu;
+import PresentationLayer.Menu;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
-import java.io.File;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;

@@ -38,7 +38,7 @@ public class ProductSupplierService {
      * @return true if succeed, false if failed
      */
     public boolean updateProduct(int supplierNumber, int catalogNumber,int productId, int price){
-     return facade.updateProduct(supplierNumber, catalogNumber,productId, price);
+        return facade.updateProduct(supplierNumber, catalogNumber,productId, price);
     }
 
     /**
