@@ -8,26 +8,27 @@ public class Site {
         South
     }
 
-    Contact contactinfo;
-    ShippingArea areacode;
-    String id;
-    int type;
+    private Contact contactInfo;
+    private ShippingArea areaCode;
+    private String id;
+    private int type;
 
     public Site(String id,Contact contact, ShippingArea shippingArea, int type){
-        this.contactinfo = contact;
-        this.areacode = shippingArea;
+        this.contactInfo = contact;
+        this.areaCode = shippingArea;
         this.id = id;
         this.type = type; // 0 for supplier 1 for store
     }
     public String toString(){
         return this.id;
     }
-    public Contact getContactinfo() {
-        return contactinfo;
+
+    public Contact getContactInfo() {
+        return contactInfo;
     }
 
-    public ShippingArea getAreacode() {
-        return areacode;
+    public ShippingArea getAreaCode() {
+        return areaCode;
     }
 
     public void setId(String id) {
@@ -36,5 +37,9 @@ public class Site {
 
     public String getId() {
         return id;
+    }
+
+    public int getType() {
+        return type;
     }
 }

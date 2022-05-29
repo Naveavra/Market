@@ -30,7 +30,7 @@ public class TruckDAO {
     }
 
     public void setAvailability(Truck truck, String  date, String time, boolean param){
-        String licenseplate = truck.getLicenseplate();
+        String licenseplate = truck.getLicensePlate();
         String avail;
         if(param){
             avail = "#t";

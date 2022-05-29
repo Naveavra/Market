@@ -16,6 +16,7 @@ public class Supply {
     public double getWeight() {
         return weight;
     }
+    
     public String toString(){
         return "Name: "+ name +" ,Weight: "+ weight;
     }

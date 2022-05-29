@@ -2,7 +2,6 @@ package DomainLayer.Employees;
 
 import ServiceLayer.Utility.ShiftPair;
 import ServiceLayer.Utility.ShiftDate;
-
 import java.util.*;
 
 public class Employee {
@@ -18,6 +17,7 @@ public class Employee {
     private final Set<JobType> roles;
     private Date shiftStart;
 
+    //constructor
     public Employee(String id, String name, String password, float salary, String bankAccount, String contractOfEmployment, Date dateOfEmployment){
         this.id = id;
         this.name = name;

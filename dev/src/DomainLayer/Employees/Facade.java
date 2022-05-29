@@ -197,11 +197,11 @@ public class Facade {
      * handles the shutting down of the system. more functionality will be added later on
      */
     public void shutDown() {
+        shiftController.shutDown();
+        employeeController.shutDown();
 //        try {
-            //employeeController.shutDown();
-            jobController.shutDown();
-            shiftController.shutDown();
-            employeeController.shutDown();
+//            employeeController.shutDown();
+//            jobController.shutDown();
 //            DBConnector.getInstance().close();
 //        }
 //        catch (SQLException e){
@@ -219,65 +219,6 @@ public class Facade {
 
     public String displayWorkersOfCurrentShift() {
         return shiftController.displayWorkersOfCurrentShift();
-    }
-
-    public void loadPreMadeData() {
-        createEmployee("234567891", "gal halifa", "123456", 1000, "yahav", "good conditions");
-        createEmployee("123456789", "dan terem", "123456", 1000, "yahav", "good conditions");
-        createEmployee("345678912", "noa aviv", "123456", 1000, "yahav", "good conditions");
-        createEmployee("456789123", "nave avraham", "123456", 1000, "yahav", "good conditions");
-        createEmployee("789123456", "gili gershon", "123456", 1000, "yahav", "good conditions");
-        createEmployee("891234567", "amit halifa", "123456", 1000, "yahav", "good conditions");
-        createEmployee("012345678", "shachar bardugo", "123456", 1000, "yahav", "good conditions");
-        createEmployee("123456780", "nadia zlenko", "123456", 1000, "yahav", "good conditions");
-        createEmployee("234567801", "yossi gershon", "123456", 1000, "yahav", "good conditions");
-        createEmployee("345678012", "eti gershon", "123456", 1000, "yahav", "good conditions");
-        createEmployee("456780123", "amit sasson", "123456", 1000, "yahav", "good conditions");
-        createEmployee("567801234", "itamar shemesh", "123456", 1000, "yahav", "good conditions");
-        createEmployee("147258369", "dina agapov", "123456", 1, "yahav", "bad");
-        createEmployee("258369147", "mor shuker", "123456", 1, "yahav", "bad");
-        createEmployee("000000000", "may terem", "123456", 1, "yahav", "good");
-        createEmployee("111111111", "wendy the dog", "123456", 1, "yahav", "good");
-        createEmployee("222222222", "savta tova", "123456", 1, "yahav", "good");
-        createEmployee("333333333", "liron marinberg", "123456", 1, "yahav", "good");
-        certifyEmployee(JobType.CASHIER, "318856994");
-        certifyEmployee(JobType.CASHIER, "234567891");
-        certifyEmployee(JobType.CASHIER, "345678912");
-        certifyEmployee(JobType.CASHIER, "123456789");
-        certifyDriver("258369147", "c");
-        certifyDriver("123456789", "c1");
-        certifyDriver("456780123", "c");
-        certifyDriver("234567891", "c");
-        certifyDriver("012345678", "c1");
-        certifyEmployee(JobType.MERCHANDISER, "234567891");
-        certifyEmployee(JobType.MERCHANDISER, "123456789");
-        certifyEmployee(JobType.MERCHANDISER, "789123456");
-        certifyEmployee(JobType.MERCHANDISER, "234567891");
-        certifyEmployee(JobType.MERCHANDISER, "123456789");
-        certifyEmployee(JobType.STOCK_KEEPER, "123456780");
-        certifyEmployee(JobType.STOCK_KEEPER, "345678912");
-        certifyEmployee(JobType.STOCK_KEEPER, "456780123");
-        certifyEmployee(JobType.STOCK_KEEPER, "123456789");
-        certifyEmployee(JobType.SHIFT_MANAGER, "234567891");
-        certifyEmployee(JobType.SHIFT_MANAGER, "318856994");
-        certifyEmployee(JobType.SHIFT_MANAGER, "222222222");
-        certifyEmployee(JobType.STOCK_KEEPER, "111111111");
-        certifyDriver( "000000000", "c1");
-        certifyEmployee(JobType.SHIFT_MANAGER, "456789123");
-        certifyEmployee(JobType.CASHIER, "333333333");
-        certifyEmployee(JobType.MERCHANDISER, "567801234");
-        certifyDriver("123456780", "c");
-//        employeeController.putBackAll();
-
-        Response r = createShift(new ShiftPair(new ShiftDate("01", "06", "2022"), Time.MORNING), "318856994",
-                "333333333,234567891", "123456780,000000000", "123456789", "111111111");
-        if (r.errorOccurred())
-            System.out.println("r1 = " + r.getErrorMessage());
-        r = createShift(new ShiftPair(new ShiftDate("02", "06", "2022"), Time.MORNING), "456789123",
-                "333333333,234567891", "258369147,000000000", "567801234", "345678912");
-        if (r.errorOccurred())
-            System.out.println("r2 = " + r.getErrorMessage());
-
     }
 
 

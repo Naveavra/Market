@@ -126,7 +126,7 @@ public class EmployeeMainCLI extends MainCLI {
             System.exit(0);
         }
         if(input.equals("load data")) {
-            serviceController.loadPreMadeData();
+            //serviceController.loadPreMadeData();
             print("Data has loaded\nThe system is now loaded with several employees");
         }
         return input;

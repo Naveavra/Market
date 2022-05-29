@@ -4,8 +4,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-
-public class OrderDoc {
+public class OrderDocument {
     Site origin;
     String id;
     private final ConcurrentHashMap<Site,ConcurrentHashMap<Supply,Integer>> destinations;
@@ -15,9 +14,9 @@ public class OrderDoc {
     Driver driver;
     double weight;
     String time;
-    private final ConcurrentHashMap<Integer,DriverDoc > driverDocs;
+    private final ConcurrentHashMap<Integer, DriverDocument> driverDocs;
 
-    public OrderDoc(String id, Site origin, ConcurrentHashMap<Site,ConcurrentHashMap<Supply,Integer>> destination, Date date, String time){
+    public OrderDocument(String id, Site origin, ConcurrentHashMap<Site,ConcurrentHashMap<Supply,Integer>> destination, Date date, String time){
         this.id = id;
         this.origin = origin;
         this.date = date;
@@ -30,7 +29,7 @@ public class OrderDoc {
     }
     public String setWeight(double weight){ //here the driver calls the manager after visits the supllier
         // to tell him the current weight
-        if(truck.getMaxweight()<weight){
+        if(truck.getMaxWeight()<weight){
             return "Error: weight exceeds the maximum";
         }
         this.weight = weight;
@@ -40,7 +39,7 @@ public class OrderDoc {
         return origin.getId();
     }
     public String getTruck(){
-        return truck.getLicenseplate();
+        return truck.getLicensePlate();
     }
     public void setTruckandDriver(Truck t,Driver d){
         this.truck=t;
@@ -54,7 +53,7 @@ public class OrderDoc {
     public String getDriverDoc(){ //here we create the document for the driver
         String res = "Doc id: " + this.id + "\n";
         for(Site store:destinations.keySet()){
-            res += store.id+"\n";
+            res += store.getId()+"\n";
             for(Supply s:destinations.get(store).keySet()){
                 res+= s+ " -- " + destinations.get(store).get(s).toString()+"\n";
             }
@@ -64,7 +63,7 @@ public class OrderDoc {
     }
 
     public boolean isWeightLegit(double currweight){
-        return currweight <= truck.maxweight;
+        return currweight <= truck.maxWeight;
     }
 
     public double getTotalWeight(){ //this will give me the total weight of the supplies list
@@ -79,7 +78,7 @@ public class OrderDoc {
     }
     public boolean containsStore(String id){
         for(Site s : getDestinations().keySet()){
-            if(Objects.equals(s.id, id)){
+            if(Objects.equals(s.getId(), id)){
                 return true;
             }
         }
@@ -87,7 +86,7 @@ public class OrderDoc {
     }
     public void remove(String id){
         for(Site s : getDestinations().keySet()){
-            if(Objects.equals(s.id, id)){
+            if(Objects.equals(s.getId(), id)){
                 getDestinations().remove(s);
             }
         }
@@ -96,10 +95,10 @@ public class OrderDoc {
         String orderID = "Doc id is: " + id;
         String Date = "\ncreated in " + date;
         String drivertruck = "\nThe driver was " + driver.getName() + " he used the truck with the licenseplate number " +
-                truck.getLicenseplate() + "\nThe departure time was: " + this.time + "\nTruck weight: " + weight;
+                truck.getLicensePlate() + "\nThe departure time was: " + this.time + "\nTruck weight: " + weight;
         String supp = "\nHe carried supplies from " + origin+" to:\n";
         for(Site store:destinations.keySet()){
-            supp+=store.id + "\nSupplies:\n";
+            supp+=store.getId() + "\nSupplies:\n";
             for(Supply sup:destinations.get(store).keySet()){
                 supp+="Name: "+ sup.name +" ,Quantity: "+destinations.get(store).get(sup)+"\n";
             }
@@ -115,7 +114,7 @@ public class OrderDoc {
         }
         this.truck = newTruck;
         newTruck.isoccupied(d);
-        this.weight = newTruck.initialweight;
+        this.weight = newTruck.initialWeight;
     }
 
     public Date getDate(){
@@ -140,7 +139,7 @@ public class OrderDoc {
         this.complete = true;
     }
 
-    public ConcurrentHashMap<Integer, DriverDoc> getDriverDocs() {
+    public ConcurrentHashMap<Integer, DriverDocument> getDriverDocs() {
         return driverDocs;
     }
 

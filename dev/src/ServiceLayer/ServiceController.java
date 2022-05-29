@@ -524,11 +524,11 @@ public class ServiceController {
         return employeeService != null;
     }
 
-    public void loadPreMadeData() {
-        if(!dataHasLoaded){
-            facade.loadPreMadeData();
-        }
-    }
+//    public void loadPreMadeData() {
+//        if(!dataHasLoaded){
+//            facade.loadPreMadeData();
+//        }
+//    }
 
     public void closeDbConnection() {
         //facade.closeDbConnection();

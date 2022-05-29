@@ -1,24 +1,23 @@
 package DomainLayer.Transport;
 
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Truck {
 
     String type; // we assume the type is matching the license meaning we only dealing with C ans C1
     Boolean available;
-    String licenseplate;
-    double initialweight;
-    double maxweight; // how much weight the truck can carry
-    private final ConcurrentHashMap<String, Boolean> dates;;//
+    String licensePlate;
+    double initialWeight;
+    double maxWeight; // how much weight the truck can carry
+    private final ConcurrentHashMap<String, Boolean> dates;//
 
     public Truck(String type, String licenseplate, double maxweight, double initialweight){
 
         this.type = type;
-        this.initialweight = initialweight;
-        this.licenseplate = licenseplate;
+        this.initialWeight = initialweight;
+        this.licensePlate = licenseplate;
         this.available = true;
-        this.maxweight = maxweight;
+        this.maxWeight = maxweight;
         dates = new ConcurrentHashMap<>();
     }
 
@@ -42,12 +41,12 @@ public class Truck {
         dates.put(date.toString(), true);
     }
 
-    public String getLicenseplate() {
-        return licenseplate;
+    public String getLicensePlate() {
+        return licensePlate;
     }
 
-    public void setLicenseplate(String licenseplate) {
-        this.licenseplate = licenseplate;
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
 
@@ -59,23 +58,23 @@ public class Truck {
 //        return true;
 //    }
 
-    public double getInitialweight() {
-        return initialweight;
+    public double getInitialWeight() {
+        return initialWeight;
     }
 
-    public void setInitialweight(double initialweight) {
-        this.initialweight = initialweight;
+    public void setInitialWeight(double initialWeight) {
+        this.initialWeight = initialWeight;
     }
 
-    public double getMaxweight() {
-        return maxweight;
+    public double getMaxWeight() {
+        return maxWeight;
     }
 
-    public void setMaxweight(double maxweight) {
-        this.maxweight = maxweight;
+    public void setMaxWeight(double maxWeight) {
+        this.maxWeight = maxWeight;
     }
     public String toString(){
-        String res = "type: " + type + " ,License plate: "+ licenseplate+ " ,Initial weight: " + initialweight+ " ,Max weight: " +maxweight +" ,Available: "+ available;
+        String res = "type: " + type + " ,License plate: "+ licensePlate + " ,Initial weight: " + initialWeight + " ,Max weight: " + maxWeight +" ,Available: "+ available;
         return res;
     }
 

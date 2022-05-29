@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Pool {
 
-    private final ConcurrentHashMap<String,OrderDoc> transporthistory; //<id, doc>
-    private final ConcurrentHashMap<String, Truck> trucks; // the truck licenseplate and the truck
+    private final ConcurrentHashMap<String, OrderDocument> transportHistory; //<id, doc>
+    private final ConcurrentHashMap<String, Truck> trucks; // the truck license-plate and the truck
     private final ConcurrentHashMap<String, Driver> drivers;
     private final ConcurrentHashMap<String, Site> sites;
     private final ConcurrentHashMap<String, Supply> supplies;
@@ -17,7 +17,7 @@ public class Pool {
         return INSTANCE;
     }
     private Pool(){
-        transporthistory = new ConcurrentHashMap<>();
+        transportHistory = new ConcurrentHashMap<>();
         trucks = new ConcurrentHashMap<>();
         drivers = new ConcurrentHashMap<>();
         sites = new ConcurrentHashMap<>();
@@ -62,7 +62,7 @@ public class Pool {
     }
 
     public void addTruck(Truck t){
-        trucks.put(t.getLicenseplate(), t);
+        trucks.put(t.getLicensePlate(), t);
     }
 
     public void removeTruck(String id){
@@ -77,14 +77,14 @@ public class Pool {
         sites.remove(id);
     }
     public void removeSupply(String name){supplies.remove(name);}
-    public void addDoc(OrderDoc doc){
-       if(transporthistory.containsKey(doc.getId())){throw new NullPointerException();}
+    public void addDoc(OrderDocument doc){
+       if(transportHistory.containsKey(doc.getId())){throw new NullPointerException();}
        else{
-           transporthistory.put(doc.getId(), doc);
+           transportHistory.put(doc.getId(), doc);
        }
     }
     public void removeDoc(String doc){
-        transporthistory.remove(doc);
+        transportHistory.remove(doc);
     }
 
     public String showSupplies(){
@@ -107,13 +107,6 @@ public class Pool {
         return null;
     }
 
-//        for(Supply supply:doc.getDestinations().get(store).get(name)){
-//            return supply;
-//            }
-//            counter++;
-//        }
-//        return null;
-//    }
     public boolean isEmpty(){
         if(trucks.isEmpty() && drivers.isEmpty()&& sites.isEmpty() && supplies.isEmpty()){
             return true;
@@ -132,8 +125,8 @@ public class Pool {
 //        }
 //        throw new NullPointerException();
    // }
-    public OrderDoc getOrderDoc(String id){
-        for(OrderDoc doc:transporthistory.values()){
+    public OrderDocument getOrderDoc(String id){
+        for(OrderDocument doc: transportHistory.values()){
             if(doc.id.equals(id)){
                 return doc;
             }
@@ -154,44 +147,21 @@ public class Pool {
 
 
     public String showStores(String areacode) {
-        String res = "";
+        String result = "";
         for(Site store : sites.values()){
-            if(store.type == 1 && store.areacode.toString() == areacode){
-                res+= "ID: " +store + "\n";
+            if(store.getType() == 1 && store.getAreaCode().toString() == areacode){
+                result += "ID: " +store + "\n";
             }
         }
-        return res;
+        return result;
     }
-    public String showSuppliers(String areacode) {
+    public String showSuppliers(String areaCode) {
         String res = "";
         for(Site supp : sites.values()){
-            if(supp.type == 0 && supp.areacode.toString().equals(areacode)){
-                res+= "ID: " +supp + "\n";
+            if(supp.getType() == 0 && supp.getAreaCode().toString().equals(areaCode)){
+                res += "ID: " +supp + "\n";
             }
         }
         return res;
     }
-
-    /*public void replaceStores(OrderDoc doc, String id2replace, String newStoreID) {
-        Site a = getSite(id2replace);
-        Site b = getSite(newStoreID);
-        if(a.type!=1 ||b.type!=1){
-            throw new NullPointerException();
-        }
-        doc.setStore(b); //TODO
-    }*/
-//    public Driver getDriverAtIDX(int idx){
-//        int counter = 0;
-//        for(Driver d:drivers.values()){
-//            if(counter == idx-1){
-//                return d;
-//            }
-//            counter++;
-//        }
-//        return null;
-//    }
-
-
-
-
 }

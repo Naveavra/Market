@@ -2,8 +2,7 @@ package DAL;
 
 
 //import SharedSpace.DBConnector;
-import DomainLayer.Transport.DriverDoc;
-import DomainLayer.Transport.OrderDoc;
+import DomainLayer.Transport.DriverDocument;
 import DomainLayer.Transport.Supply;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -16,18 +15,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DriverDocDAO {
     private Connect conn = Connect.getInstance();
     private final static DriverDocDAO INSTANCE = new DriverDocDAO();
-    private HashMap<Integer, DriverDoc> identityMap = new HashMap<>();
+    private HashMap<Integer, DriverDocument> identityMap = new HashMap<>();
     public static DriverDocDAO getInstance(){
         return INSTANCE;
     }
-    public String addDriverDocs(ArrayList<DriverDoc> docs){
+    public String addDriverDocs(ArrayList<DriverDocument> docs){
         throw new NotImplementedException();
     }
     public String removeDriverDoc(String dDocID){
         throw new NotImplementedException();
     }
-    public ArrayList<DriverDoc> showDriverDocs(String oDocID){
-        ArrayList<DriverDoc> docs = new ArrayList<>();
+    public ArrayList<DriverDocument> showDriverDocs(String oDocID){
+        ArrayList<DriverDocument> docs = new ArrayList<>();
         String query = "SELECT * FROM DriverDocs WHERE orderDocID = "+"'"+oDocID+"'";
         try {
             ResultSet rs = conn.executeQuery(query);
@@ -42,7 +41,7 @@ public class DriverDocDAO {
                 while (rs2.next()){
                     orders.put(SuppliesDAO.getInstance().getSupply(rs2.getString("supply")),rs2.getInt("quantity"));
                 }
-                docs.add(new DriverDoc(DriverDAO.getInstance().getDriver(rs.getString("driverID")),rs.getInt("id"),orders,
+                docs.add(new DriverDocument(DriverDAO.getInstance().getDriver(rs.getString("driverID")),rs.getInt("id"),orders,
                         SiteDAO.getInstance().getSite(rs.getString("siteID")),rs.getString("orderDocID")));
             }
         } catch (SQLException e) {
@@ -68,7 +67,7 @@ public class DriverDocDAO {
         throw new NotImplementedException(); //TODO DELETE IF NOT NEEDED
     }
 
-    public String addDriverDoc(DriverDoc newDoc) {
+    public String addDriverDoc(DriverDocument newDoc) {
         String query = "INSERT INTO DriverDocs(id,siteID,driverID,orderDocID) VALUES(?,?,?,?)";
         try {
             conn.executeUpdate(query,newDoc.getID(),newDoc.getStore().getId(),newDoc.getDriverID(),newDoc.getOrderDocID());

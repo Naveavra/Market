@@ -30,7 +30,4 @@ public class JobController {
         return jobDAO.addLicense(id, license);
     }
 
-    public void shutDown() {
-        jobDAO.shutDown();
-    }
 }

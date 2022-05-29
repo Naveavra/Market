@@ -1,13 +1,13 @@
 package ServiceLayer.transport;
 
-import DomainLayer.Transport.OrderCtrl;
+import DomainLayer.Transport.OrderController;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 //Miki//
-public class OrderService {
-    OrderCtrl orderCtrl = OrderCtrl.getInstance();
-    public OrderService(){
+public class OrderTransportService {
+    OrderController orderController = OrderController.getInstance();
+    public OrderTransportService(){
 
     }
 
@@ -21,120 +21,120 @@ public class OrderService {
 //    }
 
     public boolean setTrucksWeight(String docID, double weight2add) {
-        return orderCtrl.setTrucksWeight(docID, weight2add);
+        return orderController.setTrucksWeight(docID, weight2add);
     }
 
     public String showTrucks(String date, String driverID, String time) {
-        return orderCtrl.showTrucks(date,driverID,time);
+        return orderController.showTrucks(date,driverID,time);
     }
 
 
 
     public void setNewTruck(String docID,String newTruckPlate) {
-        orderCtrl.setNewTruck(docID, newTruckPlate);
+        orderController.setNewTruck(docID, newTruckPlate);
     }
 
     public String showStores(String areacode) {
-        return orderCtrl.showStores(areacode);
+        return orderController.showStores(areacode);
     }
 
     public void replaceStores(String docID, String id2replace, String newStoreID, ConcurrentHashMap<String, Integer> supplies) {
-        orderCtrl.replaceStores(docID, id2replace, newStoreID, supplies);
+        orderController.replaceStores(docID, id2replace, newStoreID, supplies);
     }
 
 
 
     public String showSupplies() {
-        return orderCtrl.showSupplies("","","");
+        return orderController.showSupplies("","","");
     }
 
 
     public String showSuppliers(String areacode) {
-        return orderCtrl.showSuppliers(areacode);
+        return orderController.showSuppliers(areacode);
     }
 
     public String createDoc(ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> orders, String supplier, String date,String driverID,String truckPlate, String time) {
-        return orderCtrl.createDoc(orders, supplier, date,driverID,truckPlate, time);
+        return orderController.createDoc(orders, supplier, date,driverID,truckPlate, time);
     }
 
     public void removeSiteFromDoc(String docID, String siteID) {
-        orderCtrl.removeSiteFromDoc(docID, siteID);
+        orderController.removeSiteFromDoc(docID, siteID);
     }
 
     public String showDrivers(String d,String time) {
-        return orderCtrl.showDrivers(d,time);
+        return orderController.showDrivers(d,time);
     }
 
     public String getDriver(String driverID) {
-        return orderCtrl.getDriver(driverID);
+        return orderController.getDriver(driverID);
     }
 
     public void removeDoc(String doc) {
-        orderCtrl.removeDoc(doc);
+        orderController.removeDoc(doc);
     }
 
     public String showSuppliesByDoc(String docID, String storeID) {
-        return orderCtrl.showSupplies(docID, storeID,"by Doc");
+        return orderController.showSupplies(docID, storeID,"by Doc");
     }
 
 
     public boolean changeOrder(String docID, String storeID, ArrayList<String> names,ArrayList<Integer> quantities) {
-        if (orderCtrl.containsSite(docID, storeID)) {
-            orderCtrl.changeOrder(docID,storeID, names,quantities);
+        if (orderController.containsSite(docID, storeID)) {
+            orderController.changeOrder(docID,storeID, names,quantities);
             return true;
         } else {
             throw new NullPointerException();
         }
     }
     public void createDriverDocs(String doc){
-        orderCtrl.createDriverDocs(doc);
+        orderController.createDriverDocs(doc);
     }
     public void transportIsDone(String doc) {
-        orderCtrl.transportIsDone(doc);
+        orderController.transportIsDone(doc);
     }
 
     public String showDriverDocs(String docID) {
-        return orderCtrl.ShowDriverDocs(docID);
+        return orderController.ShowDriverDocs(docID);
     }
 
     public String showStoresforDoc(String docID) {
-        return orderCtrl.showStoresforDoc(docID);
+        return orderController.showStoresforDoc(docID);
     }
 
 
     public String viewOrder(String docID) {
-        return orderCtrl.viewOrder(docID);
+        return orderController.viewOrder(docID);
     }
 
     public String getSupplyByIdx(int nextInt) {
-        return orderCtrl.getSupplyByIdx(nextInt,"","","");
+        return orderController.getSupplyByIdx(nextInt,"","","");
     }
 
     public String getTruck(String licensePlate) {
-        return orderCtrl.getTruck(licensePlate);
+        return orderController.getTruck(licensePlate);
     }
 
     public String getDate(String docID) {
-        return orderCtrl.getDate(docID);
+        return orderController.getDate(docID);
     }
 
     public String getDriverID(String docID) {
-        return orderCtrl.getDriverID(docID);
+        return orderController.getDriverID(docID);
     }
 
     public double getCurrWeight(String doc) {
-        return orderCtrl.getCurrWeight(doc);
+        return orderController.getCurrWeight(doc);
     }
 
     public boolean getDoc(String docID) {
-        return orderCtrl.getDoc(docID);
+        return orderController.getDoc(docID);
     }
 
     public String getSupplyByIdxandDoc(int idx,String docID,String storeID) {
-        return orderCtrl.getSupplyByIdx(idx,docID,storeID,"By Doc");
+        return orderController.getSupplyByIdx(idx,docID,storeID,"By Doc");
     }
 
-    public boolean validhour(String time) {
+    public boolean validHour(String time) {
         String[] helper = time.split(":");
         int hour = Integer.parseInt(helper[0]);
         int min = Integer.parseInt(helper[1]);
@@ -143,10 +143,10 @@ public class OrderService {
     }
 
     public void build() {
-        orderCtrl.build();
+        //orderController.build();
     }
 
     public String getTime(String docID) {
-        return orderCtrl.getTime(docID);
+        return orderController.getTime(docID);
     }
 }

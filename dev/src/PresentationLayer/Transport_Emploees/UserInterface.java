@@ -2,7 +2,7 @@ package PresentationLayer.Transport_Emploees;
 
 import PresentationLayer.Supplier.Contact;
 import ServiceLayer.transport.UserService;
-import ServiceLayer.transport.OrderService;
+import ServiceLayer.transport.OrderTransportService;
 
 
 import java.util.*;
@@ -17,7 +17,7 @@ public class UserInterface extends MainCLI {
         menu();
     }
     private UserService us = new UserService();
-    private OrderService os = new OrderService();
+    private OrderTransportService os = new OrderTransportService();
 //    private boolean createDriver(String name, String id, String license) {
   //      return us.createDriver(name, id, license);
    // }

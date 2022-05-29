@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class OrderDocDAO {
     private Connect conn = Connect.getInstance();
-    private HashMap<String, OrderDoc> identityMap = new HashMap<>();
+    private HashMap<String, OrderDocument> identityMap = new HashMap<>();
     private final static OrderDocDAO INSTANCE = new OrderDocDAO();
     public static OrderDocDAO getInstance(){
         return INSTANCE;
@@ -19,7 +19,7 @@ public class OrderDocDAO {
     public String addDoc(int ID,String originID,String creationDate,boolean complete,String truckPlate,String driverID,double weight,ConcurrentHashMap<String,ConcurrentHashMap<String,Integer>> orders, String supplier){
         throw new NotImplementedException();
     }
-    public String addDoc(OrderDoc doc){
+    public String addDoc(OrderDocument doc){
         String query = "INSERT INTO OrderDocs(id,driverID,licensePlate,origin,date,time,weight,finished) VALUES(?,?,?,?,?,?,?,?)";
         try {
             conn.executeUpdate(query,doc.getId(),doc.getDriver().getId(),doc.getTruck(),doc.getOrigin(),doc.getDate().toString(),doc.getTime(),0,"#f");
@@ -110,7 +110,7 @@ public class OrderDocDAO {
         }
         return "Success";
     }
-    public OrderDoc getOrderDoc(String docID){
+    public OrderDocument getOrderDoc(String docID){
         if(identityMap.containsKey(docID)){
             return identityMap.get(docID);
         }
@@ -141,7 +141,7 @@ public class OrderDocDAO {
                 Site store = SiteDAO.getInstance().getSite(rs.getString("siteID"));
                 supplies.put(store,showSupplies(docID,store.getId()));
             }
-            OrderDoc doc = new OrderDoc(id,s,supplies,da,time);
+            OrderDocument doc = new OrderDocument(id,s,supplies,da,time);
             doc.setTruckandDriver(t,d);
             doc.setWeight(weight);
             doc.setFinished(finished);
@@ -153,14 +153,14 @@ public class OrderDocDAO {
 
 
     }
-    public ArrayList<OrderDoc> showDocs(String date){
-        ArrayList<OrderDoc> orderdocs= new ArrayList<>();
+    public ArrayList<OrderDocument> showDocs(String date){
+        ArrayList<OrderDocument> orderdocs= new ArrayList<>();
         String query = "SELECT * FROM OrderDocs WHERE date = "+"'"+date+"'";
         ResultSet rs = null;
         try {
             rs = conn.executeQuery(query);
             while(rs.next()){
-                OrderDoc doc = getOrderDoc(rs.getString("orderDocID"));
+                OrderDocument doc = getOrderDoc(rs.getString("orderDocID"));
                 orderdocs.add(doc);
             }
             return orderdocs;
@@ -174,7 +174,7 @@ public class OrderDocDAO {
         try {
             if(identityMap.containsKey(docID)){
                 Site s = SiteDAO.getInstance().getSite(storeID);
-                OrderDoc doc = identityMap.get(docID);
+                OrderDocument doc = identityMap.get(docID);
                 return identityMap.get(docID).containsStore(SiteDAO.getInstance().getSite(storeID).getId());
             }
             String res = conn.executeQuery("SELECT siteID FROM order4Dest WHERE siteID = " + "'" + storeID + "'"+ "AND orderDocID = "+"'"+docID+"'").getString("siteID");
