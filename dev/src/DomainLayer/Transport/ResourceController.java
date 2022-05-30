@@ -9,10 +9,10 @@ import java.util.Objects;
 
 public class ResourceController {
 
-    public TruckDAO trucks = TruckDAO.getInstance();
-    public SuppliesDAO supplies = SuppliesDAO.getInstance();
-    public SiteDAO sites = SiteDAO.getInstance();
-    public DriverDAO drivers = DriverDAO.getInstance();
+    public TruckDAO trucks = new TruckDAO();
+    public SuppliesDAO supplies = new SuppliesDAO();
+    public SiteDAO sites = new SiteDAO();
+    public DriverDAO drivers = new DriverDAO();
     private final static ResourceController INSTANCE = new ResourceController();
 
     public static ResourceController getInstance(){

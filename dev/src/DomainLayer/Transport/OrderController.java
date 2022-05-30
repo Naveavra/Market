@@ -7,12 +7,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class OrderController {
-    public DriverDocDAO driverDocs = DriverDocDAO.getInstance();
-    public OrderDocDAO orderDocs = OrderDocDAO.getInstance();
-    public TruckDAO trucks = TruckDAO.getInstance();
-    public SiteDAO sites = SiteDAO.getInstance();
-    public SuppliesDAO supplies = SuppliesDAO.getInstance();
-    public DriverDAO drivers =DriverDAO.getInstance();
+    public DriverDocDAO driverDocs = new DriverDocDAO();
+    public OrderDocDAO orderDocs = new OrderDocDAO();
+    public TruckDAO trucks = new TruckDAO();
+    public SiteDAO sites = new SiteDAO();
+    public SuppliesDAO supplies = new SuppliesDAO();
+    public DriverDAO drivers = new DriverDAO();
     AtomicInteger id = new AtomicInteger();
     AtomicInteger driverDocID = new AtomicInteger();
     private final static OrderController INSTANCE = new OrderController();
@@ -230,11 +230,13 @@ public class OrderController {
         }
     }
     public void removeDriverDoc(String orderDocID,String siteID){
-        driverDocs.removeDriverDocbyODOC(orderDocID,siteID);
+        driverDocs.removeDriverDocByODOC(orderDocID,siteID);
     }
-    public void changeDriverDoc(String orderDocID,String siteID,ConcurrentHashMap<Supply,Integer>supplies){
-        driverDocs.updateDriverDoc(orderDocID,siteID,supplies);
-    }
+
+//    public void changeDriverDoc(String orderDocID,String siteID,ConcurrentHashMap<Supply,Integer>supplies){
+//        driverDocs.updateDriverDoc(orderDocID,siteID,supplies);
+//    }
+
     public String ShowDriverDocs(String docID) {
         ArrayList<DriverDocument> docs = driverDocs.showDriverDocs(docID);
         String res="";

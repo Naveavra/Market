@@ -11,25 +11,25 @@ import java.util.Objects;
 
 public class TruckDAO {
     private Connect conn = Connect.getInstance();
-    private HashMap<String, Truck> identityMap = new HashMap<>();
-    private final static TruckDAO INSTANCE = new TruckDAO();
-    public static TruckDAO getInstance(){
-        return INSTANCE;
-    }
+    private static HashMap<String, Truck> identityMap = new HashMap<>();
+//    private final static TruckDAO INSTANCE = new TruckDAO();
+//    public static TruckDAO getInstance(){
+//        return INSTANCE;
+//    }
 
     public String addTruck(String type, String licensePlate, double maxWeight, double initialWeight){
         String query = "INSERT INTO Trucks(licensePlate,type, maxWeight,initialWeight) VALUES(?,?,?,?)";
         try {
             conn.executeUpdate(query,licensePlate,type,maxWeight,initialWeight);
-            addAvailability(licensePlate);
-            return "Success";
+            if (addAvailability(licensePlate))
+                return "Success";
         }catch (SQLException se){
-            System.out.println("Cannot Insert a Truck,Something is wrong with the db");
+            return "Failed to add truck";
         }
         return "Failed to add truck";
     }
 
-    public void setAvailability(Truck truck, String  date, String time, boolean param){
+    public boolean setAvailability(Truck truck, String  date, String time, boolean param){
         String licenseplate = truck.getLicensePlate();
         String avail;
         if(param){
@@ -41,8 +41,9 @@ public class TruckDAO {
         try {
             conn.executeUpdate(query,avail,licenseplate,date,time);
         } catch (SQLException e) {
-            e.printStackTrace();
+            return false;
         }
+        return true;
     }
     public boolean getAvailability(String id,String date){
         if(containsTruck(id)){
@@ -52,9 +53,11 @@ public class TruckDAO {
                 if(Objects.equals(rs.getString("available"), "#t")){
                     return true;
                 }
-                else {return false;}
+                else {
+                    return false;
+                }
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                return false;
             }
         }
         return false;
@@ -86,7 +89,7 @@ public class TruckDAO {
         }
     }
 
-    public void addAvailability(String licenseplate){
+    public boolean addAvailability(String licenseplate){
         String query = "INSERT INTO TrucksAvailability(licenseplate,date,time,available) VALUES(?,?,?,?)";
         try {
             int day=19;
@@ -113,16 +116,18 @@ public class TruckDAO {
 
         }
         catch (SQLException e){
-            e.printStackTrace();
+            return false;
         }
-        }
+        return true;
+    }
+//
+//    public String updateTruckAvailability(String licensePlate,String date, boolean available){
+//        throw new NotImplementedException();
+//    }
+//    public double getMaxWeight(String licensePlate){
+//        throw new NotImplementedException();
+//    }
 
-    public String updateTruckAvailability(String licensePlate,String date, boolean available){
-        throw new NotImplementedException();
-    }
-    public double getMaxWeight(String licensePlate){
-        throw new NotImplementedException();
-    }
     public Truck getTruck(String licensePlate){
         if(identityMap.containsKey(licensePlate)){
             return identityMap.get(licensePlate);
@@ -138,10 +143,8 @@ public class TruckDAO {
             return t;
 
         } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//            System.out.println("Unable to execute query getTruck");
+            return null;
         }
-        return null;
     }
     public ArrayList<Truck> getTrucks(String date, String time, String licenseType){
         ArrayList<Truck> rval = new ArrayList<>();
@@ -161,7 +164,7 @@ public class TruckDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Cannot connect to the DB");
+            return null;
         }
         return rval;
     }
@@ -170,7 +173,8 @@ public class TruckDAO {
     }
     public boolean containsTruck(String licensePlate){
         try {
-            return identityMap.containsKey(licensePlate) || conn.executeQuery("SELECT licensePlate FROM Trucks WHERE licensePlate = " + "'"+licensePlate+"'").next();
+            return identityMap.containsKey(licensePlate) ||
+                    conn.executeQuery("SELECT licensePlate FROM Trucks WHERE licensePlate = " + "'"+licensePlate+"'").next();
         } catch (SQLException e) {
             return false;
         }

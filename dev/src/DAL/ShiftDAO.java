@@ -10,13 +10,12 @@ import java.util.*;
 
 
 public class ShiftDAO {
-    private final Map<ShiftPair, Shift> shiftID;
+    private static Map<ShiftPair, Shift> shiftID = new HashMap<>();;
     private Connect connect = Connect.getInstance();
-    private static final ShiftDAO instance = new ShiftDAO();
-
-    private ShiftDAO(){ shiftID = new HashMap<>();}
-
-    public static ShiftDAO getInstance(){return instance;}
+    private EmployeeDAO employeeDAO = new EmployeeDAO();
+    private DriverDAO driverDAO = new DriverDAO();
+//    private static final ShiftDAO instance = new ShiftDAO();
+//    public static ShiftDAO getInstance(){return instance;}
 
     public Shift getShift(ShiftPair shiftPair){
         if(shiftID.containsKey(shiftPair)){
@@ -29,7 +28,6 @@ public class ShiftDAO {
             return shiftConvertor(shiftPair);
         }
         catch (SQLException e){
-            System.out.println("problem in getShift");
             return null;
         }
     }
@@ -46,13 +44,13 @@ public class ShiftDAO {
             List<Employee> merchandisers = new ArrayList<>();
             List<Employee> stockKeepers = new ArrayList<>();
             while (cashiersIDs.next())
-                cashiers.add(EmployeeDAO.getInstance().getEmployee(cashiersIDs.getString("employeeID")));
+                cashiers.add(employeeDAO.getEmployee(cashiersIDs.getString("employeeID")));
             while (driversIDs.next())
-                drivers.add(EmployeeDAO.getInstance().getEmployee(driversIDs.getString("employeeID")));
+                drivers.add(employeeDAO.getEmployee(driversIDs.getString("employeeID")));
             while (merchandisersIDs.next())
-                merchandisers.add(EmployeeDAO.getInstance().getEmployee(merchandisersIDs.getString("employeeID")));
+                merchandisers.add(employeeDAO.getEmployee(merchandisersIDs.getString("employeeID")));
             while (stockKeepersIDs.next())
-                stockKeepers.add(EmployeeDAO.getInstance().getEmployee(stockKeepersIDs.getString("employeeID")));
+                stockKeepers.add(employeeDAO.getEmployee(stockKeepersIDs.getString("employeeID")));
             Map<JobType, List<Employee>> res = new HashMap<>();
             res.put(JobType.CASHIER, cashiers);
             res.put(JobType.DRIVER, drivers);
@@ -61,7 +59,7 @@ public class ShiftDAO {
             return res;
         }
         catch (SQLException e){
-            System.out.println("problem in getEmployeesInShift");
+//            System.out.println("problem in getEmployeesInShift");
             return null;
         }
     }
@@ -85,7 +83,7 @@ public class ShiftDAO {
             return s;
         }
         catch (SQLException e){
-            System.out.println("problem in shiftConverter");
+//            System.out.println("problem in shiftConverter");
             return null;
         }
     }
@@ -95,10 +93,9 @@ public class ShiftDAO {
             ShiftDate shiftID = shiftPair.getDate();
             ResultSet managerID = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? and " +
                     "timeOfDay = ? and day = ? and month = ? and year = ?", JobType.SHIFT_MANAGER, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
-            return EmployeeDAO.getInstance().getEmployee(managerID.getString("id"));
+            return employeeDAO.getEmployee(managerID.getString("id"));
         }
         catch (SQLException e){
-            System.out.println("problem in getShiftManager");
             return null;
         }
     }
@@ -131,7 +128,6 @@ public class ShiftDAO {
                     ",job) VALUES(?,?,?,?,?,?)", shiftPair.getTime(), shiftDate.getDay(), shiftDate.getMonth(), shiftDate.getYear(), manager.getId(), JobType.SHIFT_MANAGER);
         }
         catch (SQLException ignore){
-            System.out.println("problem in insertShift");
         }
     }
 
@@ -144,7 +140,6 @@ public class ShiftDAO {
                     " AND year = ?", shiftPair.getTime(), date.getDay(),date.getMonth(), date.getYear()).next();
         }
         catch (SQLException e) {
-            System.out.println("problem in shiftExists");
             return false;
         }
     }
@@ -159,14 +154,11 @@ public class ShiftDAO {
                 if(rs.next()) {
                     String id = rs.getString("id");
                     String license = rs.getString("license");
-                    DriverDAO.getInstance().addDriver(e.getName(), id, license);
+                    driverDAO.addDriver(e.getName(), id, license);
                 }
             }
         } catch (SQLException ignore) {
-            System.out.println(ignore.getMessage());
-            System.out.println("problem in updateDriversAvail");
         }
-
     }
 
     public void shutDown() {

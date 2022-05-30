@@ -199,14 +199,6 @@ public class Facade {
     public void shutDown() {
         shiftController.shutDown();
         employeeController.shutDown();
-//        try {
-//            employeeController.shutDown();
-//            jobController.shutDown();
-//            DBConnector.getInstance().close();
-//        }
-//        catch (SQLException e){
-//            System.out.println("Unsuccessful shutdown");
-//        }
     }
 
     public boolean shiftIsRunning() {
@@ -221,12 +213,4 @@ public class Facade {
         return shiftController.displayWorkersOfCurrentShift();
     }
 
-
-//    public void closeDbConnection() {
-//        DBConnector.getInstance().close();
-//    }
-//
-//    public void initializeDBConnection() {
-//        DBConnector.getInstance().startConnection();
-//    }
 }

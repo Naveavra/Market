@@ -11,7 +11,7 @@ public class ShiftController {
 //    private final List<Shift> pastShifts;
 //    private final List<Shift> upcomingShifts;
     private Shift currentShift;
-    private final ShiftDAO shiftDAO = ShiftDAO.getInstance();
+    private final ShiftDAO shiftDAO = new ShiftDAO();
 
     public ShiftController(){
 //        pastShifts = new ArrayList<>();

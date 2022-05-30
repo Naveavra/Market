@@ -6,7 +6,7 @@ import java.util.*;
 public class JobController {
 //    private static final JobController instance = new JobController();
 //    private final Map<JobType, List<Employee>> roles;
-    private final JobDAO jobDAO = JobDAO.getInstance();
+    private final JobDAO jobDAO = new JobDAO();
 
     public JobController(){
 //        roles = new HashMap<>();

@@ -16,17 +16,15 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class EmployeeDAO {
-    private final Map<String, Employee> idMap;
+    private static Map<String, Employee> idMap = new HashMap<>();;
     private Connect conn = Connect.getInstance();
-    private static final EmployeeDAO instance = new EmployeeDAO();
-
-    private EmployeeDAO(){
-        idMap = new HashMap<>();
-    }
-
-    public static EmployeeDAO getInstance() {
-        return instance;
-    }
+//    private static final EmployeeDAO instance = new EmployeeDAO();
+//    private EmployeeDAO(){
+//        idMap = new HashMap<>();
+//    }
+//    public static EmployeeDAO getInstance() {
+//        return instance;
+//    }
 
     public Employee getEmployee(String id){
         if (idMap.containsKey(id))

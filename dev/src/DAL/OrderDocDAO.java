@@ -12,19 +12,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OrderDocDAO {
     private Connect conn = Connect.getInstance();
     private HashMap<String, OrderDocument> identityMap = new HashMap<>();
-    private final static OrderDocDAO INSTANCE = new OrderDocDAO();
-    public static OrderDocDAO getInstance(){
-        return INSTANCE;
-    }
-    public String addDoc(int ID,String originID,String creationDate,boolean complete,String truckPlate,String driverID,double weight,ConcurrentHashMap<String,ConcurrentHashMap<String,Integer>> orders, String supplier){
-        throw new NotImplementedException();
-    }
+    private SiteDAO siteDAO = new SiteDAO();
+    private DriverDAO driverDAO = new DriverDAO();
+
+//    private final static OrderDocDAO INSTANCE = new OrderDocDAO();
+//    public static OrderDocDAO getInstance(){
+//        return INSTANCE;
+//    }
+//    public String addDoc(int ID,String originID,String creationDate,boolean complete,String truckPlate,String driverID,double weight,ConcurrentHashMap<String,ConcurrentHashMap<String,Integer>> orders, String supplier){
+//        throw new NotImplementedException();
+//    }
+
     public String addDoc(OrderDocument doc){
         String query = "INSERT INTO OrderDocs(id,driverID,licensePlate,origin,date,time,weight,finished) VALUES(?,?,?,?,?,?,?,?)";
         try {
             conn.executeUpdate(query,doc.getId(),doc.getDriver().getId(),doc.getTruck(),doc.getOrigin(),doc.getDate().toString(),doc.getTime(),0,"#f");
-            DriverDAO.getInstance().setAvailability(doc.getDriver(),doc.getDate().toString(),doc.getTime(),false);
-            TruckDAO.getInstance().setAvailability(TruckDAO.getInstance().getTruck(doc.getTruck()),doc.getDate().toString(),doc.getTime(),false);
+            driverDAO.setAvailability(doc.getDriver(),doc.getDate().toString(),doc.getTime(),false);
+            new TruckDAO().setAvailability(new TruckDAO().getTruck(doc.getTruck()),doc.getDate().toString(),doc.getTime(),false);
             for(Site dest: doc.getDestinations().keySet()){
                 query= "INSERT INTO Destinations(siteID,orderDocID) VALUES(?,?)";
                 conn.executeUpdate(query,dest.getId(),doc.getId());
@@ -37,8 +41,7 @@ public class OrderDocDAO {
             identityMap.put(doc.getId(),doc);
             return "Success";
         }catch (SQLException se){
-            System.out.println(se.getMessage());
-            System.out.println("Cannot Insert a OrderDoc,Something is wrong with the db");
+
         }
         return "Failed to add OrderDoc";
     }
@@ -74,9 +77,9 @@ public class OrderDocDAO {
             conn.executeUpdate(query);
             return "Success";
         } catch (SQLException e) {
-            System.out.println("Unable to execute query updateDoc");
+            return "Fail";
         }
-        return "Fail";
+
     }
     public String replaceStore(String docID, String id2Replace, String newID, ConcurrentHashMap<String,Integer> supplies){
         removeDest(docID,id2Replace,"order4Dest");
@@ -89,10 +92,10 @@ public class OrderDocDAO {
                 conn.executeUpdate(query2,newID,docID);
                 return "Success";
             } catch (SQLException e) {
-                System.out.println("Unable to update Order");
                 return "Unable to update Order";
             }
-        }return "Failed";
+        }
+        return "Failed";
 
     }
     public String updateOrder(String docID, String storeID, ArrayList<String> names,ArrayList<Integer> quantities){
@@ -104,7 +107,6 @@ public class OrderDocDAO {
                 conn.executeUpdate(query, storeID, docID, names.get(i), quantities.get(i));
                 conn.executeUpdate(query2,storeID,docID);
             } catch (SQLException e) {
-                System.out.println("Unable to update Order");
                 return "Unable to update Order";
             }
         }
@@ -129,16 +131,18 @@ public class OrderDocDAO {
             if(Objects.equals(rs.getString("finished"), "#t")){
                 finished=true;
             }
-            else{finished = false;}
+            else{
+                finished = false;
+            }
             Date da = createDate(date);
-            Driver d = DriverDAO.getInstance().getDriver(driverID);
-            Truck t = TruckDAO.getInstance().getTruck(licensePlate);
-            Site s = SiteDAO.getInstance().getSite(originID);
+            Driver d = driverDAO.getDriver(driverID);
+            Truck t = new TruckDAO().getTruck(licensePlate);
+            Site s = siteDAO.getSite(originID);
             ConcurrentHashMap<Site,ConcurrentHashMap<Supply,Integer>> supplies =new ConcurrentHashMap<>();
             query = "SELECT * FROM order4Dest WHERE orderDocID = "+"'"+docID+"'";
             rs = conn.executeQuery(query);
             while(rs.next()){
-                Site store = SiteDAO.getInstance().getSite(rs.getString("siteID"));
+                Site store = siteDAO.getSite(rs.getString("siteID"));
                 supplies.put(store,showSupplies(docID,store.getId()));
             }
             OrderDocument doc = new OrderDocument(id,s,supplies,da,time);
@@ -150,8 +154,6 @@ public class OrderDocDAO {
         } catch (SQLException e) {
             return null;
         }
-
-
     }
     public ArrayList<OrderDocument> showDocs(String date){
         ArrayList<OrderDocument> orderdocs= new ArrayList<>();
@@ -166,23 +168,21 @@ public class OrderDocDAO {
             return orderdocs;
 
         } catch (SQLException e) {
-            System.out.println("Unable to retrieve orderDocs");
             return null;
         }
     }
     public boolean containsStore(String docID,String storeID){
         try {
             if(identityMap.containsKey(docID)){
-                Site s = SiteDAO.getInstance().getSite(storeID);
+                Site s = siteDAO.getSite(storeID);
                 OrderDocument doc = identityMap.get(docID);
-                return identityMap.get(docID).containsStore(SiteDAO.getInstance().getSite(storeID).getId());
+                return identityMap.get(docID).containsStore(siteDAO.getSite(storeID).getId());
             }
             String res = conn.executeQuery("SELECT siteID FROM order4Dest WHERE siteID = " + "'" + storeID + "'"+ "AND orderDocID = "+"'"+docID+"'").getString("siteID");
             return Objects.equals(res, storeID);
         } catch (SQLException e) {
-            e.printStackTrace();
+            return false;
         }
-        return false;
     }
     public ConcurrentHashMap<Supply,Integer> showSupplies(String docID,String storeID){
         ConcurrentHashMap<Supply,Integer> supplies = new ConcurrentHashMap<>();
@@ -190,20 +190,22 @@ public class OrderDocDAO {
         try {
             ResultSet rs = conn.executeQuery(query);
             while(rs.next()){
-                Supply supp = SuppliesDAO.getInstance().getSupply(rs.getString("supply"));
+                Supply supp = new SuppliesDAO().getSupply(rs.getString("supply"));
                 int quantity = rs.getInt("quantity");
                 supplies.put(supp,quantity);
             }
             return supplies;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
+
     }
-    public String get(String docID,String field){
-        throw new NotImplementedException();
-    }
+
+//    public String get(String docID,String field){
+//        throw new NotImplementedException();
+//    }
+
     public ArrayList<String> showStores(String docID){
         ArrayList<String> stores = new ArrayList<>();
         String query = "SELECT * FROM order4Dest WHERE orderDocID = "+"'"+docID+"'";
@@ -216,10 +218,8 @@ public class OrderDocDAO {
             }
             return stores;
         } catch (SQLException e) {
-            System.out.println("Unable to show stores");
+            return null;
         }
-        return null;
-
     }
     public boolean set(String orderDocID,String field,String param){
         String query = "UPDATE OrderDocs SET "+field+" = ? WHERE id = ?";
@@ -227,9 +227,8 @@ public class OrderDocDAO {
             conn.executeUpdate(query,param,orderDocID);
             return true;
         } catch (SQLException e) {
-            System.out.println("Unable to set weight");
+            return false;
         }
-        return false;
     }
 
     public boolean containsDoc(String docID){

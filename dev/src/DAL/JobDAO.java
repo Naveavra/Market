@@ -10,13 +10,12 @@ import java.util.Set;
 
 public class JobDAO {
     private Connect conn = Connect.getInstance();
-    private static final JobDAO instance = new JobDAO();
-
-    private JobDAO(){}
-
-    public static JobDAO getInstance() {
-        return instance;
-    }
+    private EmployeeDAO employeeDAO = new EmployeeDAO();
+//    private static final JobDAO instance = new JobDAO();
+//    private JobDAO(){}
+//    public static JobDAO getInstance() {
+//        return instance;
+//    }
 
     public boolean addLicense(String id, String license){
         try {
@@ -29,14 +28,14 @@ public class JobDAO {
 
     public Set<Employee> getCertifiedEmployees(JobType role) {
         Set<Employee> employees = new HashSet<>();
-        for(Employee e : EmployeeDAO.getInstance().getIdMap().values()){
+        for(Employee e : employeeDAO.getIdMap().values()){
             if(e.isCertified(role))
                 employees.add(e);
         }
         try {
             ResultSet res = conn.executeQuery("SELECT * FROM Roles WHERE jobType = ?", role);
             while (res.next()){
-                employees.add(EmployeeDAO.getInstance().getEmployee(res.getString("id")));
+                employees.add(employeeDAO.getEmployee(res.getString("id")));
             }
             return employees;
         } catch (SQLException ignore) {

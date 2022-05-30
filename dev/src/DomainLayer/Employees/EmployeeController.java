@@ -8,7 +8,7 @@ import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
 
 public class EmployeeController {
-    private final EmployeeDAO employeeDAO = EmployeeDAO.getInstance();
+    private final EmployeeDAO employeeDAO = new EmployeeDAO();
 
     public EmployeeController(){
     }

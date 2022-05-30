@@ -11,21 +11,17 @@ import java.util.Objects;
 
 public class SiteDAO {
     private Connect conn = Connect.getInstance();
-    private HashMap<String, Site> identityMap = new HashMap<>();
-    private final static SiteDAO INSTANCE = new SiteDAO();
-    public static SiteDAO getInstance(){
-        return INSTANCE;
-    }
+    private static HashMap<String, Site> identityMap = new HashMap<>();
+//    private final static SiteDAO INSTANCE = new SiteDAO();
+//    public static SiteDAO getInstance(){
+//        return INSTANCE;
+//    }
     public String addSite(String id,int area,int type,String contactAddr, String contactName,String contactPNumber){
         String query = "INSERT INTO Sites(id,type,ShippingArea,contactPNumber,contactName,contactAddress) VALUES(?,?,?,?,?,?)";
         try {
             conn.executeUpdate(query,id,type,area,contactPNumber,contactName,contactAddr);
             return "Success";
-        }catch (SQLException se){
-            System.out.println(se.getMessage());
-            System.out.println("Cannot Insert a Site,Something is wrong with the db");
-        }finally {
-//            conn.startConnection();
+        }catch (SQLException se) {
         }
         return "Failed to add Site";
     }
@@ -41,6 +37,7 @@ public class SiteDAO {
             return "Failure to remove Site";
         }
     }
+    //get id's of sites in area
     public ArrayList<String> showSites(int areaCode, int type){
         String query = "SELECT * FROM Sites WHERE shippingArea = ? AND type = ?";
         ArrayList<String> retVal = new ArrayList<>();
@@ -51,10 +48,6 @@ public class SiteDAO {
             }
             return retVal;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("Unable to fetch sites");
-        }finally {
-//            conn.startConnection();
         }
         return null;
     }

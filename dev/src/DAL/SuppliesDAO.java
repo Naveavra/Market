@@ -11,21 +11,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SuppliesDAO {
     private Connect conn = Connect.getInstance();
-    private HashMap<String, Supply> identityMap = new HashMap<>();
-    private final static SuppliesDAO INSTANCE = new SuppliesDAO();
-    public static SuppliesDAO getInstance(){
-        return INSTANCE;
-    }
+    private static HashMap<String, Supply> identityMap = new HashMap<>();
+//    private final static SuppliesDAO INSTANCE = new SuppliesDAO();
+//    public static SuppliesDAO getInstance(){
+//        return INSTANCE;
+//    }
+
     public String addSupply(String name, double weight){
         String query = "INSERT INTO Supplies(name,weight) VALUES(?,?)";
         try {
             conn.executeUpdate(query,name,weight);
             return "Success";
         }catch (SQLException se){
-            System.out.println(se.getMessage());
-            System.out.println("Cannot Insert a Supply,Something is wrong with the db");
+            return ("Cannot Insert a Supply,Something is wrong with the db");
         }
-        return "Failed to add Supply";    }
+    }
     public String removeSupply(String name){
         try {
             if(Objects.equals(conn.deleteRecordFromTableSTR("Supplies", "name", name), "Success")){
@@ -51,12 +51,14 @@ public class SuppliesDAO {
             return s;
 
         } catch (SQLException e) {
-            System.out.println("Unable to execute query getSupply");
+            return null;
         }
-        return null;    }
-    public double getSupplyWeight(String name){
-        throw new NotImplementedException();
     }
+
+//    public double getSupplyWeight(String name){
+//        throw new NotImplementedException();
+//    }
+
     public ConcurrentHashMap<Supply,Integer> showSupplies(){
         ArrayList<Supply> supp = getSupplies();
         ConcurrentHashMap<Supply,Integer> retVal = new ConcurrentHashMap<>();
@@ -68,10 +70,12 @@ public class SuppliesDAO {
 
     public boolean contains(String name) {
         try {
-            return identityMap.containsKey(name) || (Objects.equals(conn.executeQuery("SELECT name FROM Supplies WHERE name = " + "'" + name + "'").getString("name"), name));
+            return identityMap.containsKey(name) ||
+                    (Objects.equals(conn.executeQuery("SELECT name FROM Supplies WHERE name = " + "'" + name + "'").getString("name"), name));
         } catch (SQLException e) {
             return false;
-        }    }
+        }
+    }
 
     public ArrayList<Supply> getSupplies() {
         ArrayList<Supply> rval = new ArrayList<>();
@@ -83,7 +87,8 @@ public class SuppliesDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Cannot connect to the DB");
+            return null;
         }
-        return rval;    }
+        return rval;
+    }
 }

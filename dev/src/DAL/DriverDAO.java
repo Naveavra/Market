@@ -13,11 +13,11 @@ import java.util.Objects;
 
 public class DriverDAO {
     private Connect conn = Connect.getInstance();
-    private final static DriverDAO INSTANCE = new DriverDAO();
-    private HashMap<String, Driver> identityMap = new HashMap<>();
-    public static DriverDAO getInstance(){
-        return INSTANCE;
-    }
+    private static HashMap<String, Driver> identityMap = new HashMap<>();
+//    private final static DriverDAO INSTANCE = new DriverDAO();
+//    public static DriverDAO getInstance(){
+//        return INSTANCE;
+//    }
 
 //    public void setAvailability(Driver driver, String date, String time,boolean param) {
 //        String driverID = driver.getId();
@@ -48,7 +48,7 @@ public class DriverDAO {
             conn.executeUpdate(query2,driverID,date,time);
             conn.executeUpdate(query,driverID,date,time,avail);
         } catch (SQLException e) {
-            e.printStackTrace();
+
         }
 
     }
@@ -107,8 +107,8 @@ public class DriverDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            System.out.println("Cannot connect to the DB");
+//            System.out.println(e.getMessage());
+//            System.out.println("Cannot connect to the DB");
         }
         return rval;
     }
@@ -147,7 +147,7 @@ public class DriverDAO {
 
         }
         catch (SQLException e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
@@ -158,7 +158,7 @@ public class DriverDAO {
             conn.executeUpdate(query,name,id,license);
 //            addAvailability(d.getId());
         }catch (SQLException se){
-            System.out.println("Cannot Insert a Driver,Something is wrong with the db");
+//            System.out.println("Cannot Insert a Driver,Something is wrong with the db");
         }
     }
     public void addDriver(Driver d) {
@@ -167,7 +167,7 @@ public class DriverDAO {
             conn.executeUpdate(query,d.getName(),d.getId(),d.getLicense());
             addAvailability(d.getId());
         }catch (SQLException se){
-            System.out.println("Cannot Insert a Driver,Something is wrong with the db");
+//            System.out.println("Cannot Insert a Driver,Something is wrong with the db");
         }
     }
 
