@@ -1,31 +1,37 @@
-//package SharedSpace;
+//package Tests;
 //
-//import EmployeesModule.BusinessLayer.Facade;
-//import EmployeesModule.BusinessLayer.JobType;
-//import EmployeesModule.BusinessLayer.Time;
-//import EmployeesModule.Utility.ShiftDate;
-//import EmployeesModule.Utility.ShiftPair;
-//import TransportModule.BuisnessLayer.*;
-//import TransportModule.DataAccessLayer.DriverDAO;
-//import TransportModule.DataAccessLayer.OrderDocDAO;
-//import TransportModule.DataAccessLayer.TruckDAO;
-//import org.junit.jupiter.api.*;
+//import DomainLayer.Employees.Facade;
+//import DomainLayer.Employees.JobType;
+//import DomainLayer.Employees.Time;
+//import PresentationLayer.Transport_Emploees.MainCLI;
+//import ServiceLayer.Utility.ShiftDate;
+//import ServiceLayer.Utility.ShiftPair;
+//import DomainLayer.Transport.*;
+//import DAL.DriverDAO;
+//import DAL.OrderDocDAO;
+//import DAL.TruckDAO;
+//import org.junit.Before;
+//import org.junit.FixMethodOrder;
+//import org.junit.Test;
+//import org.junit.jupiter.api.BeforeAll;
 //
 //import java.util.Objects;
 //import java.util.concurrent.ConcurrentHashMap;
 //
 //public class EmployeeTransportTests {
 //
+//
 //    @BeforeAll
 //    public static void setup() {
-//        Facade.getInstance().loadPreMadeData();
-//        OrderCtrl.getInstance().build();
+////        Facade.getInstance().loadPreMadeData();
+//        orderCtrl.build();
 //    }
-//    @AfterAll
-//    static void finish(){
-//        DBConnector.getInstance().resetDB();
-//        System.out.println("Great Success");
-//    }
+//
+////    @After
+////    static void finish(){
+////        DBConnector.getInstance().resetDB();
+////        System.out.println("Great Success");
+////    }
 //
 //
 //    public void createShift(int choice){
