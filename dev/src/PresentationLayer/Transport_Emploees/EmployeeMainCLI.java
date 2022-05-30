@@ -1,15 +1,15 @@
 package PresentationLayer.Transport_Emploees;
 
 import ServiceLayer.Utility.Response;
-import ServiceLayer.ServiceController;
+import ServiceLayer.EmployeeService;
 import java.util.Scanner;
 import java.util.function.Function;
 
 public class EmployeeMainCLI extends MainCLI {
-    private final ServiceController serviceController;
+    private final EmployeeService serviceController;
 
     public EmployeeMainCLI(){
-        serviceController = ServiceController.getInstance();
+        serviceController = new EmployeeService();
     }
 
     public void start(){

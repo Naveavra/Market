@@ -1,6 +1,6 @@
 package ServiceLayer;
 
-public class HRManagerService extends EmployeeService{
+public class HRManagerService extends EmployeeServiceGeneric {
     public HRManagerService(String id) {
         super(id);
     }
