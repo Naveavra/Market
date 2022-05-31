@@ -3,20 +3,19 @@ package DomainLayer.Employees;
 
 //import SharedSpace.DBConnector;
 import ServiceLayer.Utility.Response;
-import ServiceLayer.Utility.ShiftDate;
 import ServiceLayer.Utility.ShiftPair;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class Facade {
-    private static final Facade instance = new Facade();
+public class FacadeEmployees {
+    private static final FacadeEmployees instance = new FacadeEmployees();
     private final EmployeeController employeeController;
     private final ShiftController shiftController;
     private final JobController jobController;
 
-    private Facade(){
+    private FacadeEmployees(){
         employeeController = new EmployeeController();
         shiftController = new ShiftController();
         jobController = new JobController();
@@ -24,7 +23,7 @@ public class Facade {
         certifyEmployee(JobType.HR_MANAGER, "318856994");
     }
 
-    public static Facade getInstance() {
+    public static FacadeEmployees getInstance() {
         return instance;
     }
 

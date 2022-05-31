@@ -336,6 +336,7 @@ public class Connect {
 
     public ResultSet executeQuery(String query, Object... params) throws SQLException {
         try  {
+            createStatement();
             PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++)
                 statement.setObject(i+1, params[i]);
@@ -350,6 +351,7 @@ public class Connect {
 
     public int executeUpdate(String query,Object... params) throws SQLException {
         try  {
+            createStatement();
             PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++)
                 statement.setObject(i+1, params[i]);
@@ -365,6 +367,7 @@ public class Connect {
 
     public String deleteRecordFromTableSTR(String tableName, String columnName, String recordID) throws SQLException {
         try  {
+            createStatement();
             Statement statement = conn.createStatement();
             String query = "DELETE FROM " + tableName +
                     " WHERE " + columnName + " = " + "'"+ recordID + "'";

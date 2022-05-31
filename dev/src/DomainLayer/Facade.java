@@ -1,5 +1,6 @@
 package DomainLayer;
 
+import DomainLayer.Employees.FacadeEmployees;
 import DomainLayer.Storage.CategoryController;
 import DomainLayer.Storage.ReportController;
 import DomainLayer.Supplier.*;
@@ -13,6 +14,7 @@ public class Facade {
     private CategoryController categoryController;
     private ReportController reportController;
     private Gson gson;
+    private FacadeEmployees facadeEmployees;
     private static boolean needsUpdateOrders=true;
 
 
@@ -26,6 +28,7 @@ public class Facade {
             updateOrders();
             needsUpdateOrders=false;
         }
+        facadeEmployees =FacadeEmployees.getInstance();
 
     }
 

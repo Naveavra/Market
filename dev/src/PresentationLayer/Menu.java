@@ -1,6 +1,7 @@
 package PresentationLayer;
 
 import DAL.Connect;
+import DomainLayer.Employees.JobType;
 import PresentationLayer.Storage.CLI;
 import PresentationLayer.Supplier.Order;
 import PresentationLayer.Supplier.SupplierMenu;
@@ -8,6 +9,7 @@ import PresentationLayer.Transport_Emploees.EmployeeMainCLI;
 import PresentationLayer.Transport_Emploees.MainCLI;
 import PresentationLayer.Transport_Emploees.UserInterface;
 import ServiceLayer.*;
+import ServiceLayer.Utility.Response;
 import com.google.gson.Gson;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -122,8 +124,71 @@ public class Menu {
         os.addFixedDeliveryDaysForOrder(1, 1, days);
         os.sendOrder(1, 1);
 
+        // empoly info
+        LoadEmployeeData();
 
     }
+    public void LoadEmployeeData() {
+        EmployeeService es =new EmployeeService();
+
+        es.register("234567891", "gal halifa", "123456", 1000, "yahav", "good conditions");
+        es.register("123456789", "dan terem", "123456", 1000, "yahav", "good conditions");
+        es.register("345678912", "noa aviv", "123456", 1000, "yahav", "good conditions");
+        es.register("456789123", "nave avraham", "123456", 1000, "yahav", "good conditions");
+        es.register("789123456", "gili gershon", "123456", 1000, "yahav", "good conditions");
+        es.register("891234567", "amit halifa", "123456", 1000, "yahav", "good conditions");
+        es.register("012345678", "shachar bardugo", "123456", 1000, "yahav", "good conditions");
+        es.register("123456780", "nadia zlenko", "123456", 1000, "yahav", "good conditions");
+        es.register("234567801", "yossi gershon", "123456", 1000, "yahav", "good conditions");
+        es.register("345678012", "eti gershon", "123456", 1000, "yahav", "good conditions");
+        es.register("456780123", "amit sasson", "123456", 1000, "yahav", "good conditions");
+        es.register("567801234", "itamar shemesh", "123456", 1000, "yahav", "good conditions");
+        es.register("147258369", "dina agapov", "123456", 1, "yahav", "bad");
+        es.register("258369147", "mor shuker", "123456", 1, "yahav", "bad");
+        es.register("000000000", "may terem", "123456", 1, "yahav", "good");
+        es.register("111111111", "wendy the dog", "123456", 1, "yahav", "good");
+        es.register("222222222", "savta tova", "123456", 1, "yahav", "good");
+        es.register("333333333", "liron marinberg", "123456", 1, "yahav", "good");
+        es.certifyEmployee("CASHIER", "318856994");
+        es.certifyEmployee("CASHIER", "234567891");
+        es.certifyEmployee("CASHIER", "345678912");
+        es.certifyEmployee("CASHIER", "123456789");
+        es.certifyDriver("258369147", "c");
+        es.certifyDriver("123456789", "c1");
+        es.certifyDriver("456780123", "c");
+        es.certifyDriver("234567891", "c");
+        es.certifyDriver("012345678", "c1");
+        es.certifyEmployee("MERCHANDISER", "234567891");
+        es.certifyEmployee("MERCHANDISER", "123456789");
+        es.certifyEmployee("MERCHANDISER", "789123456");
+        es.certifyEmployee("MERCHANDISER", "234567891");
+        es.certifyEmployee("MERCHANDISER", "123456789");
+        es.certifyEmployee("STOCK_KEEPER", "123456780");
+        es.certifyEmployee("STOCK_KEEPER", "345678912");
+        es.certifyEmployee("STOCK_KEEPER", "456780123");
+        es.certifyEmployee("STOCK_KEEPER", "123456789");
+        es.certifyEmployee("SHIFT_MANAGER", "234567891");
+        es.certifyEmployee("SHIFT_MANAGER", "318856994");
+        es.certifyEmployee("SHIFT_MANAGER", "222222222");
+        es.certifyEmployee("STOCK_KEEPER", "111111111");
+        es.certifyDriver( "000000000", "c1");
+        es.certifyEmployee("SHIFT_MANAGER", "456789123");
+        es.certifyEmployee("CASHIER", "333333333");
+        es.certifyEmployee("MERCHANDISER", "567801234");
+        es.certifyDriver("123456780", "c");
+//        employeeController.putBackAll();
+
+//        Response r = es.createShift(new ShiftPair(new ShiftDate("01", "06", "2022"), Time.MORNING), "318856994",
+//                "333333333,234567891", "123456780,000000000", "123456789", "111111111");
+//        if (r.errorOccurred())
+//            System.out.println("r1 = " + r.getErrorMessage());
+//        r = createShift(new ShiftPair(new ShiftDate("02", "06", "2022"), Time.MORNING), "456789123",
+//                "333333333,234567891", "258369147,000000000", "567801234", "345678912");
+//        if (r.errorOccurred())
+//            System.out.println("r2 = " + r.getErrorMessage());
+
+    }
+
 
     public static<T> T fromJson(String json, Class<T> c){
         Gson gson = new Gson();
