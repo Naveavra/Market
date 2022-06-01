@@ -1,17 +1,17 @@
 package ServiceLayer;
 
 
-import DomainLayer.Facade;
+import DomainLayer.FacadeSupplier;
 import DomainLayer.Supplier.SupplierController;
 import com.google.gson.Gson;
 
 public class SupplierService {
     private SupplierController supplierController =new SupplierController();
     private Gson gson=new Gson();
-    private Facade facade;
+    private FacadeSupplier facadeSupplier;
 
     public SupplierService(){
-        facade = new Facade();
+        facadeSupplier = new FacadeSupplier();
     }
 
     /**
@@ -23,7 +23,7 @@ public class SupplierService {
      *@return true if succeed, false if failed
      */
     public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, boolean isDeliver){
-        return facade.openAccount(supplierNumber, supplierName, bankAccount,isDeliver);
+        return facadeSupplier.openAccount(supplierNumber, supplierName, bankAccount,isDeliver);
     }
 
     /**
@@ -32,7 +32,7 @@ public class SupplierService {
      * @return true if succeed, false if failed
      */
     public boolean closeAccount(int supplierNumber){
-        return facade.closeAccount(supplierNumber);
+        return facadeSupplier.closeAccount(supplierNumber);
     }
 
     /**
@@ -43,7 +43,7 @@ public class SupplierService {
      * @return
      */
     public boolean updateAccount(int supplierNumber, String supplierName, int bankAccount){
-        return facade.updateAccount(supplierNumber, supplierName, bankAccount);
+        return facadeSupplier.updateAccount(supplierNumber, supplierName, bankAccount);
     }
 
     /**
@@ -55,7 +55,7 @@ public class SupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addDiscount(int supplierNumber,int catalogNumber,int count,double discount){
-        return facade.addDiscount(supplierNumber, catalogNumber, count, discount);
+        return facadeSupplier.addDiscount(supplierNumber, catalogNumber, count, discount);
     }
 
     /**
@@ -66,7 +66,7 @@ public class SupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addDiscount(int supplierNumber,int count,double discount){
-        return facade.addDiscount(supplierNumber, count, discount);
+        return facadeSupplier.addDiscount(supplierNumber, count, discount);
     }
 
     /**
@@ -77,7 +77,7 @@ public class SupplierService {
      * @return true is succeed, false is failed
      */
     public boolean removeDiscountOnProduct(int supplierNumber,int catalogNumber,int count){
-        return facade.removeDiscountOnProduct(supplierNumber, catalogNumber, count);
+        return facadeSupplier.removeDiscountOnProduct(supplierNumber, catalogNumber, count);
     }
 
     /**
@@ -87,11 +87,11 @@ public class SupplierService {
      * @return true if succeed,false if failed
      */
     public boolean removeDiscountOnAmount(int supplierNumber,int count){
-        return facade.removeDiscountOnAmount(supplierNumber, count);
+        return facadeSupplier.removeDiscountOnAmount(supplierNumber, count);
     }
 
     public String getSupplier(int supplierNumber) {
-        return facade.getSupplier(supplierNumber);
+        return facadeSupplier.getSupplier(supplierNumber);
     }
 
     /**
@@ -101,15 +101,15 @@ public class SupplierService {
      * @return A Boolean variable that defines who is responsible for transports, true -the supplier,false - SUPERLI
      */
     public boolean updateDeliveration(int supplierNumber,boolean isDeliver) {
-        return facade.updateDeliveration(supplierNumber, isDeliver);
+        return facadeSupplier.updateDeliveration(supplierNumber, isDeliver);
     }
 
     public boolean addContact(int supplierNumber,String name, String email, String telephone) {
-        return facade.addContact(supplierNumber,name,email,telephone);
+        return facadeSupplier.addContact(supplierNumber,name,email,telephone);
     }
 
     public boolean updateContact(int supplierNumber, String name, String email, String telephone) {
-        return facade.updateContact(supplierNumber, name, email, telephone);
+        return facadeSupplier.updateContact(supplierNumber, name, email, telephone);
     }
 //    public void addContact(int supplierNumber,String name,String email){
 //        supplierController.getSupplier(supplierNumber).

@@ -1,6 +1,6 @@
 package ServiceLayer;
 
-import DomainLayer.Employees.FacadeEmployees;
+import DomainLayer.FacadeEmployees;
 import DomainLayer.Employees.JobType;
 import PresentationLayer.Transport_Emploees.EmployeeMainCLI;
 import ServiceLayer.Utility.Response;

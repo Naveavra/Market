@@ -1,6 +1,5 @@
 package DomainLayer;
 
-import DomainLayer.Employees.FacadeEmployees;
 import DomainLayer.Storage.CategoryController;
 import DomainLayer.Storage.ReportController;
 import DomainLayer.Supplier.*;
@@ -8,7 +7,7 @@ import com.google.gson.Gson;
 
 import java.util.*;
 
-public class Facade {
+public class FacadeSupplier {
     private OrdersController ordersController;
     private SupplierController supplierController;
     private CategoryController categoryController;
@@ -18,7 +17,7 @@ public class Facade {
     private static boolean needsUpdateOrders=true;
 
 
-    public Facade(){
+    public FacadeSupplier(){
         ordersController=new OrdersController();
         supplierController=new SupplierController();
         categoryController=new CategoryController();
