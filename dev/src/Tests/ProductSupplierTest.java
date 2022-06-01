@@ -1,7 +1,7 @@
 package Tests;
 
 import DAL.Connect;
-import DomainLayer.Facade;
+import DomainLayer.FacadeSupplier;
 import DomainLayer.Supplier.Discount;
 import DomainLayer.Supplier.SupplierController;
 import org.junit.Before;
@@ -9,36 +9,35 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.io.File;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 @FixMethodOrder( MethodSorters.NAME_ASCENDING ) // force name ordering
 public class ProductSupplierTest {
-private Facade facade;
+private FacadeSupplier facadeSupplier;
 private static boolean setUpIsDone = false;
 private SupplierController supplierController;
     @Before
     public void setUp() throws SQLException {
         if(!setUpIsDone) {
             Connect.getInstance().deleteRecordsOfTables();
-            facade=new Facade();
+            facadeSupplier =new FacadeSupplier();
             supplierController=new SupplierController();
-            facade.addCategory("first");
-            facade.addSubCat("first", "first1");
-            facade.addSubSubCat("first", "first1", "first11");
-            facade.addCategory("second");
-            facade.addSubCat("second", "second1");
-            facade.addSubSubCat("second", "second1", "second11");
-            facade.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
-            facade.addNewProduct(2,"eggs","hello",4,"me","first","first1", "first11");
-            facade.addAllItems(1,4,"2022-06-01",12);
-            facade.openAccount(1, "eli", 3, true);
-            facade.addProductToSupplier(1, 1, 5, 1);
+            facadeSupplier.addCategory("first");
+            facadeSupplier.addSubCat("first", "first1");
+            facadeSupplier.addSubSubCat("first", "first1", "first11");
+            facadeSupplier.addCategory("second");
+            facadeSupplier.addSubCat("second", "second1");
+            facadeSupplier.addSubSubCat("second", "second1", "second11");
+            facadeSupplier.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
+            facadeSupplier.addNewProduct(2,"eggs","hello",4,"me","first","first1", "first11");
+            facadeSupplier.addAllItems(1,4,"2022-06-01",12);
+            facadeSupplier.openAccount(1, "eli", 3, true);
+            facadeSupplier.addProductToSupplier(1, 1, 5, 1);
             //setUpIsDone=true;
         }
         else{
-            facade=new Facade();
+            facadeSupplier =new FacadeSupplier();
             supplierController=new SupplierController();
         }
 
@@ -46,7 +45,7 @@ private SupplierController supplierController;
 
     @Test
     public void stage1_addDiscount() {
-        facade.addDiscount(1, 1, 2,0.5);
+        facadeSupplier.addDiscount(1, 1, 2,0.5);
         boolean ans=false;
         for( Discount discount : supplierController.getSupplier(1).getProduct(1).getDiscount())
             ans= discount.getDiscount() == 0.5 || ans;
@@ -55,13 +54,13 @@ private SupplierController supplierController;
 
     @Test
     public void stage2_removeDiscountOnProduct() {
-        facade.removeDiscountOnProduct(1, 1, 2);
+        facadeSupplier.removeDiscountOnProduct(1, 1, 2);
         assertEquals(1, supplierController.getSupplier(1).getProduct(1).getDiscount().size());
     }
 
     @Test
     public void stage3_getPriceAfterDiscount() {
-        facade.addDiscount(1, 1, 2,0.5);
+        facadeSupplier.addDiscount(1, 1, 2,0.5);
         double total =supplierController.getSupplier(1).getProduct(1).getPriceAfterDiscount(2);
         assertEquals(5, total, 0.1);//total = 2.0
     }

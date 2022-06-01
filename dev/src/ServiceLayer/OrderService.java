@@ -1,20 +1,17 @@
 package ServiceLayer;
 
-import DomainLayer.Facade;
-import PresentationLayer.Supplier.PastOrder;
-
-import java.util.List;
+import DomainLayer.FacadeSupplier;
 
 
 public class OrderService {
 
-    private Facade facade;
+    private FacadeSupplier facadeSupplier;
 
     public OrderService(){
-        facade=new Facade();
+        facadeSupplier =new FacadeSupplier();
     }
     public String createOrder(int supplierNumber){
-        return facade.createOrder(supplierNumber);
+        return facadeSupplier.createOrder(supplierNumber);
     }
 
     /**
@@ -26,7 +23,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean addProductToOrder(int supplierNumber,int orderId , int catalogNUmber, int count){
-        return facade.addProductToOrder(supplierNumber,orderId,catalogNUmber,count);
+        return facadeSupplier.addProductToOrder(supplierNumber,orderId,catalogNUmber,count);
     }
 
     /**
@@ -38,7 +35,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean updateProductInOrder(int supplierNumber,int orderId, int catalogNUmber, int newCount){
-        return facade.updateProductInOrder(supplierNumber,orderId,catalogNUmber,newCount);
+        return facadeSupplier.updateProductInOrder(supplierNumber,orderId,catalogNUmber,newCount);
     }
     /**
      * the function remove a product to an existing order
@@ -48,7 +45,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean deleteProductFromOrder(int supplierNumber,int orderId, int catalogNUmber){
-        return facade.deleteProductFromOrder(supplierNumber, orderId, catalogNUmber);
+        return facadeSupplier.deleteProductFromOrder(supplierNumber, orderId, catalogNUmber);
     }
 
     /**
@@ -57,7 +54,7 @@ public class OrderService {
      * @return gson string which wrappers the list of the active order
      */
     public String getActiveOrders(int supplierNumber){
-      return facade.getActiveOrders(supplierNumber);
+      return facadeSupplier.getActiveOrders(supplierNumber);
     }
 
     /**
@@ -66,7 +63,7 @@ public class OrderService {
      * @return gson string which wrappers the dictionary<order id,days[]> of the delivery days of each active order
      */
     public String getFixedDaysOrders(int supplierNumber){
-       return facade.getFixedDaysOrders(supplierNumber);
+       return facadeSupplier.getFixedDaysOrders(supplierNumber);
     }
 
     /**
@@ -76,10 +73,10 @@ public class OrderService {
      * @return true is succeed, false if failed
      */
     public boolean sendOrder(int supplierNumber, int orderId){
-      return facade.sendOrder(supplierNumber, orderId);
+      return facadeSupplier.sendOrder(supplierNumber, orderId);
     }
     public String getOrderDetails(int orderId) {
-        return facade.getOrderTotalDetails(orderId);
+        return facadeSupplier.getOrderTotalDetails(orderId);
     }
 
     /**
@@ -89,7 +86,7 @@ public class OrderService {
      * @return gson string which wrappers the order
      */
     public String getOrder(int supplierNumber, int orderId) {
-      return facade.getOrder(supplierNumber, orderId);
+      return facadeSupplier.getOrder(supplierNumber, orderId);
     }
 
     /**
@@ -99,7 +96,7 @@ public class OrderService {
      * @return gson which wrappers the dictionary<product,amount>
      */
     public String getProductsInOrder(int supplierNumber, int orderID) {
-        return facade.getProductsInOrder(supplierNumber, orderID);
+        return facadeSupplier.getProductsInOrder(supplierNumber, orderID);
     }
 
     /**
@@ -110,7 +107,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean addFixedDeliveryDaysForOrder(int supplierNumber,int orderId, String[] daysInWeek){
-        return facade.addFixedDeliveryDaysForOrder(supplierNumber, orderId, daysInWeek);
+        return facadeSupplier.addFixedDeliveryDaysForOrder(supplierNumber, orderId, daysInWeek);
     }
 
     /**
@@ -121,7 +118,7 @@ public class OrderService {
      * @return true if succeed, false if failed
      */
     public boolean updateFixedDeliveryDaysForOrder(int supplierNumber,int orderId, String[] daysInWeek){
-        return facade.updateFixedDeliveryDaysForOrder(supplierNumber, orderId, daysInWeek);
+        return facadeSupplier.updateFixedDeliveryDaysForOrder(supplierNumber, orderId, daysInWeek);
     }
 
     /**
@@ -130,6 +127,6 @@ public class OrderService {
      * @return Json string which wrappers the list of past order
      */
     public String getPastOrders(int supplierNumber) {
-        return facade.watchPastOrders(supplierNumber);
+        return facadeSupplier.watchPastOrders(supplierNumber);
     }
 }

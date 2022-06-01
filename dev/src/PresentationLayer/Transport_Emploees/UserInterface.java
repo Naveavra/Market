@@ -123,7 +123,7 @@ public class UserInterface extends MainCLI {
             System.out.println("Please select supplies ,When you are done enter OK:");
             System.out.println(os.showSuppliesByDoc(docID, storeID));
             Scanner input = new Scanner(System.in);
-            suppnames.add(os.getSupplyByIdxandDoc(input.nextInt(),docID,storeID));
+            suppnames.add(os.getSupplyByIdAndDoc(input.nextInt(),docID,storeID));
             if (input.nextLine().equalsIgnoreCase( "ok")) {
                 return;
             }
@@ -402,7 +402,7 @@ public class UserInterface extends MainCLI {
         }
     }
     private String showStores(String docID){
-        return os.showStoresforDoc(docID);
+        return os.showStoresForDoc(docID);
     }
     private void removeSitesFromDoc(String docID){
         System.out.println("Please choose Store ID to remove:");

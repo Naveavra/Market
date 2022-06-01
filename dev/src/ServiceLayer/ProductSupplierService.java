@@ -1,12 +1,12 @@
 package ServiceLayer;
 
-import DomainLayer.Facade;
+import DomainLayer.FacadeSupplier;
 
 public class ProductSupplierService {
-    private Facade facade;
+    private FacadeSupplier facadeSupplier;
 
     public ProductSupplierService(){
-        facade = new Facade();
+        facadeSupplier = new FacadeSupplier();
     }
 
     /**
@@ -18,7 +18,7 @@ public class ProductSupplierService {
      * @return true if succeed, false if failed
      */
     public boolean addProduct(int supplierNumber, int catalogNumber, int price, int productId){
-       return facade.addProductToSupplier(supplierNumber, catalogNumber, price, productId);
+       return facadeSupplier.addProductToSupplier(supplierNumber, catalogNumber, price, productId);
     }
 
     /**
@@ -27,7 +27,7 @@ public class ProductSupplierService {
      * @return gson which wrappers the dictionary<catalog number,product>
      */
     public String getProductsOfSupplier(int supplierNumber){
-        return facade.getProductsOfSupplier(supplierNumber);
+        return facadeSupplier.getProductsOfSupplier(supplierNumber);
     }
 
     /**
@@ -38,7 +38,7 @@ public class ProductSupplierService {
      * @return true if succeed, false if failed
      */
     public boolean updateProduct(int supplierNumber, int catalogNumber,int productId, int price){
-        return facade.updateProduct(supplierNumber, catalogNumber,productId, price);
+        return facadeSupplier.updateProduct(supplierNumber, catalogNumber,productId, price);
     }
 
     /**
@@ -48,6 +48,6 @@ public class ProductSupplierService {
      * @return true if succeed, false if failed
      */
     public boolean removeProduct(int supplierNumber, int catalogNumber){
-        return facade.removeProduct(supplierNumber, catalogNumber);
+        return facadeSupplier.removeProduct(supplierNumber, catalogNumber);
     }
 }

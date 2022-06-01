@@ -7,16 +7,17 @@ import com.google.gson.Gson;
 
 import java.util.*;
 
-public class Facade {
+public class FacadeSupplier {
     private OrdersController ordersController;
     private SupplierController supplierController;
     private CategoryController categoryController;
     private ReportController reportController;
     private Gson gson;
+    private FacadeEmployees facadeEmployees;
     private static boolean needsUpdateOrders=true;
 
 
-    public Facade(){
+    public FacadeSupplier(){
         ordersController=new OrdersController();
         supplierController=new SupplierController();
         categoryController=new CategoryController();
@@ -26,6 +27,7 @@ public class Facade {
             updateOrders();
             needsUpdateOrders=false;
         }
+        facadeEmployees =FacadeEmployees.getInstance();
 
     }
 

@@ -1,6 +1,6 @@
 package ServiceLayer;
 
-import DomainLayer.Employees.Facade;
+import DomainLayer.FacadeEmployees;
 import DomainLayer.Employees.JobType;
 import PresentationLayer.Transport_Emploees.EmployeeMainCLI;
 import ServiceLayer.Utility.Response;
@@ -16,12 +16,12 @@ import java.util.function.Function;
 public class EmployeeService {
 //    private static final ServiceController instance = new ServiceController();
     private EmployeeServiceGeneric employeeService;
-    private final Facade facade;
+    private final FacadeEmployees facadeEmployees;
     private final Parser parser;
 //    private boolean dataHasLoaded; // this is only to indicate if the pre-made data was loaded into the system or not, so we wouldn't load it twice
 
     public EmployeeService() {
-        facade = Facade.getInstance();
+        facadeEmployees = FacadeEmployees.getInstance();
         parser = new Parser();
 //        dataHasLoaded = false;
     }
@@ -37,7 +37,7 @@ public class EmployeeService {
     }
 
     public Runnable doAction(String choice, EmployeeMainCLI employeeCli) {
-        Action action = parser.parseActionChoice(choice, facade.isHRManager(employeeService.getID()));
+        Action action = parser.parseActionChoice(choice, facadeEmployees.isHRManager(employeeService.getID()));
         if (action == Action.DISPLAY_SCHEDULE) {
             return ()-> employeeCli.print(displaySchedule());
         } else if (action == Action.CHANGE_SCHEDULE) {
@@ -75,17 +75,17 @@ public class EmployeeService {
     }
 
     public void handleCloseSystem(EmployeeMainCLI employeeCli) {
-        facade.shutDown();
+        facadeEmployees.shutDown();
         employeeCli.print("Goodbye!");
 //        System.exit(0);
     }
 
     private void handleEndShift(EmployeeMainCLI employeeCli) {
-        if (!facade.shiftIsRunning()){
+        if (!facadeEmployees.shiftIsRunning()){
             employeeCli.print("Cannot end shift since there is no shift running at the moment");
             return;
         }
-        if(!facade.endShift(employeeService.getID())){
+        if(!facadeEmployees.endShift(employeeService.getID())){
             employeeCli.print("Make sure that the employee logged in is the shift manager. Only the shift manager can end the shift.");
         }
         else{
@@ -94,7 +94,7 @@ public class EmployeeService {
     }
 
     private void handleStartShift(EmployeeMainCLI employeeCli) {
-        if(facade.shiftIsRunning()) {
+        if(facadeEmployees.shiftIsRunning()) {
             employeeCli.print("You cannot start a new shift while the current shift is still running");
             return;
         }
@@ -109,7 +109,7 @@ public class EmployeeService {
         if(!thisDay.equals(shiftPair.toString())){
             employeeCli.print("Today's date is " + thisDay + ", not " + shiftPair.getDate() + ". You can only start today's shift");
         }
-        else if(!facade.startShift(shiftPair, employeeService.getID())){
+        else if(!facadeEmployees.startShift(shiftPair, employeeService.getID())){
             employeeCli.print("Something's wrong." +
                     " Make sure that the shift time is correct and that the user logged in is the shift manager");
         }
@@ -120,11 +120,11 @@ public class EmployeeService {
 
     private void handleMidShiftActions(EmployeeMainCLI employeeCli) {
         String empID = employeeService.getID();
-        if(!facade.shiftIsRunning()){
+        if(!facadeEmployees.shiftIsRunning()){
             employeeCli.print("Cannot perform mid-shift actions since there is no shift running at the moment");
             return;
         }
-        if (!facade.isCurrentShiftManager(empID)){
+        if (!facadeEmployees.isCurrentShiftManager(empID)){
             employeeCli.print("Only the shift manager is authorized to perform this action");
             return;
         }
@@ -145,15 +145,15 @@ public class EmployeeService {
                     "\n3.Cashier\n4.Stock keeper\n5.Driver\n6.Merchandiser\n7.Logistics manager\n8.Transport manager";
             String jobNum = getValidInput(employeeCli, toPrint,"", parser::isValidJobNumber);
             JobType jobType = parser.parseJobType(jobNum);
-            employeeCli.print(getAllCertified(jobType, facade.getCurrentShiftTime(), false).toString());
+            employeeCli.print(getAllCertified(jobType, facadeEmployees.getCurrentShiftTime(), false).toString());
             employeeCli.print("From the above list, enter the id of the employee you want to add");
             String id = employeeCli.getValidId();
-            Response response = facade.isCertified(id, jobType);
+            Response response = facadeEmployees.isCertified(id, jobType);
             if(response.errorOccurred()){
                 employeeCli.print(response.getErrorMessage());
             }
             else{
-                if(!facade.addEmployeeToCurrentShift(id, jobType)){
+                if(!facadeEmployees.addEmployeeToCurrentShift(id, jobType)){
                     employeeCli.print("Employee is already working in this shift");
                 }
                 else {
@@ -162,11 +162,11 @@ public class EmployeeService {
             }
         }
         else { // input.equals("3")
-            employeeCli.print(facade.displayWorkersOfCurrentShift());
+            employeeCli.print(facadeEmployees.displayWorkersOfCurrentShift());
             employeeCli.print("Enter the id of the employee leaving the shift");
             employeeCli.print("Notice that you cannot remove the shift manager, but you can provide a different manager to replace them");
             String idToRemove = employeeCli.getValidId();
-            if (!facade.removeFromShift(idToRemove)){
+            if (!facadeEmployees.removeFromShift(idToRemove)){
                 employeeCli.print("Unable to remove employee.\nMake sure that the id inserted is selected from the provided list" +
                         ", and that it isn't the manager's id");
             }
@@ -179,7 +179,7 @@ public class EmployeeService {
     private void handleDelete(EmployeeMainCLI employeeCli) {
         employeeCli.print("Enter the id of the employee you want to delete");
         String id = employeeCli.getValidId();
-        Response response = facade.removeEmployee(id);
+        Response response = facadeEmployees.removeEmployee(id);
         if(response.errorOccurred()){
             employeeCli.print(response.getErrorMessage());
         }
@@ -192,7 +192,7 @@ public class EmployeeService {
     private void handleEditDetails(EmployeeMainCLI employeeCli){
         employeeCli.print("Enter the id of the employee you want to edit");
         String id = employeeCli.getValidId();
-        if(!facade.exists(id)){
+        if(!facadeEmployees.exists(id)){
             employeeCli.print("Employee does not exist.");
             return;
         }
@@ -212,31 +212,31 @@ public class EmployeeService {
             case "1" : {
                 employeeCli.print("Enter the new name of the employee");
                 String newName = employeeCli.getValidName();
-                success = facade.editName(id, newName);
+                success = facadeEmployees.editName(id, newName);
                 break;
             }
             case "2" : {
                 employeeCli.print("Enter the new password of the employee");
                 String newPassword = employeeCli.getValidPassword();
-                success = facade.editPassword(id, newPassword);
+                success = facadeEmployees.editPassword(id, newPassword);
                 break;
             }
             case "3" : {
                 employeeCli.print("Enter the new salary of the employee");
                 String newSalary = employeeCli.getValidSalary();
-                success = facade.editSalary(id, Float.parseFloat(newSalary));
+                success = facadeEmployees.editSalary(id, Float.parseFloat(newSalary));
                 break;
             }
             case "4" : {
                 employeeCli.print("Enter the new bank account information of the employee");
                 String newBankInfo = employeeCli.getValidBankAccount();
-                success = facade.editBankInfo(id, newBankInfo);
+                success = facadeEmployees.editBankInfo(id, newBankInfo);
                 break;
             }
             case "5" : {
                 employeeCli.print("Enter the new contract of employment");
                 String newContract = employeeCli.getValidContractOfEmployment();
-                success = facade.editContract(id, newContract);
+                success = facadeEmployees.editContract(id, newContract);
                 break;
             }
         }
@@ -303,7 +303,7 @@ public class EmployeeService {
             return;
         }
 
-        Response shiftCreated = facade.createShift(shift, shiftManagerID, cashiersIDs, driversIDs, merchandisersIDs, stockKeepersIDs);
+        Response shiftCreated = facadeEmployees.createShift(shift, shiftManagerID, cashiersIDs, driversIDs, merchandisersIDs, stockKeepersIDs);
         if(shiftCreated.errorOccurred())
             employeeCli.print(shiftCreated.getErrorMessage());
         else
@@ -319,7 +319,7 @@ public class EmployeeService {
      * @return list in the format of <id> <name> <isAvailable>
      */
     private List<String> getAllCertified(JobType jobType, ShiftPair shift, boolean displayInShift){
-        List<String[]> namesAndIDs = facade.getAllCertified(jobType, shift, displayInShift);
+        List<String[]> namesAndIDs = facadeEmployees.getAllCertified(jobType, shift, displayInShift);
         List<String> ret = new ArrayList<>();
         for (String[] s: namesAndIDs){
             ret.add(String.join(" ", s));
@@ -336,7 +336,7 @@ public class EmployeeService {
     private Response areCertified(String ids, JobType jobType){
         String[] employees = ids.split(",");
         for (String id: employees){
-            Response response = facade.isCertified(id, jobType);
+            Response response = facadeEmployees.isCertified(id, jobType);
             if (response.errorOccurred())
                 return response;
         }
@@ -383,10 +383,10 @@ public class EmployeeService {
             JobType jobType = parser.parseJobType(jobNum);
             if (jobType == JobType.DRIVER){
                 String license = getValidInput(employeeCli, "Enter the driver's license", "A valid license must be either C or C1", parser::isValidLicense);
-                if (!facade.certifyDriver(id, license))
+                if (!facadeEmployees.certifyDriver(id, license))
                     employeeCli.print("Id does not exist in the system");
             }
-            else if(!facade.certifyEmployee(jobType, id)){
+            else if(!facadeEmployees.certifyEmployee(jobType, id)){
                 employeeCli.print("Id does not exist in the system");
             }
             employeeCli.print("You have certified the employee successfully");
@@ -395,7 +395,7 @@ public class EmployeeService {
     private void handleViewDetails(EmployeeMainCLI employeeCli){
         employeeCli.print("Enter the id of the employee");
         String id = employeeCli.getValidId();
-        String details = facade.getDetailsOf(id);
+        String details = facadeEmployees.getDetailsOf(id);
         employeeCli.print(details);
     }
 
@@ -417,7 +417,7 @@ public class EmployeeService {
             input = employeeCli.getUserInput();
         }
         if (input.equals("1")) {
-            facade.resetSchedule(employeeService.getID());
+            facadeEmployees.resetSchedule(employeeService.getID());
         }
         else if (input.equals("2")) {
             employeeCli.print("Type in the shift you want to add.\nExample:  19/10/1998 evening");
@@ -427,7 +427,7 @@ public class EmployeeService {
                 employeeCli.print(response.getErrorMessage());
             else {
                 ShiftPair shift = parser.getShiftPair(input);
-                if(facade.addAvailableTimeSlotToEmployee(employeeService.getID(), shift)) {
+                if(facadeEmployees.addAvailableTimeSlotToEmployee(employeeService.getID(), shift)) {
                     employeeCli.print("Your schedule was changed successfully.\nYour new schedule:");
                     employeeCli.print(displaySchedule());
                 }
@@ -446,7 +446,7 @@ public class EmployeeService {
             }
             else{
                 ShiftPair shift = parser.getShiftPair(input);
-                facade.removeShift(employeeService.getID(), shift);
+                facadeEmployees.removeShift(employeeService.getID(), shift);
                 employeeCli.print("Shift was removed successfully.\nYour new schedule:");
                 employeeCli.print(displaySchedule());
             }
@@ -458,7 +458,7 @@ public class EmployeeService {
     }
 
     public Response login(String id, String password) {
-        Response response = facade.login(id, password);
+        Response response = facadeEmployees.login(id, password);
         if (response.errorOccurred())
             return response;
         createEmployeeService(id);
@@ -482,7 +482,7 @@ public class EmployeeService {
     }
 
     public Response register(String id, String name, String password, float salary, String bankAccount, String contractOfEmployment){//){
-        return facade.createEmployee(id, name, password, salary, bankAccount, contractOfEmployment);
+        return facadeEmployees.createEmployee(id, name, password, salary, bankAccount, contractOfEmployment);
     }
 
     public Response isValidSalary(String salary) {
@@ -494,7 +494,7 @@ public class EmployeeService {
     }
 
     private void createEmployeeService(String id) {
-        if(facade.isHRManager(id)){
+        if(facadeEmployees.isHRManager(id)){
             employeeService = new HRManagerService(id);
         }
         else {
@@ -517,7 +517,7 @@ public class EmployeeService {
     }
 
     private String displaySchedule() {
-        return facade.getScheduleOf(employeeService.getID());
+        return facadeEmployees.getScheduleOf(employeeService.getID());
     }
 
     public boolean isLoggedIn() {
@@ -532,5 +532,12 @@ public class EmployeeService {
 
     public void closeDbConnection() {
         //facade.closeDbConnection();
+    }
+
+    public void certifyEmployee(String cashier, String s) {
+        facadeEmployees.certifyEmployee(JobType.get(cashier),s);
+    }
+    public boolean certifyDriver(String id, String license) {
+       return facadeEmployees.certifyDriver(id,license);
     }
 }

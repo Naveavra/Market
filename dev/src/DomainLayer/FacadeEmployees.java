@@ -1,30 +1,37 @@
-package DomainLayer.Employees;
+package DomainLayer;
 
 
 //import SharedSpace.DBConnector;
+import DomainLayer.Employees.*;
+import DomainLayer.Transport.OrderController;
+import DomainLayer.Transport.ResourceController;
 import ServiceLayer.Utility.Response;
-import ServiceLayer.Utility.ShiftDate;
 import ServiceLayer.Utility.ShiftPair;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class Facade {
-    private static final Facade instance = new Facade();
+public class FacadeEmployees {
+    private static final FacadeEmployees instance = new FacadeEmployees();
     private final EmployeeController employeeController;
     private final ShiftController shiftController;
     private final JobController jobController;
+    private final OrderController orderController;
+    ResourceController resourceController;
 
-    private Facade(){
+    private FacadeEmployees(){
         employeeController = new EmployeeController();
         shiftController = new ShiftController();
         jobController = new JobController();
         createEmployee("318856994", "Itay Gershon", "123456", 1000000000, "Hapoalim 12 115", "The conditions for this employee are really terrific");
         certifyEmployee(JobType.HR_MANAGER, "318856994");
+        orderController= new OrderController();
+        resourceController = ResourceController.getInstance();
     }
 
-    public static Facade getInstance() {
+    public static FacadeEmployees getInstance() {
         return instance;
     }
 
@@ -213,4 +220,144 @@ public class Facade {
         return shiftController.displayWorkersOfCurrentShift();
     }
 
+    public boolean setTrucksWeight(String docID, double weight2add) {
+        return orderController.setTrucksWeight(docID, weight2add);
+    }
+
+    public String showTrucks(String date, String driverID, String time) {
+        return orderController.showTrucks(date,driverID,time);
+    }
+
+    public void setNewTruck(String docID, String newTruckPlate) {
+        orderController.setNewTruck(docID, newTruckPlate);
+    }
+
+    public String showStores(String areaCode) {
+        return orderController.showStores(areaCode);
+    }
+
+    public void replaceStores(String docID, String id2replace, String newStoreID, ConcurrentHashMap<String, Integer> supplies) {
+        orderController.replaceStores(docID, id2replace, newStoreID, supplies);
+    }
+
+    public String showSupplies(String s, String s1, String s2) {
+        return orderController.showSupplies("","","");
+    }
+
+    public String showSuppliers(String areaCode) {
+        return orderController.showSuppliers(areaCode);
+    }
+
+    public String createDoc(ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> orders, String supplier, String date, String driverID, String truckPlate, String time) {
+        return orderController.createDoc(orders, supplier, date,driverID,truckPlate, time);
+    }
+
+    public void removeSiteFromDoc(String docID, String siteID) {
+        orderController.removeSiteFromDoc(docID, siteID);
+    }
+
+    public String showDrivers(String d, String time) {
+        return orderController.showDrivers(d,time);
+    }
+
+    public String getDriver(String driverID) {
+        return orderController.getDriver(driverID);
+    }
+
+    public void removeDoc(String doc) {
+        orderController.removeDoc(doc);
+    }
+
+    public boolean changeOrder(String docID, String storeID, ArrayList<String> names, ArrayList<Integer> quantities) {
+        if (orderController.containsSite(docID, storeID)) {
+            orderController.changeOrder(docID,storeID, names,quantities);
+            return true;
+        } else {
+            throw new NullPointerException();
+        }
+    }
+
+    public void createDriverDocs(String doc) {
+        orderController.createDriverDocs(doc);
+    }
+
+    public void transportIsDone(String doc) {
+        orderController.transportIsDone(doc);
+    }
+
+    public String ShowDriverDocs(String docID) {
+        return orderController.ShowDriverDocs(docID);
+    }
+
+    public String showStoresforDoc(String docID) {
+        return orderController.showStoresforDoc(docID);
+    }
+
+    public String viewOrder(String docID) {
+        return orderController.viewOrder(docID);
+    }
+
+    public String getSupplyByIdx(int nextInt, String s, String s1, String s2) {
+        return orderController.getSupplyByIdx(nextInt,"","","");
+    }
+
+    public String getTruck(String licensePlate) {
+        return orderController.getTruck(licensePlate);
+    }
+
+    public String getDate(String docID) {
+        return orderController.getDate(docID);
+    }
+
+    public String getDriverID(String docID) {
+        return orderController.getDriverID(docID);
+    }
+
+    public double getCurrWeight(String doc) {
+        return orderController.getCurrWeight(doc);
+    }
+
+    public boolean getDoc(String docID) {
+        return orderController.getDoc(docID);
+    }
+
+    public String getTime(String docID) {
+        return orderController.getTime(docID);
+    }
+
+    public boolean createDriver(String name, String id, String licence) {
+        if(licence.equalsIgnoreCase("C")){
+            licence = "C";
+        }
+        else{licence ="C1";}
+        return resourceController.addDriver(name, id, licence) ;
+    }
+
+    public boolean addTruck(String type, String licensePlate, double maxWeight, double initialWeight) {
+        return resourceController.addTruck(type, licensePlate, maxWeight, initialWeight);
+    }
+
+    public boolean addSupply(String name, double weight) {
+        return resourceController.addSupply(name, weight);
+    }
+
+    public boolean addSite(String id, String contactaddress, String contactname, String contactphonenumber, int shippingArea, int type) {
+        return resourceController.addSite(id, contactaddress, contactname, contactphonenumber, shippingArea, type);
+    }
+
+    public boolean removeDriver(String id) {
+        return resourceController.removeDriver(id);
+    }
+
+    public boolean removeTruck(String id) {
+        return resourceController.removeTruck(id);
+    }
+
+    public boolean removeSite(String id) {
+        return resourceController.removeSite(id);
+    }
+
+    public String removeSupply(String suppName2Remove) {
+        return resourceController.removeSupply(suppName2Remove);
+    }
 }
