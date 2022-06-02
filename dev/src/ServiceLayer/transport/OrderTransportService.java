@@ -31,8 +31,6 @@ public class OrderTransportService {
         return facadeEmployees.showTrucks(date,driverID,time);
     }
 
-
-
     public void setNewTruck(String docID,String newTruckPlate) {
         facadeEmployees.setNewTruck(docID, newTruckPlate);
     }

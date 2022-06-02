@@ -1,14 +1,10 @@
-package EmployeesModule.ServiceLayer;
+package ServiceLayer;
 
 import DomainLayer.FacadeEmployees;
 import DomainLayer.Employees.JobType;
-import EmployeesModule.PresentationLayer.EmployeeMainCLI;
-import ServiceLayer.HRManagerService;
+import PresentationLayer.EmployeeMainCLI;
 import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
-import ServiceLayer.EmployeeServiceGeneric;
-import ServiceLayer.Parser;
-import ServiceLayer.Action;
 
 import java.util.ArrayList;
 import java.util.Calendar;
