@@ -6,7 +6,6 @@ import DomainLayer.Employees.*;
 import DomainLayer.Transport.OrderController;
 import DomainLayer.Transport.ResourceController;
 import ServiceLayer.Utility.Response;
-import ServiceLayer.Utility.ShiftDate;
 import ServiceLayer.Utility.ShiftPair;
 
 import java.util.ArrayList;
@@ -14,23 +13,27 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FacadeEmployees {
-    private static final FacadeEmployees instance = new FacadeEmployees();
+public class FacadeEmployees_Transports {
+    private static final FacadeEmployees_Transports instance = new FacadeEmployees_Transports();
     private final EmployeeController employeeController;
     private final ShiftController shiftController;
     private final JobController jobController;
+    private final OrderController orderController;
+    ResourceController resourceController;
 
-        private FacadeEmployees(){
-            employeeController = new EmployeeController();
-            shiftController = new ShiftController();
-            jobController = new JobController();
-            createEmployee("318856994", "Itay Gershon", "123456", 1000000000, "Hapoalim 12 115", "The conditions for this employee are really terrific");
-            certifyEmployee(JobType.HR_MANAGER, "318856994");
-        }
+    private FacadeEmployees_Transports(){
+        employeeController = new EmployeeController();
+        shiftController = new ShiftController();
+        jobController = new JobController();
+        createEmployee("318856994", "Itay Gershon", "123456", 1000000000, "Hapoalim 12 115", "The conditions for this employee are really terrific");
+        certifyEmployee(JobType.HR_MANAGER, "318856994");
+        orderController= new OrderController();
+        resourceController = ResourceController.getInstance();
+    }
 
-        public static FacadeEmployees getInstance() {
-            return instance;
-        }
+    public static FacadeEmployees_Transports getInstance() {
+        return instance;
+    }
 
 
     public Response createEmployee(String id, String name, String password, float salary, String bankAccount, String contractOfEmployment){
@@ -83,45 +86,14 @@ public class FacadeEmployees {
         return employeeController.resetSchedule(id);
     }
 
-    public boolean addAvailableTimeSlotToEmployee(String id, ShiftPair shift) {
-        return employeeController.addAvailableTimeSlotTo(id, shift);
-    }
+    public boolean addAvailableTimeSlotToEmployee(String id, ShiftPair shift) {return employeeController.addAvailableTimeSlotTo(id, shift); }
 
     //return value can be ignored because the employee invoking it is logged in => employee != null
     public boolean removeShift(String id, ShiftPair shift) {
         return employeeController.removeAvailableTimeSlot(id, shift);
     }
 
-
-    public Response areCertified(String ids, JobType jobType){
-        String[] employees = ids.split(",");
-        for (String id: employees){
-            Response response = isCertified(id, jobType);
-            if (response.errorOccurred())
-                return response;
-        }
-        return new Response();
-    }
-
     public Response createShift(ShiftPair shift, String shiftManagerID, String cashiersIDs, String driversIDs, String merchandisersIDs, String stockKeepersIDs) {
-
-        Response rManager = areCertified(shiftManagerID, JobType.SHIFT_MANAGER);
-        if (rManager.errorOccurred())
-            return rManager;
-        Response rCashier = areCertified(cashiersIDs, JobType.CASHIER);
-        if (rCashier.errorOccurred())
-            return rCashier;
-        Response rDriver = areCertified(driversIDs, JobType.DRIVER);
-        if (rDriver.errorOccurred())
-            return rDriver;
-        Response rMerchandiser = areCertified(merchandisersIDs, JobType.MERCHANDISER);
-        if (rMerchandiser.errorOccurred())
-            return rMerchandiser;
-        Response rStockKeepers = areCertified(stockKeepersIDs, JobType.STOCK_KEEPER);
-        if (rStockKeepers.errorOccurred())
-            return rStockKeepers;
-
-
         List<Employee> cashiers = new ArrayList<>();
         addAll(cashiers, cashiersIDs);
         List<Employee> drivers = new ArrayList<>();
@@ -182,15 +154,7 @@ public class FacadeEmployees {
     }
 
     public boolean startShift(ShiftPair shiftPair, String id){
-        boolean started = shiftController.startShift(shiftPair, id);
-        if (started){
-            for (List<Employee> emps : shiftController.getCurrentShift().getEmployeesInShift().values()){
-                for (Employee emp : emps){
-                    employeeController.addToMap(emp);
-                }
-            }
-        }
-        return started;
+        return shiftController.startShift(shiftPair, id);
     }
 
     public String getDetailsOf(String id) {
@@ -236,21 +200,13 @@ public class FacadeEmployees {
         return shiftController.endShift(id);
     }
 
-//    /**
-//     * handles the shutting down of the system. more functionality will be added later on
-//     */
-//    public void shutDown() {
-////        try {
-//        //employeeController.shutDown();
-////        jobController.shutDown();
-//        shiftController.shutDown();
-//        employeeController.shutDown();
-////            DBConnector.getInstance().close();
-////        }
-////        catch (SQLException e){
-////            System.out.println("Unsuccessful shutdown");
-////        }
-//    }
+    /**
+     * handles the shutting down of the system. more functionality will be added later on
+     */
+    public void shutDown() {
+        shiftController.shutDown();
+        employeeController.shutDown();
+    }
 
     public boolean shiftIsRunning() {
         return shiftController.shiftIsRunning();
@@ -264,62 +220,144 @@ public class FacadeEmployees {
         return shiftController.displayWorkersOfCurrentShift();
     }
 
-//    public void loadPreMadeData() {
-//        createEmployee("234567891", "gal halifa", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("123456789", "dan terem", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("345678912", "noa aviv", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("456789123", "nave avraham", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("789123456", "gili gershon", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("891234567", "amit halifa", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("012345678", "shachar bardugo", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("123456780", "nadia zlenko", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("234567801", "yossi gershon", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("345678012", "eti gershon", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("456780123", "amit sasson", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("567801234", "itamar shemesh", "123456", 1000, "yahav", "good conditions");
-//        createEmployee("147258369", "dina agapov", "123456", 1, "yahav", "bad");
-//        createEmployee("258369147", "mor shuker", "123456", 1, "yahav", "bad");
-//        createEmployee("000000000", "may terem", "123456", 1, "yahav", "good");
-//        createEmployee("111111111", "wendy the dog", "123456", 1, "yahav", "good");
-//        createEmployee("222222222", "savta tova", "123456", 1, "yahav", "good");
-//        createEmployee("333333333", "liron marinberg", "123456", 1, "yahav", "good");
-//        certifyEmployee(JobType.CASHIER, "318856994");
-//        certifyEmployee(JobType.CASHIER, "234567891");
-//        certifyEmployee(JobType.CASHIER, "345678912");
-//        certifyEmployee(JobType.CASHIER, "123456789");
-//        certifyDriver("258369147", "c");
-//        certifyDriver("123456789", "c1");
-//        certifyDriver("456780123", "c");
-//        certifyDriver("234567891", "c");
-//        certifyDriver("012345678", "c1");
-//        certifyEmployee(JobType.MERCHANDISER, "234567891");
-//        certifyEmployee(JobType.MERCHANDISER, "123456789");
-//        certifyEmployee(JobType.MERCHANDISER, "789123456");
-//        certifyEmployee(JobType.MERCHANDISER, "234567891");
-//        certifyEmployee(JobType.MERCHANDISER, "123456789");
-//        certifyEmployee(JobType.STOCK_KEEPER, "123456780");
-//        certifyEmployee(JobType.STOCK_KEEPER, "345678912");
-//        certifyEmployee(JobType.STOCK_KEEPER, "456780123");
-//        certifyEmployee(JobType.STOCK_KEEPER, "123456789");
-//        certifyEmployee(JobType.SHIFT_MANAGER, "234567891");
-//        certifyEmployee(JobType.SHIFT_MANAGER, "318856994");
-//        certifyEmployee(JobType.SHIFT_MANAGER, "222222222");
-//        certifyEmployee(JobType.STOCK_KEEPER, "111111111");
-//        certifyDriver( "000000000", "c1");
-//        certifyEmployee(JobType.SHIFT_MANAGER, "456789123");
-//        certifyEmployee(JobType.CASHIER, "333333333");
-//        certifyEmployee(JobType.MERCHANDISER, "567801234");
-//        certifyDriver("123456780", "c");
-//
-//        Response r = createShift(new ShiftPair(new ShiftDate("01", "06", "2022"), Time.EVENING), "318856994",
-//                "333333333,234567891", "123456780,000000000", "123456789", "111111111");
-//        if (r.errorOccurred())
-//            System.out.println("r1 = " + r.getErrorMessage());
-//        r = createShift(new ShiftPair(new ShiftDate("02", "06", "2022"), Time.MORNING), "456789123",
-//                "333333333,234567891", "258369147,000000000", "567801234", "345678912");
-//        if (r.errorOccurred())
-//            System.out.println("r2 = " + r.getErrorMessage());
-//
-//    }
+    public boolean setTrucksWeight(String docID, double weight2add) {
+        return orderController.setTrucksWeight(docID, weight2add);
+    }
 
+    public String showTrucks(String date, String driverID, String time) {
+        return orderController.showTrucks(date,driverID,time);
+    }
+
+    public void setNewTruck(String docID, String newTruckPlate) {
+        orderController.setNewTruck(docID, newTruckPlate);
+    }
+
+    public String showStores(String areaCode) {
+        return orderController.showStores(areaCode);
+    }
+
+    public void replaceStores(String docID, String id2replace, String newStoreID, ConcurrentHashMap<String, Integer> supplies) {
+        orderController.replaceStores(docID, id2replace, newStoreID, supplies);
+    }
+
+    public String showSupplies(String s, String s1, String s2) {
+        return orderController.showSupplies("","","");
+    }
+
+    public String showSuppliers(String areaCode) {
+        return orderController.showSuppliers(areaCode);
+    }
+
+    public String createDoc(ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> orders, String supplier, String date, String driverID, String truckPlate, String time) {
+        return orderController.createDoc(orders, supplier, date,driverID,truckPlate, time);
+    }
+
+    public void removeSiteFromDoc(String docID, String siteID) {
+        orderController.removeSiteFromDoc(docID, siteID);
+    }
+
+    public String showDrivers(String d, String time) {
+        return orderController.showDrivers(d,time);
+    }
+
+    public String getDriver(String driverID) {
+        return orderController.getDriver(driverID);
+    }
+
+    public void removeDoc(String doc) {
+        orderController.removeDoc(doc);
+    }
+
+    public boolean changeOrder(String docID, String storeID, ArrayList<String> names, ArrayList<Integer> quantities) {
+        if (orderController.containsSite(docID, storeID)) {
+            orderController.changeOrder(docID,storeID, names,quantities);
+            return true;
+        } else {
+            throw new NullPointerException();
+        }
+    }
+
+    public void createDriverDocs(String doc) {
+        orderController.createDriverDocs(doc);
+    }
+
+    public void transportIsDone(String doc) {
+        orderController.transportIsDone(doc);
+    }
+
+    public String ShowDriverDocs(String docID) {
+        return orderController.ShowDriverDocs(docID);
+    }
+
+    public String showStoresforDoc(String docID) {
+        return orderController.showStoresforDoc(docID);
+    }
+
+    public String viewOrder(String docID) {
+        return orderController.viewOrder(docID);
+    }
+
+    public String getSupplyByIdx(int nextInt, String s, String s1, String s2) {
+        return orderController.getSupplyByIdx(nextInt,"","","");
+    }
+
+    public String getTruck(String licensePlate) {
+        return orderController.getTruck(licensePlate);
+    }
+
+    public String getDate(String docID) {
+        return orderController.getDate(docID);
+    }
+
+    public String getDriverID(String docID) {
+        return orderController.getDriverID(docID);
+    }
+
+    public double getCurrWeight(String doc) {
+        return orderController.getCurrWeight(doc);
+    }
+
+    public boolean getDoc(String docID) {
+        return orderController.getDoc(docID);
+    }
+
+    public String getTime(String docID) {
+        return orderController.getTime(docID);
+    }
+
+    public boolean createDriver(String name, String id, String licence) {
+        if(licence.equalsIgnoreCase("C")){
+            licence = "C";
+        }
+        else{licence ="C1";}
+        return resourceController.addDriver(name, id, licence) ;
+    }
+
+    public boolean addTruck(String type, String licensePlate, double maxWeight, double initialWeight) {
+        return resourceController.addTruck(type, licensePlate, maxWeight, initialWeight);
+    }
+
+    public boolean addSupply(String name, double weight) {
+        return resourceController.addSupply(name, weight);
+    }
+
+    public boolean addSite(String id, String contactaddress, String contactname, String contactphonenumber, int shippingArea, int type) {
+        return resourceController.addSite(id, contactaddress, contactname, contactphonenumber, shippingArea, type);
+    }
+
+    public boolean removeDriver(String id) {
+        return resourceController.removeDriver(id);
+    }
+
+    public boolean removeTruck(String id) {
+        return resourceController.removeTruck(id);
+    }
+
+    public boolean removeSite(String id) {
+        return resourceController.removeSite(id);
+    }
+
+    public String removeSupply(String suppName2Remove) {
+        return resourceController.removeSupply(suppName2Remove);
+    }
 }

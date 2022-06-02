@@ -72,7 +72,7 @@ public class SiteDAO {
             return s;
 //id,type,ShippingArea,contactPNumber,contactName,contactAddress
         } catch (SQLException e) {
-            System.out.println("Unable to execute query getSite");
+            //System.out.println("Unable to execute query getSite");
         }finally {
 //            conn.startConnection();
         }

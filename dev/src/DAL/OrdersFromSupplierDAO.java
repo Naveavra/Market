@@ -235,7 +235,7 @@ public class OrdersFromSupplierDAO {
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
         } catch (SQLException throwable) {
-            System.out.println(throwable.getMessage());
+            //System.out.println(throwable.getMessage());
         } finally {
             connect.closeConnect();
         }

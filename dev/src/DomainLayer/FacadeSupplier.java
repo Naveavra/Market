@@ -13,7 +13,7 @@ public class FacadeSupplier {
     private CategoryController categoryController;
     private ReportController reportController;
     private Gson gson;
-    private FacadeEmployees facadeEmployees;
+    private FacadeEmployees_Transports facadeEmployeesTransports;
     private static boolean needsUpdateOrders=true;
 
 
@@ -27,7 +27,7 @@ public class FacadeSupplier {
             updateOrders();
             needsUpdateOrders=false;
         }
-        facadeEmployees =FacadeEmployees.getInstance();
+        facadeEmployeesTransports = FacadeEmployees_Transports.getInstance();
 
     }
 

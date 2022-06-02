@@ -2,48 +2,48 @@ package ServiceLayer.transport;
 
 //import BusinessLayer.*;
 
-import DomainLayer.FacadeEmployees;
+import DomainLayer.FacadeEmployees_Transports;
 import DomainLayer.Transport.ResourceController;
 
 public class UserService {
-    FacadeEmployees facadeEmployees;
+    FacadeEmployees_Transports facadeEmployeesTransports;
     ResourceController resourceController = ResourceController.getInstance();
     public UserService(){
-        facadeEmployees =FacadeEmployees.getInstance();
+        facadeEmployeesTransports = FacadeEmployees_Transports.getInstance();
     }
 
     public boolean createDriver(String name, String id, String licence){
-        return facadeEmployees.createDriver(name, id, licence);
+        return facadeEmployeesTransports.createDriver(name, id, licence);
     }
 
     public boolean createTruck(String type, String licenseplate, double maxweight, double initialweight ){
-        return facadeEmployees.addTruck(type, licenseplate, maxweight, initialweight);
+        return facadeEmployeesTransports.addTruck(type, licenseplate, maxweight, initialweight);
     }
 
     public boolean createSupply(String name, double weight){
-        return facadeEmployees.addSupply(name, weight);
+        return facadeEmployeesTransports.addSupply(name, weight);
     }
 
     public boolean createSite(String id,String contactaddress, String contactname, String contactphonenumber
             , int shippingArea, int type){
-        return facadeEmployees.addSite(id, contactaddress, contactname, contactphonenumber, shippingArea, type);
+        return facadeEmployeesTransports.addSite(id, contactaddress, contactname, contactphonenumber, shippingArea, type);
     }
 
     public boolean removeDriver(String id){
-        return facadeEmployees.removeDriver(id);
+        return facadeEmployeesTransports.removeDriver(id);
     }
 
     public boolean removeTruck(String id){ //the condition should be in the userctrl and not here, cohesion!!!!!!!
-        return facadeEmployees.removeTruck(id);
+        return facadeEmployeesTransports.removeTruck(id);
     }
 
     public boolean removeSite(String id){
-        return facadeEmployees.removeSite(id);
+        return facadeEmployeesTransports.removeSite(id);
     }
 
 
     public String removeSupply(String suppName2Remove) {
-        return facadeEmployees.removeSupply(suppName2Remove);
+        return facadeEmployeesTransports.removeSupply(suppName2Remove);
     }
 
 
