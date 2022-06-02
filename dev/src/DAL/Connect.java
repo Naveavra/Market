@@ -1,5 +1,7 @@
 package DAL;
 
+import ServiceLayer.Utility.Response;
+
 import java.io.File;
 import java.sql.*;
 
@@ -344,9 +346,10 @@ public class Connect {
             return rs;
         } catch (SQLException throwable) {
             throw throwable;
-        } finally {
-            closeConnect();
         }
+//        } finally {
+//            closeConnect();
+//        }
     }
 
     public int executeUpdate(String query,Object... params) throws SQLException {
@@ -361,6 +364,18 @@ public class Connect {
             throw throwable;
         } finally {
             closeConnect();
+        }
+    }
+
+    public Response updateRecordInTable(String tableName, String columnName, String recordID, Object newValue){
+        try {
+            Statement statement = conn.createStatement();
+            String query = "UPDATE TABLE " + tableName + " SET " + columnName + " = " + newValue +
+                    " WHERE " + columnName + " = " + recordID;
+            statement.execute(query);
+            return new Response();
+        } catch (SQLException se) {
+            return new Response("Failed to connect to DB");
         }
     }
 

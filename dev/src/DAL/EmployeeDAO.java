@@ -1,10 +1,7 @@
 package DAL;
 
+import DomainLayer.Employees.*;
 import DomainLayer.Employees.Employee;
-import DomainLayer.Employees.Time;
-import DomainLayer.Employees.Employee;
-import DomainLayer.Employees.JobType;
-import DomainLayer.Employees.Shift;
 import DomainLayer.Employees.Time;
 import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftDate;
@@ -18,13 +15,13 @@ import java.util.*;
 public class EmployeeDAO {
     private static Map<String, Employee> idMap = new HashMap<>();;
     private Connect conn = Connect.getInstance();
-//    private static final EmployeeDAO instance = new EmployeeDAO();
+    private static final EmployeeDAO instance = new EmployeeDAO();
 //    private EmployeeDAO(){
 //        idMap = new HashMap<>();
 //    }
-//    public static EmployeeDAO getInstance() {
-//        return instance;
-//    }
+    public static EmployeeDAO getInstance() {
+        return instance;
+    }
 
     public Employee getEmployee(String id){
         if (idMap.containsKey(id))
@@ -38,6 +35,13 @@ public class EmployeeDAO {
         catch (SQLException e){
             System.out.println(e.getMessage());
             return null;
+        }
+        finally {
+            try {
+                conn.closeConnect();
+            }
+            catch (SQLException ignored){
+            }
         }
     }
 
@@ -71,7 +75,7 @@ public class EmployeeDAO {
             String timeOfDay = schedule.getString("timeOfDay");
             Time t;
             if (timeOfDay.equals("MORNING"))
-                    t = Time.MORNING;
+                t = Time.MORNING;
             else
                 t = Time.EVENING;
             String day = schedule.getString("day");
@@ -115,7 +119,7 @@ public class EmployeeDAO {
     public Response putBackEmployee(Employee e){
         try{
             conn.executeUpdate("UPDATE Employees SET name = ?, password = ?, salary = ?, contract = ?, bankAccount " +
-                    "= ?, monthlyHours = ?, dateOfEmployment = ? WHERE id = ?",e.getName(), e.getPassword(), e.getSalary(),
+                            "= ?, monthlyHours = ?, dateOfEmployment = ? WHERE id = ?",e.getName(), e.getPassword(), e.getSalary(),
                     e.getContractOfEmployment(), e.getBankAccount(), e.getAccMonthlyHours(), e.getDateOfEmployment(),e.getId());
             List<ShiftPair> schedule = e.getAvailabilitySchedule().getSchedule();
             for (ShiftPair shiftPair : schedule) {
@@ -150,15 +154,23 @@ public class EmployeeDAO {
         if (idMap.containsKey(id))
             return true;
         try {
-            return !conn.executeQuery("SELECT id FROM Employees WHERE id = " + id).wasNull();
+            return !conn.executeQuery("SELECT id FROM Employees WHERE id = " + id).next();
         }
         catch (SQLException e) {
             return false;
+        }
+        finally {
+            try {
+                conn.closeConnect();
+            }
+            catch (SQLException ignored){
+            }
         }
     }
 
     public Response registerEmployee(String id, String name, String password, float salary, String bankAccount, String contractOfEmployment , float monthlyHours, Date date) {
         try{
+//            idMap.put(id, new Employee(id,name, password, salary, bankAccount, contractOfEmployment, date));
             conn.executeUpdate("INSERT INTO Employees (id, name, password, salary, contract, bankAccount, monthlyHours," +
                     " dateOfEmployment) VALUES(?,?,?,?,?,?,?,?)",id, name, password, salary, contractOfEmployment, bankAccount, monthlyHours ,date);
             return new Response();
@@ -171,18 +183,16 @@ public class EmployeeDAO {
     public Response removeEmployee(String id) {
         idMap.remove(id);
         try {
-            String ans = conn.deleteRecordFromTableSTR("Employees", "id", id);
-            if (ans.equals("Success"))
-                return new Response();
-            return new Response("Failed to connect to DB");
-        } catch (SQLException e) {
-            return new Response("Failed to connect to DB");
+            conn.deleteRecordFromTableSTR("Employees", "id", id);
+            return new Response();
+        }
+        catch (SQLException e){
+            return new Response("Unable to delete employee. Make sure the id is correct");
         }
     }
 
-    public void putBackAll() {
-        for (Employee e : idMap.values())
-            putBackEmployee(e);
+    public void clearMap() {
+        idMap.clear();
     }
 
     public Map<String, Employee> getIdMap() {
@@ -190,20 +200,16 @@ public class EmployeeDAO {
     }
 
     public void shutDown() {
-        putBackAll();
+        clearMap();
     }
 
-    public boolean resetSchedule(String id) {
+    public void resetSchedule(String id) {
         if (idMap.containsKey(id))
             idMap.get(id).resetSchedule();
         try {
-            String ans = conn.deleteRecordFromTableSTR("Schedules", "id",id);
-            if (ans.equals("Success"))
-                return true;
-            return false;
-        } catch (SQLException e) {
-            return false;
+            conn.deleteRecordFromTableSTR("Schedules", "id", id);
         }
+        catch (SQLException ignored){}
     }
 
     public void removeShift(String id, ShiftPair shift){
@@ -220,5 +226,150 @@ public class EmployeeDAO {
         catch (SQLException e){
             System.out.println(e.getMessage());
         }
+    }
+
+    public boolean addAvailableTimeSlotTo(String id, ShiftPair shift) {
+        if (idMap.containsKey(id))
+            idMap.get(id).addAvailableTimeSlot(shift);
+        try {
+            ShiftDate date = shift.getDate();
+            conn.executeUpdate("INSERT INTO Schedules (id, timeOfDay, day, month, year)",
+                    id, shift.getTime().toString(), date.getDay(), date.getMonth(), date.getYear());
+            return true;
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public Schedule getScheduleOf(String id) {
+        if (idMap.containsKey(id))
+            return idMap.get(id).getAvailabilitySchedule();
+        try {
+            ResultSet res = conn.executeQuery("SELECT * FROM Schedules WHERE id = ?", id);
+            Schedule schedule = new Schedule(new ArrayList<>());
+            while (res.next()){
+                String sTimeOfDay = res.getString("timeOfDay");
+                Time timeOfDay;
+                if (sTimeOfDay.equalsIgnoreCase("morning"))
+                    timeOfDay = Time.MORNING;
+                else
+                    timeOfDay = Time.EVENING;
+                String day = res.getString("day");
+                String month = res.getString("month");
+                String year = res.getString("year");
+                schedule.addTimeSlot(new ShiftPair(new ShiftDate(day, month, year), timeOfDay));
+            }
+            return schedule;
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+        finally {
+            try {
+                conn.closeConnect();
+            }
+            catch (SQLException ignored){
+            }
+        }
+    }
+
+    public boolean removeAvailableTimeSlot(String id, ShiftPair shift) {
+        if (idMap.containsKey(id))
+            idMap.get(id).deleteShift(id, shift);
+        try {
+            ShiftDate date = shift.getDate();
+            conn.executeUpdate("DELETE FROM Schedules WHERE timeOfDay = ? AND day = ? AND month = ? AND year = ?",
+                    shift.getTime().toString(), date.getDay(), date.getMonth(), date.getYear());
+            return true;
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+    }
+
+    public Response certifyEmployee(String id, JobType job) {
+        if (idMap.containsKey(id))
+            idMap.get(id).addCertification(job);
+        try {
+            conn.executeUpdate("INSERT INTO Roles (id, jobType) VALUES(?,?)",
+                    id, job);
+            return new Response();
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+            return new Response("No such employee exists");
+        }
+
+    }
+
+    public Response isCertified(String id, JobType jobType) {
+        if (idMap.containsKey(id) && idMap.get(id).isCertified(jobType))
+            return new Response();
+        try {
+            ResultSet res = conn.executeQuery("SELECT * FROM Roles WHERE id = ? AND jobType = ?", id, jobType);
+            if (res.next())
+                return new Response();
+            return new Response("Employee is not certified to be a " + jobType.toString().toLowerCase());
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+            return new Response("No such employee exists");
+        }
+        finally {
+            try {
+                conn.closeConnect();
+            }
+            catch (SQLException ignored){
+            }
+        }
+    }
+
+    public boolean editName(String id, String name) {
+        if (idMap.containsKey(id)) {
+            idMap.get(id).setName(name);
+        }
+        Response r = conn.updateRecordInTable("Employees", "name", id, name);
+        return !r.errorOccurred();
+    }
+
+    public boolean editPassword(String id, String password) {
+        if (idMap.containsKey(id)) {
+            idMap.get(id).setPassword(password);
+        }
+        Response r = conn.updateRecordInTable("Employees", "password", id, password);
+        return !r.errorOccurred();
+    }
+
+    public boolean editSalary(String id, float newSalary) {
+        if (idMap.containsKey(id)) {
+            idMap.get(id).setSalary(newSalary);
+        }
+        Response r = conn.updateRecordInTable("Employees", "salary", id, newSalary);
+        return !r.errorOccurred();
+    }
+
+    public boolean editContract(String id, String newContract) {
+        if (idMap.containsKey(id)) {
+            idMap.get(id).setContractOfEmployment(newContract);
+        }
+        Response r = conn.updateRecordInTable("Employees", "contract", id, newContract);
+        return !r.errorOccurred();
+    }
+
+    public boolean editBankInfo(String id, String newBankInfo) {
+        if (idMap.containsKey(id)) {
+            idMap.get(id).setBankAccount(newBankInfo);
+        }
+        Response r = conn.updateRecordInTable("Employees", "bankAccount", id, newBankInfo);
+        return !r.errorOccurred();
+    }
+
+    public void addToMap(Employee emp) {
+        idMap.put(emp.getId(), emp);
     }
 }

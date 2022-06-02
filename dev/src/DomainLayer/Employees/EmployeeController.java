@@ -8,7 +8,7 @@ import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
 
 public class EmployeeController {
-    private final EmployeeDAO employeeDAO = new EmployeeDAO();
+    private final EmployeeDAO employeeDAO = EmployeeDAO.getInstance();
 
     public EmployeeController(){
     }
@@ -43,44 +43,26 @@ public class EmployeeController {
     }
 
     public String getScheduleOf(String id) {
-//        return employeeDAO.getScheduleOf(id);
-        return getEmployee(id).getAvailabilitySchedule().toString();
+        Schedule s = employeeDAO.getScheduleOf(id);
+        if (s == null)
+            return "Unspecified";
+        return s.toString();
     }
 
     public boolean addAvailableTimeSlotTo(String id, ShiftPair shift) {
-        Employee e = getEmployee(id);
-        if (e == null)
-            return false;
-        e.addAvailableTimeSlot(shift);
-        employeeDAO.putBackEmployee(e);
-        return true;
+        return employeeDAO.addAvailableTimeSlotTo(id, shift);
     }
 
     public boolean removeAvailableTimeSlot(String id, ShiftPair shift) {
-        Employee e = getEmployee(id);
-        if (e == null)
-            return false;
-        employeeDAO.removeShift(id, shift);
-        e.deleteShift(id, shift);
-        return true;
+        return employeeDAO.removeAvailableTimeSlot(id, shift);
     }
 
     public Response certifyEmployee(JobType job, String id) {
-        Employee e = getEmployee(id);
-        if (e == null)
-            return new Response("Employee does not exist");
-        e.addCertification(job);
-//        employeeDAO.putBackEmployee(e);
-        return new Response();
+        return employeeDAO.certifyEmployee(id, job);
     }
 
     public Response isCertified(String id, JobType jobType) {
-        Employee e = getEmployee(id);
-        if (e == null)
-            return new Response("Employee with id " + id + " does not exist");
-        if (!e.isCertified(jobType))
-            return new Response("Employee with id " + id + " is not certified to be a " + jobType);
-        return new Response();
+        return employeeDAO.isCertified(id, jobType);
     }
 
     public String getDetailsOf(String id) {
@@ -92,48 +74,23 @@ public class EmployeeController {
     }
 
     public boolean editName(String id, String newName) {
-        Employee e = getEmployee(id);
-        if(e == null) {
-            return false;
-        }
-        e.setName(newName);
-        return true;
+        return employeeDAO.editName(id, newName);
     }
 
     public boolean editPassword(String id, String newPassword) {
-        Employee e = getEmployee(id);
-        if(e == null){
-            return false;
-        }
-        e.setPassword(newPassword);
-        return true;
+        return employeeDAO.editPassword(id, newPassword);
     }
 
     public boolean editSalary(String id, float newSalary) {
-        Employee e = getEmployee(id);
-        if(e == null){
-            return false;
-        }
-        e.setSalary(newSalary);
-        return true;
+        return employeeDAO.editSalary(id, newSalary);
     }
 
     public boolean editBankInfo(String id, String newBankInfo) {
-        Employee e = getEmployee(id);
-        if(e == null){
-            return false;
-        }
-        e.setBankAccount(newBankInfo);
-        return true;
+        return employeeDAO.editBankInfo(id, newBankInfo);
     }
 
     public boolean editContract(String id, String newContract) {
-        Employee e = getEmployee(id);
-        if(e == null){
-            return false;
-        }
-        e.setContractOfEmployment(newContract);
-        return true;
+        return employeeDAO.editContract(id, newContract);
     }
 
     public boolean resetSchedule(String id) {
@@ -145,12 +102,16 @@ public class EmployeeController {
 //        return employeeDAO.addLicense(id, license);
 //    }
 
-    public void putBackAll() {
-        employeeDAO.putBackAll();
+    public void endShift() {
+        employeeDAO.clearMap();
     }
 
     public void shutDown() {
         employeeDAO.shutDown();
     }
 
+    public void addToMap(Employee emp) {
+        employeeDAO.addToMap(emp);
+    }
 }
+

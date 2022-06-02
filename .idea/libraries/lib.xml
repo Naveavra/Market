@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/hamcrest-core-1.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/jquery-1.11.3.bv1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/shared-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/ec.base-3.1.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/jquery-1.11.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/org.json-ld-3.1.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/org.json-ld-3.1.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/client-runtime-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/ec.base-3.1.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/html-5.0.bv6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dev/out/production/dev/lib/junit-4.12.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

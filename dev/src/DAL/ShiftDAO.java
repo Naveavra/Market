@@ -30,38 +30,48 @@ public class ShiftDAO {
         catch (SQLException e){
             return null;
         }
+        finally {
+            try {
+                connect.closeConnect();
+            }
+            catch (SQLException ignored){
+            }
+        }
+    }
+
+    public List<Employee> getEmployeesInShift(JobType jobType, ShiftPair shiftPair){
+        ShiftDate shiftID = shiftPair.getDate();
+        try {
+            List<Employee> employees = new ArrayList<>();
+            ResultSet employeesIDs = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? AND timeOfDay = ? AND day = ? AND month = ? AND year = ?", jobType, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
+            while (employeesIDs.next()) {
+                String id = employeesIDs.getString("employeeID");
+                Employee e = EmployeeDAO.getInstance().getEmployee(id);
+                employees.add(e);
+            }
+            return employees;
+
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+        finally {
+            try {
+                connect.closeConnect();
+            }
+            catch (SQLException ignored){
+            }
+        }
     }
 
     private Map<JobType, List<Employee>> getEmployeesInShift(ShiftPair shiftPair){
-        try {
-            ShiftDate shiftID = shiftPair.getDate();
-            ResultSet cashiersIDs = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? and timeOfDay = ? and day = ? and month = ? and year = ?", JobType.CASHIER, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
-            ResultSet driversIDs = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? and timeOfDay = ? and day = ? and month = ? and year = ?", JobType.DRIVER, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
-            ResultSet merchandisersIDs = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? and timeOfDay = ? and day = ? and month = ? and year = ?", JobType.MERCHANDISER, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
-            ResultSet stockKeepersIDs = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? and timeOfDay = ? and day = ? and month = ? and year = ?", JobType.STOCK_KEEPER, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
-            List<Employee> cashiers = new ArrayList<>();
-            List<Employee> drivers = new ArrayList<>();
-            List<Employee> merchandisers = new ArrayList<>();
-            List<Employee> stockKeepers = new ArrayList<>();
-            while (cashiersIDs.next())
-                cashiers.add(employeeDAO.getEmployee(cashiersIDs.getString("employeeID")));
-            while (driversIDs.next())
-                drivers.add(employeeDAO.getEmployee(driversIDs.getString("employeeID")));
-            while (merchandisersIDs.next())
-                merchandisers.add(employeeDAO.getEmployee(merchandisersIDs.getString("employeeID")));
-            while (stockKeepersIDs.next())
-                stockKeepers.add(employeeDAO.getEmployee(stockKeepersIDs.getString("employeeID")));
-            Map<JobType, List<Employee>> res = new HashMap<>();
-            res.put(JobType.CASHIER, cashiers);
-            res.put(JobType.DRIVER, drivers);
-            res.put(JobType.MERCHANDISER, merchandisers);
-            res.put(JobType.STOCK_KEEPER, stockKeepers);
-            return res;
-        }
-        catch (SQLException e){
-//            System.out.println("problem in getEmployeesInShift");
-            return null;
-        }
+        Map<JobType, List<Employee>> res = new HashMap<>();
+        res.put(JobType.CASHIER, getEmployeesInShift(JobType.CASHIER, shiftPair));
+        res.put(JobType.DRIVER, getEmployeesInShift(JobType.DRIVER, shiftPair));
+        res.put(JobType.MERCHANDISER, getEmployeesInShift(JobType.MERCHANDISER, shiftPair));
+        res.put(JobType.STOCK_KEEPER, getEmployeesInShift(JobType.STOCK_KEEPER, shiftPair));
+        return res;
     }
 
     public Shift shiftConvertor(ShiftPair shiftPair){
@@ -86,6 +96,13 @@ public class ShiftDAO {
 //            System.out.println("problem in shiftConverter");
             return null;
         }
+        finally {
+            try {
+                connect.closeConnect();
+            }
+            catch (SQLException ignored){
+            }
+        }
     }
 
     private Employee getShiftManager(ShiftPair shiftPair) {
@@ -97,6 +114,13 @@ public class ShiftDAO {
         }
         catch (SQLException e){
             return null;
+        }
+        finally {
+            try {
+                connect.closeConnect();
+            }
+            catch (SQLException ignored){
+            }
         }
     }
 
@@ -158,6 +182,27 @@ public class ShiftDAO {
                 }
             }
         } catch (SQLException ignore) {
+        }
+        finally {
+            try {
+                connect.closeConnect();
+            }
+            catch (SQLException ignored){
+            }
+        }
+    }
+
+    public void endShift(Shift currentShift) {
+        try {
+            ShiftPair shiftPair = currentShift.getShiftTime();
+            ShiftDate date = shiftPair.getDate();
+            connect.executeUpdate("UPDATE Shifts SET start = ? AND end = ?" +
+                            " WHERE timeOfDay = ? AND day = ? AND month = ?" + " AND year = ?",
+                    currentShift.getStart(), currentShift.getEnd() ,shiftPair.getTime(), date.getDay(),date.getMonth(), date.getYear());
+        }
+        catch (SQLException e) {
+            System.out.println("problem in shiftExists");
+            System.out.println(e.getMessage());
         }
     }
 

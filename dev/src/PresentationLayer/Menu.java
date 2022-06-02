@@ -2,10 +2,11 @@ package PresentationLayer;
 
 import DAL.Connect;
 import DomainLayer.Employees.JobType;
+import EmployeesModule.ServiceLayer.EmployeeService;
 import PresentationLayer.Storage.CLI;
 import PresentationLayer.Supplier.Order;
 import PresentationLayer.Supplier.SupplierMenu;
-import PresentationLayer.Transport_Emploees.EmployeeMainCLI;
+import EmployeesModule.PresentationLayer.EmployeeMainCLI;
 import PresentationLayer.Transport_Emploees.MainCLI;
 import PresentationLayer.Transport_Emploees.UserInterface;
 import ServiceLayer.*;
@@ -129,8 +130,7 @@ public class Menu {
 
     }
     public void LoadEmployeeData() {
-        EmployeeService es =new EmployeeService();
-
+        EmployeeService es = EmployeeService.getInstance();
         es.register("234567891", "gal halifa", "123456", 1000, "yahav", "good conditions");
         es.register("123456789", "dan terem", "123456", 1000, "yahav", "good conditions");
         es.register("345678912", "noa aviv", "123456", 1000, "yahav", "good conditions");

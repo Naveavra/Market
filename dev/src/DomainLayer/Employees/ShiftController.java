@@ -1,6 +1,7 @@
 package DomainLayer.Employees;
 
 import DAL.ShiftDAO;
+import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
 
 import java.util.HashMap;
@@ -32,16 +33,16 @@ public class ShiftController {
         return false;
     }
 
-    public boolean endShift(String id){
+    public Response endShift(String id){
         if (currentShift == null)
-            return false;
+            return new Response("There is not shift currently running");
         if(currentShift.getManager().getId().equals(id)) {
             currentShift.endShift();
-            shiftDAO.insertShift(currentShift);
+            shiftDAO.endShift(currentShift);
             currentShift = null;
-            return true;
+            return new Response();
         }
-        return false;
+        return new Response("Only the shift manager can end the shift");
     }
 
 //    public static ShiftController getInstance() {
