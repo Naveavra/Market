@@ -347,9 +347,9 @@ public class Connect {
         } catch (SQLException throwable) {
             throw throwable;
         }
-//        } finally {
-//            closeConnect();
-//        }
+        finally {
+            closeConnect();
+        }
     }
 
     public int executeUpdate(String query,Object... params) throws SQLException {
