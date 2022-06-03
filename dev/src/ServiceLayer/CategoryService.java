@@ -1,13 +1,13 @@
 package ServiceLayer;
 
-import DomainLayer.FacadeSupplier;
+import DomainLayer.FacadeSupplier_Storage;
 
 public class CategoryService {
 
-    private FacadeSupplier facadeSupplier;
+    private FacadeSupplier_Storage facadeSupplier;
 
     public CategoryService() {
-        this.facadeSupplier = new FacadeSupplier();
+        this.facadeSupplier = new FacadeSupplier_Storage();
     }//const empty
 
     public void addCategory(String cName) {

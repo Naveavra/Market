@@ -1,17 +1,17 @@
 package ServiceLayer;
 
 
-import DomainLayer.FacadeSupplier;
-import DomainLayer.Supplier.SupplierController;
+import DomainLayer.FacadeSupplier_Storage;
+import DomainLayer.Suppliers.SupplierController;
 import com.google.gson.Gson;
 
 public class SupplierService {
     private SupplierController supplierController =new SupplierController();
     private Gson gson=new Gson();
-    private FacadeSupplier facadeSupplier;
+    private FacadeSupplier_Storage facadeSupplier;
 
     public SupplierService(){
-        facadeSupplier = new FacadeSupplier();
+        facadeSupplier = new FacadeSupplier_Storage();
     }
 
     /**

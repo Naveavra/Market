@@ -1,14 +1,14 @@
 package ServiceLayer;
 
-import DomainLayer.FacadeSupplier;
+import DomainLayer.FacadeSupplier_Storage;
 
 import java.util.List;
 
 public class ReportService {
-    private FacadeSupplier facadeSupplier;
+    private FacadeSupplier_Storage facadeSupplier;
 
     public ReportService(){
-        facadeSupplier =new FacadeSupplier();
+        facadeSupplier =new FacadeSupplier_Storage();
     }
 
 

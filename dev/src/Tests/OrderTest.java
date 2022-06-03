@@ -2,12 +2,12 @@ package Tests;
 
 
 import DAL.Connect;
-import DomainLayer.FacadeSupplier;
-import DomainLayer.Supplier.OrderFromSupplier;
-import DomainLayer.Supplier.OrdersController;
-import DomainLayer.Supplier.ProductSupplier;
+import DomainLayer.FacadeSupplier_Storage;
+import DomainLayer.Suppliers.OrderFromSupplier;
+import DomainLayer.Suppliers.OrdersController;
+import DomainLayer.Suppliers.ProductSupplier;
 import PresentationLayer.Menu;
-import PresentationLayer.Supplier.Order;
+import PresentationLayer.Suppliers.Order;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 @FixMethodOrder( MethodSorters.NAME_ASCENDING ) // force name ordering
 public class OrderTest {
-    private FacadeSupplier facadeSupplier;
+    private FacadeSupplier_Storage facadeSupplier;
     private OrdersController ordersController;
     private static boolean setUpIsDone = false;
     @Before
@@ -28,7 +28,7 @@ public class OrderTest {
 //            file.delete();
             Connect.getInstance().deleteRecordsOfTables();
 
-            facadeSupplier = new FacadeSupplier();
+            facadeSupplier = new FacadeSupplier_Storage();
             facadeSupplier.addCategory("first");
             facadeSupplier.addSubCat("first", "first1");
             facadeSupplier.addSubSubCat("first", "first1", "first11");
@@ -51,7 +51,7 @@ public class OrderTest {
            // setUpIsDone=true;
         }
         else {
-            facadeSupplier = new FacadeSupplier();
+            facadeSupplier = new FacadeSupplier_Storage();
             ordersController = new OrdersController();
         }
     }

@@ -1,8 +1,8 @@
 package DAL;
 
-import DomainLayer.Supplier.Contact;
-import DomainLayer.Supplier.Discount;
-import DomainLayer.Supplier.Supplier;
+import DomainLayer.Suppliers.Contact;
+import DomainLayer.Suppliers.Discount;
+import DomainLayer.Suppliers.Supplier;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

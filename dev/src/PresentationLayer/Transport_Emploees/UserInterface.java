@@ -1,6 +1,6 @@
 package PresentationLayer.Transport_Emploees;
 
-import PresentationLayer.Supplier.Contact;
+import PresentationLayer.Suppliers.Contact;
 import ServiceLayer.transport.UserService;
 import ServiceLayer.transport.OrderTransportService;
 

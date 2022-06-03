@@ -1,16 +1,13 @@
 package Tests;
 
 import DAL.Connect;
-import DomainLayer.Supplier.ProductSupplier;
-import DomainLayer.Supplier.SupplierController;
+import DomainLayer.Suppliers.ProductSupplier;
+import DomainLayer.Suppliers.SupplierController;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;

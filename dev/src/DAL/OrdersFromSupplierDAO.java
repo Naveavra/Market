@@ -1,8 +1,8 @@
 package DAL;
 
-import DomainLayer.Supplier.DeliveryTerm;
-import DomainLayer.Supplier.OrderFromSupplier;
-import DomainLayer.Supplier.ProductSupplier;
+import DomainLayer.Suppliers.DeliveryTerm;
+import DomainLayer.Suppliers.OrderFromSupplier;
+import DomainLayer.Suppliers.ProductSupplier;
 
 
 import java.sql.ResultSet;

@@ -1,9 +1,9 @@
 package Tests;
 
 import DAL.Connect;
-import DomainLayer.FacadeSupplier;
-import DomainLayer.Supplier.Discount;
-import DomainLayer.Supplier.SupplierController;
+import DomainLayer.FacadeSupplier_Storage;
+import DomainLayer.Suppliers.Discount;
+import DomainLayer.Suppliers.SupplierController;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -14,14 +14,14 @@ import java.sql.SQLException;
 import static org.junit.Assert.*;
 @FixMethodOrder( MethodSorters.NAME_ASCENDING ) // force name ordering
 public class ProductSupplierTest {
-private FacadeSupplier facadeSupplier;
+private FacadeSupplier_Storage facadeSupplier;
 private static boolean setUpIsDone = false;
 private SupplierController supplierController;
     @Before
     public void setUp() throws SQLException {
         if(!setUpIsDone) {
             Connect.getInstance().deleteRecordsOfTables();
-            facadeSupplier =new FacadeSupplier();
+            facadeSupplier =new FacadeSupplier_Storage();
             supplierController=new SupplierController();
             facadeSupplier.addCategory("first");
             facadeSupplier.addSubCat("first", "first1");
@@ -37,7 +37,7 @@ private SupplierController supplierController;
             //setUpIsDone=true;
         }
         else{
-            facadeSupplier =new FacadeSupplier();
+            facadeSupplier =new FacadeSupplier_Storage();
             supplierController=new SupplierController();
         }
 

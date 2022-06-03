@@ -1,14 +1,14 @@
 package ServiceLayer;
 
-import DomainLayer.FacadeSupplier;
+import DomainLayer.FacadeSupplier_Storage;
 
 
 public class OrderService {
 
-    private FacadeSupplier facadeSupplier;
+    private FacadeSupplier_Storage facadeSupplier;
 
     public OrderService(){
-        facadeSupplier =new FacadeSupplier();
+        facadeSupplier =new FacadeSupplier_Storage();
     }
     public String createOrder(int supplierNumber){
         return facadeSupplier.createOrder(supplierNumber);

@@ -1,12 +1,12 @@
 package ServiceLayer;
 
-import DomainLayer.FacadeSupplier;
+import DomainLayer.FacadeSupplier_Storage;
 
 public class ProductSupplierService {
-    private FacadeSupplier facadeSupplier;
+    private FacadeSupplier_Storage facadeSupplier;
 
     public ProductSupplierService(){
-        facadeSupplier = new FacadeSupplier();
+        facadeSupplier = new FacadeSupplier_Storage();
     }
 
     /**

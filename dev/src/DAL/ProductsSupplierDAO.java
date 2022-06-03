@@ -1,7 +1,7 @@
 package DAL;
 
-import DomainLayer.Supplier.Discount;
-import DomainLayer.Supplier.ProductSupplier;
+import DomainLayer.Suppliers.Discount;
+import DomainLayer.Suppliers.ProductSupplier;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

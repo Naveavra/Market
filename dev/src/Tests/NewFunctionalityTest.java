@@ -1,10 +1,10 @@
 package Tests;
 
 import DAL.Connect;
-import DomainLayer.FacadeSupplier;
+import DomainLayer.FacadeSupplier_Storage;
 import DomainLayer.Storage.CategoryController;
-import DomainLayer.Supplier.OrderFromSupplier;
-import DomainLayer.Supplier.OrdersController;
+import DomainLayer.Suppliers.OrderFromSupplier;
+import DomainLayer.Suppliers.OrdersController;
 import PresentationLayer.Menu;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -18,7 +18,7 @@ public class NewFunctionalityTest {
 
     private CategoryController cC;
     private OrdersController ordersController;
-    private FacadeSupplier facadeSupplier;
+    private FacadeSupplier_Storage facadeSupplier;
     private OrderFromSupplier order;
     private OrderFromSupplier order2;
     private static boolean setUpIsDone = false;
@@ -28,7 +28,7 @@ public class NewFunctionalityTest {
 //            file.delete();
             Connect.getInstance().deleteRecordsOfTables();
             cC = new CategoryController();
-            facadeSupplier =new FacadeSupplier();
+            facadeSupplier =new FacadeSupplier_Storage();
             ordersController=new OrdersController();
             cC.addCategory("first", 0);
             cC.addSubCategory("first", "first1");
