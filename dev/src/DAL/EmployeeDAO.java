@@ -33,7 +33,7 @@ public class EmployeeDAO {
             return recordToEmployee(personalDetails);
         }
         catch (SQLException e){
-            System.out.println(e.getMessage());
+           // System.out.println(e.getMessage());
             return null;
         }
         finally {
@@ -65,7 +65,7 @@ public class EmployeeDAO {
             return e;
         }
         catch (SQLException e){
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             return null;
         }
     }
@@ -135,7 +135,7 @@ public class EmployeeDAO {
             idMap.remove(e.getId());
             return new Response();
         } catch (SQLException se) {
-            System.out.println(se.getMessage());
+          //  System.out.println(se.getMessage());
             return new Response("An unknown error occurred");
         }
     }
@@ -224,7 +224,7 @@ public class EmployeeDAO {
                     , date.getMonth(), date.getYear());
         }
         catch (SQLException e){
-            System.out.println(e.getMessage());
+           // System.out.println(e.getMessage());
         }
     }
 
@@ -238,7 +238,7 @@ public class EmployeeDAO {
             return true;
         }
         catch (SQLException e){
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             return false;
         }
     }
@@ -264,7 +264,7 @@ public class EmployeeDAO {
             return schedule;
         }
         catch (SQLException e){
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             return null;
         }
         finally {
@@ -286,7 +286,7 @@ public class EmployeeDAO {
             return true;
         }
         catch (SQLException e){
-            System.out.println(e.getMessage());
+           // System.out.println(e.getMessage());
             return false;
         }
 
@@ -301,7 +301,7 @@ public class EmployeeDAO {
             return new Response();
         }
         catch (SQLException e){
-            System.out.println(e.getMessage());
+           // System.out.println(e.getMessage());
             return new Response("No such employee exists");
         }
 
@@ -317,7 +317,7 @@ public class EmployeeDAO {
             return new Response("Employee is not certified to be a " + jobType.toString().toLowerCase());
         }
         catch (SQLException e){
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             return new Response("No such employee exists");
         }
         finally {

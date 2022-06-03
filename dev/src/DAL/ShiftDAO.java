@@ -53,7 +53,7 @@ public class ShiftDAO {
 
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             return null;
         }
         finally {
@@ -201,8 +201,8 @@ public class ShiftDAO {
                     currentShift.getStart(), currentShift.getEnd() ,shiftPair.getTime(), date.getDay(),date.getMonth(), date.getYear());
         }
         catch (SQLException e) {
-            System.out.println("problem in shiftExists");
-            System.out.println(e.getMessage());
+           // System.out.println("problem in shiftExists");
+            //System.out.println(e.getMessage());
         }
     }
 

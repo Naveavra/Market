@@ -1,9 +1,9 @@
-package EmployeesModule.PresentationLayer;
+package PresentationLayer.Transport_Emploees;
 
 import DomainLayer.Employees.JobType;
 import PresentationLayer.Transport_Emploees.MainCLI;
 import ServiceLayer.Action;
-import EmployeesModule.ServiceLayer.EmployeeService;
+import ServiceLayer.EmployeeService;
 import ServiceLayer.Utility.Response;
 
 //import SharedSpace.MainCLI;

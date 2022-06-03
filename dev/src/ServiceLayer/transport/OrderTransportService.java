@@ -1,6 +1,6 @@
 package ServiceLayer.transport;
 
-import DomainLayer.FacadeEmployees;
+import DomainLayer.FacadeEmployees_Transports;
 import DomainLayer.Transport.OrderController;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 //Miki//
 public class OrderTransportService {
     OrderController orderController = OrderController.getInstance();
-    FacadeEmployees facadeEmployees = FacadeEmployees.getInstance();
+    FacadeEmployees_Transports facadeEmployeesTransports = FacadeEmployees_Transports.getInstance();
     public OrderTransportService(){
 
     }
@@ -23,116 +23,114 @@ public class OrderTransportService {
 //    }
 
     public boolean setTrucksWeight(String docID, double weight2add) {
-        return facadeEmployees.setTrucksWeight(docID, weight2add);
+        return facadeEmployeesTransports.setTrucksWeight(docID, weight2add);
 
     }
 
     public String showTrucks(String date, String driverID, String time) {
-        return facadeEmployees.showTrucks(date,driverID,time);
+        return facadeEmployeesTransports.showTrucks(date,driverID,time);
     }
 
-
-
     public void setNewTruck(String docID,String newTruckPlate) {
-        facadeEmployees.setNewTruck(docID, newTruckPlate);
+        facadeEmployeesTransports.setNewTruck(docID, newTruckPlate);
     }
 
     public String showStores(String areaCode) {
-        return facadeEmployees.showStores(areaCode);
+        return facadeEmployeesTransports.showStores(areaCode);
     }
 
     public void replaceStores(String docID, String id2replace, String newStoreID, ConcurrentHashMap<String, Integer> supplies) {
-        facadeEmployees.replaceStores(docID, id2replace, newStoreID, supplies);
+        facadeEmployeesTransports.replaceStores(docID, id2replace, newStoreID, supplies);
     }
 
 
 
     public String showSupplies() {
-        return facadeEmployees.showSupplies("","","");
+        return facadeEmployeesTransports.showSupplies("","","");
     }
 
 
     public String showSuppliers(String areaCode) {
-        return facadeEmployees.showSuppliers(areaCode);
+        return facadeEmployeesTransports.showSuppliers(areaCode);
 
     }
 
     public String createDoc(ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> orders, String supplier, String date,String driverID,String truckPlate, String time) {
-       return facadeEmployees.createDoc(orders, supplier, date,driverID,truckPlate, time);
+       return facadeEmployeesTransports.createDoc(orders, supplier, date,driverID,truckPlate, time);
          }
 
     public void removeSiteFromDoc(String docID, String siteID) {
-        facadeEmployees.removeSiteFromDoc(docID, siteID);
+        facadeEmployeesTransports.removeSiteFromDoc(docID, siteID);
 
     }
 
     public String showDrivers(String d,String time) {
-        return facadeEmployees.showDrivers(d,time);
+        return facadeEmployeesTransports.showDrivers(d,time);
     }
 
     public String getDriver(String driverID) {
-        return facadeEmployees.getDriver(driverID);
+        return facadeEmployeesTransports.getDriver(driverID);
     }
 
     public void removeDoc(String doc) {
-        facadeEmployees.removeDoc(doc);
+        facadeEmployeesTransports.removeDoc(doc);
     }
 
     public String showSuppliesByDoc(String docID, String storeID) {
-        return facadeEmployees.showSupplies(docID, storeID,"by Doc");
+        return facadeEmployeesTransports.showSupplies(docID, storeID,"by Doc");
     }
 
 
     public boolean changeOrder(String docID, String storeID, ArrayList<String> names,ArrayList<Integer> quantities) {
-       return facadeEmployees.changeOrder(docID,storeID,names,quantities);
+       return facadeEmployeesTransports.changeOrder(docID,storeID,names,quantities);
     }
     public void createDriverDocs(String doc){
-        facadeEmployees.createDriverDocs(doc);
+        facadeEmployeesTransports.createDriverDocs(doc);
     }
     public void transportIsDone(String doc) {
-        facadeEmployees.transportIsDone(doc);
+        facadeEmployeesTransports.transportIsDone(doc);
     }
 
     public String showDriverDocs(String docID) {
-        return facadeEmployees.ShowDriverDocs(docID);
+        return facadeEmployeesTransports.ShowDriverDocs(docID);
 
     }
 
     public String showStoresForDoc(String docID) {
-        return facadeEmployees.showStoresforDoc(docID);
+        return facadeEmployeesTransports.showStoresforDoc(docID);
     }
 
 
     public String viewOrder(String docID) {
-        return facadeEmployees.viewOrder(docID);
+        return facadeEmployeesTransports.viewOrder(docID);
     }
 
     public String getSupplyByIdx(int nextInt) {
-        return facadeEmployees.getSupplyByIdx(nextInt,"","","");
+        return facadeEmployeesTransports.getSupplyByIdx(nextInt,"","","");
           }
 
     public String getTruck(String licensePlate) {
-        return facadeEmployees.getTruck(licensePlate);
+        return facadeEmployeesTransports.getTruck(licensePlate);
     }
 
     public String getDate(String docID) {
-        return facadeEmployees.getDate(docID);
+        return facadeEmployeesTransports.getDate(docID);
     }
 
     public String getDriverID(String docID) {
-        return facadeEmployees.getDriverID(docID);
+        return facadeEmployeesTransports.getDriverID(docID);
     }
 
     public double getCurrWeight(String doc) {
-        return facadeEmployees.getCurrWeight(doc);
+        return facadeEmployeesTransports.getCurrWeight(doc);
     }
 
     public boolean getDoc(String docID) {
-        return facadeEmployees.getDoc(docID);
+        return facadeEmployeesTransports.getDoc(docID);
     }
 
     public String getSupplyByIdAndDoc(int idx,String docID,String storeID) {
-        return facadeEmployees.getSupplyByIdx(idx,docID,storeID,"By Doc");
+        return facadeEmployeesTransports.getSupplyByIdx(idx,docID,storeID,"By Doc");
     }
 
     public boolean validHour(String time) {
@@ -147,6 +145,6 @@ public class OrderTransportService {
     }
 
     public String getTime(String docID) {
-        return facadeEmployees.getTime(docID);
+        return facadeEmployeesTransports.getTime(docID);
     }
 }

@@ -1,6 +1,4 @@
 package ServiceLayer;
-
-
 public class EmployeeServiceGeneric {
     private String id;
 

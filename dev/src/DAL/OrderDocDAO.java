@@ -67,7 +67,7 @@ public class OrderDocDAO {
             conn.executeUpdate(query);
             return "Success";
         } catch (SQLException e) {
-            System.out.println("Unable to delete orderDOC");
+           // System.out.println("Unable to delete orderDOC");
             return "Failure to remove dest from doc";
         }
     }

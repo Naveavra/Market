@@ -1,14 +1,10 @@
-package EmployeesModule.ServiceLayer;
+package ServiceLayer;
 
-import DomainLayer.FacadeEmployees;
+import DomainLayer.FacadeEmployees_Transports;
 import DomainLayer.Employees.JobType;
-import EmployeesModule.PresentationLayer.EmployeeMainCLI;
-import ServiceLayer.HRManagerService;
+import PresentationLayer.Transport_Emploees.EmployeeMainCLI;
 import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
-import ServiceLayer.EmployeeServiceGeneric;
-import ServiceLayer.Parser;
-import ServiceLayer.Action;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,13 +14,13 @@ import java.util.function.Function;
 
 public class EmployeeService {
     private static final EmployeeService instance = new EmployeeService();
-    private EmployeeServiceGeneric employeeService;
-    private final FacadeEmployees facade;
+    private EmployeeServiceGeneric employeeService = new EmployeeServiceGeneric("");
+    private final FacadeEmployees_Transports facade;
     private final Parser parser;
     private boolean dataHasLoaded; // this is only to indicate if the pre-made data was loaded into the system or not, so we wouldn't load it twice
 
     private EmployeeService() {
-        facade = FacadeEmployees.getInstance();
+        facade = FacadeEmployees_Transports.getInstance();
         parser = new Parser();
         dataHasLoaded = false;
     }

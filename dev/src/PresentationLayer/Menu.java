@@ -1,16 +1,13 @@
 package PresentationLayer;
 
 import DAL.Connect;
-import DomainLayer.Employees.JobType;
-import EmployeesModule.ServiceLayer.EmployeeService;
+import PresentationLayer.Transport_Emploees.EmployeeMainCLI;
+import ServiceLayer.EmployeeService;
 import PresentationLayer.Storage.CLI;
 import PresentationLayer.Supplier.Order;
 import PresentationLayer.Supplier.SupplierMenu;
-import EmployeesModule.PresentationLayer.EmployeeMainCLI;
-import PresentationLayer.Transport_Emploees.MainCLI;
 import PresentationLayer.Transport_Emploees.UserInterface;
 import ServiceLayer.*;
-import ServiceLayer.Utility.Response;
 import com.google.gson.Gson;
 import java.sql.SQLException;
 import java.util.Scanner;
