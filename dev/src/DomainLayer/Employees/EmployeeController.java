@@ -22,7 +22,7 @@ public class EmployeeController {
     }
 
     public Response createEmployee(String id, String name, String password, float salary, String bankAccount, String contractOfEmployment){//} throws DoubleRegistrationException {
-        return employeeDAO.registerEmployee(id, name, password, salary, bankAccount, contractOfEmployment, 0 , new Date());
+        return employeeDAO.registerEmployee(id, name, password, salary, bankAccount, contractOfEmployment, 0.001f , new Date());
     }
 
     public Response removeEmployee(String id){
@@ -112,6 +112,10 @@ public class EmployeeController {
 
     public void addToMap(Employee emp) {
         employeeDAO.addToMap(emp);
+    }
+
+    public Set<JobType> getEmployeeRoles(String id) {
+        return employeeDAO.getEmployeeRoles(id);
     }
 }
 

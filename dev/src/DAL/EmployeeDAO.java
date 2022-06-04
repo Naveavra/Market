@@ -9,6 +9,7 @@ import ServiceLayer.Utility.ShiftPair;
 //import SharedSpace.DBConnector;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -27,8 +28,11 @@ public class EmployeeDAO {
         if (idMap.containsKey(id))
             return idMap.get(id);
         try {
-            ResultSet personalDetails = conn.executeQuery("SELECT * FROM Employees WHERE id = ?", id);
-            if (!personalDetails.next())
+            // was ResultSet
+            List<HashMap<String,Object>> personalDetails = conn.executeQuery("SELECT * FROM Employees WHERE id = ?", id);
+/*            if (!personalDetails.next())
+                return null;*/
+            if (personalDetails.isEmpty())
                 return null;
             return recordToEmployee(personalDetails);
         }
@@ -45,20 +49,22 @@ public class EmployeeDAO {
         }
     }
 
-    private Employee recordToEmployee(ResultSet res) {
+
+    private Employee recordToEmployee(List<HashMap<String,Object>> res) {
         try {
-            String id = res.getString("id");
-            String name = res.getString("name");
-            String password = res.getString("password");
-            String contract = res.getString("contract");
-            String bankAccount = res.getString("bankAccount");
-            float monthlyHrs = res.getFloat("monthlyHours");
-            float salary = res.getFloat("salary");
-            Date DoE = res.getDate("dateOfEmployment");
+            String id = (String) res.get(0).get("id");
+            String name = (String) res.get(0).get("name");
+            String password = (String) res.get(0).get("password");
+            String contract = (String) res.get(0).get("contract");
+            String bankAccount = (String) res.get(0).get("bankAccount");
+            double monthlyHrs = (Double) res.get(0).get("monthlyHours");
+            float salary = (Integer) res.get(0).get("salary");
+            long doe = (long) res.get(0).get("dateOfEmployment");
+            Date DoE = new Date(doe);
             Employee e = new Employee(id, name, password, salary, bankAccount, contract, DoE);
             e.setMonthlyHours(monthlyHrs);
-            ResultSet rolesSet = conn.executeQuery("SELECT jobType FROM Roles WHERE id = ?", id);
-            ResultSet schedule = conn.executeQuery("SELECT * FROM Schedules WHERE id = ?", id);
+            List<HashMap<String,Object>> rolesSet = conn.executeQuery("SELECT jobType FROM Roles WHERE id = ?", id);
+            List<HashMap<String,Object>> schedule = conn.executeQuery("SELECT * FROM Schedules WHERE id = ?", id);
             reconstructEmployeeAvailability(e, schedule);
             reconstructEmployeeRoles(e, rolesSet);
             idMap.put(id, e);
@@ -70,17 +76,17 @@ public class EmployeeDAO {
         }
     }
 
-    private void reconstructEmployeeAvailability(Employee e, ResultSet schedule) throws SQLException {
-        while (schedule.next()){
-            String timeOfDay = schedule.getString("timeOfDay");
+    private void reconstructEmployeeAvailability(Employee e, List<HashMap<String,Object>> schedule) throws SQLException {
+        for (int i = 0; i < schedule.size(); i++){
+            String timeOfDay = (String) schedule.get(i).get("timeOfDay");
             Time t;
             if (timeOfDay.equals("MORNING"))
                 t = Time.MORNING;
             else
                 t = Time.EVENING;
-            String day = schedule.getString("day");
-            String month = schedule.getString("month");
-            String year = schedule.getString("year");
+            String day = (String) schedule.get(i).get("day");
+            String month = (String) schedule.get(i).get("month");
+            String year = (String) schedule.get(i).get("year");
             e.addAvailableTimeSlot(new ShiftPair(new ShiftDate(day, month, year), t));
         }
     }
@@ -107,9 +113,9 @@ public class EmployeeDAO {
         }
     }
 
-    private void reconstructEmployeeRoles(Employee e, ResultSet rolesSet) throws SQLException {
-        while(rolesSet.next()){
-            String role = rolesSet.getString("jobType");
+    private void reconstructEmployeeRoles(Employee e, List<HashMap<String,Object>> rolesSet) throws SQLException {
+        for (int i = 0; i < rolesSet.size(); i++){
+            String role = (String) rolesSet.get(i).get("jobType");
             if (role == null)
                 return;
             e.addCertification(getJobType(role));
@@ -154,7 +160,7 @@ public class EmployeeDAO {
         if (idMap.containsKey(id))
             return true;
         try {
-            return !conn.executeQuery("SELECT id FROM Employees WHERE id = " + id).next();
+            return conn.executeQuery("SELECT id FROM Employees WHERE id = " + id).size() != 0;
         }
         catch (SQLException e) {
             return false;
@@ -247,18 +253,18 @@ public class EmployeeDAO {
         if (idMap.containsKey(id))
             return idMap.get(id).getAvailabilitySchedule();
         try {
-            ResultSet res = conn.executeQuery("SELECT * FROM Schedules WHERE id = ?", id);
+            List<HashMap<String, Object>> res = conn.executeQuery("SELECT * FROM Schedules WHERE id = ?", id);
             Schedule schedule = new Schedule(new ArrayList<>());
-            while (res.next()){
-                String sTimeOfDay = res.getString("timeOfDay");
+           for (int i = 0; i < res.size(); i++){
+                String sTimeOfDay = (String) res.get(i).get("timeOfDay");
                 Time timeOfDay;
                 if (sTimeOfDay.equalsIgnoreCase("morning"))
                     timeOfDay = Time.MORNING;
                 else
                     timeOfDay = Time.EVENING;
-                String day = res.getString("day");
-                String month = res.getString("month");
-                String year = res.getString("year");
+                String day = (String) res.get(i).get("day");
+                String month = (String) res.get(i).get("month");
+                String year = (String) res.get(i).get("year");
                 schedule.addTimeSlot(new ShiftPair(new ShiftDate(day, month, year), timeOfDay));
             }
             return schedule;
@@ -311,8 +317,8 @@ public class EmployeeDAO {
         if (idMap.containsKey(id) && idMap.get(id).isCertified(jobType))
             return new Response();
         try {
-            ResultSet res = conn.executeQuery("SELECT * FROM Roles WHERE id = ? AND jobType = ?", id, jobType);
-            if (res.next())
+            List<HashMap<String, Object>> res = conn.executeQuery("SELECT * FROM Roles WHERE id = ? AND jobType = ?", id, jobType);
+            if (res.size() > 0)
                 return new Response();
             return new Response("Employee is not certified to be a " + jobType.toString().toLowerCase());
         }
@@ -371,5 +377,12 @@ public class EmployeeDAO {
 
     public void addToMap(Employee emp) {
         idMap.put(emp.getId(), emp);
+    }
+
+    public Set<JobType> getEmployeeRoles(String id) {
+        if (idMap.containsKey(id)) {
+            return idMap.get(id).getRoles();
+        }
+        return getEmployee(id).getRoles();
     }
 }

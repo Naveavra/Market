@@ -22,8 +22,8 @@ public class ShiftDAO {
             return shiftID.get(shiftPair);
         }
         try {
-            ResultSet res = connect.executeQuery("SELECT * FROM Shifts WHERE shiftID = ?", shiftID);
-            if (!res.next())
+            List<HashMap<String, Object>> res = connect.executeQuery("SELECT * FROM Shifts WHERE shiftID = ?", shiftID);
+            if (res.size() == 0)
                 return null;
             return shiftConvertor(shiftPair);
         }
@@ -43,9 +43,9 @@ public class ShiftDAO {
         ShiftDate shiftID = shiftPair.getDate();
         try {
             List<Employee> employees = new ArrayList<>();
-            ResultSet employeesIDs = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? AND timeOfDay = ? AND day = ? AND month = ? AND year = ?", jobType, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
-            while (employeesIDs.next()) {
-                String id = employeesIDs.getString("employeeID");
+            List<HashMap<String, Object>> employeesIDs = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? AND timeOfDay = ? AND day = ? AND month = ? AND year = ?", jobType, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
+            for (int i = 0; i < employeesIDs.size(); i++) {
+                String id = (String) employeesIDs.get(i).get("employeeID");
                 Employee e = EmployeeDAO.getInstance().getEmployee(id);
                 employees.add(e);
             }
@@ -77,9 +77,9 @@ public class ShiftDAO {
     public Shift shiftConvertor(ShiftPair shiftPair){
         try{
             ShiftDate shiftID = shiftPair.getDate();
-            ResultSet shiftDate = connect.executeQuery("SELECT * FROM Shifts WHERE timeOfDay = ? and day = ? and month = ? and year = ?",
+            List<HashMap<String, Object>> shiftDate = connect.executeQuery("SELECT * FROM Shifts WHERE timeOfDay = ? and day = ? and month = ? and year = ?",
                     shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
-            if(!shiftDate.next()){
+            if(shiftDate.size() == 0){
                 return null;
             }
             Map<JobType, List<Employee>> employees = getEmployeesInShift(shiftPair);
@@ -108,9 +108,9 @@ public class ShiftDAO {
     private Employee getShiftManager(ShiftPair shiftPair) {
         try {
             ShiftDate shiftID = shiftPair.getDate();
-            ResultSet managerID = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? and " +
+            List<HashMap<String, Object>> managerID = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? and " +
                     "timeOfDay = ? and day = ? and month = ? and year = ?", JobType.SHIFT_MANAGER, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
-            return employeeDAO.getEmployee(managerID.getString("id"));
+            return employeeDAO.getEmployee((String) managerID.get(0).get("id"));
         }
         catch (SQLException e){
             return null;
@@ -161,7 +161,7 @@ public class ShiftDAO {
         try {
             ShiftDate date = shiftPair.getDate();
             return connect.executeQuery("SELECT * FROM Shifts WHERE timeOfDay = ? AND day = ? AND month = ?" +
-                    " AND year = ?", shiftPair.getTime(), date.getDay(),date.getMonth(), date.getYear()).next();
+                    " AND year = ?", shiftPair.getTime(), date.getDay(),date.getMonth(), date.getYear()).size() > 0;
         }
         catch (SQLException e) {
             return false;
@@ -170,15 +170,15 @@ public class ShiftDAO {
 
     public void updateDriversAvailability(Shift shift, List<Employee> drivers){
         try{
-            ResultSet rs;
+            List<HashMap<String, Object>> rs;
             for(Employee e : drivers) {
                 connect.executeUpdate("INSERT OR IGNORE INTO DriverAvailability(id, date, time, available) " +
                         "VALUES (?,?,?,?)", e.getId(), shift.getShiftTime().getDate().toString(), shift.getShiftTime().getTime().toString().toUpperCase(), "#t");
                 rs = connect.executeQuery("SELECT * FROM DriversLicenses WHERE id = ?",e.getId());
-                if(rs.next()) {
-                    String id = rs.getString("id");
-                    String license = rs.getString("license");
-                    driverDAO.addDriver(e.getName(), id, license);
+                if(rs.size() > 0) {
+                    String id = (String) rs.get(0).get("id");
+                    String license = (String) rs.get(0).get("license");
+//                    driverDAO.addDriver(e.getName(), id, license);
                 }
             }
         } catch (SQLException ignore) {

@@ -4,9 +4,7 @@ import DomainLayer.Employees.Employee;
 import DomainLayer.Employees.JobType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 public class JobDAO {
     private Connect conn = Connect.getInstance();
@@ -33,9 +31,9 @@ public class JobDAO {
                 employees.add(e);
         }
         try {
-            ResultSet res = conn.executeQuery("SELECT * FROM Roles WHERE jobType = ?", role);
-            while (res.next()){
-                employees.add(employeeDAO.getEmployee(res.getString("id")));
+            List<HashMap<String, Object>> res = conn.executeQuery("SELECT * FROM Roles WHERE jobType = ?", role);
+           for (int i = 0; i < res.size(); i++){
+                employees.add(employeeDAO.getEmployee((String)res.get(i).get("id")));
             }
             return employees;
         } catch (SQLException ignore) {

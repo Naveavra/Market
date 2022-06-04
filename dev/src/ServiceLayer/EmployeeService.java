@@ -6,15 +6,12 @@ import PresentationLayer.Transport_Emploees.EmployeeMainCLI;
 import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.function.Function;
 
 public class EmployeeService {
     private static final EmployeeService instance = new EmployeeService();
-    private EmployeeServiceGeneric employeeService = new EmployeeServiceGeneric("");
+    private EmployeeServiceGeneric employeeService;// = new EmployeeServiceGeneric("");
     private final FacadeEmployees_Transports facade;
     private final Parser parser;
     private boolean dataHasLoaded; // this is only to indicate if the pre-made data was loaded into the system or not, so we wouldn't load it twice
@@ -117,13 +114,7 @@ public class EmployeeService {
 
     public Response certifyEmployee(String id, String jobNum){
         JobType job = parser.parseJobType(jobNum);
-        Response response = facade.isCertified(id, job);
-        if(response.errorOccurred()){
-            return new Response("Something went wrong");
-        }
-        else{
-            return new Response();
-        }
+        return facade.certifyEmployee(job, id);
     }
 
     public Response certifyDriver(String id, String license){
@@ -345,5 +336,13 @@ public class EmployeeService {
 
     public Response removeEmployee(String id) {
         return facade.removeEmployee(id);
+    }
+
+    public Set<JobType> getEmployeeRoles(String id){
+        return facade.getEmployeeRoles(id);
+    }
+
+    public Set<JobType> getLoggedInEmployeeRoles() {
+        return getEmployeeRoles(employeeService.getID());
     }
 }

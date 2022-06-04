@@ -9,6 +9,7 @@ import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,14 +45,13 @@ public class FacadeEmployees_Transports {
         return employeeController.removeEmployee(id);
     }
 
-    public boolean certifyEmployee(JobType job, String id){
-        Response empResponse =  employeeController.certifyEmployee(job, id);
-        return !empResponse.errorOccurred();
-//        jobController.certifyEmployee(job, id);
+    public Response certifyEmployee(JobType job, String id){
+        return employeeController.certifyEmployee(job, id);
     }
 
     public boolean certifyDriver(String id, String license) {
-        if (!certifyEmployee(JobType.DRIVER, id))
+        Response r = certifyEmployee(JobType.DRIVER, id);
+        if (r.errorOccurred())
             return false;
         return jobController.addLicense(id, license);
     }
@@ -359,5 +359,9 @@ public class FacadeEmployees_Transports {
 
     public String removeSupply(String suppName2Remove) {
         return resourceController.removeSupply(suppName2Remove);
+    }
+
+    public Set<JobType> getEmployeeRoles(String id) {
+        return employeeController.getEmployeeRoles(id);
     }
 }

@@ -1,6 +1,7 @@
 package PresentationLayer;
 
 import DAL.Connect;
+import DomainLayer.Employees.JobType;
 import PresentationLayer.Transport_Emploees.EmployeeMainCLI;
 import ServiceLayer.EmployeeService;
 import PresentationLayer.Storage.CLI;
@@ -11,9 +12,11 @@ import ServiceLayer.*;
 import com.google.gson.Gson;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Menu {
     private Scanner sc=new Scanner(System.in);
+    private EmployeeMainCLI employeeCLI = new EmployeeMainCLI();
 
     public static void main(String[] args) throws SQLException {
         Menu m = new Menu();
@@ -37,41 +40,78 @@ public class Menu {
         }
         if(choice==1)
             loadInitialData();
-        System.out.println("\t1.Supplier Model");
-        System.out.println("\t2.Storage Model");
-        System.out.println("\t3.Employee Model");
-        System.out.println("\t4.Transport Model");
-        try{
-            choiceStr = sc.next();
-            choice=Integer.parseInt(choiceStr);
-        }
-        catch (Exception e){
-            System.out.println("you must enter only 1 digit number");
-            initialMenu();
-        }
-        switch (choice) {
-            case 1:
-                SupplierMenu sm = new SupplierMenu();
-                sm.chooseSupplierMenu();
-                break;
-            case 2://storage
-                CLI cli=new CLI();//storage
-                cli.startStorageModel();
-                break;
-            case 3://emploees - transport
-                EmployeeMainCLI cli2 = new EmployeeMainCLI();
-                cli2.start();
-                break;
-            case 4://emploees - transport
-                UserInterface cli3 = new UserInterface();
-                cli3.start();
-                break;
-            default:
-                System.out.println("You must type digit 1 to 2");
+        while (true){
+            if (!employeeCLI.isLoggedIn()) {
+                employeeCLI.login();
+            }
+            Set<JobType> roles = employeeCLI.getLoggedInUserRoles();
+            System.out.println("\t1.Supplier Model");
+            System.out.println("\t2.Storage Model");
+            System.out.println("\t3.Employee Model");
+            System.out.println("\t4.Transport Model");
+            System.out.println("To close the system - enter the word 'exit'");
+            try{
+                choiceStr = sc.next();
+                if (choiceStr.equals("exit")){
+                    System.out.println("Goodbye!");
+                    break;
+                }
+                choice=Integer.parseInt(choiceStr);
+            }
+            catch (Exception e){
+                System.out.println("you must enter only 1 digit number");
                 initialMenu();
-
+            }
+            switch (choice) {
+                case 1:
+                    if (canUseSupplierModule(roles)) {
+                        SupplierMenu sm = new SupplierMenu();
+                        sm.chooseSupplierMenu();
+                    } else {
+                        System.out.println("You are not authorized to enter this page");
+                    }
+                    break;
+                case 2://storage
+                    if (canUseStorageModule(roles)) {
+                        CLI cli = new CLI();//storage
+                        cli.startStorageModel();
+                    } else {
+                        System.out.println("You are not authorized to enter this page");
+                    }
+                    break;
+                case 3://employees - transport
+        //                EmployeeMainCLI cli2 = new EmployeeMainCLI();
+                    employeeCLI.start();
+                    break;
+                case 4://employees - transport
+                    if (canUseTransportModule(roles)) {
+                        UserInterface cli3 = new UserInterface();
+                        cli3.start();
+                    } else {
+                        System.out.println("You are not authorized to enter this page");
+                    }
+                    break;
+                default:
+                    System.out.println("You must type digit 1 to 2");
+                    initialMenu();
+            }
         }
 
+    }
+
+    private boolean canUseTransportModule(Set<JobType> roles) {
+        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.HR_MANAGER) ||
+                roles.contains(JobType.SHIFT_MANAGER) || roles.contains(JobType.TRANSPORT_MANAGER);
+    }
+
+    private boolean canUseStorageModule(Set<JobType> roles) {
+        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.HR_MANAGER) ||
+                roles.contains(JobType.SHIFT_MANAGER);
+    }
+
+    private boolean canUseSupplierModule(Set<JobType> roles) {
+        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.HR_MANAGER)
+                || roles.contains(JobType.SHIFT_MANAGER) || roles.contains(JobType.LOGISTICS_MANAGER);
     }
 
     private void loadInitialData() {
@@ -146,43 +186,39 @@ public class Menu {
         es.register("111111111", "wendy the dog", "123456", 1, "yahav", "good");
         es.register("222222222", "savta tova", "123456", 1, "yahav", "good");
         es.register("333333333", "liron marinberg", "123456", 1, "yahav", "good");
-        es.certifyEmployee("CASHIER", "318856994");
-        es.certifyEmployee("CASHIER", "234567891");
-        es.certifyEmployee("CASHIER", "345678912");
-        es.certifyEmployee("CASHIER", "123456789");
+        es.certifyEmployee("318856994", "3");
+        es.certifyEmployee("234567891", "3");
+        es.certifyEmployee("345678912", "3");
+        es.certifyEmployee("123456789", "3");
         es.certifyDriver("258369147", "c");
         es.certifyDriver("123456789", "c1");
         es.certifyDriver("456780123", "c");
         es.certifyDriver("234567891", "c");
         es.certifyDriver("012345678", "c1");
-        es.certifyEmployee("MERCHANDISER", "234567891");
-        es.certifyEmployee("MERCHANDISER", "123456789");
-        es.certifyEmployee("MERCHANDISER", "789123456");
-        es.certifyEmployee("MERCHANDISER", "234567891");
-        es.certifyEmployee("MERCHANDISER", "123456789");
-        es.certifyEmployee("STOCK_KEEPER", "123456780");
-        es.certifyEmployee("STOCK_KEEPER", "345678912");
-        es.certifyEmployee("STOCK_KEEPER", "456780123");
-        es.certifyEmployee("STOCK_KEEPER", "123456789");
-        es.certifyEmployee("SHIFT_MANAGER", "234567891");
-        es.certifyEmployee("SHIFT_MANAGER", "318856994");
-        es.certifyEmployee("SHIFT_MANAGER", "222222222");
-        es.certifyEmployee("STOCK_KEEPER", "111111111");
+        es.certifyEmployee("234567891","6");
+        es.certifyEmployee("123456789","6");
+        es.certifyEmployee("789123456", "6");
+        es.certifyEmployee("234567891","6");
+        es.certifyEmployee("123456789", "6");
+        es.certifyEmployee("123456780", "4");
+        es.certifyEmployee("345678912", "4");
+        es.certifyEmployee("456780123", "4");
+        es.certifyEmployee("123456789", "4");
+        es.certifyEmployee("234567891", "2");
+        es.certifyEmployee("318856994", "2");
+        es.certifyEmployee("222222222", "2");
+        es.certifyEmployee("111111111", "2" );
         es.certifyDriver( "000000000", "c1");
-        es.certifyEmployee("SHIFT_MANAGER", "456789123");
-        es.certifyEmployee("CASHIER", "333333333");
-        es.certifyEmployee("MERCHANDISER", "567801234");
+        es.certifyEmployee("456789123", "2");
+        es.certifyEmployee("333333333", "3");
+        es.certifyEmployee("567801234", "6");
         es.certifyDriver("123456780", "c");
 //        employeeController.putBackAll();
 
-//        Response r = es.createShift(new ShiftPair(new ShiftDate("01", "06", "2022"), Time.MORNING), "318856994",
-//                "333333333,234567891", "123456780,000000000", "123456789", "111111111");
-//        if (r.errorOccurred())
-//            System.out.println("r1 = " + r.getErrorMessage());
-//        r = createShift(new ShiftPair(new ShiftDate("02", "06", "2022"), Time.MORNING), "456789123",
-//                "333333333,234567891", "258369147,000000000", "567801234", "345678912");
-//        if (r.errorOccurred())
-//            System.out.println("r2 = " + r.getErrorMessage());
+        es.createShift("01/07/2022 morning", "318856994",
+                "333333333,234567891", "123456780,000000000", "123456789", "111111111");
+        es.createShift("01/07/2022 evening", "456789123",
+                "333333333,234567891", "258369147,000000000", "567801234", "345678912");
 
     }
 
