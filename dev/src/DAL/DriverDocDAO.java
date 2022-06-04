@@ -4,12 +4,13 @@ package DAL;
 //import SharedSpace.DBConnector;
 import DomainLayer.Transport.DriverDocument;
 import DomainLayer.Transport.Supply;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+//import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DriverDocDAO {
@@ -30,25 +31,27 @@ public class DriverDocDAO {
 //        throw new NotImplementedException();
 //    }
 
+
+    //FROM HERE
     public ArrayList<DriverDocument> showDriverDocs(String oDocID){
         ArrayList<DriverDocument> docs = new ArrayList<>();
         String query = "SELECT * FROM DriverDocs WHERE orderDocID = "+"'"+oDocID+"'";
         try {
-            ResultSet rs = conn.executeQuery(query);
-            while(rs.next()){
-                if(identityMap.containsKey(rs.getInt("id"))){
-                    docs.add(identityMap.get(rs.getInt("id")));
+            List<HashMap<String, Object>> rs = conn.executeQuery(query);
+            for (int i = 0; i < rs.size(); i++){
+                if(identityMap.containsKey((int)rs.get(i).get("id"))){
+                    docs.add(identityMap.get((int)rs.get(i).get("id")));
                     continue;
                 }
-                String query2 ="SELECT supply,quantity FROM order4Dest WHERE orderDocID = "+"'"+oDocID+"'"+" AND siteID = "+ "'"+rs.getString("siteID")+"'";
-                ResultSet rs2 = conn.executeQuery(query2);
+                String query2 ="SELECT supply,quantity FROM order4Dest WHERE orderDocID = "+"'"+oDocID+"'"+" AND siteID = "+ "'"+rs.get(i).get("siteID")+"'";
+                List<HashMap<String, Object>> rs2 = conn.executeQuery(query2);
                 ConcurrentHashMap<Supply,Integer> orders = new ConcurrentHashMap<>();
-                while (rs2.next()){
+                for (int j = 0; j < rs.size(); j++){
 
-                    orders.put(suppliesDAO.getSupply(rs2.getString("supply")),rs2.getInt("quantity"));
+                    orders.put(suppliesDAO.getSupply((String)rs2.get(j).get("supply")),(int)rs2.get(j).get("quantity"));
                 }
-                docs.add(new DriverDocument(driverDAO.getDriver(rs.getString("driverID")),rs.getInt("id"),orders,
-                        sitesDAO.getSite(rs.getString("siteID")),rs.getString("orderDocID")));
+                docs.add(new DriverDocument(driverDAO.getDriver((String)rs.get(i).get("driverID")),(int)rs.get(i).get("id"),orders,
+                        sitesDAO.getSite((String)rs.get(i).get("siteID")),(String)rs.get(i).get("orderDocID")));
             }
         } catch (SQLException e) {
 //            System.out.println("Unable to show driverDocs,Something went wrong in the DB");
@@ -58,10 +61,10 @@ public class DriverDocDAO {
     public String removeDriverDocByODOC(String oDocID, String storeID){
         String query = "SELECT id FROM DriverDocs WHERE orderDocID = "+"'"+oDocID+"'"+" AND siteID = "+"'"+storeID+"'";
         try {
-            ResultSet rs = conn.executeQuery(query);
-            conn.deleteRecordFromTableSTR("DriverDocs","id",String.valueOf(rs.getInt("id")));
-            if(identityMap.containsKey(rs.getInt("id"))){
-                identityMap.remove(rs.getInt("id"));
+            List<HashMap<String, Object>> rs = conn.executeQuery(query);
+            conn.deleteRecordFromTableSTR("DriverDocs","id",String.valueOf(rs.get(0).get("id")));
+            if(identityMap.containsKey((int)rs.get(0).get("id"))){
+                identityMap.remove((int)rs.get(0).get("id"));
             }
         } catch (SQLException e) {
 //            System.out.println("Unable to remove driverdoc");

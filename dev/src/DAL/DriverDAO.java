@@ -6,10 +6,7 @@ import DomainLayer.Transport.Driver;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 public class DriverDAO {
     private Connect conn = Connect.getInstance();
@@ -35,6 +32,8 @@ public class DriverDAO {
 //
 //    }
 
+    //FROM HERE
+
     public void setAvailability(Driver driver, String date, String time,boolean param) {
         String driverID = driver.getId();
         String avail;
@@ -57,8 +56,8 @@ public class DriverDAO {
         if(containsDriver(id)){
             String query = "SELECT available FROM DriverAvailability WHERE id = ? AND date = ? AND time = ?";
             try {
-                ResultSet rs = conn.executeQuery(query,id,date,time);
-                if(Objects.equals(rs.getString("available"), "#t")){
+                List<HashMap<String, Object>> rs = conn.executeQuery(query,id,date,time);
+                if(Objects.equals((String)rs.get(0).get("available"), "#t")){
                     return true;
                 }
                 else {return false;}
@@ -81,10 +80,10 @@ public class DriverDAO {
             return identityMap.get(driverID);
         }
         try {
-            ResultSet rs = conn.executeQuery("SELECT * FROM Drivers WHERE id = "+"'"+driverID+"'");
-            String name = rs.getString("name");
-            String id = rs.getString("id");
-            String license = rs.getString("license");
+            List<HashMap<String, Object>> rs = conn.executeQuery("SELECT * FROM Drivers WHERE id = "+"'"+driverID+"'");
+            String name = (String)rs.get(0).get("name");
+            String id = (String)rs.get(0).get("id");
+            String license = (String)rs.get(0).get("license");
             Driver d = new Driver(name,id,license);
             identityMap.put(id,d);
             return d;
@@ -96,13 +95,13 @@ public class DriverDAO {
 
     public ArrayList<Driver> getDrivers(String date,String time){
         ArrayList<Driver> rval = new ArrayList<>();
-        ResultSet rs;
+        List<HashMap<String, Object>> rs;
         try {
             rs = conn.executeQuery("Select * From DriverAvailability WHERE date = "
                     +"'"+date+"'"+ " AND time = "+"'"+time+"'");
-            while(rs.next()){
-                if(Objects.equals(rs.getString("available"), "#t")) {
-                    rval.add(getDriver(rs.getString("id")));
+            for (int i = 0 ; i< rs.size(); i++){
+                if(Objects.equals((String)rs.get(0).get("available"), "#t")) {
+                    rval.add(getDriver((String)rs.get(0).get("id")));
                 }
             }
 
@@ -115,7 +114,7 @@ public class DriverDAO {
 
     public boolean containsDriver(String driverID){
         try {
-            return identityMap.containsKey(driverID) || conn.executeQuery("SELECT id FROM Drivers WHERE id = " + "'"+driverID+"'").next();
+            return identityMap.containsKey(driverID) || conn.executeQuery("SELECT id FROM Drivers WHERE id = " + "'"+driverID+"'").size() > 0;
         } catch (SQLException e) {
             return false;
         }

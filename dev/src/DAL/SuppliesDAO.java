@@ -1,11 +1,12 @@
 package DAL;
 
 import DomainLayer.Transport.Supply;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+//import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,6 +18,8 @@ public class SuppliesDAO {
 //        return INSTANCE;
 //    }
 
+
+    //FROM HERE
     public String addSupply(String name, double weight){
         String query = "INSERT INTO Supplies(name,weight) VALUES(?,?)";
         try {
@@ -43,9 +46,9 @@ public class SuppliesDAO {
             return identityMap.get(name);
         }
         try {
-            ResultSet rs = conn.executeQuery("SELECT * FROM Supplies Where name = "+"'"+name+"'");
-            String suppName = rs.getString("name");
-            double weight = rs.getDouble("weight");
+            List<HashMap<String, Object>> rs = conn.executeQuery("SELECT * FROM Supplies Where name = "+"'"+name+"'");
+            String suppName = (String)rs.get(0).get("name");
+            double weight = (double)rs.get(0).get("weight");
             Supply s = new Supply(suppName,weight);
             identityMap.put(name,s);
             return s;
@@ -71,7 +74,7 @@ public class SuppliesDAO {
     public boolean contains(String name) {
         try {
             return identityMap.containsKey(name) ||
-                    (Objects.equals(conn.executeQuery("SELECT name FROM Supplies WHERE name = " + "'" + name + "'").getString("name"), name));
+                    (Objects.equals(conn.executeQuery("SELECT name FROM Supplies WHERE name = " + "'" + name + "'").get(0).get("name"), name));
         } catch (SQLException e) {
             return false;
         }
@@ -79,11 +82,11 @@ public class SuppliesDAO {
 
     public ArrayList<Supply> getSupplies() {
         ArrayList<Supply> rval = new ArrayList<>();
-        ResultSet rs;
+        List<HashMap<String, Object>> rs;
         try {
             rs = conn.executeQuery("Select name From Supplies");
-            while(rs.next()){
-                rval.add(getSupply(rs.getString("name")));
+            for (int i = 0; i < rs.size(); i++){
+                rval.add(getSupply((String) rs.get(i).get("name")));
             }
 
         } catch (SQLException e) {

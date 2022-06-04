@@ -4,8 +4,8 @@ public enum JobType {
     HR_MANAGER, SHIFT_MANAGER ,CASHIER, STOCK_KEEPER, DRIVER, MERCHANDISER, LOGISTICS_MANAGER, TRANSPORT_MANAGER;
 
 
-    public static JobType get(String cashier) {
-        switch (cashier) {
+    public static JobType get(String job) {
+        switch (job) {
             case "HR_MANAGER":
                 return HR_MANAGER;
             case "SHIFT_MANAGER":

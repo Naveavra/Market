@@ -4,6 +4,9 @@ import ServiceLayer.Utility.Response;
 
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -336,14 +339,30 @@ public class Connect {
         conn.close();
     }
 
-    public ResultSet executeQuery(String query, Object... params) throws SQLException {
+
+    public List<HashMap<String,Object>> convertResultSetToList(ResultSet rs) throws SQLException {
+        ResultSetMetaData md = rs.getMetaData();
+        int columns = md.getColumnCount();
+        List<HashMap<String,Object>> list = new ArrayList<>();
+
+        while (rs.next()) {
+            HashMap<String,Object> row = new HashMap<>(columns);
+            for(int i=1; i<=columns; ++i) {
+                row.put(md.getColumnName(i),rs.getObject(i));
+            }
+            list.add(row);
+        }
+        return list;
+    }
+
+    public List<HashMap<String,Object>> executeQuery(String query, Object... params) throws SQLException {
         try  {
             createStatement();
             PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++)
                 statement.setObject(i+1, params[i]);
             ResultSet rs = statement.executeQuery();
-            return rs;
+            return convertResultSetToList((rs));
         } catch (SQLException throwable) {
             throw throwable;
         }

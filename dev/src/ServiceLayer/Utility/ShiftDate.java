@@ -1,5 +1,7 @@
 package ServiceLayer.Utility;
 
+import java.util.Calendar;
+
 public class ShiftDate {
     private final String year;
     private final String month;
@@ -9,6 +11,20 @@ public class ShiftDate {
         this.day = day;
         this.year = year;
         this.month = month;
+    }
+
+    public ShiftDate(){
+        Calendar calendar = Calendar.getInstance();
+        String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+        String month = String.valueOf(calendar.get(Calendar.MONTH)+1);
+        String year = String.valueOf(calendar.get(Calendar.YEAR));
+        if (day.length() == 1)
+            day = "0" + day;
+        if (month.length() == 1)
+            month = "0" + month;
+        this.day = day;
+        this.month = month;
+        this.year = year;
     }
 
     public String getDay() {

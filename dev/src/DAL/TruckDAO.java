@@ -2,11 +2,12 @@ package DAL;
 
 
 import DomainLayer.Transport.Truck;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+//import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class TruckDAO {
@@ -49,8 +50,8 @@ public class TruckDAO {
         if(containsTruck(id)){
             String query = "SELECT available FROM TrucksAvailability WHERE licenseplate = ? AND date = ?";
             try {
-                ResultSet rs = conn.executeQuery(query,id,date);
-                if(Objects.equals(rs.getString("available"), "#t")){
+                List<HashMap<String, Object>> rs = conn.executeQuery(query,id,date);
+                if(Objects.equals((String)rs.get(0).get("available"), "#t")){
                     return true;
                 }
                 else {
@@ -133,11 +134,11 @@ public class TruckDAO {
             return identityMap.get(licensePlate);
         }
         try {
-            ResultSet rs = conn.executeQuery("SELECT * FROM Trucks Where licensePlate = "+"'"+licensePlate+"'");
-            String type = rs.getString("type");
-            String license = rs.getString("licensePlate");
-            double maxWeight = rs.getDouble("maxWeight");
-            double initialWeight = rs.getDouble("initialWeight");
+            List<HashMap<String, Object>> rs = conn.executeQuery("SELECT * FROM Trucks Where licensePlate = "+"'"+licensePlate+"'");
+            String type = (String)rs.get(0).get("type");
+            String license = (String)rs.get(0).get("licensePlate");
+            double maxWeight = (double)rs.get(0).get("maxWeight");
+            double initialWeight = (double)rs.get(0).get("initialWeight");
             Truck t = new Truck(type,license,maxWeight,initialWeight);
             identityMap.put(license,t);
             return t;
@@ -148,18 +149,18 @@ public class TruckDAO {
     }
     public ArrayList<Truck> getTrucks(String date, String time, String licenseType){
         ArrayList<Truck> rval = new ArrayList<>();
-        ResultSet rs1;
-        ResultSet rs2;
+        List<HashMap<String, Object>> rs1;
+        List<HashMap<String, Object>> rs2;
         try {
             rs1 = conn.executeQuery("SELECT licenseplate from TrucksAvailability WHERE date = "+ "'"+date+"'"+" AND time = "+"'"+time+"'"+" AND available = #f");
             rs2 = conn.executeQuery("SELECT licensePlate From TRUCKS");
             ArrayList<String> temp = new ArrayList<>();
-            while(rs1.next()){
-                temp.add(rs1.getString("licensePlate"));
+            for (int i = 0; i < rs1.size(); i++){
+                temp.add((String)rs1.get(0).get("licensePlate"));
             }
-            while(rs2.next()){
-                if(!temp.contains(rs2.getString("licensePlate"))) {
-                    rval.add(getTruck(rs2.getString("licensePlate")));
+            for (int i = 0; i < rs2.size(); i++){
+                if(!temp.contains((String)rs2.get(0).get("licensePlate"))) {
+                    rval.add(getTruck((String)rs2.get(0).get("licensePlate")));
                 }
             }
 
@@ -168,13 +169,13 @@ public class TruckDAO {
         }
         return rval;
     }
-    public String showTrucks(String date,String type){
-        throw new NotImplementedException();
-    }
+//    public String showTrucks(String date,String type){
+//        throw new NotImplementedException();
+//    }
     public boolean containsTruck(String licensePlate){
         try {
             return identityMap.containsKey(licensePlate) ||
-                    conn.executeQuery("SELECT licensePlate FROM Trucks WHERE licensePlate = " + "'"+licensePlate+"'").next();
+                    conn.executeQuery("SELECT licensePlate FROM Trucks WHERE licensePlate = " + "'"+licensePlate+"'").size() > 0;
         } catch (SQLException e) {
             return false;
         }

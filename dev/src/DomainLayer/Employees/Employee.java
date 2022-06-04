@@ -13,7 +13,7 @@ public class Employee {
     private String contractOfEmployment;
     private Schedule availabilitySchedule;
     private final Date dateOfEmployment;
-    private float accMonthlyHours;
+    private double accMonthlyHours;
     private final Set<JobType> roles;
     private Date shiftStart;
 
@@ -80,7 +80,7 @@ public class Employee {
     }
 
 
-    public float getAccMonthlyHours() {
+    public double getAccMonthlyHours() {
         return accMonthlyHours;
     }
 
@@ -145,7 +145,7 @@ public class Employee {
                 ", Date of employment: " + dateOfEmployment + ", Certifications: " + roles;
     }
 
-    public void setMonthlyHours(float monthlyHrs) {
+    public void setMonthlyHours(double monthlyHrs) {
         this.accMonthlyHours = monthlyHrs;
     }
 

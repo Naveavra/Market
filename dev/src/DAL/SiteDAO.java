@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class SiteDAO {
@@ -16,6 +17,8 @@ public class SiteDAO {
 //    public static SiteDAO getInstance(){
 //        return INSTANCE;
 //    }
+
+    //FROM HERE
     public String addSite(String id,int area,int type,String contactAddr, String contactName,String contactPNumber){
         String query = "INSERT INTO Sites(id,type,ShippingArea,contactPNumber,contactName,contactAddress) VALUES(?,?,?,?,?,?)";
         try {
@@ -42,9 +45,9 @@ public class SiteDAO {
         String query = "SELECT * FROM Sites WHERE shippingArea = ? AND type = ?";
         ArrayList<String> retVal = new ArrayList<>();
         try {
-            ResultSet rs = conn.executeQuery(query,areaCode,type);
-            while(rs.next()){
-                retVal.add(rs.getString("id"));
+            List<HashMap<String, Object>> rs = conn.executeQuery(query,areaCode,type);
+            for(int i = 0; i < rs.size(); i++){
+                retVal.add((String)rs.get(0).get("id"));
             }
             return retVal;
         } catch (Exception e) {
@@ -56,17 +59,17 @@ public class SiteDAO {
             return identityMap.get(id);
         }
         try {
-            ResultSet rs = conn.executeQuery("SELECT * FROM Sites Where id = "+"'"+id+"'");
-            String siteid = rs.getString("id");
-            int type = rs.getInt("type");
+            List<HashMap<String, Object>> rs = conn.executeQuery("SELECT * FROM Sites Where id = "+"'"+id+"'");
+            String siteid = (String)rs.get(0).get("id");
+            int type = (int)rs.get(0).get("type");
             Site.ShippingArea sArea;
-            int shippingArea = rs.getInt("ShippingArea");
+            int shippingArea = (int)rs.get(0).get("ShippingArea");
             if(shippingArea == 0){sArea = Site.ShippingArea.North;}
             else if(shippingArea == 1){ sArea=Site.ShippingArea.Center;}
             else{sArea=Site.ShippingArea.South;};
-            String contactPNumber = rs.getString("contactPNumber");
-            String contactName = rs.getString("contactName");
-            String contactAddress = rs.getString("contactAddress");
+            String contactPNumber = (String)rs.get(0).get("contactPNumber");
+            String contactName = (String)rs.get(0).get("contactName");
+            String contactAddress = (String)rs.get(0).get("contactAddress");
             Site s = new Site(id,new Contact(contactAddress,contactName,contactPNumber),sArea,type);
             identityMap.put(id,s);
             return s;
@@ -80,7 +83,7 @@ public class SiteDAO {
 
     public boolean contains(String id) {
         try {
-            return identityMap.containsKey(id) || (Objects.equals(conn.executeQuery("SELECT id FROM Sites WHERE id = " + "'" + id + "'").getString("id"), id));
+            return identityMap.containsKey(id) || (Objects.equals((String)conn.executeQuery("SELECT id FROM Sites WHERE id = " + "'" + id + "'").get(0).get("id"), id));
         } catch (SQLException e) {
             return false;
         }  finally {

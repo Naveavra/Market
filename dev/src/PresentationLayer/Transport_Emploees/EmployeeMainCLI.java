@@ -8,8 +8,10 @@ import ServiceLayer.Utility.Response;
 
 //import SharedSpace.MainCLI;
 
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Function;
 
 public class EmployeeMainCLI extends MainCLI {
@@ -22,9 +24,11 @@ public class EmployeeMainCLI extends MainCLI {
     public void start() {
         print(serviceController.start());
         while (true) {
-            while (!serviceController.isLoggedIn()) {
+/*            while (!serviceController.isLoggedIn()) {
                 login();
-            }
+            }*/
+            if (!serviceController.isLoggedIn())
+                break;
             print(serviceController.displayActions());
             String action = getUserInput();
             if (action.equals("goodbye")) {
@@ -402,5 +406,13 @@ public class EmployeeMainCLI extends MainCLI {
             print("Employee is now certified");
 
 
+    }
+
+    public Set<JobType> getLoggedInUserRoles() {
+        return serviceController.getLoggedInEmployeeRoles();
+    }
+
+    public boolean isLoggedIn() {
+        return serviceController.isLoggedIn();
     }
 }

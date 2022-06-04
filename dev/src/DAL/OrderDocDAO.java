@@ -1,11 +1,12 @@
 package DAL;
 
 import DomainLayer.Transport.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+//import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,6 +24,8 @@ public class OrderDocDAO {
 //        throw new NotImplementedException();
 //    }
 
+
+    //FROM HERE
     public String addDoc(OrderDocument doc){
         String query = "INSERT INTO OrderDocs(id,driverID,licensePlate,origin,date,time,weight,finished) VALUES(?,?,?,?,?,?,?,?)";
         try {
@@ -116,19 +119,19 @@ public class OrderDocDAO {
         if(identityMap.containsKey(docID)){
             return identityMap.get(docID);
         }
-        ResultSet rs;
+        List<HashMap<String, Object>> rs;
         String query = "SELECT * FROM OrderDocs WHERE id = "+"'"+docID+"'";
         try {
             rs = conn.executeQuery(query);
-            String id = rs.getString("id");
-            String driverID = rs.getString("driverID");
-            String licensePlate = rs.getString("licensePlate");
-            String originID = rs.getString("origin");
-            String date = rs.getString("date");
-            String time = rs.getString("time");
-            double weight = rs.getDouble("weight");
+            String id = (String)rs.get(0).get("id");
+            String driverID = (String)rs.get(0).get("driverID");
+            String licensePlate = (String)rs.get(0).get("licensePlate");
+            String originID = (String)rs.get(0).get("origin");
+            String date = (String)rs.get(0).get("date");
+            String time = (String)rs.get(0).get("time");
+            double weight = (double)rs.get(0).get("weight");
             boolean finished;
-            if(Objects.equals(rs.getString("finished"), "#t")){
+            if(Objects.equals((String)rs.get(0).get("finished"), "#t")){
                 finished=true;
             }
             else{
@@ -141,8 +144,8 @@ public class OrderDocDAO {
             ConcurrentHashMap<Site,ConcurrentHashMap<Supply,Integer>> supplies =new ConcurrentHashMap<>();
             query = "SELECT * FROM order4Dest WHERE orderDocID = "+"'"+docID+"'";
             rs = conn.executeQuery(query);
-            while(rs.next()){
-                Site store = siteDAO.getSite(rs.getString("siteID"));
+            for (int i = 0; i < rs.size(); i++){
+                Site store = siteDAO.getSite((String)rs.get(i).get("siteID"));
                 supplies.put(store,showSupplies(docID,store.getId()));
             }
             OrderDocument doc = new OrderDocument(id,s,supplies,da,time);
@@ -158,11 +161,11 @@ public class OrderDocDAO {
     public ArrayList<OrderDocument> showDocs(String date){
         ArrayList<OrderDocument> orderdocs= new ArrayList<>();
         String query = "SELECT * FROM OrderDocs WHERE date = "+"'"+date+"'";
-        ResultSet rs = null;
+        List<HashMap<String, Object>> rs;
         try {
             rs = conn.executeQuery(query);
-            while(rs.next()){
-                OrderDocument doc = getOrderDoc(rs.getString("orderDocID"));
+            for (int i = 0; i < rs.size(); i++){
+                OrderDocument doc = getOrderDoc((String)rs.get(i).get("orderDocID"));
                 orderdocs.add(doc);
             }
             return orderdocs;
@@ -178,7 +181,7 @@ public class OrderDocDAO {
                 OrderDocument doc = identityMap.get(docID);
                 return identityMap.get(docID).containsStore(siteDAO.getSite(storeID).getId());
             }
-            String res = conn.executeQuery("SELECT siteID FROM order4Dest WHERE siteID = " + "'" + storeID + "'"+ "AND orderDocID = "+"'"+docID+"'").getString("siteID");
+            String res = (String) conn.executeQuery("SELECT siteID FROM order4Dest WHERE siteID = " + "'" + storeID + "'"+ "AND orderDocID = "+"'"+docID+"'").get(0).get("siteID");
             return Objects.equals(res, storeID);
         } catch (SQLException e) {
             return false;
@@ -188,10 +191,10 @@ public class OrderDocDAO {
         ConcurrentHashMap<Supply,Integer> supplies = new ConcurrentHashMap<>();
         String query = "SELECT * FROM order4Dest WHERE orderDocID = "+"'"+docID+"'"+" AND siteID = "+"'"+storeID+"'";
         try {
-            ResultSet rs = conn.executeQuery(query);
-            while(rs.next()){
-                Supply supp = new SuppliesDAO().getSupply(rs.getString("supply"));
-                int quantity = rs.getInt("quantity");
+            List<HashMap<String, Object>> rs = conn.executeQuery(query);
+            for (int i = 0; i < rs.size(); i++){
+                Supply supp = new SuppliesDAO().getSupply((String)rs.get(i).get("supply"));
+                int quantity = (int)rs.get(i).get("quantity");
                 supplies.put(supp,quantity);
             }
             return supplies;
@@ -210,10 +213,10 @@ public class OrderDocDAO {
         ArrayList<String> stores = new ArrayList<>();
         String query = "SELECT * FROM order4Dest WHERE orderDocID = "+"'"+docID+"'";
         try {
-            ResultSet rs = conn.executeQuery(query);
-            while (rs.next()){
-                if(!stores.contains(rs.getString("siteID"))) {
-                    stores.add(rs.getString("siteID"));
+            List<HashMap<String, Object>> rs = conn.executeQuery(query);
+            for (int i = 0; i < rs.size(); i++){
+                if(!stores.contains((String)rs.get(i).get("siteID"))) {
+                    stores.add((String)rs.get(i).get("siteID"));
                 }
             }
             return stores;
@@ -233,7 +236,7 @@ public class OrderDocDAO {
 
     public boolean containsDoc(String docID){
         try {
-            return identityMap.containsKey(docID) || (Objects.equals(conn.executeQuery("SELECT id FROM OrderDocs WHERE id = " + "'" + docID + "'").getString("id"), docID));
+            return identityMap.containsKey(docID) || (Objects.equals((String)conn.executeQuery("SELECT id FROM OrderDocs WHERE id = " + "'" + docID + "'").get(0).get("id"), docID));
         } catch (SQLException e) {
             return false;
         }
