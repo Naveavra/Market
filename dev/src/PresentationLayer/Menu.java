@@ -45,6 +45,8 @@ public class Menu {
                 employeeCLI.login();
             }
             Set<JobType> roles = employeeCLI.getLoggedInUserRoles();
+            System.out.println(employeeCLI.displayLoggedInUserMessages());
+            System.out.println("Choose module:");
             System.out.println("\t1.Supplier Model");
             System.out.println("\t2.Storage Model");
             System.out.println("\t3.Employee Model");

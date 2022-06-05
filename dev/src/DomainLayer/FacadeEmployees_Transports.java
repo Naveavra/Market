@@ -364,4 +364,8 @@ public class FacadeEmployees_Transports {
     public Set<JobType> getEmployeeRoles(String id) {
         return employeeController.getEmployeeRoles(id);
     }
+
+    public String displayMessages(String id) {
+        return employeeController.displayMessages(id);
+    }
 }

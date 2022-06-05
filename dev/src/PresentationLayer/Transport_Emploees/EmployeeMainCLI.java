@@ -415,4 +415,8 @@ public class EmployeeMainCLI extends MainCLI {
     public boolean isLoggedIn() {
         return serviceController.isLoggedIn();
     }
+
+    public String displayLoggedInUserMessages() {
+        return serviceController.displayLoggedInUserMessages();
+    }
 }

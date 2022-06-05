@@ -345,4 +345,14 @@ public class EmployeeService {
     public Set<JobType> getLoggedInEmployeeRoles() {
         return getEmployeeRoles(employeeService.getID());
     }
+
+
+
+    public String displayLoggedInUserMessages() {
+        return displayMessages(employeeService.getID());
+    }
+
+    private String displayMessages(String id) {
+        return facade.displayMessages(id);
+    }
 }

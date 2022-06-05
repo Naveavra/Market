@@ -117,5 +117,9 @@ public class EmployeeController {
     public Set<JobType> getEmployeeRoles(String id) {
         return employeeDAO.getEmployeeRoles(id);
     }
+
+    public String displayMessages(String id) {
+        return employeeDAO.displayMessages(id);
+    }
 }
 
