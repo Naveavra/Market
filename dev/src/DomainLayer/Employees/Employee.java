@@ -16,9 +16,11 @@ public class Employee {
     private double accMonthlyHours;
     private final Set<JobType> roles;
     private Date shiftStart;
+    private List<String> messages;
 
     //constructor
-    public Employee(String id, String name, String password, float salary, String bankAccount, String contractOfEmployment, Date dateOfEmployment){
+    public Employee(String id, String name, String password, float salary, String bankAccount,
+                    String contractOfEmployment, Date dateOfEmployment){
         this.id = id;
         this.name = name;
         this.password = password;
@@ -29,6 +31,7 @@ public class Employee {
         this.accMonthlyHours = 0;
         this.roles = new HashSet<>();
         this.dateOfEmployment = dateOfEmployment;
+        this.messages = new ArrayList<>();
     }
 
     public String getId() {
@@ -154,6 +157,19 @@ public class Employee {
 
     }
 
+    public void addMessage(String message) {
+        messages.add(message);
+    }
+
+    public List<String> getMessages() {
+        return messages;
+    }
+
+    public String displayMessages() {
+        if (messages.isEmpty())
+            return "No new messages";
+        return messages.toString();
+    }
 }
 
 

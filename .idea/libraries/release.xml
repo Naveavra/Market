@@ -5,6 +5,8 @@
       <root url="jar://$PROJECT_DIR$/release/adss2022_v02.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/release/adss2020_v01.jar!/" />
+    </SOURCES>
   </library>
 </component>

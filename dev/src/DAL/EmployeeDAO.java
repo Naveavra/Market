@@ -65,14 +65,23 @@ public class EmployeeDAO {
             e.setMonthlyHours(monthlyHrs);
             List<HashMap<String,Object>> rolesSet = conn.executeQuery("SELECT jobType FROM Roles WHERE id = ?", id);
             List<HashMap<String,Object>> schedule = conn.executeQuery("SELECT * FROM Schedules WHERE id = ?", id);
+            List<HashMap<String,Object>> messages = conn.executeQuery("SELECT message FROM Messages WHERE id = ? AND read = ?", id, "false");
             reconstructEmployeeAvailability(e, schedule);
             reconstructEmployeeRoles(e, rolesSet);
+            reconstructEmployeeMessages(e, messages);
             idMap.put(id, e);
             return e;
         }
         catch (SQLException e){
             //System.out.println(e.getMessage());
             return null;
+        }
+    }
+
+    private void reconstructEmployeeMessages(Employee e, List<HashMap<String, Object>> messages) {
+        for (int i = 0; i < messages.size(); i++){
+            String message = (String) messages.get(i).get("message");
+            e.addMessage(message);
         }
     }
 
@@ -384,5 +393,22 @@ public class EmployeeDAO {
             return idMap.get(id).getRoles();
         }
         return getEmployee(id).getRoles();
+    }
+
+    public String displayMessages(String id) {
+        if (idMap.containsKey(id)) {
+            return idMap.get(id).displayMessages();
+        }
+        try {
+            List<HashMap<String, Object>> messagesDB = conn.executeQuery("SELECT message FROM Messages WHERE id = ? AND read = ?", id, "false");
+            List<String> messages = new ArrayList<>();
+            for (int i = 0; i < messagesDB.size(); i++) {
+                String message = (String) messagesDB.get(i).get("message");
+                messages.add(message);
+            }
+            return messages.toString();
+        } catch (SQLException e) {
+            return "Couldn't fetch employee messages";
+        }
     }
 }

@@ -222,6 +222,13 @@ public class Connect {
                     "FOREIGN KEY (id) REFERENCES Employees(id) ON DELETE CASCADE" +
                     ");";
             statement.execute(query);
+            query = "CREATE TABLE IF NOT EXISTS Messages(" +
+                    "id VARCHAR(9)," +
+                    "message VARCHAR(500)," +
+                    "read VARCHAR(5)," +
+                    "FOREIGN KEY (id) REFERENCES Employees(id) ON DELETE CASCADE" +
+                    ")";
+            statement.execute(query);
             query = "CREATE TABLE IF NOT EXISTS DriversLicenses (" +
                     "id VARCHAR(9)," +
                     "license VARCHAR(5)," +
