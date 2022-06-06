@@ -41,7 +41,7 @@ public class Menu {
         if(choice==1)
             loadInitialData();
         while (true){
-            if (!employeeCLI.isLoggedIn()) {
+            while (!employeeCLI.isLoggedIn()) {
                 employeeCLI.login();
             }
             Set<JobType> roles = employeeCLI.getLoggedInUserRoles();
