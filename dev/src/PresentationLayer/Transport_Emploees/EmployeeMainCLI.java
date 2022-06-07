@@ -24,20 +24,25 @@ public class EmployeeMainCLI extends MainCLI {
     public void start() {
         print(serviceController.start());
         while (true) {
+            try {
 /*            while (!serviceController.isLoggedIn()) {
                 login();
             }*/
-            if (!serviceController.isLoggedIn())
-                break;
-            print(serviceController.displayActions());
-            String action = getUserInput();
-            if (action.equals("goodbye")) {
-                print("Goodbye");
-                break;
-            }
-            parseAndDoAction(action);
+                if (!serviceController.isLoggedIn())
+                    break;
+                print(serviceController.displayActions());
+                String action = getUserInput();
+                if (action.equals("goodbye")) {
+                    print("Goodbye");
+                    break;
+                }
+                parseAndDoAction(action);
 //            serviceController.doAction(action, this);
 //            ans.run();
+            }
+            catch (Exception e){
+                print("Something went wrong and we couldn't complete your request");
+            }
         }
     }
 
@@ -52,13 +57,13 @@ public class EmployeeMainCLI extends MainCLI {
             startShift();
         }
         else if (action == Action.END_SHIFT){
-            endShift(); //done
+            endShift();
         }
         else if (action == Action.MID_SHIFT_ACTIONS){
-            midShiftActions(); //done
+            midShiftActions();
         }
         else if (action == Action.LOGOUT){
-            logout(); //done
+            logout();
         }
         else if (action == Action.REGISTER_EMPLOYEE){
             register();
@@ -66,11 +71,11 @@ public class EmployeeMainCLI extends MainCLI {
             certify();
         }
         else if (action == Action.CREATE_SHIFT){
-            createShift(); //done
+            createShift();
         } else if(action == Action.VIEW_EMPLOYEE_DETAILS){
-            viewDetails(); //done
+            viewDetails();
         } else if(action == Action.EDIT_EMPLOYEE_DETAILS){
-            editDetails(); //done
+            editDetails();
         } else if (action == Action.DELETE_EMPLOYEE){
             deleteEmployee();
         }

@@ -170,6 +170,10 @@ public class Employee {
             return "No new messages";
         return messages.toString();
     }
+
+    public void clearMessages() {
+        messages.clear();
+    }
 }
 
 

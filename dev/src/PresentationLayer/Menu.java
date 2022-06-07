@@ -41,7 +41,7 @@ public class Menu {
         if(choice==1)
             loadInitialData();
         while (true){
-            if (!employeeCLI.isLoggedIn()) {
+            while (!employeeCLI.isLoggedIn()) {
                 employeeCLI.login();
             }
             Set<JobType> roles = employeeCLI.getLoggedInUserRoles();
@@ -62,7 +62,8 @@ public class Menu {
             }
             catch (Exception e){
                 System.out.println("you must enter only 1 digit number");
-                initialMenu();
+                continue;
+//                initialMenu();
             }
             switch (choice) {
                 case 1:
@@ -94,8 +95,8 @@ public class Menu {
                     }
                     break;
                 default:
-                    System.out.println("You must type digit 1 to 2");
-                    initialMenu();
+                    System.out.println("You must type digit 1 to 4");
+//                    initialMenu();
             }
         }
 

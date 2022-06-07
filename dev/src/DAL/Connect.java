@@ -393,15 +393,18 @@ public class Connect {
         }
     }
 
-    public Response updateRecordInTable(String tableName, String columnName, String recordID, Object newValue){
+    public Response updateRecordInTable(String tableName, String columnName, String recordID, Object idValue, Object newValue) throws SQLException {
         try {
-            Statement statement = conn.createStatement();
-            String query = "UPDATE TABLE " + tableName + " SET " + columnName + " = " + newValue +
-                    " WHERE " + columnName + " = " + recordID;
+            Statement statement = createStatement();
+            String query = "UPDATE " + tableName + " SET " + columnName + " = " + newValue +
+                    " WHERE " + recordID + " = " + idValue;
             statement.execute(query);
             return new Response();
         } catch (SQLException se) {
             return new Response("Failed to connect to DB");
+        }
+        finally {
+            closeConnect();
         }
     }
 
