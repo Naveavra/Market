@@ -17,7 +17,7 @@ public class Connect {
      * Connect to a sample database
      */
     public Connection conn = null;
-    public final String url = "jdbc:sqlite:../dev/superli.db";
+    public final String url = "jdbc:sqlite:./superli.db";
     private static Connect instance;
     public static Connect getInstance(){
         if(instance==null){
