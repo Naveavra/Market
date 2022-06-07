@@ -103,17 +103,17 @@ public class Menu {
     }
 
     private boolean canUseTransportModule(Set<JobType> roles) {
-        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.HR_MANAGER) ||
+        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER) ||
                 roles.contains(JobType.SHIFT_MANAGER) || roles.contains(JobType.TRANSPORT_MANAGER);
     }
 
     private boolean canUseStorageModule(Set<JobType> roles) {
-        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.HR_MANAGER) ||
+        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER) ||
                 roles.contains(JobType.SHIFT_MANAGER);
     }
 
     private boolean canUseSupplierModule(Set<JobType> roles) {
-        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.HR_MANAGER)
+        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER)
                 || roles.contains(JobType.SHIFT_MANAGER) || roles.contains(JobType.LOGISTICS_MANAGER);
     }
 

@@ -28,6 +28,7 @@ public class FacadeEmployees_Transports {
         jobController = new JobController();
         createEmployee("318856994", "Itay Gershon", "123456", 1000000000, "Hapoalim 12 115", "The conditions for this employee are really terrific");
         certifyEmployee(JobType.HR_MANAGER, "318856994");
+        certifyEmployee(JobType.STORE_MANAGER, "318856994");
         orderController= new OrderController();
         resourceController = ResourceController.getInstance();
     }

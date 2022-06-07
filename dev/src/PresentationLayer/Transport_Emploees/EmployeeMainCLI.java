@@ -395,7 +395,9 @@ public class EmployeeMainCLI extends MainCLI {
     public void certify(){
         print("Enter the details of the employee being certified");
         String id = getValidId();
-        String msg = "Enter the type of certification. it must be one the following:\n1.Human resources manager\n2.Shift manager\n3.Cashier\n4.Stock keeper\n5.Driver\n6.Merchandiser\n7.Logistics manager";
+        String msg = "Enter the type of certification. it must be one the following:\n1.Human resources manager\n" +
+                "2.Shift manager\n3.Cashier\n4.Stock keeper\n5.Driver\n6.Merchandiser\n7.Logistics manager\n" +
+                "8.Transport manager\n9.Store manager";
         String jobNum = getValidInput(msg , "",serviceController::isValidJobNumber);
         Response r;
         if(jobNum.equals("5")){
