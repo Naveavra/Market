@@ -248,7 +248,7 @@ public class EmployeeDAO {
             idMap.get(id).addAvailableTimeSlot(shift);
         try {
             ShiftDate date = shift.getDate();
-            conn.executeUpdate("INSERT INTO Schedules (id, timeOfDay, day, month, year)",
+            conn.executeUpdate("INSERT INTO Schedules (id, timeOfDay, day, month, year) VALUES (?,?,?,?,?)",
                     id, shift.getTime().toString(), date.getDay(), date.getMonth(), date.getYear());
             return true;
         }
@@ -348,40 +348,69 @@ public class EmployeeDAO {
         if (idMap.containsKey(id)) {
             idMap.get(id).setName(name);
         }
-        Response r = conn.updateRecordInTable("Employees", "name", id, name);
-        return !r.errorOccurred();
+        try {
+            Response r = conn.updateRecordInTable("Employees", "name","id", id, name);
+            return !r.errorOccurred();
+        }
+        catch (SQLException e){
+            return false;
+        }
     }
 
     public boolean editPassword(String id, String password) {
         if (idMap.containsKey(id)) {
             idMap.get(id).setPassword(password);
         }
-        Response r = conn.updateRecordInTable("Employees", "password", id, password);
-        return !r.errorOccurred();
+        try {
+            Response r = conn.updateRecordInTable("Employees", "password","id", id, password);
+            return !r.errorOccurred();
+        }
+
+        catch (SQLException e){
+            return false;
+        }
     }
 
     public boolean editSalary(String id, float newSalary) {
         if (idMap.containsKey(id)) {
             idMap.get(id).setSalary(newSalary);
         }
-        Response r = conn.updateRecordInTable("Employees", "salary", id, newSalary);
-        return !r.errorOccurred();
+        try {
+            Response r = conn.updateRecordInTable("Employees", "salary","id", id, newSalary);
+            return !r.errorOccurred();
+        }
+
+        catch (SQLException e){
+            return false;
+        }
     }
 
     public boolean editContract(String id, String newContract) {
         if (idMap.containsKey(id)) {
             idMap.get(id).setContractOfEmployment(newContract);
         }
-        Response r = conn.updateRecordInTable("Employees", "contract", id, newContract);
-        return !r.errorOccurred();
+        try {
+            Response r = conn.updateRecordInTable("Employees", "contract", "id",id, newContract);
+            return !r.errorOccurred();
+        }
+
+        catch (SQLException e){
+            return false;
+        }
     }
 
     public boolean editBankInfo(String id, String newBankInfo) {
         if (idMap.containsKey(id)) {
             idMap.get(id).setBankAccount(newBankInfo);
         }
-        Response r = conn.updateRecordInTable("Employees", "bankAccount", id, newBankInfo);
-        return !r.errorOccurred();
+        try {
+            Response r = conn.updateRecordInTable("Employees", "bankAccount","id", id, newBankInfo);
+            return !r.errorOccurred();
+        }
+
+        catch (SQLException e){
+            return false;
+        }
     }
 
     public void addToMap(Employee emp) {
@@ -397,6 +426,7 @@ public class EmployeeDAO {
 
     public String displayMessages(String id) {
         if (idMap.containsKey(id)) {
+            markAllAsRead(id);
             return idMap.get(id).displayMessages();
         }
         try {
@@ -406,9 +436,20 @@ public class EmployeeDAO {
                 String message = (String) messagesDB.get(i).get("message");
                 messages.add(message);
             }
+            markAllAsRead(id);
             return messages.toString();
         } catch (SQLException e) {
             return "Couldn't fetch employee messages";
         }
+    }
+
+    private void markAllAsRead(String id) {
+        if (idMap.containsKey(id)) {
+            idMap.get(id).clearMessages();
+        }
+        try {
+            conn.updateRecordInTable("Messages", "read","id", id, "true");
+        }
+        catch (SQLException ignored){}
     }
 }

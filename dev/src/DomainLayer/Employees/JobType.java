@@ -1,7 +1,8 @@
 package DomainLayer.Employees;
 
 public enum JobType {
-    HR_MANAGER, SHIFT_MANAGER ,CASHIER, STOCK_KEEPER, DRIVER, MERCHANDISER, LOGISTICS_MANAGER, TRANSPORT_MANAGER;
+    HR_MANAGER, SHIFT_MANAGER ,CASHIER, STOCK_KEEPER, DRIVER, MERCHANDISER, LOGISTICS_MANAGER,
+    TRANSPORT_MANAGER, STORE_MANAGER;
 
 
     public static JobType get(String job) {
@@ -22,6 +23,8 @@ public enum JobType {
                 return LOGISTICS_MANAGER;
             case "TRANSPORT_MANAGER":
                 return TRANSPORT_MANAGER;
+            case "STORE_MANAGER":
+                return STORE_MANAGER;
         }
         return null;
     }

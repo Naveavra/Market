@@ -167,14 +167,17 @@ public class Parser {
     }
 
     public Response isValidJobNumber(String jobNum) {
-        if(!(jobNum.equals("1")|| jobNum.equals("2")||jobNum.equals("3")||jobNum.equals("4")||jobNum.equals("5")||jobNum.equals("6") || jobNum.equals("7"))){
+        if(!(jobNum.equals("1")|| jobNum.equals("2")||jobNum.equals("3")||jobNum.equals("4")
+                ||jobNum.equals("5")||jobNum.equals("6") || jobNum.equals("7") || jobNum.equals("8")
+                ||jobNum.equals("9"))){
             return new Response("Input does not match any of the valid options");
         }
         return new Response();
     }
 
     public JobType parseJobType(String jobNum) {
-        //HR_MANAGER, SHIFT_MANAGER ,CASHIER, STOCK_KEEPER, DRIVER, MERCHANDISER, LOGISTICS_MANAGER, TRANSPORT_MANAGER
+        //HR_MANAGER, SHIFT_MANAGER ,CASHIER, STOCK_KEEPER, DRIVER, MERCHANDISER, LOGISTICS_MANAGER,
+        // TRANSPORT_MANAGER, STORE_MANAGER
          switch (jobNum) {
             case "1" : return JobType.HR_MANAGER;
             case "2" : return JobType.SHIFT_MANAGER;
@@ -184,28 +187,14 @@ public class Parser {
             case "6" : return JobType.MERCHANDISER;
             case "7" : return JobType.LOGISTICS_MANAGER;
              case "8" : return JobType.TRANSPORT_MANAGER;
+             case "9" : return JobType.STORE_MANAGER;
             default : return null;
         }
     }
 
-//    /**
-//     * this function was written as a replacement to the strip method in String class in java 8, since it's not supported in java 1.8
-//     * @param s
-//     * @return
-//     */
-//    public String strip(String s){
-//        StringBuilder stringBuilder = new StringBuilder();
-//        int i = 0;
-//        while (s.charAt(i) == ' '){
-//            i++;
-//        }
-//        while ()
-//    }
-
     public Response isValidIdList(String input) {
         String[] ids = input.split(",");
         for (String s: ids) {
-//            s = s.strip();
             if (s.length() != 9)
                 return new Response("Invalid id. A valid id has 9 digits");
         }
@@ -235,9 +224,8 @@ public class Parser {
         for (String[] idArr : arrays){
             ids.retainAll(new HashSet<>(Arrays.asList(idArr)));
         }
-//        return ids.isEmpty();
         if (!ids.isEmpty())
-            return new Response(ids.stream().findAny().get() + " was appears twice. Each id must be selected once");
+            return new Response(ids.stream().findAny().get() + " appears twice. Each id must be selected once");
         return new Response();
     }
 

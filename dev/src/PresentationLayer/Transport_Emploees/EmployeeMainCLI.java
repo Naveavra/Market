@@ -24,20 +24,25 @@ public class EmployeeMainCLI extends MainCLI {
     public void start() {
         print(serviceController.start());
         while (true) {
+            try {
 /*            while (!serviceController.isLoggedIn()) {
                 login();
             }*/
-            if (!serviceController.isLoggedIn())
-                break;
-            print(serviceController.displayActions());
-            String action = getUserInput();
-            if (action.equals("goodbye")) {
-                print("Goodbye");
-                break;
-            }
-            parseAndDoAction(action);
+                if (!serviceController.isLoggedIn())
+                    break;
+                print(serviceController.displayActions());
+                String action = getUserInput();
+                if (action.equals("goodbye")) {
+                    print("Goodbye");
+                    break;
+                }
+                parseAndDoAction(action);
 //            serviceController.doAction(action, this);
 //            ans.run();
+            }
+            catch (Exception e){
+                print("Something went wrong and we couldn't complete your request");
+            }
         }
     }
 
@@ -52,13 +57,13 @@ public class EmployeeMainCLI extends MainCLI {
             startShift();
         }
         else if (action == Action.END_SHIFT){
-            endShift(); //done
+            endShift();
         }
         else if (action == Action.MID_SHIFT_ACTIONS){
-            midShiftActions(); //done
+            midShiftActions();
         }
         else if (action == Action.LOGOUT){
-            logout(); //done
+            logout();
         }
         else if (action == Action.REGISTER_EMPLOYEE){
             register();
@@ -66,11 +71,11 @@ public class EmployeeMainCLI extends MainCLI {
             certify();
         }
         else if (action == Action.CREATE_SHIFT){
-            createShift(); //done
+            createShift();
         } else if(action == Action.VIEW_EMPLOYEE_DETAILS){
-            viewDetails(); //done
+            viewDetails();
         } else if(action == Action.EDIT_EMPLOYEE_DETAILS){
-            editDetails(); //done
+            editDetails();
         } else if (action == Action.DELETE_EMPLOYEE){
             deleteEmployee();
         }
@@ -390,7 +395,9 @@ public class EmployeeMainCLI extends MainCLI {
     public void certify(){
         print("Enter the details of the employee being certified");
         String id = getValidId();
-        String msg = "Enter the type of certification. it must be one the following:\n1.Human resources manager\n2.Shift manager\n3.Cashier\n4.Stock keeper\n5.Driver\n6.Merchandiser\n7.Logistics manager";
+        String msg = "Enter the type of certification. it must be one the following:\n1.Human resources manager\n" +
+                "2.Shift manager\n3.Cashier\n4.Stock keeper\n5.Driver\n6.Merchandiser\n7.Logistics manager\n" +
+                "8.Transport manager\n9.Store manager";
         String jobNum = getValidInput(msg , "",serviceController::isValidJobNumber);
         Response r;
         if(jobNum.equals("5")){

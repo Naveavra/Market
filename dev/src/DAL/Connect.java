@@ -17,7 +17,7 @@ public class Connect {
      * Connect to a sample database
      */
     public Connection conn = null;
-    public final String url = "jdbc:sqlite:../dev/superli.db";
+    public final String url = "jdbc:sqlite:./superli.db";
     private static Connect instance;
     public static Connect getInstance(){
         if(instance==null){
@@ -393,15 +393,18 @@ public class Connect {
         }
     }
 
-    public Response updateRecordInTable(String tableName, String columnName, String recordID, Object newValue){
+    public Response updateRecordInTable(String tableName, String columnName, String recordID, Object idValue, Object newValue) throws SQLException {
         try {
-            Statement statement = conn.createStatement();
-            String query = "UPDATE TABLE " + tableName + " SET " + columnName + " = " + newValue +
-                    " WHERE " + columnName + " = " + recordID;
+            Statement statement = createStatement();
+            String query = "UPDATE " + tableName + " SET " + columnName + " = " + newValue +
+                    " WHERE " + recordID + " = " + idValue;
             statement.execute(query);
             return new Response();
         } catch (SQLException se) {
             return new Response("Failed to connect to DB");
+        }
+        finally {
+            closeConnect();
         }
     }
 
