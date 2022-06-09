@@ -299,8 +299,8 @@ public class SupplierMenu {
                 }
                 boolean deliver=supNum==2;
                 boolean update=ss.updateDeliveration(s.getSupplierNumber(),deliver);
-                if(update & deliver){
-                    System.out.println(s.getSupplierName()+" is responsible for transformation");
+                if(update & deliver) {
+                    System.out.println(s.getSupplierName() + " is responsible for transformation");
                 }
                 else if(update &!deliver){
                     System.out.println("SUPER LI is responsible for transformation");
