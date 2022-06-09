@@ -1,0 +1,39 @@
+<changelist name="Uncommitted_changes_before_Update_at_19_04_2022_19_11_[Changes]" date="1650384717061" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2022_19_11_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 19/04/2022 19:11 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/dev/DomainLayer/Product.class" />
+    <option name="AFTER_PATH" value="out/production/dev/DomainLayer/Product.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2022_19_11_[Changes]/Product.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/dev/PresentationLayer/ProductMenu.class" />
+    <option name="AFTER_PATH" value="out/production/dev/PresentationLayer/ProductMenu.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2022_19_11_[Changes]/ProductMenu.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/dev/ServiceLayer/SupplierService.class" />
+    <option name="AFTER_PATH" value="out/production/dev/ServiceLayer/SupplierService.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2022_19_11_[Changes]/SupplierService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/dev/DomainLayer/PastOrder.class" />
+    <option name="AFTER_PATH" value="out/production/dev/DomainLayer/PastOrder.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2022_19_11_[Changes]/PastOrder.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/dev/PresentationLayer/OrderMenu.class" />
+    <option name="AFTER_PATH" value="out/production/dev/PresentationLayer/OrderMenu.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2022_19_11_[Changes]/OrderMenu.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/dev/ServiceLayer/ProductService.class" />
+    <option name="AFTER_PATH" value="out/production/dev/ServiceLayer/ProductService.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2022_19_11_[Changes]/ProductService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/dev/PresentationLayer/Menu.class" />
+    <option name="AFTER_PATH" value="out/production/dev/PresentationLayer/Menu.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2022_19_11_[Changes]/Menu.class" />
+  </binary>
+</changelist>
