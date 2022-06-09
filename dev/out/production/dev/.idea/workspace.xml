@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
+  <component name="ChangeListManager">
+    <list default="true" id="e1b1a6ff-f06d-49f6-8f99-1d8b519453e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/out/production/dev/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/dev/DAL/Connect.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
+=======
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -22,6 +29,7 @@
     <list default="true" id="8a109b7e-c264-4c46-be18-54b7d276f0a5" name="Default Changelist" comment="adding module">
       <change beforePath="$PROJECT_DIR$/src/PresentationLayer/Suppliers/SupplierMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PresentationLayer/Suppliers/SupplierMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/superli.db" beforeDir="false" afterPath="$PROJECT_DIR$/superli.db" afterDir="false" />
+>>>>>>> c0d62884f589c9ddc3c5bbdc1ce580f0f9abd89c
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,13 +39,38 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+<<<<<<< HEAD
+  <component name="ProjectId" id="2A4Y1VFFQq7RXyQZyoRDn6UwdQN" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+=======
   <component name="ProjectId" id="29wKNKi25mBjVejVhHT7Ad8w2Ap" />
+>>>>>>> c0d62884f589c9ddc3c5bbdc1ce580f0f9abd89c
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+<<<<<<< HEAD
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Menu" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="PresentationLayer.Menu" />
+      <module name="dev" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="PresentationLayer.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+=======
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -55,10 +88,16 @@
     <configuration name="Menu (1)" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="PresentationLayer.Menu" />
       <module name="dev" />
+>>>>>>> c0d62884f589c9ddc3c5bbdc1ce580f0f9abd89c
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+<<<<<<< HEAD
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Menu" />
+=======
     <configuration name="Menu" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="PresentationLayer.Menu" />
       <module name="dev" />
@@ -95,12 +134,34 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.CategoryControllerTest" />
+>>>>>>> c0d62884f589c9ddc3c5bbdc1ce580f0f9abd89c
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+<<<<<<< HEAD
+      <changelist id="e1b1a6ff-f06d-49f6-8f99-1d8b519453e8" name="Default Changelist" comment="" />
+      <created>1654270110449</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1654270110449</updated>
+      <workItem from="1654270111834" duration="9927000" />
+      <workItem from="1654345823424" duration="199000" />
+      <workItem from="1654346161605" duration="5330000" />
+      <workItem from="1654367338316" duration="2924000" />
+      <workItem from="1654418426151" duration="40000" />
+      <workItem from="1654451907195" duration="188000" />
+      <workItem from="1654510579275" duration="12613000" />
+      <workItem from="1654620805248" duration="1548000" />
+      <workItem from="1654625016622" duration="667000" />
+      <workItem from="1654626734405" duration="23000" />
+      <workItem from="1654627286314" duration="479000" />
+      <workItem from="1654723722474" duration="825000" />
+      <workItem from="1654756873532" duration="352000" />
+    </task>
+=======
       <changelist id="8a109b7e-c264-4c46-be18-54b7d276f0a5" name="Default Changelist" comment="" />
       <created>1654018675867</created>
       <option name="number" value="Default" />
@@ -175,11 +236,33 @@
       <updated>1654549950029</updated>
     </task>
     <option name="localTasksCounter" value="9" />
+>>>>>>> c0d62884f589c9ddc3c5bbdc1ce580f0f9abd89c
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+<<<<<<< HEAD
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/DAL/EmployeeDAO.java</url>
+          <line>445</line>
+          <properties class="DAL.EmployeeDAO" method="markAllAsRead">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Menu_java$Menu.ic" NAME="Menu Coverage Results" MODIFIED="1654551487237" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>PresentationLayer.*</FILTER>
+    </SUITE>
+  </component>
+=======
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -318,4 +401,5 @@
       </breakpoints>
     </breakpoint-manager>
   </component>
+>>>>>>> c0d62884f589c9ddc3c5bbdc1ce580f0f9abd89c
 </project>

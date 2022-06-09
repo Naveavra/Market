@@ -118,6 +118,8 @@ public class EmployeeDAO {
                 return JobType.TRANSPORT_MANAGER;
             case "LOGISTICS_MANAGER":
                 return JobType.LOGISTICS_MANAGER;
+            case "STORE_MANAGER":
+                return JobType.STORE_MANAGER;
             default: return null;
         }
     }
