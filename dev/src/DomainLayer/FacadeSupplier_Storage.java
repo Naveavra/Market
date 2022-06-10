@@ -185,11 +185,14 @@ public class FacadeSupplier_Storage {
 
 
     //SupplierService
-    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, boolean isDeliver){
+    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount,  String[] days,int area){
         if(supplierNumber<=0){
             return false;
         }
-        return supplierController.openAccount(supplierNumber, supplierName,bankAccount,isDeliver);
+        if(area!= 0 & area!=1 & area!=2){
+            return false;
+        }
+        return supplierController.openAccount(supplierNumber, supplierName,bankAccount, days, area);
     }
     public boolean closeAccount(int supplierNumber){
         if(supplierController.getSupplier(supplierNumber)==null){
@@ -281,14 +284,14 @@ public class FacadeSupplier_Storage {
         return gson.toJson(s);
 
     }
-    public boolean updateDeliveration(int supplierNumber,boolean isDeliver) {
+    public boolean updateDeliveration(int supplierNumber,String[] days) {
         if(supplierController.getSupplier(supplierNumber)==null){
             return false;
         }
         if(!supplierController.getSupplier(supplierNumber).isActive()){
             return false;
         }
-        return supplierController.getSupplier(supplierNumber).updateDeliveration(isDeliver);
+        return supplierController.getSupplier(supplierNumber).updateDeliveration(days);
     }
     public String  watchPastOrders(int supplierNumber) {
         Map<Integer,PastOrderSupplier> pastOrderList=new HashMap<>();

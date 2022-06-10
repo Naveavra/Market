@@ -6,6 +6,8 @@ public class Supplier {
     private int supplierNumber;
     private String name;
     private int bankAccount;
+    private int area;
+    private String[] deliveryDays;
     private LinkedList<Contact> contacts;//<name,email>
     private boolean active;
 //    private Map<Integer, Product> products =new HashMap<>();
@@ -13,16 +15,56 @@ public class Supplier {
 //    private Map<Integer, Order> orders;
 //    private Map<Integer,Order> pastOrders;
 
-    public Supplier(int supplierNumber, String name, int bankAccount,LinkedList<Contact> contacts){
+    public Supplier(int supplierNumber, String name, int bankAccount,LinkedList<Contact> contacts,int area,String[] deliveryDays){
         this.supplierNumber=supplierNumber;
         this.name=name;
         this.bankAccount=bankAccount;
         this.contacts=new LinkedList<>();
         this.contacts.addAll(contacts);
         active =true;
+        this.area=area;
+        this.deliveryDays=sort(deliveryDays);
 //        discountByAmount=new TreeMap<>();
 //        orders = new TreeMap<>();
 //        pastOrders = new HashMap<>();
+    }
+
+    private String[] sort(String[] deliveryDays) {
+        int[] arr = new int[deliveryDays.length];
+        int i=0;
+        for(String s:deliveryDays){
+            arr[i]=Integer.parseInt(s);
+            i++;
+        }
+        i=0;
+        quicksort(arr,0,arr.length-1);
+        String[] out =new String[arr.length];
+        for(Integer s:arr){
+            out[i]=String.valueOf(s);
+            i++;
+        }
+        return out;
+    }
+    static void quicksort(int[] arr, int low, int high){
+        if(low < high){
+            int p = partition(arr, low, high);
+            quicksort(arr, low, p-1);
+            quicksort(arr, p+1, high);
+        }
+    }
+    static int partition(int[] arr, int low, int high){
+        int p = low, j;
+        for(j=low+1; j <= high; j++)
+            if(arr[j] < arr[low])
+                swap(arr, ++p, j);
+
+        swap(arr, low, p);
+        return p;
+    }
+    static void swap(int[] arr, int low, int pivot){
+        int tmp = arr[low];
+        arr[low] = arr[pivot];
+        arr[pivot] = tmp;
     }
 
     public String getSupplierName() {
@@ -43,7 +85,15 @@ public class Supplier {
             ans+= "\n\t "+i+". "+ c.getName() + ": " + c.getEmail() +" , "+ c.getTelephone();
             i++;
         }
-        return ans;
+        ans += "\nArea shipment: " +area;
+        int x=0;
+        ans += "\ndelivery days : " ;
+
+        for(String s : deliveryDays){
+            ans += s +" , ";
+
+        }
+        return ans.substring(0,ans.length()-2);
     }
 
     public int getBankNumber() {

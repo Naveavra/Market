@@ -118,7 +118,8 @@ public class Connect {
                     "\t\"name\"\tTEXT ,\n" +
                     "\t\"bankAccount\"\tInteger,\n" +
                     "\t\"active\"\tINTEGER ,\n"+
-                    "\t\"isDeliver\"\tINTEGER,\n"+
+                    "\t\"area\"\tINTEGER,\n"+
+                    "\t\"deliveryDays\"\tINTEGER,\n"+
                     "\tPRIMARY KEY(\"supplierNumber\")\n"+ ")";
             statement.execute(query);
 

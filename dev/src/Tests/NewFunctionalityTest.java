@@ -35,8 +35,8 @@ public class NewFunctionalityTest {
             cC.addSubSubCategory("first", "first1", "first11");
             cC.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
             cC.addAllItems(1,7,"2022-06-01",12);
-            facadeSupplier.openAccount(1,"eli", 1, true);
-            facadeSupplier.openAccount(2,"eli2", 2, true);
+            facadeSupplier.openAccount(1,"eli", 1, new String[]{"1"},0);
+            facadeSupplier.openAccount(2,"eli2", 2, new String[]{"1"},0);
             facadeSupplier.addProductToSupplier(1, 1, 2, 1);
             facadeSupplier.addProductToSupplier(2, 2, 4, 1);
             String json = facadeSupplier.createOrder(1);

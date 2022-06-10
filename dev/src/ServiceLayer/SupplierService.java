@@ -19,11 +19,11 @@ public class SupplierService {
      *@param supplierNumber  the id of the supplier
      *@param supplierName  the name of the supplier
      *@param bankAccount  the bunk number of the supplier
-     *@param isDeliver  boolean var which specify who is responsible for delivery the SUPERLI or the supplier
+     *@param days  string array which specify on which days the supplier regularly supplies products
      *@return true if succeed, false if failed
      */
-    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, boolean isDeliver){
-        return facadeSupplier.openAccount(supplierNumber, supplierName, bankAccount,isDeliver);
+    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, String[] days,int area){
+        return facadeSupplier.openAccount(supplierNumber, supplierName, bankAccount,days,area);
     }
 
     /**
@@ -40,7 +40,6 @@ public class SupplierService {
      * @param supplierNumber the id of the supplier
      * @param supplierName the name of the supplier
      * @param bankAccount the bank account number of the supplier
-     * @return
      */
     public boolean updateAccount(int supplierNumber, String supplierName, int bankAccount){
         return facadeSupplier.updateAccount(supplierNumber, supplierName, bankAccount);
@@ -97,11 +96,11 @@ public class SupplierService {
     /**
      * the function updates the responsibility of the transports to a particular supplier
      * @param supplierNumber the id of the supplier
-     * @param isDeliver boolean var which
+     *@param days  string array which specify on which days the supplier regularly supplies products
      * @return A Boolean variable that defines who is responsible for transports, true -the supplier,false - SUPERLI
      */
-    public boolean updateDeliveration(int supplierNumber,boolean isDeliver) {
-        return facadeSupplier.updateDeliveration(supplierNumber, isDeliver);
+    public boolean updateDeliveration(int supplierNumber,String[] days) {
+        return facadeSupplier.updateDeliveration(supplierNumber, days);
     }
 
     public boolean addContact(int supplierNumber,String name, String email, String telephone) {

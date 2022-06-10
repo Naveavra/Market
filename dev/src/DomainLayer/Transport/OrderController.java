@@ -80,8 +80,8 @@ public class OrderController {
         orderDoc.setTruck(newTruck, orderDoc.getDate());
     }
 
-    public String showStores(String areacode) {
-        int area = Integer.parseInt(areacode);
+    public String showStores(String areaCode) {
+        int area = Integer.parseInt(areaCode);
         ArrayList<String> lst = sites.showSites(area,1);
         if(lst.isEmpty()){
             return "No stores in this area yet.";
@@ -124,8 +124,6 @@ public class OrderController {
 
         return res;
     }
-
-
     public String showSuppliers(String areacode) {
         int area = Integer.parseInt(areacode);
         if (sites.showSites(area, 0).size() == 0){
@@ -133,6 +131,7 @@ public class OrderController {
         }
         return ShowSitesOption(sites.showSites(area,0));
     }
+
 
     private String ShowSitesOption(ArrayList<String> showSites) {
         int counter = 0;

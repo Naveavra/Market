@@ -3,11 +3,15 @@ package DAL;
 import DomainLayer.Suppliers.Contact;
 import DomainLayer.Suppliers.Discount;
 import DomainLayer.Suppliers.Supplier;
+import sun.awt.image.ImageWatched;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class SuppliersDAO {
     private Connect connect;
@@ -26,10 +30,11 @@ public class SuppliersDAO {
     }
 
     public void updateSupplier(Supplier s) throws SQLException {
-        Integer isDeliver = s.getIsDeliver() ? 1 : 0;
+        int area =s.getArea();
+        int days =s.getDeliverDaysInt();
         Integer isActive = s.getActive() ? 1 : 0;
-        String query = String.format("UPDATE Suppliers SET name = '%s' and bankAccount = %d and active = %d and isDeliver = %d WHERE supplierNumber = %d",
-                s.getName(),s.getBankAccount(),isActive, isDeliver,
+        String query = String.format("UPDATE Suppliers SET name = '%s' and bankAccount = %d and active = %d and area = %d and deliveryDays = %d WHERE supplierNumber = %d",
+                s.getName(),s.getBankAccount(),isActive,area,days,
                 s.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
@@ -40,6 +45,22 @@ public class SuppliersDAO {
         finally {
             connect.closeConnect();
         }
+    }
+    public List<String> GetSupplierByArea(int area) throws SQLException {
+        ArrayList<String> out =new ArrayList<>();
+        String query =String.format("SELECT supplierNumber from Suppliers WHERE area =%d", area);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                out.add(String.valueOf(rs.getInt("supplierNumber")));
+            }
+        } catch (SQLException e) {
+           throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+        return out;
     }
     public void updateSupplierContacts(Supplier s) throws SQLException {
         String query = String.format("DELETE from ContactsSupplier WHERE supplierNumber = %d",
@@ -76,10 +97,11 @@ public class SuppliersDAO {
         }
     }
     public void insertSupplier(Supplier s) throws SQLException {
-        Integer isDeliver = s.getIsDeliver() ? 1 : 0;
+        int days = s.getDeliverDaysInt();
+        int area =s.getArea();
         Integer isActive = s.getActive() ? 1:0;
-        String query =String.format("INSERT INTO Suppliers (supplierNumber,name,bankAccount,active,isDeliver) " +
-                "VALUES (%d,'%s',%d,%d,%d)", s.getSupplierNumber(),s.getName(),s.getBankAccount(),isActive,isDeliver);
+        String query =String.format("INSERT INTO Suppliers (supplierNumber,name,bankAccount,active,area,deliveryDays) " +
+                "VALUES (%d,'%s',%d,%d,%d,%d)", s.getSupplierNumber(),s.getName(),s.getBankAccount(),isActive,area,days);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
             IMSuppliers.put(s.getSupplierNumber(), s);
@@ -115,7 +137,7 @@ public class SuppliersDAO {
             if (!rs.next())
                 return null;
             Supplier supplier =new Supplier(supplierNumber, rs.getString("name"),rs.getInt("bankAccount"),contacts,
-                    parseIntToBool(rs.getInt("isDeliver")),parseIntToBool(rs.getInt("active")));
+                    getDays(rs.getInt("deliveryDays")),rs.getInt("area"),parseIntToBool(rs.getInt("active")));
             supplier.addDiscounts(getDiscountsSupplier(supplierNumber));
             return supplier;
         } catch (SQLException e) {
@@ -125,6 +147,23 @@ public class SuppliersDAO {
             connect.closeConnect();
         }
     }
+
+    private String[] getDays(int deliveryDays) {
+        LinkedList<String> out =new LinkedList<>();
+        while (deliveryDays > 0) {
+            int prev= (deliveryDays % 10);
+            out.addLast( String.valueOf(prev));
+            deliveryDays = deliveryDays / 10;
+        }
+        String[] arr =new String[out.size()];
+        int i=0;
+        for( String s:out){
+            arr[i] =s;
+            i++;
+        }
+        return arr;
+    }
+
     private boolean parseIntToBool(int i){
         return i == 1;
     }

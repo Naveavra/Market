@@ -39,8 +39,8 @@ public class OrderTest {
             facadeSupplier.addNewProduct(2,"eggs","hello",4,"me","first","first1", "first11");
             facadeSupplier.addAllItems(1,4,"2022-06-01",12);
             ordersController = new OrdersController();
-            facadeSupplier.openAccount(1, "eli", 1, true);
-            facadeSupplier.openAccount(2, "eli2", 2, true);
+            facadeSupplier.openAccount(1, "eli", 1, new String[]{"1"},0);
+            facadeSupplier.openAccount(2, "eli2", 2, new String[]{"1"},0);
             facadeSupplier.addProductToSupplier(1, 1, 4, 1);
             facadeSupplier.addProductToSupplier(2, 2, 3, 2);
 //            facade.createOrder(1);
