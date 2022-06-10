@@ -143,8 +143,8 @@ public class Menu {
         cC.addAllItems(1, 7, "2022-06-01", 1);
         cC.addAllItems(2, 3, "2019-06-01", 1);
 
-        ss.openAccount(1,"OSEM", 5555, true);
-        ss.openAccount(2,"TNUVA", 456, false);
+        ss.openAccount(1,"OSEM", 5555, new String[]{"1"},0);
+        ss.openAccount(2,"TNUVA", 456, new String[]{"1"},0);
 
         ss.addContact(1, "Dan", "dan@gmail.com", "0501234567");
         ss.addContact(1, "nave","nave@gmail.com", "0501234567");

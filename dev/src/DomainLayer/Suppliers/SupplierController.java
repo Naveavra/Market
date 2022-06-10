@@ -26,10 +26,10 @@ public class SupplierController {
      * @param supplierNumber  the id of the supplier
      * @param supplierName  the name of the supplier
      * @param bankAccount  the bunk number of the supplier
-     * @param isDeliver  boolean var which specify who is responsible for delivery the SUPERLI or the supplier
+     *@param days  string array which specify on which days the supplier regularly supplies products
      * @return true if succeed, false if failed
      */
-    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount, boolean isDeliver){
+    public boolean openAccount(int supplierNumber, String supplierName, int bankAccount,  String[] days,int area){
         if(supplierNumber<0){
             return false;
         }
@@ -40,7 +40,7 @@ public class SupplierController {
             if(suppliersDAO.getSupplier(supplierNumber) != null){
                 return false;
             }
-            Supplier s = new Supplier(supplierNumber,supplierName, bankAccount,new LinkedList<Contact>(),isDeliver,true);
+            Supplier s = new Supplier(supplierNumber,supplierName, bankAccount,new LinkedList<Contact>(),days,area,true);
             suppliersDAO.insertSupplier(s);
         }
         catch (Exception e){

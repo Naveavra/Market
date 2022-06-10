@@ -13,8 +13,9 @@ public class Supplier {
     private int supplierNumber;
     private String name;
     private int bankAccount;
-    private boolean isDeliver;
     private boolean active;
+    private int area;
+    private String[] deliveryDays;
     private LinkedList<Contact> contacts;
     private LinkedList<Discount> discountByAmount;//sum of products in order
     //DAO to db
@@ -22,7 +23,7 @@ public class Supplier {
     private transient SuppliersDAO suppliersDAO;
 
 
-    public Supplier(int supplierNumber, String name,int bankAccount,LinkedList<Contact> contacts,boolean isDeliver,boolean active){
+    public Supplier(int supplierNumber, String name,int bankAccount,LinkedList<Contact> contacts, String[] days,int area,boolean active){
         this.supplierNumber=supplierNumber;
         this.name=name;
         this.bankAccount=bankAccount;
@@ -31,7 +32,8 @@ public class Supplier {
         discountByAmount=new LinkedList<Discount>();
         discountByAmount.add(new Discount(0,1.0));
         this.active =active;
-        this.isDeliver=isDeliver;
+        this.area = area;
+        this.deliveryDays=sort(days);
         productsDAO = new ProductsSupplierDAO();
         suppliersDAO = new SuppliersDAO();
         //ordersDAO = new OrdersFromSupplierDAO();
@@ -202,13 +204,6 @@ public class Supplier {
         return contacts;
     }
 
-    public boolean updateDeliveration(boolean deliver) {
-        if(isDeliver==deliver){
-            return false;
-        }
-        isDeliver=deliver;
-        return true;
-    }
 
 
     public void addDiscounts(LinkedList<Discount> discountsToAdd) {//by DAO
@@ -224,9 +219,6 @@ public class Supplier {
         return active;
     }
 
-    public boolean getIsDeliver() {
-        return isDeliver;
-    }
     public LinkedList<Discount> getDiscounts(){
         return discountByAmount;
     }
@@ -268,5 +260,66 @@ public class Supplier {
         }
         return false;
     }
+    public String[] getDeliveryDays() {
+    return deliveryDays;
+    }
+    public int getArea(){
+        return area;
+    }
+    public int getDeliverDaysInt(){
+        String out ="";
+        for(String s:deliveryDays){
+            out+=s;
+        }
+        return Integer.parseInt(out);
+    }
 
+    public boolean updateDeliveration(String[] days) {
+        this.deliveryDays=days;
+        try {
+            suppliersDAO.updateSupplier(this);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return false;
+    }
+    private String[] sort(String[] deliveryDays) {
+        int[] arr = new int[deliveryDays.length];
+        int i=0;
+        for(String s:deliveryDays){
+            arr[i]=Integer.parseInt(s);
+            i++;
+        }
+        i=0;
+        quicksort(arr,0,arr.length-1);
+        String[] out =new String[arr.length];
+        for(Integer s:arr){
+            out[i]=String.valueOf(s);
+            i++;
+        }
+        return out;
+    }
+    static void quicksort(int[] arr, int low, int high){
+        if(low < high){
+            int p = partition(arr, low, high);
+            quicksort(arr, low, p-1);
+            quicksort(arr, p+1, high);
+        }
+    }
+    static int partition(int[] arr, int low, int high){
+        int p = low, j;
+        for(j=low+1; j <= high; j++)
+            if(arr[j] < arr[low])
+                swap(arr, ++p, j);
+
+        swap(arr, low, p);
+        return p;
+    }
+    static void swap(int[] arr, int low, int pivot){
+        int tmp = arr[low];
+        arr[low] = arr[pivot];
+        arr[pivot] = tmp;
+    }
 }

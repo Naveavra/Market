@@ -29,6 +29,7 @@ public class SuppliesDAO {
             return ("Cannot Insert a Supply,Something is wrong with the db");
         }
     }
+
     public String removeSupply(String name){
         try {
             if(Objects.equals(conn.deleteRecordFromTableSTR("Supplies", "name", name), "Success")){

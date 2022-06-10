@@ -280,39 +280,49 @@ public class SupplierMenu {
                 }
                 break;
             case 4:
-                System.out.println("Choose who responsible for Future orders");
-                System.out.println("\t1. SUPER LI");
-                System.out.println("\t2. "+s.getSupplierName());
-                choiceStr = "";
-                int supNum =0;
-                try{
-                    choiceStr = sc.next();
-                    supNum=Integer.parseInt(choiceStr);
+                System.out.println("Choose on which days the supplier "+s.getSupplierName()+" supplies");
+                System.out.println("Enter the numbers so that they are not separated by a space");
+                System.out.println("\t1. SUNDAY.");
+                System.out.println("\t2. MONDAY.");
+                System.out.println("\t3. TUESDAY.");
+                System.out.println("\t4. WEDNESDAY.");
+                System.out.println("\t5. THURSDAY.");
+                System.out.println("\t6. FRIDAY.");
+                System.out.println("\t7. SATURDAY.");
+                String days = "";
+                days = sc.next();
+                String[] Days=days.split("");
+                for (String day : Days) {
+                    if (day.length() >= 2) {
+                        System.out.println("invalid input");
+                        openNewAccountSupplier();
+                    }
+                    if(Integer.parseInt(day)<1|Integer.parseInt(day)>7){
+                        System.out.println("invalid input");
+                        openNewAccountSupplier();
+                    }
                 }
-                catch (Exception e){
-                    System.out.println("you must enter only digits number");
+                for(int i=0;i< Days.length;i++){
+                    for(int j=i+1;j< Days.length-1;j++){
+                        if(Days[i].equals(Days[j])){
+                            System.out.println("invalid input");
+                            openNewAccountSupplier();
+                        }
+                    }
+                }
+                if(Days.length>7){
+                    System.out.println("invalid input");
                     openNewAccountSupplier();
                 }
-                if(supNum!=1& supNum!=2){
-                    System.out.println("you must enter only 1 or 2");
+                boolean update=ss.updateDeliveration(s.getSupplierNumber(),Days);
+                if(update) {
+                    System.out.println(s.getSupplierName() + " has new delivery days");
+                }
+                else if(!update){
+                    System.out.println("!invalid input");
                     updateSupplierDetails(s);
                 }
-                boolean deliver=supNum==2;
-                boolean update=ss.updateDeliveration(s.getSupplierNumber(),deliver);
-                if(update & deliver) {
-                    System.out.println(s.getSupplierName() + " is responsible for transformation");
-                }
-                else if(update &!deliver){
-                    System.out.println("SUPER LI is responsible for transformation");
-                }
-                else if(!update & !deliver){
-                    System.out.println("SUPER LI is already responsible for transformation");
-                    updateSupplierDetails(s);
-                }
-                else if(!update & deliver){
-                    System.out.println(s.getSupplierName()+" is already responsible for transformation");
-                    updateSupplierDetails(s);
-                }
+
                 break;
             case 5:
                 inSupplierMenu(s.getSupplierNumber());
@@ -392,28 +402,57 @@ public class SupplierMenu {
             else {
                 contacts.add(new Contact(name, email,telephone));
             }
-        }
-        System.out.println("Choose who responsible for Future orders");
-        System.out.println("\t1. SUPER LI");
-        System.out.println("\t2. "+supName);
+        }System.out.println("Choose the shipping area of the supplier");
+        System.out.println("\t1. 0.");
+        System.out.println("\t2. 1.");
+        System.out.println("\t3. 2.");
         choiceStr = "";
-        int supNum =0;
+        int area =0;
         try{
             choiceStr = sc.next();
-            supNum=Integer.parseInt(choiceStr);
-        }
-        catch (Exception e){
+            area=Integer.parseInt(choiceStr);
+        }catch (Exception e){
             System.out.println("you must enter only digits number");
             openNewAccountSupplier();
         }
-        if(supNum!=1& supNum!=2){
-            System.out.println("you must enter only 1 or 2");
+        if(area<0 |area >2){
+            System.out.println("you must enter only  0 or 1 or 2");
             openNewAccountSupplier();
         }
-        //
-        boolean deliver=supNum==2;
-
-        boolean open=ss.openAccount(supNumber,supName, bankNumber,deliver);
+        System.out.println("Choose on which days the supplier "+supName+" supplies");
+        System.out.println("\t1. SUNDAY.");
+        System.out.println("\t2. MONDAY.");
+        System.out.println("\t3. TUESDAY.");
+        System.out.println("\t4. WEDNESDAY.");
+        System.out.println("\t5. THURSDAY.");
+        System.out.println("\t6. FRIDAY.");
+        System.out.println("\t7. SATURDAY.");
+        String days = "";
+        days = sc.next();
+        String[] Days=days.split("");
+        for (String day : Days) {
+            if (day.length() >= 2) {
+                System.out.println("invalid input");
+                openNewAccountSupplier();
+            }
+            if(Integer.parseInt(day)<1|Integer.parseInt(day)>7){
+                System.out.println("invalid input");
+                openNewAccountSupplier();
+            }
+        }
+        for(int i=0;i< Days.length;i++){
+            for(int j=i+1;j< Days.length-1;j++){
+                if(Days[i].equals(Days[j])){
+                    System.out.println("invalid input");
+                    openNewAccountSupplier();
+                }
+            }
+        }
+        if(Days.length>7){
+            System.out.println("invalid input");
+            openNewAccountSupplier();
+        }
+        boolean open=ss.openAccount(supNumber,supName, bankNumber,Days,area);
         boolean addContact =true;
         for(Contact c:contacts) {
             addContact=addContact & ss.addContact(supNumber,c.getName(),c.getEmail(),c.getTelephone());

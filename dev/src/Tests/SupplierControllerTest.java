@@ -22,8 +22,8 @@ private static boolean setUpIsDone = false;
         if(!setUpIsDone){
             Connect.getInstance().deleteRecordsOfTables();
             sc=new SupplierController();
-            sc.openAccount(1, "ziv", 12, true);
-            sc.openAccount(2, "ziv", 12, true);
+            sc.openAccount(1, "ziv", 12, new String[]{"1"},0);
+            sc.openAccount(2, "ziv", 12, new String[]{"1"},0);
             setUpIsDone=true;
         }
         else
@@ -32,9 +32,9 @@ private static boolean setUpIsDone = false;
 
     @Test
     public void openAccount() {
-        assertFalse(sc.openAccount(1, "ziv", 12,true));
-        assertFalse(sc.openAccount(1, "ziv", -12,true));
-        assertFalse(sc.openAccount(-1, "ziv", 12, true));
+        assertFalse(sc.openAccount(1, "ziv", 12,new String[]{"1"},0));
+        assertFalse(sc.openAccount(1, "ziv", -12,new String[]{"1"},0));
+        assertFalse(sc.openAccount(-1, "ziv", 12, new String[]{"1"},0));
 
     }
 
