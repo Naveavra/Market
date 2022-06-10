@@ -27,7 +27,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a109b7e-c264-4c46-be18-54b7d276f0a5" name="Default Changelist" comment="adding module">
-      <change beforePath="$PROJECT_DIR$/src/PresentationLayer/Suppliers/SupplierMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PresentationLayer/Suppliers/SupplierMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/superli.db" beforeDir="false" afterPath="$PROJECT_DIR$/superli.db" afterDir="false" />
 >>>>>>> c0d62884f589c9ddc3c5bbdc1ce580f0f9abd89c
     </list>
@@ -186,6 +185,8 @@
       <workItem from="1654686436748" duration="65000" />
       <workItem from="1654707822448" duration="639000" />
       <workItem from="1654756535051" duration="1068000" />
+      <workItem from="1654759620405" duration="94000" />
+      <workItem from="1654784259887" duration="1987000" />
     </task>
     <task id="LOCAL‎00001" summary="adding new facade">
       <created>1654023169713</created>
@@ -312,22 +313,22 @@
       <screen x="0" y="0" width="1280" height="672" />
     </state>
     <state x="423" y="91" key="FileChooserDialogImpl/0.0.1280.672@0.0.1280.672" timestamp="1654686499402" />
-    <state width="765" height="528" key="GridCell.Tab.0.bottom" timestamp="1654758570545">
+    <state width="749" height="507" key="GridCell.Tab.0.bottom" timestamp="1654759714180">
       <screen x="0" y="0" width="1280" height="672" />
     </state>
-    <state width="765" height="528" key="GridCell.Tab.0.bottom/0.0.1280.672@0.0.1280.672" timestamp="1654758570545" />
-    <state width="765" height="528" key="GridCell.Tab.0.center" timestamp="1654758570545">
+    <state width="749" height="507" key="GridCell.Tab.0.bottom/0.0.1280.672@0.0.1280.672" timestamp="1654759714180" />
+    <state width="749" height="507" key="GridCell.Tab.0.center" timestamp="1654759714180">
       <screen x="0" y="0" width="1280" height="672" />
     </state>
-    <state width="765" height="528" key="GridCell.Tab.0.center/0.0.1280.672@0.0.1280.672" timestamp="1654758570545" />
-    <state width="765" height="528" key="GridCell.Tab.0.left" timestamp="1654758570545">
+    <state width="749" height="507" key="GridCell.Tab.0.center/0.0.1280.672@0.0.1280.672" timestamp="1654759714180" />
+    <state width="749" height="507" key="GridCell.Tab.0.left" timestamp="1654759714180">
       <screen x="0" y="0" width="1280" height="672" />
     </state>
-    <state width="765" height="528" key="GridCell.Tab.0.left/0.0.1280.672@0.0.1280.672" timestamp="1654758570545" />
-    <state width="765" height="528" key="GridCell.Tab.0.right" timestamp="1654758570545">
+    <state width="749" height="507" key="GridCell.Tab.0.left/0.0.1280.672@0.0.1280.672" timestamp="1654759714180" />
+    <state width="749" height="507" key="GridCell.Tab.0.right" timestamp="1654759714180">
       <screen x="0" y="0" width="1280" height="672" />
     </state>
-    <state width="765" height="528" key="GridCell.Tab.0.right/0.0.1280.672@0.0.1280.672" timestamp="1654758570545" />
+    <state width="749" height="507" key="GridCell.Tab.0.right/0.0.1280.672@0.0.1280.672" timestamp="1654759714180" />
     <state width="1010" height="316" key="GridCell.Tab.1.bottom" timestamp="1654708104303">
       <screen x="0" y="0" width="1280" height="672" />
     </state>
@@ -360,10 +361,10 @@
       <screen x="0" y="0" width="1280" height="672" />
     </state>
     <state width="647" height="343" key="XDebugger.FullValuePopup/0.0.1280.672@0.0.1280.672" timestamp="1654549483436" />
-    <state x="459" y="251" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1654758213191">
+    <state x="459" y="251" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1654759627393">
       <screen x="0" y="0" width="1280" height="672" />
     </state>
-    <state x="459" y="251" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.672@0.0.1280.672" timestamp="1654758213191" />
+    <state x="459" y="251" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.672@0.0.1280.672" timestamp="1654759627393" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
