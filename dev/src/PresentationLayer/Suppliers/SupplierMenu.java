@@ -281,7 +281,7 @@ public class SupplierMenu {
                 break;
             case 4:
                 System.out.println("Choose on which days the supplier "+s.getSupplierName()+" supplies");
-                System.out.println(" Which days do yo want the order to arrive? Enter the numbers so that they are not separated by a space");
+                System.out.println("Enter the numbers so that they are not separated by a space");
                 System.out.println("\t1. SUNDAY.");
                 System.out.println("\t2. MONDAY.");
                 System.out.println("\t3. TUESDAY.");
