@@ -11,11 +11,12 @@ import PresentationLayer.Transport_Emploees.UserInterface;
 import ServiceLayer.*;
 import com.google.gson.Gson;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
 public class Menu {
-    private Scanner sc=new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in);
     private EmployeeMainCLI employeeCLI = new EmployeeMainCLI();
 
     public static void main(String[] args) throws SQLException {
@@ -186,10 +187,13 @@ public class Menu {
         es.register("147258369", "dina agapov", "123456", 1, "yahav", "bad");
         es.register("258369147", "mor shuker", "123456", 1, "yahav", "bad");
         es.register("000000000", "may terem", "123456", 1, "yahav", "good");
-        es.register("111111111", "wendy the dog", "123456", 1, "yahav", "good");
-        es.register("222222222", "savta tova", "123456", 1, "yahav", "good");
-        es.register("333333333", "liron marinberg", "123456", 1, "yahav", "good");
+        es.register("111111111", "miki daniarov", "123456", 1, "yahav", "good");
+        es.register("222222222", "eyal german", "123456", 1, "yahav", "good");
+        es.register("333333333", "ziv cohen gvura", "123456", 1, "yahav", "good");
         es.certifyEmployee("318856994", "3");
+        es.certifyEmployee("333333333", "1"); //HR M
+        es.certifyEmployee("111111111", "8"); // TRANSPORT M
+        es.certifyEmployee("222222222", "7"); // LOGISTICS M
         es.certifyEmployee("234567891", "3");
         es.certifyEmployee("345678912", "3");
         es.certifyEmployee("123456789", "3");
@@ -206,7 +210,7 @@ public class Menu {
         es.certifyEmployee("123456780", "4");
         es.certifyEmployee("345678912", "4");
         es.certifyEmployee("456780123", "4");
-        es.certifyEmployee("123456789", "4");
+        es.certifyEmployee("123456789", "4"); // STOCK
         es.certifyEmployee("234567891", "2");
         es.certifyEmployee("318856994", "2");
         es.certifyEmployee("222222222", "2");
@@ -216,13 +220,53 @@ public class Menu {
         es.certifyEmployee("333333333", "3");
         es.certifyEmployee("567801234", "6");
         es.certifyDriver("123456780", "c");
-//        employeeController.putBackAll();
+
 
         es.createShift("01/07/2022 morning", "318856994",
                 "333333333,234567891", "123456780,000000000", "123456789", "111111111");
         es.createShift("01/07/2022 evening", "456789123",
                 "333333333,234567891", "258369147,000000000", "567801234", "345678912");
 
+        createAvailabilities("318856994");
+        createAvailabilities("333333333");
+        createAvailabilities("111111111");
+        createAvailabilities("222222222");
+        createAvailabilities("123456780");
+        createAvailabilities("123456789");
+        createAvailabilities("567801234");
+        createAvailabilities("789123456");
+        createAvailabilities("000000000");
+        createAvailabilities("234567891");
+        createAvailabilities("456780123");
+        createAvailabilities("234567891");
+
+
+
+    }
+
+    /**
+     * used only for loading data, creates some availabilities in July
+     * @param id employee to add availability to
+     */
+    private void createAvailabilities(String id){
+        EmployeeService es = EmployeeService.getInstance();
+        for (int i = 1; i < 31; i++){
+            String day;
+            if (i < 10)
+                day = "0" + i;
+            else
+                day = String.valueOf(i);
+            Random r = new Random();
+            int x = r.nextInt(4);
+            if (x == 0)
+                es.addAvailableTimeSlotToEmployee(day + "/07/2022 morning" ,id);
+            else if (x == 1)
+                es.addAvailableTimeSlotToEmployee(day + "/07/2022 evening" ,id);
+            else{
+                es.addAvailableTimeSlotToEmployee(day + "/07/2022 morning" ,id);
+                es.addAvailableTimeSlotToEmployee(day + "/07/2022 evening" ,id);
+            }
+        }
     }
 
 

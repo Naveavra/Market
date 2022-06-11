@@ -224,6 +224,16 @@ public class EmployeeService {
         return facade.resetSchedule(employeeService.getID());
     }
 
+    /**
+     * used only for loading data, **NOT FOR ACTUAL USE**
+     * @param shiftInput VALID shift string
+     * @param id employee to add availability slot to
+     */
+    public void addAvailableTimeSlotToEmployee(String shiftInput, String id){
+        ShiftPair sp = parser.getShiftPair(shiftInput);
+        facade.addAvailableTimeSlotToEmployee(id, sp);
+    }
+
     public Response addAvailableTimeSlotToEmployee(String shiftInput) {
         Response r = parser.isValidShiftInput(shiftInput);
         if (r.errorOccurred())
