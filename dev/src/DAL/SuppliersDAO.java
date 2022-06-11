@@ -3,7 +3,7 @@ package DAL;
 import DomainLayer.Suppliers.Contact;
 import DomainLayer.Suppliers.Discount;
 import DomainLayer.Suppliers.Supplier;
-import sun.awt.image.ImageWatched;
+//import sun.awt.image.ImageWatched;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
