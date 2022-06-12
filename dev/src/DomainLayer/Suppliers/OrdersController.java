@@ -129,18 +129,24 @@ public class OrdersController {
             totalPrice = updateTotalIncludeDiscounts(orderId);
             if(o.getCountProducts()>0) {
                 pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o, totalPrice));
-                String supplierNumber =String.valueOf(o.getSupplierNumber());// nave this is the supplier number
-                String date = o.getDate();// i dont know the format suppoed is DD\MM\YYYY
-                Map<ProductSupplier,Integer> productToQuantity= new HashMap<ProductSupplier, Integer>();
-                productToQuantity=o.getProducts();
-
-                //create transport
+                createTransport(o);
             }
             return o.getDaysToDeliver().getDaysInWeeks().length > 0;
         } catch (SQLException e) {
             return false;
         }
+    }
 
+    //helper function to connect with Transport model
+    private boolean createTransport(OrderFromSupplier o){
+        String supplierNumber =String.valueOf(o.getSupplierNumber());// nave this is the supplier number
+        String date = o.getDate();// i dont know the format suppoed is DD\MM\YYYY
+        Map<ProductSupplier,Integer> productToQuantity= new HashMap<ProductSupplier, Integer>();
+        productToQuantity=o.getProducts();
+
+        //create transport
+//        employees_transports - fasade
+        return true;
     }
 
     private boolean checkDays(DeliveryTerm d) {
@@ -162,6 +168,7 @@ public class OrdersController {
                 try {
                     ordersDAO.addProductToOrder(ps, order.getOrderId(), amount);
                     finishOrder(order.getOrderId());
+                    createTransport(order);
                 } catch (SQLException ignored) {
 
                 }
