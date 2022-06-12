@@ -4,24 +4,24 @@ import DAL.OrdersFromSupplierDAO;
 import DAL.PastOrdersSupplierDAO;
 import DAL.ProductsSupplierDAO;
 import DAL.SuppliersDAO;
+import DomainLayer.FacadeEmployees_Transports;
 
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OrdersController {
     private OrdersFromSupplierDAO ordersDAO;
     private ProductsSupplierDAO productsDAO;
     private PastOrdersSupplierDAO pastOrdersDAO;
     private SuppliersDAO suppliersDAO;
+    private FacadeEmployees_Transports employees_transports;
 
     public OrdersController() {
         this.ordersDAO = new OrdersFromSupplierDAO();
         this.productsDAO = new ProductsSupplierDAO();
         this.pastOrdersDAO =new PastOrdersSupplierDAO();
         this.suppliersDAO=new SuppliersDAO();
+        this.employees_transports=FacadeEmployees_Transports.getInstance();
     }
 
     public OrderFromSupplier createOrder(int supplierNumber){
@@ -127,8 +127,15 @@ public class OrdersController {
         double totalPrice = 0;
         try {
             totalPrice = updateTotalIncludeDiscounts(orderId);
-            if(o.getCountProducts()>0)
-                pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o,totalPrice));
+            if(o.getCountProducts()>0) {
+                pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o, totalPrice));
+                String supplierNumber =String.valueOf(o.getSupplierNumber());// nave this is the supplier number
+                String date = o.getDate();// i dont know the format suppoed is DD\MM\YYYY
+                Map<ProductSupplier,Integer> productToQuantity= new HashMap<ProductSupplier, Integer>();
+                productToQuantity=o.getProducts();
+
+                //create transport
+            }
             return o.getDaysToDeliver().getDaysInWeeks().length > 0;
         } catch (SQLException e) {
             return false;
