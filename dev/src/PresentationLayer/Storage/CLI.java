@@ -1,19 +1,21 @@
 package PresentationLayer.Storage;
 
+import DomainLayer.Employees.JobType;
 import ServiceLayer.CategoryService;
 import ServiceLayer.ProductSupplierService;
 import ServiceLayer.ReportService;
 import ServiceLayer.SupplierService;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class CLI
 {
     static Scanner in = new Scanner(System.in);
+
+    public CLI(Set<JobType> roles) {
+    }
+
     public void startStorageModel ()
     {
         CategoryService cC=new CategoryService();

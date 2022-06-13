@@ -1,5 +1,6 @@
 package PresentationLayer.Transport_Emploees;
 
+import DomainLayer.Employees.JobType;
 import PresentationLayer.Suppliers.Contact;
 import ServiceLayer.transport.UserService;
 import ServiceLayer.transport.OrderTransportService;
@@ -12,7 +13,7 @@ public class UserInterface extends MainCLI {
     public static String red = "\033[0;31m";
     public static String reset = "\033[0m";
     public static String RED_BOLD = "\033[1;31m";
-    public UserInterface(){};
+    public UserInterface(Set<JobType> roles){};
     public void start() {
         menu();
     }
