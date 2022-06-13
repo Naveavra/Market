@@ -57,8 +57,10 @@ public class Connect {
                     "\t\"timesBought\"\tINTEGER,\n"+
                     "\t\"amountNeededForRefill\"\tINTEGER,\n"+
                     "\t\"price\"\tInteger,\n"+
+                    "\t\"weight\"\tInteger,\n"+
                     "\t\"discount\"\tInteger,\n"+
                     "\t\"dayAdded\"\tTEXT,\n" +
+
                     "\t\"categoryName\"\tTEXT,\n" +
                     "\t\"subCategoryName\"\tTEXT,\n"+
                     "\t\"subSubCategoryName\"\tTEXT,\n"+
@@ -300,7 +302,7 @@ public class Connect {
                     "orderDocID varchar (20)," +
                     "supply varchar (50)," +
                     "quantity integer," +
-                    "PRIMARY KEY (siteID,orderDocID,supply)," +
+                    "PRIMARY KEY (siteID,orderDocID,OrderId)," +
                     "FOREIGN KEY (orderDocID) REFERENCES OrderDocs(id) ON DELETE CASCADE" +
                     ")";
             statement.execute(query);

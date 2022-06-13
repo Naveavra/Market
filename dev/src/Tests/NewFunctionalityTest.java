@@ -34,7 +34,7 @@ public class NewFunctionalityTest {
             cC.addSubCategory("first", "first1");
             cC.addSubSubCategory("first", "first1", "first11");
             cC.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
-            cC.addAllItems(1,7,"2022-06-01",12);
+            cC.addAllItems(1,7,"2027-06-01",12);
             facadeSupplier.openAccount(1,"eli", 1, new String[]{"1"},0);
             facadeSupplier.openAccount(2,"eli2", 2, new String[]{"1"},0);
             facadeSupplier.addProductToSupplier(1, 1, 2, 1);
@@ -91,7 +91,7 @@ public class NewFunctionalityTest {
     @org.junit.Test
     public void stage6_checkSendingOrderWhenRefillIsNotEnough() {
         facadeSupplier.buyItems(1, 6);
-        facadeSupplier.addAllItems(1,1,"2022-06-01",12);
+        facadeSupplier.addAllItems(1,1,"2027-06-01",12);
         assertEquals(2, ordersController.getFinalOrders(1).size());
 
     }
@@ -99,8 +99,8 @@ public class NewFunctionalityTest {
     @org.junit.Test
     public void stage7_checkStopSendingOrderAfterRefill() {
         facadeSupplier.buyItems(1, 6);
-        facadeSupplier.addAllItems(1,1,"2022-06-01",12);
-        cC.addAllItems(1,100,"2022-06-01",12);
+        facadeSupplier.addAllItems(1,1,"2027-06-01",12);
+        cC.addAllItems(1,100,"2027-06-01",12);
         assertEquals(2, ordersController.getFinalOrders(1).size());// one order before and one order because of regular
 
     }
@@ -108,8 +108,8 @@ public class NewFunctionalityTest {
     @org.junit.Test
     public void stage8_checkUpdatingRegularOrdersAfterRefillTo0(){
         facadeSupplier.buyItems(1, 6);
-        facadeSupplier.addAllItems(1,1,"2022-06-01",12);
-        cC.addAllItems(1,100,"2022-06-01",12);
+        facadeSupplier.addAllItems(1,1,"2027-06-01",12);
+        cC.addAllItems(1,100,"2027-06-01",12);
         facadeSupplier.updateOrders();
         assertEquals(0, order.getCountProducts());
     }
@@ -117,8 +117,8 @@ public class NewFunctionalityTest {
     @org.junit.Test
     public void stage9_checkSendingRegularOrderWhenCountIs0() {
         facadeSupplier.buyItems(1, 6);
-        facadeSupplier.addAllItems(1,1,"2022-06-01",12);
-        cC.addAllItems(1,100,"2022-06-01",12);
+        facadeSupplier.addAllItems(1,1,"2027-06-01",12);
+        cC.addAllItems(1,100,"2027-06-01",12);
         facadeSupplier.updateOrders();
         assertEquals(2, ordersController.getFinalOrders(1).size());//2 were already there, checking no other order was added
     }
@@ -126,8 +126,8 @@ public class NewFunctionalityTest {
     @org.junit.Test
     public void stage9z_checkGotMinPriceForProduct(){
         facadeSupplier.buyItems(1, 6);
-        facadeSupplier.addAllItems(1,1,"2022-06-01",12);
-        cC.addAllItems(1,100,"2022-06-01",12);
+        facadeSupplier.addAllItems(1,1,"2027-06-01",12);
+        cC.addAllItems(1,100,"2027-06-01",12);
         facadeSupplier.updateOrders();
         assertEquals(2, ordersController.getProductWithMinPrice(1, 5).getPrice(), 0.0);
     }

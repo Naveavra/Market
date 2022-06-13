@@ -74,10 +74,6 @@ public class CategoryService {
         facadeSupplier.transferItem(id, ed, curePlace, curShelf, toPlace, toShelf);
     }
 
-    public void addAllItems(int id, int amount, String ed, int shelf){
-        facadeSupplier.addAllItems(id, amount, ed, shelf);
-    }
-
     public int getProductIdWithName(String name){
         return facadeSupplier.getProductIdWithName(name);
     }
@@ -88,5 +84,12 @@ public class CategoryService {
 
     public String printAllProducts(){
         return facadeSupplier.printAllProducts();
+    }
+
+    public void getItemsFromTransport(int id) {
+        facadeSupplier.getItemsFromTransport(id);
+    }
+    public void addAllItems(int productId, int quantity, String ed, int shelf){
+        facadeSupplier.addAllItems(productId, quantity, ed, shelf);
     }
 }
