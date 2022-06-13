@@ -8,6 +8,7 @@ import DomainLayer.Transport.Supply;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,7 @@ public class DriverDocDAO {
 
     //FROM HERE
     public ArrayList<DriverDocument> showDriverDocs(String oDocID){
-        ArrayList<DriverDocument> docs = new ArrayList<>();
+            ArrayList<DriverDocument> docs = new ArrayList<>();
         String query = "SELECT * FROM DriverDocs WHERE orderDocID = "+"'"+oDocID+"'";
         try {
             List<HashMap<String, Object>> rs = conn.executeQuery(query);
@@ -95,5 +96,23 @@ public class DriverDocDAO {
 //            System.out.println("Unable to execute query addDriverDoc");
             return "Fail";
         }
+    }
+
+
+    public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId) throws SQLException {
+        String query = "SELECT  orderId FROM order4Dest WHERE orderDocID = "+"'"+orderDocId+"'";
+        HashMap<Integer, Integer> ans =new HashMap<>();
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            while(!rs.isClosed()) {
+                ans.put(Integer.parseInt(rs.getString("supply")), rs.getInt("quantity"));
+                rs.next();
+            }
+        } catch (SQLException ignored) {
+        } finally {
+        conn.closeConnect();
+    }
+        return ans;
     }
 }
