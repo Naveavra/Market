@@ -117,6 +117,7 @@ public class OrderDocDAO {
         }
         return "Success";
     }
+
     public OrderDocument getOrderDoc(String docID){
         if(identityMap.containsKey(docID)){
             return identityMap.get(docID);
@@ -148,7 +149,8 @@ public class OrderDocDAO {
             rs = conn.executeQuery(query);
             for (int i = 0; i < rs.size(); i++){
                 Store store = storesDAO.getSite((String)rs.get(i).get("siteID"));
-                Product p = productDAO.get((Integer.parseInt((String)rs.get(i).get("supply"))));
+                int miki = Integer.parseInt((String)rs.get(i).get("supply"));
+                Product p = productDAO.get(miki);
                 if(!supplies.containsKey(store)){
                     supplies.put(store,new ConcurrentHashMap<>());
                 }
@@ -167,6 +169,56 @@ public class OrderDocDAO {
             return null;
         }
     }
+//    public OrderDocument getOrderDoc(String docID){
+//        if(identityMap.containsKey(docID)){
+//            return identityMap.get(docID);
+//        }
+//        List<HashMap<String, Object>> rs;
+//        String query = "SELECT * FROM OrderDocs WHERE id = "+"'"+docID+"'";
+//        try {
+//            rs = conn.executeQuery(query);
+//            String id = (String)rs.get(0).get("id");
+//            String driverID = (String)rs.get(0).get("driverID");
+//            String licensePlate = (String)rs.get(0).get("licensePlate");
+//            String originID = (String)rs.get(0).get("origin");
+//            String date = (String)rs.get(0).get("date");
+//            String time = (String)rs.get(0).get("time");
+//            double weight = Double.parseDouble(String.valueOf(rs.get(0).get("weight")));
+//            boolean finished;
+//            if(Objects.equals((String)rs.get(0).get("finished"), "#t")){
+//                finished=true;
+//            }
+//            else{
+//                finished = false;
+//            }
+//            Date da = createDate(date);
+//            Driver d = driverDAO.getDriver(driverID);
+//            Truck t = new TruckDAO().getTruck(licensePlate);
+//            Supplier s = suppliersDAO.getSupplier(Integer.parseInt(originID));
+//            ConcurrentHashMap<Store,ConcurrentHashMap<String,Integer>> supplies =new ConcurrentHashMap<>();
+//            query = "SELECT * FROM order4Dest WHERE orderDocID = "+"'"+docID+"'";
+//            rs = conn.executeQuery(query);
+//            for (int i = 0; i < rs.size(); i++){
+//                Store store = storesDAO.getSite((String)rs.get(i).get("siteID"));
+//                Product p = productDAO.get((Integer.parseInt((String)rs.get(i).get("supply"))));
+//                if(!supplies.containsKey(store)){
+//                    supplies.put(store,new ConcurrentHashMap<>());
+//                }
+//                if(!supplies.get(store).containsKey(String.valueOf(p.getId()))){
+//                    supplies.get(store).put(String.valueOf(p.getId()),(int)rs.get(i).get("quantity"));
+//                }
+////                supplies.put(store,showSupplies(docID,store.getId()));
+//            }
+//            OrderDocument doc = new OrderDocument(id,s.getSupplierNumber(),supplies,da,time);
+//            doc.setTruckandDriver(t,d);
+//            doc.setWeight(weight);
+//            doc.setFinished(finished);
+//            identityMap.put(docID,doc);
+//            return doc;
+//        } catch (SQLException e) {
+//            return null;
+//        }
+//    }
     public ArrayList<OrderDocument> showDocs(String date){
         ArrayList<OrderDocument> orderdocs= new ArrayList<>();
         String query = "SELECT * FROM OrderDocs WHERE date = "+"'"+date+"'";

@@ -39,11 +39,12 @@ public class CLI
                             String name = fields[1];
                             String desc = fields[2];
                             double price = Double.parseDouble(fields[3]);
-                            String maker = fields[4];
+                            double weight = Double.parseDouble(fields[4]);
+                            String maker = fields[5];
                             System.out.println("write the Category,subCategory,subSubCategory of the product in that format");
                             line = in.nextLine();
                             String[] cats = line.split(",");
-                            cC.addNewProduct(id, name, desc, price, maker, cats[0], cats[1], cats[2]);
+                            cC.addNewProduct(id, name, desc, price, weight, maker, cats[0], cats[1], cats[2]);
                         }
                         catch (Exception e){
                             System.out.println("wrong input");

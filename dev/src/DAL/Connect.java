@@ -57,7 +57,6 @@ public class Connect {
                     "\t\"timesBought\"\tINTEGER,\n"+
                     "\t\"amountNeededForRefill\"\tINTEGER,\n"+
                     "\t\"price\"\tInteger,\n"+
-                    "\t\"weight\"\tInteger,\n"+
                     "\t\"discount\"\tInteger,\n"+
                     "\t\"dayAdded\"\tTEXT,\n" +
 

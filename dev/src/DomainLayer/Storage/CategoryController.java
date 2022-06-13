@@ -100,9 +100,9 @@ public class CategoryController
     }
 
     public void addNewProduct(int productId, String productName, String desc,
-                              double price, String maker, String catName, String subCatName, String subSubName){
+                              double price, double weight, String maker, String catName, String subCatName, String subSubName){
         if(validId(productId) && categoriesDAO.hasSubSubCategory(catName, subCatName, subSubName)) {
-            categoriesDAO.insertIntoProduct(new Product(productId, productName, desc, price, maker), catName, subCatName, subSubName);
+            categoriesDAO.insertIntoProduct(new Product(productId, productName, desc, price, weight, maker), catName, subCatName, subSubName);
         }
     }
     public void addItemToProduct(int id, String loc, int shelf, String ed){

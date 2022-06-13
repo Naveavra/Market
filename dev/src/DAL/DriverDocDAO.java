@@ -7,6 +7,7 @@ import DomainLayer.Transport.Supply;
 //import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;

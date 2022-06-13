@@ -14,9 +14,9 @@ public class CategoryService {
         facadeSupplier.addCategory(cName);
     }
 
-    public void addNewProduct(int pId, String pName, String desc, double price,
+    public void addNewProduct(int pId, String pName, String desc, double price, double weight,
                               String maker, String cat, String sub, String subSub) {
-        facadeSupplier.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
+        facadeSupplier.addNewProduct(pId, pName, desc, price, weight, maker, cat, sub, subSub);
     }
 
     public void addSubCat(String cName, String subName) {

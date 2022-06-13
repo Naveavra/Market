@@ -139,9 +139,9 @@ public class Menu {
         cC.addCategory("second");
         cC.addSubCat("second", "second1");
         cC.addSubSubCat("second", "second1", "second11");
-        cC.addNewProduct(1, "milk", "from cow", 3, "me"
+        cC.addNewProduct(1, "milk", "from cow", 3, 3,"me"
                 , "first", "first1", "first11");
-        cC.addNewProduct(2, "eggs", "from chicken", 5, "me",
+        cC.addNewProduct(2, "eggs", "from chicken", 5,4, "me",
                 "second", "second1", "second11");
         cC.addAllItems(1, 7, "2027-06-01", 1);
         cC.addAllItems(2, 3, "2019-06-01", 1);

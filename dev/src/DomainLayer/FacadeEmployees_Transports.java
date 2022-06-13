@@ -3,15 +3,14 @@ package DomainLayer;
 
 //import SharedSpace.DBConnector;
 import DomainLayer.Employees.*;
+import DomainLayer.Suppliers.ProductSupplier;
 import DomainLayer.Transport.OrderController;
 import DomainLayer.Transport.ResourceController;
 import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FacadeEmployees_Transports {
@@ -338,9 +337,9 @@ public class FacadeEmployees_Transports {
         return resourceController.addTruck(type, licensePlate, maxWeight, initialWeight);
     }
 
-    public boolean addSupply(String name, double weight) {
-        return resourceController.addSupply(name, weight);
-    }
+//    public boolean addSupply(String name, double weight) {
+//        return resourceController.addSupply(name, weight);
+//    }
 
     public boolean addSite(String id, String contactaddress, String contactname, String contactphonenumber, int shippingArea, int type) {
         return resourceController.addSite(id, contactaddress, contactname, contactphonenumber, shippingArea, type);
@@ -357,10 +356,10 @@ public class FacadeEmployees_Transports {
     public boolean removeSite(String id) {
         return resourceController.removeSite(id);
     }
-
-    public String removeSupply(String suppName2Remove) {
-        return resourceController.removeSupply(suppName2Remove);
-    }
+//
+//    public String removeSupply(String suppName2Remove) {
+//        return resourceController.removeSupply(suppName2Remove);
+//    }
 
     public Set<JobType> getEmployeeRoles(String id) {
         return employeeController.getEmployeeRoles(id);
@@ -368,5 +367,18 @@ public class FacadeEmployees_Transports {
 
     public String displayMessages(String id) {
         return employeeController.displayMessages(id);
+    }
+
+    public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId){
+        return orderController.getOrderIdFromOrderDoc(orderDocId);
+
+    }
+
+    public boolean createAutoTransport(String supplierNumber, String date, Map<ProductSupplier, Integer> supplyList) {
+        ConcurrentHashMap<String,Integer> supplies = new ConcurrentHashMap<>();
+        for(ProductSupplier ps : supplyList.keySet()){
+            supplies.put(String.valueOf(ps.getSupplierNumber()),supplyList.get(ps));
+        }
+        return orderController.createAutoTransport(supplierNumber,date,supplies);
     }
 }
