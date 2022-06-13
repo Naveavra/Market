@@ -5,6 +5,7 @@ import DomainLayer.Storage.ReportController;
 import DomainLayer.Suppliers.*;
 import com.google.gson.Gson;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class FacadeSupplier_Storage {
@@ -14,6 +15,7 @@ public class FacadeSupplier_Storage {
     private ReportController reportController;
     private Gson gson;
     private FacadeEmployees_Transports facadeEmployeesTransports;
+    private  FacadeEmployees_Transports facade;
     private static boolean needsUpdateOrders=true;
 
 
@@ -23,6 +25,7 @@ public class FacadeSupplier_Storage {
         categoryController=new CategoryController();
         reportController=new ReportController(categoryController);
         gson=new Gson();
+        facade=FacadeEmployees_Transports.getInstance();
         if(needsUpdateOrders){
             updateOrders();
             needsUpdateOrders=false;
@@ -372,12 +375,20 @@ public class FacadeSupplier_Storage {
         return categoryController.needsRefill(productId);
     }
 
-    public void addAllItems(int id, int amount, String ed, int shelf){
-        categoryController.addAllItems(id, amount, ed, shelf);
-        if(categoryController.needsRefill(id)) {
-            //find supplier with the lowest price and make an order
-            ordersController.createOrderWithMinPrice(id, categoryController.getProductWithId(id).getRefill());
+    public void getItemsFromTransport(int id){
+        HashMap<Integer, Integer> productsAndQuantity = facade.getOrderIdFromOrderDoc(id);
+        for( int productId : productsAndQuantity.keySet()){
+            String curDate= LocalDate.now().toString();
+            int curYear=Integer.parseInt(curDate.substring(0, 4))+1;
+            int curMonth=Integer.parseInt(curDate.substring(5, 7));
+            int curDay=Integer.parseInt(curDate.substring(8, 10));
+            String expirationDate = curYear +""+ curMonth +""+ curDay;
+            categoryController.addAllItems(productId, productsAndQuantity.get(productId), expirationDate, 1);
         }
+    }
+
+    public void addAllItems(int productId, int quantity, String ed, int shelf){
+        categoryController.addAllItems(productId, quantity, ed, shelf);
     }
 
     public int getProductIdWithName(String name){

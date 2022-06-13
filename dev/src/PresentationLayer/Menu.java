@@ -141,7 +141,7 @@ public class Menu {
                 , "first", "first1", "first11");
         cC.addNewProduct(2, "eggs", "from chicken", 5, "me",
                 "second", "second1", "second11");
-        cC.addAllItems(1, 7, "2022-06-01", 1);
+        cC.addAllItems(1, 7, "2027-06-01", 1);
         cC.addAllItems(2, 3, "2019-06-01", 1);
 
         ss.openAccount(1,"OSEM", 5555, new String[]{"1"},0);

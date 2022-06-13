@@ -25,7 +25,7 @@ public class CategoryControllerTest {
         cC.addSubCategory("second", "second1");
         cC.addSubSubCategory("second", "second1", "second11");
         cC.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
-        cC.addAllItems(1,4,"2022-06-01",12);
+        cC.addAllItems(1,4,"2027-06-01",12);
 
     }
 
@@ -43,7 +43,7 @@ public class CategoryControllerTest {
 
     @org.junit.Test
     public void stage3_defineAsDamaged(){
-        cC.defineAsDamaged(1,"very bad", "STORAGE",12,"2022-06-01");
+        cC.defineAsDamaged(1,"very bad", "STORAGE",12,"2027-06-01");
         assertEquals("was not defined as bad", 1, cC.getDamagedItems().size());
     }
 

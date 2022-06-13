@@ -1,7 +1,10 @@
 package DomainLayer.Transport;
 
 import DAL.*;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -308,5 +311,16 @@ public class OrderController {
             counter++;
         }
         return null;
+    }
+
+
+    public HashMap<Integer, Integer> getOrderIdFromOrderDoc(int orderDocId){
+        HashMap<Integer, Integer> ans=null;
+        try {
+            ans = driverDocs.getProductsFromOrderDoc(orderDocId);
+        } catch (SQLException exp) {
+            System.out.println("didn't work");
+        }
+        return ans;
     }
 }
