@@ -376,7 +376,7 @@ public class FacadeSupplier_Storage {
     }
 
     public void getItemsFromTransport(int id){
-        HashMap<Integer, Integer> productsAndQuantity = facade.getOrderIdFromOrderDoc(id);
+        HashMap<Integer, Integer> productsAndQuantity = facade.getProductsFromOrderDoc(id);
         for( int productId : productsAndQuantity.keySet()){
             String curDate= LocalDate.now().toString();
             int curYear=Integer.parseInt(curDate.substring(0, 4))+1;

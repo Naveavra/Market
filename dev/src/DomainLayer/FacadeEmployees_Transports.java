@@ -367,7 +367,7 @@ public class FacadeEmployees_Transports {
         return employeeController.displayMessages(id);
     }
 
-    public HashMap<Integer, Integer> getOrderIdFromOrderDoc(int orderDocId){
+    public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId){
         return orderController.getOrderIdFromOrderDoc(orderDocId);
     }
 }
