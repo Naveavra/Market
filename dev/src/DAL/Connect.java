@@ -320,7 +320,7 @@ public class Connect {
                     ")";
             statement.execute(query);
 
-            query = "CREATE TABLE IF NOT EXISTS Sites(" +
+            query = "CREATE TABLE IF NOT EXISTS Stores(" +
                     "id varchar (20)," +
                     "type INTEGER," +
                     "shippingArea INTEGER," +

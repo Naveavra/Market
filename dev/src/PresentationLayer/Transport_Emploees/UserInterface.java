@@ -23,16 +23,18 @@ public class UserInterface extends MainCLI {
    // }
 
     private boolean createTruck(String type, String licensePlate, double maxWeight, double initialweight) {
+        String temp = String.valueOf(maxWeight)+".0";
+        
         return us.createTruck(type, licensePlate, maxWeight, initialweight);
     }
 
     private boolean createSite(String id, String address, String name, String pNumber, int area, int type) {
         return us.createSite(id, address, name, pNumber, area, type);
     }
-
-    private boolean createSupply(String name, double weight) {
-        return us.createSupply(name, weight);
-    }
+//
+//    private boolean createSupply(String name, double weight) {
+//        return us.createSupply(name, weight);
+//    }
 
 //    private boolean removeDriver(String id) {
        // return us.removeDriver(id);
@@ -45,8 +47,8 @@ public class UserInterface extends MainCLI {
     private boolean removeSitebyID(String id) {
         return us.removeSite(id);
     }
-    private String removeSupply(String suppName2Remove){return us.removeSupply(suppName2Remove);}
-
+//    private String removeSupply(String suppName2Remove){return us.removeSupply(suppName2Remove);}
+//
 
 
     private void menu() {
@@ -55,7 +57,7 @@ public class UserInterface extends MainCLI {
 
             System.out.println(RED_BOLD+"Welcome to the Transport Management System."+reset+"\n" +
                     "Please choose an option\n" +
-                    "\t1.Edit resources\n" +
+                    "\t1.Add/Remove resources\n" +
                     "\t2.Orders\n" +
                     "\t3.Exit System");
             Scanner input = new Scanner(System.in);
@@ -108,6 +110,7 @@ public class UserInterface extends MainCLI {
                         String docID = getDoc();
                         System.out.println(os.showDriverDocs(docID));
                     }catch (Exception e){
+                        System.out.println(e.getMessage());
                         System.out.println("Doc doesnt exist or ID is wrong");
                     }
                     break;
@@ -123,10 +126,12 @@ public class UserInterface extends MainCLI {
             System.out.println("Please select supplies ,When you are done enter OK:");
             System.out.println(os.showSuppliesByDoc(docID, storeID));
             Scanner input = new Scanner(System.in);
-            suppnames.add(os.getSupplyByIdAndDoc(input.nextInt(),docID,storeID));
-            if (input.nextLine().equalsIgnoreCase( "ok")) {
+            String res = input.nextLine();
+            if (res.equalsIgnoreCase( "ok")) {
                 return;
             }
+            int miki = Integer.parseInt(res);
+            suppnames.add(os.getSupplyByIdAndDoc(miki,docID,storeID));
             System.out.println("Please enter desired quantity:");
             input = new Scanner(System.in);
             int quantity = input.nextInt();
@@ -145,6 +150,9 @@ public class UserInterface extends MainCLI {
             Scanner input = new Scanner(System.in);
             storeID = input.nextLine();
             changeOrderList(suppNames,quantities,doc,storeID);
+            if(os.changeOrder(doc,storeID,suppNames,quantities)) {
+                System.out.println("Order changed hopefully");
+            }
 //            while (true){
 //                System.out.println("Please select supplies, When you are done enter OK:");
 //                System.out.println(os.showSuppliesByDoc(doc, storeID));
@@ -286,10 +294,10 @@ public class UserInterface extends MainCLI {
             String storeID = input.nextLine();
             orders.put(storeID, createOrderList());
         }
-        System.out.println("Please choose a supplier ID:");
+        System.out.println("Please enter a supplier ID:");
         String suppliers = os.showSuppliers(areacode);
-        if(suppliers.isEmpty()){
-            System.out.println("There are no Suppliers in this area yet");
+        if(suppliers.equals("No suppliers available, sorry G")){
+            System.out.println(suppliers);
             return false;
         }
         System.out.println(suppliers);
@@ -421,10 +429,12 @@ public class UserInterface extends MainCLI {
         ArrayList<Integer> quantities = new ArrayList<>();
             try {
                 changeOrderList(supplyNames,quantities,docID,storeID);
-
+                if(os.changeOrder(docID,storeID,supplyNames,quantities)) {
+                    System.out.println("Order changed hopefully");
+                }
             }catch (Exception e) {
                 if(os.changeOrder(docID,storeID,supplyNames,quantities)) {
-                    System.out.println("Order changed, please set a new weight");
+                    System.out.println("Order changed hopefully");
                 }else {
                     System.out.println("Order did not change, something went wrong");
                 }
@@ -465,7 +475,7 @@ public class UserInterface extends MainCLI {
         String truckLst = "";
         String t;
         while(true){
-            System.out.println("Please enter a truck"+RED_BOLD+ "license plate:"+reset);
+            System.out.println("Please enter a truck"+RED_BOLD+ " license plate:"+reset);
             truckLst = os.showTrucks(date,driverID,time);
             if(truckLst.isEmpty()){
                 System.out.println("No trucks available");
@@ -613,31 +623,31 @@ public class UserInterface extends MainCLI {
             System.out.println("Site doesnt exist");
         }
     }
-    private void removeSupply(){
-        System.out.println("Please enter supply name to remove:");
-        Scanner input = new Scanner(System.in);
-        String suppName2Remove = input.nextLine();
-        System.out.println(removeSupply(suppName2Remove));
-    }
+//    private void removeSupply(){
+//        System.out.println("Please enter supply name to remove:");
+//        Scanner input = new Scanner(System.in);
+//        String suppName2Remove = input.nextLine();
+//        System.out.println(removeSupply(suppName2Remove));
+//    }
 
-    private void addSupply(){
-        System.out.println("Please enter supply name:");
-        Scanner input = new Scanner(System.in);
-        String suppName = input.nextLine();
-        System.out.println("Please enter supply weight:");
-        input = new Scanner(System.in);
-        double suppWeight = input.nextDouble();
-        createSupply(suppName,suppWeight);
-        System.out.println("Supply created.");
-    }
+//    private void addSupply(){
+//        System.out.println("Please enter supply name:");
+//        Scanner input = new Scanner(System.in);
+//        String suppName = input.nextLine();
+//        System.out.println("Please enter supply weight:");
+//        input = new Scanner(System.in);
+//        double suppWeight = input.nextDouble();
+//        createSupply(suppName,suppWeight);
+//        System.out.println("Supply created.");
+//    }
     private void editResources() {
         boolean c1;
         while (true) {
             System.out.println("You chose Resource Control.\nPlease choose an option:\n" +
                     "\t1.Edit Trucks\n" +
-                    "\t2.Edit Sites\n" +
-                    "\t3.Edit Supplies\n" +
-                    "\t4.Go back\n");
+                    "\t2.Edit Stores\n" +
+//                    "\t2.Edit Supplies\n" +
+                    "\t3.Go back\n");
 
             Scanner input = new Scanner(System.in);
             int choice = input.nextInt();
@@ -667,9 +677,9 @@ public class UserInterface extends MainCLI {
                 case 2: //add or remove sites
                     c1 = false;
                     while (!c1) {
-                        System.out.println("Would you like to add or remove sites?:\n" +
-                                "\t1.Add site.\n" +
-                                "\t2.Remove site.\n" +
+                        System.out.println("Would you like to add or remove stores?:\n" +
+                                "\t1.Add store.\n" +
+                                "\t2.Remove store.\n" +
                                 "\t3.Go back.");
                         input = new Scanner(System.in);
                         choice = input.nextInt();
@@ -681,26 +691,26 @@ public class UserInterface extends MainCLI {
                     }
                     break;
                 case 3: //add/remove supplies
-                    c1 =false;
-                    while (!c1) {
-                        System.out.println("Would you like to add or remove supplies?\n" +
-                                "\t1.Add supplies.\n" +
-                                "\t2.Remove supplies.\n" +
-                                "\t3.Go back.");
-                        input = new Scanner(System.in);
-                        choice = input.nextInt();
-                        switch (choice) {
-                            case 1:// add supplies
-                                addSupply();
-                                break;
-                            case 2: //remove supplies
-                                removeSupply();
-                                break;
-                            case 3:
-                                c1=true;
-                        }
-                    }
-                    break;
+//                    c1 =false;
+//                    while (!c1) {
+//                        System.out.println("Would you like to add or remove supplies?\n" +
+//                                "\t1.Add supplies.\n" +
+//                                "\t2.Remove supplies.\n" +
+//                                "\t3.Go back.");
+//                        input = new Scanner(System.in);
+//                        choice = input.nextInt();
+//                        switch (choice) {
+//                            case 1:// add supplies
+//                                addSupply();
+//                                break;
+//                            case 2: //remove supplies
+//                                removeSupply();
+//                                break;
+//                            case 3:
+//                                c1=true;
+//                        }
+//                    }
+//                    break;
                 case 4:
                     return;
             }

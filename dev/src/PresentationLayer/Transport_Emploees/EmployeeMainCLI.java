@@ -153,7 +153,7 @@ public class EmployeeMainCLI extends MainCLI {
     }
 
     public void login() {
-        print("Please log in to the system");
+        print("Please log in to the system, 318856994, 123456");
         String id = getValidId();
         String password = getValidPassword();
         Response response = serviceController.login(id, password);

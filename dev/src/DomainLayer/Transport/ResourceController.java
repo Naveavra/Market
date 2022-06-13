@@ -1,8 +1,9 @@
 package DomainLayer.Transport;
 
 import DAL.DriverDAO;
-import DAL.SiteDAO;
-import DAL.SuppliesDAO;
+import DAL.ProductDAO;
+import DAL.StoreDAO;
+//import DAL.SuppliesDAO;
 import DAL.TruckDAO;
 import java.util.Locale;
 import java.util.Objects;
@@ -10,8 +11,8 @@ import java.util.Objects;
 public class ResourceController {
 
     public TruckDAO trucks = new TruckDAO();
-    public SuppliesDAO supplies = new SuppliesDAO();
-    public SiteDAO sites = new SiteDAO();
+    public ProductDAO supplies = new ProductDAO();
+    public StoreDAO sites = new StoreDAO();
     public DriverDAO drivers = new DriverDAO();
     private final static ResourceController INSTANCE = new ResourceController();
 
@@ -45,14 +46,14 @@ public class ResourceController {
         }
     }
 
-    public boolean addSupply(String name, double weight){
+/*    public boolean addSupply(String name, double weight){
         if (supplies.contains(name.toLowerCase(Locale.ROOT))){
             return false;
         }
         else {
             return Objects.equals(supplies.addSupply(name.toLowerCase(Locale.ROOT), weight), "Success");
         }
-    }
+    }*/
 
     public boolean addSite(String id,String contactaddress, String contactname, String contactphonenumber
             , int shippingArea, int type){
@@ -60,16 +61,16 @@ public class ResourceController {
             return false;
         }
         else {
-            Site.ShippingArea area = null;
+            Store.ShippingArea area = null;
             if(shippingArea==0){
-                area = Site.ShippingArea.North;
+                area = Store.ShippingArea.North;
             }else if(shippingArea==1){
-                area = Site.ShippingArea.Center;
+                area = Store.ShippingArea.Center;
             }else if(shippingArea ==2){
-                area = Site.ShippingArea.South;
+                area = Store.ShippingArea.South;
             }
             Contact c = new Contact(contactaddress, contactname, contactphonenumber);
-            Site s = new Site(id, c, area, type);
+            Store s = new Store(id, c, area, type);
             sites.addSite(id,shippingArea,type,contactaddress,contactname,contactphonenumber);
             return true;
         }
@@ -108,12 +109,12 @@ public class ResourceController {
     }
 
 
-    public String removeSupply(String suppName2Remove) {
-        if(!supplies.contains(suppName2Remove.toLowerCase(Locale.ROOT))){
-            return "Supply doesn't exist";
-        }else{
-            supplies.removeSupply(suppName2Remove);
-        }
-        return "Supply removed successfully";
-    }
+//    public String removeSupply(String suppName2Remove) {
+//        if(!supplies.contains(suppName2Remove.toLowerCase(Locale.ROOT))){
+//            return "Supply doesn't exist";
+//        }else{
+//            supplies.removeSupply(suppName2Remove);
+//        }
+//        return "Supply removed successfully";
+//    }
 }

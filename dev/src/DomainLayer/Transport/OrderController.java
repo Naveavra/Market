@@ -1,7 +1,11 @@
 package DomainLayer.Transport;
 
 import DAL.*;
+import DomainLayer.Storage.Product;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,9 +14,10 @@ public class OrderController {
     public DriverDocDAO driverDocs = new DriverDocDAO();
     public OrderDocDAO orderDocs = new OrderDocDAO();
     public TruckDAO trucks = new TruckDAO();
-    public SiteDAO sites = new SiteDAO();
-    public SuppliesDAO supplies = new SuppliesDAO();
+    public StoreDAO sites = new StoreDAO();
+    public ProductDAO supplies = new ProductDAO();
     public DriverDAO drivers = new DriverDAO();
+    public SuppliersDAO suppliers = new SuppliersDAO();
     AtomicInteger id = new AtomicInteger();
     AtomicInteger driverDocID = new AtomicInteger();
     private final static OrderController INSTANCE = new OrderController();
@@ -61,9 +66,9 @@ public class OrderController {
     public String showTrucks(String date,String driverID,String time){
         String res = "Trucks:\n";
         int idx=1;
-        String licenseType = drivers.getDriver(driverID).getLicense();
+        String licenseType = drivers.getDriver(driverID).getLicense(); //we allready have the license type so ...
         for(Truck t:trucks.getTrucks(date,time,licenseType)) {
-            if(trucks.getAvailability(t.licensePlate,date) && t.isSuitable(drivers.getDriver(driverID))) {
+            if(trucks.getAvailability(t.licensePlate,date) ) { //Nave:"I think the issuitable func isnt necessary, && t.isSuitable(drivers.getDriver(driverID)
                 res += idx + ". " + (t + "\n");
             }
             idx++;
@@ -80,8 +85,8 @@ public class OrderController {
         orderDoc.setTruck(newTruck, orderDoc.getDate());
     }
 
-    public String showStores(String areaCode) {
-        int area = Integer.parseInt(areaCode);
+    public String showStores(String areacode) {
+        int area = Integer.parseInt(areacode);
         ArrayList<String> lst = sites.showSites(area,1);
         if(lst.isEmpty()){
             return "No stores in this area yet.";
@@ -89,10 +94,15 @@ public class OrderController {
         return ShowSitesOption(lst);
     }
 
-    public ConcurrentHashMap<Supply,Integer> createSupplyList(ConcurrentHashMap<String,Integer> supp){
-        ConcurrentHashMap<Supply,Integer>supplies = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String,Integer> createSupplyList(ConcurrentHashMap<String,Integer> supp){//need to make sure we are sending productid
+        ConcurrentHashMap<String,Integer>supplies = new ConcurrentHashMap<>();
         for(String s:supp.keySet()){
-            supplies.put(this.supplies.getSupply(s),supp.get(s));
+            try {
+                supplies.put(String.valueOf(this.supplies.get(Integer.parseInt(s)).getId()), supp.get(s));
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }
         return supplies;
     }
@@ -105,52 +115,73 @@ public class OrderController {
     }
 
     public String showSupplies(String docID,String storeID,String method) {
-        ConcurrentHashMap<Supply,Integer> supplies;
+        ConcurrentHashMap<String,Integer> supplies;
+        List<Product> products;
         String res = "";
         int counter = 0;
         if(Objects.equals(method,"by Doc")){
             supplies = orderDocs.showSupplies(docID,storeID);
-            for(Supply supply: supplies.keySet()){
-                res+= counter + ".Name: " +supply.getName()+" ,Quantity: "+supplies.get(supply)+"\n";
+            for(String supply: supplies.keySet()){
+                res+= counter + ".ID: " +supply +" ,Quantity: "+supplies.get(supply)+"\n";
                 counter += 1;
             }
         }else{
-            supplies = this.supplies.showSupplies();
-            for(Supply supply: supplies.keySet()){
-                res+= counter + ".Name: " +supply.getName()+"\n";
-                counter += 1;
+            try {
+                products = this.supplies.getAllProducts();
+                for (Product product : products) {
+                    res += counter + ".Name: " + product.getName() + ", ID: " + product.getId() + "\n";
+                    counter += 1;
+                }
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
             }
         }
 
         return res;
     }
+
+
     public String showSuppliers(String areacode) {
         int area = Integer.parseInt(areacode);
-        if (sites.showSites(area, 0).size() == 0){
+        List<String> suppliersList = null;
+        try {
+            suppliersList = suppliers.GetSupplierByArea(area); //ZIV
+        } catch (SQLException e) {
+            return null;
+        }
+        if (suppliersList.size() == 0){
             return "No suppliers available, sorry G";
         }
-        return ShowSitesOption(sites.showSites(area,0));
+        return ShowSitesOption(suppliersList);
+
     }
 
 
-    private String ShowSitesOption(ArrayList<String> showSites) {
+    private String ShowSitesOption(List<String> showSites) {
         int counter = 0;
         String res = "";
         for (int i=0;i<showSites.size();i++){
-            res += counter + "." + showSites.get(i) + "\n";
+            res += counter + ".  " + showSites.get(i) + "\n";
             counter++;
         }
         return res;
 
     }
 
-    public String createDoc(ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> orders, String supplier, String date,String driverID,String truckPlate, String time) {
+    public String createDoc(ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> orders, String supplier, String date,String driverID,String truckPlate, String time)  {
         int docID = id.getAndIncrement();
-        ConcurrentHashMap<Site,ConcurrentHashMap<Supply,Integer>>orderList = new ConcurrentHashMap<>();
+        ConcurrentHashMap<Store,ConcurrentHashMap<String,Integer>>orderList = new ConcurrentHashMap<>();
         for(String storeName:orders.keySet()){
             orderList.put(sites.getSite(storeName),createSupplyList(orders.get(storeName)));
         }
-        OrderDocument doc = new OrderDocument(String.valueOf(docID),sites.getSite(supplier),orderList,createDate(date), time);
+        int supplierid = 0;
+        try {
+            supplierid = suppliers.getSupplier(Integer.parseInt(supplier)).getSupplierNumber();
+        } catch (SQLException e) {
+            return null;
+        }
+        OrderDocument doc = new OrderDocument(String.valueOf(docID),supplierid,orderList,createDate(date), time);
         doc.setTruckandDriver(trucks.getTruck(truckPlate),drivers.getDriver(driverID));
         drivers.setAvailability(drivers.getDriver(driverID),doc.getDate().toString(),doc.time,false);
         orderDocs.addDoc(doc);
@@ -193,13 +224,17 @@ public class OrderController {
 
 
 
-    public void changeOrder(String docID, String storeID, ArrayList<String>names,ArrayList<Integer>quantities) {
-        ConcurrentHashMap<Supply,Integer> newSupplyOrder = new ConcurrentHashMap<>();
+    public void changeOrder(String docID, String storeID, ArrayList<String>names,ArrayList<Integer>quantities)  {
+        ConcurrentHashMap<String,Integer> newSupplyOrder = new ConcurrentHashMap<>();
         OrderDocument doc =orderDocs.getOrderDoc(docID);
-        Site store = sites.getSite(storeID);
+        Store store = sites.getSite(storeID);
         for(int i = 0;i< names.size();i++){
             if(names.size()==quantities.size()){
-                newSupplyOrder.put(supplies.getSupply(names.get(i)),quantities.get(i));
+                try {
+                    newSupplyOrder.put(String.valueOf(supplies.get(Integer.parseInt(names.get(i))).getId()),quantities.get(i));
+                } catch (SQLException e) {
+                    return;
+                }
             }
         }
         doc.remove(store.getId());
@@ -223,9 +258,9 @@ public class OrderController {
     }
     public void createDriverDocs(String docID){
         OrderDocument doc = orderDocs.getOrderDoc(docID);
-        for(Site site : doc.getDestinations().keySet()) {
+        for(Store store : doc.getDestinations().keySet()) {
             int id = driverDocID.getAndIncrement();
-            driverDocs.addDriverDoc(new DriverDocument(doc.driver,id,doc.getDestinations().get(site),site,doc.getId()));
+            driverDocs.addDriverDoc(new DriverDocument(doc.driver,id,doc.getDestinations().get(store), store,doc.getId()));
         }
     }
     public void removeDriverDoc(String orderDocID,String siteID){
@@ -293,20 +328,32 @@ public class OrderController {
 
 
     public String getSupplyByIdx(int idx, String docID,String storeID,String pred) {
-        ConcurrentHashMap<Supply,Integer> supplies;
+        ConcurrentHashMap<String,Integer> supplies;
         if(Objects.equals(pred, "By Doc")){
             supplies = orderDocs.showSupplies(docID,storeID);
+            int counter = 0;
+            for(String supp: supplies.keySet()){
+                if(counter==idx){
+                    return supp;
+                }
+                counter++;
+            }
         }
         else{
-            supplies = this.supplies.showSupplies();
-        }
-        int counter = 0;
-        for(Supply supp: supplies.keySet()){
-            if(counter==idx){
-                return supp.name;
+            try {
+                List<Product> products = this.supplies.getAllProducts();
+                for (int i=0; i<products.size(); i++){
+                    if(i==idx){
+                        return String.valueOf(products.get(i).getId());
+                    }
+                }
+
             }
-            counter++;
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }
+
         return null;
     }
 }

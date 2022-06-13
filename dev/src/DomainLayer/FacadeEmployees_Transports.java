@@ -8,6 +8,7 @@ import DomainLayer.Transport.ResourceController;
 import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -249,7 +250,7 @@ public class FacadeEmployees_Transports {
         return orderController.showSuppliers(areaCode);
     }
 
-    public String createDoc(ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> orders, String supplier, String date, String driverID, String truckPlate, String time) {
+    public String createDoc(ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> orders, String supplier, String date, String driverID, String truckPlate, String time)  {
         return orderController.createDoc(orders, supplier, date,driverID,truckPlate, time);
     }
 
@@ -338,9 +339,9 @@ public class FacadeEmployees_Transports {
         return resourceController.addTruck(type, licensePlate, maxWeight, initialWeight);
     }
 
-    public boolean addSupply(String name, double weight) {
-        return resourceController.addSupply(name, weight);
-    }
+//    public boolean addSupply(String name, double weight) {
+//        return resourceController.addSupply(name, weight);
+//    }
 
     public boolean addSite(String id, String contactaddress, String contactname, String contactphonenumber, int shippingArea, int type) {
         return resourceController.addSite(id, contactaddress, contactname, contactphonenumber, shippingArea, type);
@@ -358,9 +359,9 @@ public class FacadeEmployees_Transports {
         return resourceController.removeSite(id);
     }
 
-    public String removeSupply(String suppName2Remove) {
-        return resourceController.removeSupply(suppName2Remove);
-    }
+//    public String removeSupply(String suppName2Remove) {
+//        return resourceController.removeSupply(suppName2Remove);
+//    }
 
     public Set<JobType> getEmployeeRoles(String id) {
         return employeeController.getEmployeeRoles(id);
