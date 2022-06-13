@@ -89,26 +89,17 @@ public class CLI
                     }
                     case ("5"): {
                         try {
-                            System.out.println("enter id/name,amount,exp date, shelf number");
+                            System.out.println("enter orderDocId");
                             detail = in.nextLine();
-                            String[] fields = detail.split(",");
-                            int id = -1;
-                            if (checkId(fields[0]))
-                                id = Integer.parseInt(fields[0]);
+                            int id = Integer.parseInt(detail);
+                            if(id>0)
+                                cC.getItemsFromTransport(id);
                             else
-                                id = cC.getProductIdWithName(fields[0]);
-                            if (id != -1) {
-                                int amount = Integer.parseInt(fields[1]);
-                                String exp = fields[2];
-                                int shelf = Integer.parseInt(fields[3]);
-                                cC.addAllItems(id, amount, exp, shelf);
-                            } else
-                                System.out.println("no such product exists");
+                                System.out.println("wrong input");
                         }
                         catch (Exception e){
                             System.out.println("wrong input");
                         }
-
                         break;
                     }
                     case ("6"): {
