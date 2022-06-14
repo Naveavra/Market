@@ -74,6 +74,7 @@ public class Shift {
 
     public String displayWorkers(){
         List<String[]> emps = new ArrayList<>();
+        emps.add(new String[]{manager.getId(), manager.getName(), "shift manager"});
         Set<JobType> roles = employeesInShift.keySet();
         for (JobType jobType : roles){
             for (Employee employee : employeesInShift.get(jobType)){

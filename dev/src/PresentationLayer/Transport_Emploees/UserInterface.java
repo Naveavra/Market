@@ -14,6 +14,11 @@ public class UserInterface extends MainCLI {
     public static String reset = "\033[0m";
     public static String RED_BOLD = "\033[1;31m";
     public UserInterface(Set<JobType> roles){};
+
+    public UserInterface() {
+
+    }
+
     public void start() {
         menu();
     }

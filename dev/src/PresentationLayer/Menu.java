@@ -79,7 +79,7 @@ public class Menu {
                     break;
                 case 3: // suppliers
                     if (canUseSupplierModule(roles)) {
-                        SupplierMenu sm = new SupplierMenu(roles);
+                        SupplierMenu sm = new SupplierMenu();
                         sm.chooseSupplierMenu();
                     } else {
                         System.out.println("You are not authorized to enter this page");

@@ -267,14 +267,6 @@ public class Connect {
                     "PRIMARY KEY (licenseplate,date,time)" +
                     ")";
             statement.execute(query);
-//            query = "CREATE TABLE IF NOT EXISTS DriverAvailability(" +
-//                    "id varchar(30)," +
-//                    "date VARCHAR(20)," +
-//                    "time varchar(10)," +
-//                    "available varchar(3)," +
-//                    "PRIMARY KEY (id,date,time)" +
-//                    ")";
-//            statement.execute(query);
             query = "CREATE Table IF NOT EXISTS OrderDocs(" +
                     "id varchar(20)," +
                     "driverID varchar(9)," +
@@ -379,12 +371,16 @@ public class Connect {
         }
     }
 
+
     public int executeUpdate(String query,Object... params) throws SQLException {
         try  {
             createStatement();
-            PreparedStatement statement = conn.prepareStatement(query);
+            PreparedStatement statement = conn.prepareStatement("PRAGMA foreign_keys = ON");
+            statement.executeUpdate();
+            statement = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++)
                 statement.setObject(i+1, params[i]);
+
             int res = statement.executeUpdate();
             return res;
         } catch (SQLException throwable) {

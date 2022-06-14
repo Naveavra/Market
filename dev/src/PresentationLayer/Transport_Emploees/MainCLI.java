@@ -28,7 +28,7 @@ public class MainCLI {
             if (choice.equals("1"))
                 moduleCLI = new EmployeeMainCLI();
             else if (choice.equals("2"))
-                moduleCLI = new UserInterface(roles);
+                moduleCLI = new UserInterface();
             else if(choice.equals("3")){
                 print(RED_BOLD+"\n\tConcurrentHashMayTeremBlockingLinkedDan\n"+reset);
                 continue;

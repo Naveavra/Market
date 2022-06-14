@@ -69,7 +69,9 @@ public class Parser {
                 if (userChoice == 12)
                     return Action.DELETE_EMPLOYEE;
                 if (userChoice == 13)
-                    return Action.EXIT_SYSTEM;
+                    return Action.VIEW_SHIFT;
+                if (userChoice == 14)
+                    return Action.DELETE_SHIFT;
             }
             else{
                 return Action.ILLEGAL_ACTION;
