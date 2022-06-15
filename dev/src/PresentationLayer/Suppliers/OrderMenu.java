@@ -1,5 +1,6 @@
 package PresentationLayer.Suppliers;
 
+import DomainLayer.Employees.JobType;
 import PresentationLayer.Menu;
 import ServiceLayer.OrderService;
 import ServiceLayer.ProductSupplierService;
@@ -17,14 +18,16 @@ public class OrderMenu {
     private OrderService orderService;
     private Gson gson;
     private SupplierMenu sm ;
+    private Set<JobType> roles;
 
     public OrderMenu(Supplier s) {
         this.supplier = s;
         orderService = new OrderService();
         gson = new Gson();
         sm =new SupplierMenu();
-
-
+    }
+    public void setRoles(Set<JobType> roles){
+        this.roles=roles;
     }
 
     public void newOrder() {
@@ -98,10 +101,9 @@ public class OrderMenu {
                 break;
             case 2:
                 determineDeliveryDays(o);
-                sm.inSupplierMenu(supplier.getSupplierNumber());
+                watchOrdersMenu(supplier);
         }
         addProductsToOrder(o);
-
     }
 
     private void determineDeliveryDays(Order o) {
@@ -123,10 +125,10 @@ public class OrderMenu {
                 addDeliveryDays(o);
                 break;
             case 2 :
-                sm.inSupplierMenu(supplier.getSupplierNumber());
+                watchOrdersMenu(supplier);
                 break;
         }
-     sm.inSupplierMenu(supplier.getSupplierNumber());
+        watchOrdersMenu(supplier);
     }
 
     private void addDeliveryDays(Order o) {
@@ -177,16 +179,16 @@ public class OrderMenu {
             addDeliveryDays(o);
         }
     }
-
-    public void watchOrdersMenu() {
+    public void watchOrdersMenu(Supplier s) {
         System.out.println("You can now see and manage your orders:");
         System.out.println("Choose what you want");
-        System.out.println("\t1. Update order.");
-        System.out.println("\t2. See all your wait orders.");
-        System.out.println("\t3. See all your orders in fixed days delivery.");
-        System.out.println("\t4. See all your past orders..");
-        System.out.println("\t5. Send orders.");
-        System.out.println("\t6. Return to supplier page");
+        System.out.println("\t1. create order to supplier.");
+        System.out.println("\t2. Send orders.");
+        System.out.println("\t3. update order.");
+        System.out.println("\t4. See all your wait orders.");
+        System.out.println("\t5. See all your orders in fixed days delivery.");
+        System.out.println("\t6. See all your past orders..");
+        System.out.println("\t7. Return to supplier page");
         String choiceStr = "";
         int choice =0;
         try{
@@ -195,58 +197,59 @@ public class OrderMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only 1 digit number");
-            watchOrdersMenu();
+            watchOrdersMenu(s);
             return;
+        }
+        if(choice!=4& choice!=5 & choice!=6 & choice!=7){
+            if(!roles.contains(JobType.STOCK_KEEPER)){
+                System.out.println("u dont have access to this area");
+                watchOrdersMenu(s);
+            }
+
+        }
+        int orderId =0;
+        if(choice ==2 | choice ==3){
+            System.out.println("Enter orderID:");
+            choiceStr = "";
+            orderId =0;
+            try{
+                choiceStr = sc.next();
+                orderId=Integer.parseInt(choiceStr);
+            }
+            catch (Exception e){
+                System.out.println("you must enter only 1 digit number");
+                watchOrdersMenu(s);
+                return;
+            }
         }
         switch (choice){
             case 1:
-                watchWaitOrdersForUpdate();
-                System.out.println("Enter orderID:");
-                choiceStr = "";
-                int orderID =0;
-                try{
-                    choiceStr = sc.next();
-                    orderID=Integer.parseInt(choiceStr);
-                }
-                catch (Exception e){
-                    System.out.println("you must enter only 1 digit number");
-                    watchOrdersMenu();
-                    return;
-                }
-                updateOrderMenu(orderID);
+                OrderMenu om = new OrderMenu(s);
+                om.setRoles(roles);
+                om.newOrder();
                 break;
             case 2:
-                watchWaitOrders();
-                break;
-            case 3:
-                watchFixedDaysOrders();
-                break;
-            case 4:
-                watchPastOrders();
-                break;
-            case 5:
-                System.out.println("Enter orderID:");
-                choiceStr = "";
-                int orderId =0;
-                try{
-                    choiceStr = sc.next();
-                    orderId=Integer.parseInt(choiceStr);
-                }
-                catch (Exception e){
-                    System.out.println("you must enter only 1 digit number");
-                    watchOrdersMenu();
-                    return;
-                }
                 sendOrders(orderId);
                 break;
+            case 3:
+                watchWaitOrdersForUpdate();
+                updateOrderMenu(orderId);
+                break;
+            case 4:
+                watchWaitOrders();
+                break;
+            case 5:
+                watchFixedDaysOrders();
+                break;
             case 6:
-                sm.inSupplierMenu(supplier.getSupplierNumber());
+                watchPastOrders();
+            case 7:
+                sm.chooseSupplierMenu();
             default:
-                System.out.println("You must type number between 1 to 5");
-                watchOrdersMenu();
-
+                System.out.println("You must type number between 1 to 8");
+                watchOrdersMenu(s);
         }
-        sm.inSupplierMenu(supplier.getSupplierNumber());
+        sm.chooseSupplierMenu();
     }
 
     private void watchPastOrders() {
@@ -260,11 +263,7 @@ public class OrderMenu {
             PastOrder pastOrder =Menu.fromJson(p.toString(), PastOrder.class);
             System.out.println(pastOrder.toString());
         }
-//        for(LinkedTreeMap o: orders.values()){
-//            Order order = Menu.fromJson(o.toString(), Order.class);
-//            System.out.println(order.toString());
-//        }
-
+        watchOrdersMenu(supplier);
     }
 
     private void sendOrders(int orderId) {
@@ -276,6 +275,7 @@ public class OrderMenu {
         else{
           System.out.println("The order wasn't found");
         }
+        watchOrdersMenu(supplier);
     }
 
     private void printOrderDetailsBeforeClose(int orderId) {
@@ -303,8 +303,7 @@ public class OrderMenu {
             System.out.println("\nOrderID:" +" "+list.get(i)+" , "+"days to deliver: "+ deliveryTerm.toString());
             i++;
         }
-        watchOrdersMenu();
-
+        watchOrdersMenu(supplier);
     }
 
     private void watchWaitOrders() {
@@ -318,7 +317,7 @@ public class OrderMenu {
             Order order = Menu.fromJson(o.toString(), Order.class);
             System.out.println(order.toString());
         }
-        watchOrdersMenu();
+        watchOrdersMenu(supplier);
     }
     private void watchWaitOrdersForUpdate() {
         String json=orderService.getActiveOrders(supplier.getSupplierNumber());
@@ -337,7 +336,7 @@ public class OrderMenu {
         String json = orderService.getOrder(supplier.getSupplierNumber(), orderID);
         if(json.equals("fail")){
            System.out.println("Order does not exist");
-           watchOrdersMenu();
+           watchOrdersMenu(supplier);
            return;
         }
         System.out.println("Order: "+ orderID);
@@ -394,7 +393,7 @@ public class OrderMenu {
                 updateDeliverDaysInOrder(orderID);
                 break;
             case 5:
-                watchOrdersMenu();
+                watchOrdersMenu(supplier);
                 break;
             default:
                 System.out.println("You must type number between 1 to 3");
@@ -417,7 +416,7 @@ public class OrderMenu {
                 updateOrderMenu(orderID);
                 break;
             case 2:
-                new SupplierMenu().inSupplierMenu(supplier.getSupplierNumber());
+                watchOrdersMenu(supplier);
         }
         updateOrderMenu(orderID);
     }
