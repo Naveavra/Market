@@ -78,7 +78,7 @@ public class Menu {
                 case 2://storage
                     if (canUseStorageModule(roles)) {
                         CLI cli = new CLI();//storage
-                        cli.startStorageModel();
+                        cli.startStorageModel(roles);
                     } else {
                         System.out.println("You are not authorized to enter this page");
                     }
