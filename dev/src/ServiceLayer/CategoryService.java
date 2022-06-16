@@ -2,6 +2,8 @@ package ServiceLayer;
 
 import DomainLayer.FacadeSupplier_Storage;
 
+import java.util.HashMap;
+
 public class CategoryService {
 
     private FacadeSupplier_Storage facadeSupplier;
@@ -86,8 +88,8 @@ public class CategoryService {
         return facadeSupplier.printAllProducts();
     }
 
-    public void getItemsFromTransport(int id) {
-        facadeSupplier.getItemsFromTransport(id);
+    public HashMap<Integer, Integer> getItemsFromTransport(int id) {
+        return facadeSupplier.getItemsFromTransport(id);
     }
     public void addAllItems(int productId, int quantity, String ed, int shelf){
         facadeSupplier.addAllItems(productId, quantity, ed, shelf);

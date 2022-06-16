@@ -418,7 +418,7 @@ public class OrderController {
         Date date_ = createDate(date);
         Driver driver = null;
         Truck truck = null;
-        getAutoTruckandDriver(date_,time,truck,driver);
+        getAutoTruckandDriver(date_, time, truck, driver);
         if(truck == null || driver == null){
 //TODO ADD MESSAGE HERE
             new EmployeeDAO();
