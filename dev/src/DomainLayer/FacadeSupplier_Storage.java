@@ -24,7 +24,7 @@ public class FacadeSupplier_Storage {
         categoryController=new CategoryController();
         reportController=new ReportController(categoryController);
         gson=new Gson();
-        facade=FacadeEmployees_Transports.getInstance();
+        facade=new FacadeEmployees_Transports();
         if(needsUpdateOrders){
             updateOrders();
             needsUpdateOrders=false;

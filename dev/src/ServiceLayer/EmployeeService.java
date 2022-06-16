@@ -10,21 +10,17 @@ import java.util.*;
 import java.util.function.Function;
 
 public class EmployeeService {
-    private static final EmployeeService instance = new EmployeeService();
     private EmployeeServiceGeneric employeeService;// = new EmployeeServiceGeneric("");
     private final FacadeEmployees_Transports facade;
     private final Parser parser;
     private boolean dataHasLoaded; // this is only to indicate if the pre-made data was loaded into the system or not, so we wouldn't load it twice
 
-    private EmployeeService() {
-        facade = FacadeEmployees_Transports.getInstance();
+    public EmployeeService() {
+        facade = new FacadeEmployees_Transports();
         parser = new Parser();
         dataHasLoaded = false;
     }
 
-    public static EmployeeService getInstance() {
-        return instance;
-    }
 
     public String start() {
         String GREEN_BOLD = "\033[1;32m";  // GREEN

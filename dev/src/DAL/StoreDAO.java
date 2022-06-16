@@ -20,7 +20,7 @@ public class StoreDAO {
 
     //FROM HERE
     public String addSite(String id,int area,int type,String contactAddr, String contactName,String contactPNumber){
-        String query = "INSERT INTO Stores(id,type,ShippingArea,contactPNumber,contactName,contactAddress) VALUES(?,?,?,?,?,?)";
+        String query = "INSERT OR IGNORE INTO Stores(id,type,ShippingArea,contactPNumber,contactName,contactAddress) VALUES(?,?,?,?,?,?)";
         try {
             conn.executeUpdate(query,id,type,area,contactPNumber,contactName,contactAddr);
             return "Success";

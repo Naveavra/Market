@@ -14,27 +14,24 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FacadeEmployees_Transports {
-    private static final FacadeEmployees_Transports instance = new FacadeEmployees_Transports();
     private final EmployeeController employeeController;
     private final ShiftController shiftController;
     private final JobController jobController;
     private final OrderController orderController;
     ResourceController resourceController;
 
-    private FacadeEmployees_Transports(){
+    public FacadeEmployees_Transports(){
         employeeController = new EmployeeController();
         shiftController = new ShiftController();
         jobController = new JobController();
         createEmployee("318856994", "Itay Gershon", "123456", 1000000000, "Hapoalim 12 115", "The conditions for this employee are really terrific");
         certifyEmployee(JobType.HR_MANAGER, "318856994");
         certifyEmployee(JobType.STORE_MANAGER, "318856994");
+        certifyEmployee(JobType.STOCK_KEEPER, "318856994");
         orderController= new OrderController();
         resourceController = ResourceController.getInstance();
     }
 
-    public static FacadeEmployees_Transports getInstance() {
-        return instance;
-    }
 
 
     public Response createEmployee(String id, String name, String password, float salary, String bankAccount, String contractOfEmployment){
@@ -53,7 +50,8 @@ public class FacadeEmployees_Transports {
         Response r = certifyEmployee(JobType.DRIVER, id);
         if (r.errorOccurred())
             return false;
-        return jobController.addLicense(id, license);
+        Employee e = employeeController.getEmployee(id);
+        return jobController.addLicense(e.getName() ,id, license);
     }
 
 

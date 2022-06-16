@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 //Miki//
 public class OrderTransportService {
-    OrderController orderController = OrderController.getInstance();
-    FacadeEmployees_Transports facadeEmployeesTransports = FacadeEmployees_Transports.getInstance();
+    OrderController orderController = new OrderController();
+    FacadeEmployees_Transports facadeEmployeesTransports = new FacadeEmployees_Transports();
 
     public OrderTransportService() {
 
@@ -166,5 +166,9 @@ public class OrderTransportService {
         Driver nave = new Driver("nave", "315809376", "C");
         Truck shahar = new Truck("C", "shahar", 150, 100);
         createDoc(des1, "1", date1.toString(), nave.getId(), shahar.getLicensePlate(), "MORNING");
+    }
+
+    public String GetFinish(String docID) {
+        return orderController.GetFinish(docID);
     }
 }
