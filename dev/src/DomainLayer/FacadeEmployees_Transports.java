@@ -8,10 +8,7 @@ import DomainLayer.Transport.ResourceController;
 import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FacadeEmployees_Transports {
@@ -376,5 +373,8 @@ public class FacadeEmployees_Transports {
 
     public Response deleteShift(ShiftPair shiftPair) {
         return shiftController.deleteShift(shiftPair);
+    }
+    public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId){
+        return orderController.getOrderIdFromOrderDoc(orderDocId);
     }
 }
