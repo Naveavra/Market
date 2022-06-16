@@ -90,7 +90,7 @@ public class UserInterface extends MainCLI {
                     "\t2.View Order\n" +
                     "\t3.Create new Order\n" +
                     "\t4.Show Driver Docs\n" +
-                    "\t5.Back to the previous menu");
+                    "\t5.go back");
 
             Scanner input = new Scanner(System.in);
             int choice = input.nextInt();
@@ -230,7 +230,7 @@ public class UserInterface extends MainCLI {
                 "\t3.Delete Document\n" +
                 "\t4.Transport finished\n" +
                 "\t5.Delete Sites from Order Docs\n" +
-                "\t6.Go Back");
+                "\t6.go back");
         Scanner input = new Scanner(System.in);
         int choice = input.nextInt();
         switch (choice) {
@@ -473,7 +473,7 @@ public class UserInterface extends MainCLI {
                 "1.Change Truck.\n" +
                 "2.Change destinations.\n" +
                 "3.Remove supplies\n" +
-                "4.Back to the previous menu");
+                "4.go back");
         Scanner input = new Scanner(System.in);
         int choice = input.nextInt();
         try {
@@ -707,7 +707,7 @@ public class UserInterface extends MainCLI {
                         System.out.println("Would you like to add or remove stores?:\n" +
                                 "\t1.Add store.\n" +
                                 "\t2.Remove store.\n" +
-                                "\t3.Go back.");
+                                "\t3.go back.");
                         input = new Scanner(System.in);
                         choice = input.nextInt();
                         if (choice == 1) { //add site
