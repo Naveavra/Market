@@ -1,6 +1,6 @@
 package DomainLayer.Transport;
 
-public class Site {
+public class Store {
 
     public enum ShippingArea {
         North,
@@ -13,7 +13,7 @@ public class Site {
     private String id;
     private int type;
 
-    public Site(String id,Contact contact, ShippingArea shippingArea, int type){
+    public Store(String id, Contact contact, ShippingArea shippingArea, int type){
         this.contactInfo = contact;
         this.areaCode = shippingArea;
         this.id = id;

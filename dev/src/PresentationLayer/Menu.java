@@ -9,6 +9,8 @@ import PresentationLayer.Suppliers.Order;
 import PresentationLayer.Suppliers.SupplierMenu;
 import PresentationLayer.Transport_Emploees.UserInterface;
 import ServiceLayer.*;
+import ServiceLayer.transport.OrderTransportService;
+import ServiceLayer.transport.UserService;
 import com.google.gson.Gson;
 import java.sql.SQLException;
 import java.util.Random;
@@ -134,9 +136,9 @@ public class Menu {
         cC.addCategory("second");
         cC.addSubCat("second", "second1");
         cC.addSubSubCat("second", "second1", "second11");
-        cC.addNewProduct(1, "milk", "from cow", 3, "me"
+        cC.addNewProduct(1, "milk", "from cow", 3, 3,"me"
                 , "first", "first1", "first11");
-        cC.addNewProduct(2, "eggs", "from chicken", 5, "me",
+        cC.addNewProduct(2, "eggs", "from chicken", 5,4, "me",
                 "second", "second1", "second11");
         cC.addAllItems(1, 7, "2027-06-01", 1);
         cC.addAllItems(2, 3, "2019-06-01", 1);
@@ -165,6 +167,7 @@ public class Menu {
 
         // empoly info
         LoadEmployeeData();
+        LoadTransportData();
 
     }
     public void LoadEmployeeData() {
@@ -264,6 +267,25 @@ public class Menu {
                 es.addAvailableTimeSlotToEmployee(day + "/07/2022 evening" ,id);
             }
         }
+    }
+
+    public void LoadTransportData() {
+        UserService us = new UserService();
+        OrderTransportService os = new OrderTransportService();
+        us.createTruck("C", "shahar", 150, 100);
+        us.createTruck("C1", "nadia", 100, 50);
+        us.createTruck("C", "nastia", 200, 100);
+        us.createDriver("nave", "315809376", "C");
+        us.createDriver("miki", "208163709", "C1");
+        us.createSite("1567", "hakanaim 16", "liron", "05068582", 0, 1);
+        us.createSite("156", "hakanaim 15", "liro", "0506858", 1, 1);
+        us.createSite("15", "hakanaim 14", "lir", "050685", 2, 1);
+        us.createSite("14", "hakanaim 13", "li", "05858", 0, 1);
+        us.createSite("13", "hakanaim 12", "lin", "05858", 1, 1);
+        us.createSite("12", "hakanaim 11", "lid", "058528", 2, 1);
+//        us.createSupply("milk", 1);
+//        us.createSupply("eggs", 2);
+        os.orderList();
     }
 
 

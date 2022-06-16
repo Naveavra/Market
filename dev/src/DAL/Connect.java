@@ -27,8 +27,6 @@ public class Connect {
     }
     private Connect() {
         try {
-            // db parameters
-            String url = "jdbc:sqlite:../dev/superli.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
             createTables();
@@ -57,7 +55,6 @@ public class Connect {
                     "\t\"timesBought\"\tINTEGER,\n"+
                     "\t\"amountNeededForRefill\"\tINTEGER,\n"+
                     "\t\"price\"\tInteger,\n"+
-                    "\t\"weight\"\tInteger,\n"+
                     "\t\"discount\"\tInteger,\n"+
                     "\t\"dayAdded\"\tTEXT,\n" +
 
@@ -294,7 +291,7 @@ public class Connect {
                     "orderDocID varchar (20)," +
                     "supply varchar (50)," +
                     "quantity integer," +
-                    "PRIMARY KEY (siteID,orderDocID,OrderId)," +
+                    "PRIMARY KEY (siteID,orderDocID)," +
                     "FOREIGN KEY (orderDocID) REFERENCES OrderDocs(id) ON DELETE CASCADE" +
                     ")";
             statement.execute(query);
@@ -314,7 +311,7 @@ public class Connect {
                     ")";
             statement.execute(query);
 
-            query = "CREATE TABLE IF NOT EXISTS Sites(" +
+            query = "CREATE TABLE IF NOT EXISTS Stores(" +
                     "id varchar (20)," +
                     "type INTEGER," +
                     "shippingArea INTEGER," +

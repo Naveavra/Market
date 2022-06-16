@@ -174,7 +174,7 @@ public class EmployeeMainCLI extends MainCLI {
     }
 
     public void login() {
-        print("Please log in to the system");
+        print("Please log in to the system:");
         String id = getValidId();
         String password = getValidPassword();
         Response response = serviceController.login(id, password);

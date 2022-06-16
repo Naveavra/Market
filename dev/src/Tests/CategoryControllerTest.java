@@ -24,7 +24,7 @@ public class CategoryControllerTest {
         cC.addCategory("second", 0);
         cC.addSubCategory("second", "second1");
         cC.addSubSubCategory("second", "second1", "second11");
-        cC.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
+        cC.addNewProduct(1,"milk","hello",3,5,"me","first","first1", "first11");
         cC.addAllItems(1,4,"2027-06-01",12);
 
     }
@@ -72,7 +72,7 @@ public class CategoryControllerTest {
 
     @org.junit.Test
     public void stage8_transferProductToAnotherCategory() {
-        cC.addNewProduct(2, "eggs", "yes", 4, "me", "first", "first1", "first11");
+        cC.addNewProduct(2, "eggs", "yes", 4, 4,"me", "first", "first1", "first11");
         assertEquals("products were not inserted correctly", 2, cC.getProductsOfCategory("first").size());
         assertEquals("products were not inserted correctly", 0, cC.getProductsOfCategory("second").size());
         cC.transferProduct(2, "second", "second1", "second11");

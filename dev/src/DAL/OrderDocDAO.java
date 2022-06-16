@@ -1,8 +1,9 @@
 package DAL;
 
+import DomainLayer.Storage.Product;
+import DomainLayer.Suppliers.Supplier;
 import DomainLayer.Transport.*;
 //import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,9 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OrderDocDAO {
     private Connect conn = Connect.getInstance();
     private HashMap<String, OrderDocument> identityMap = new HashMap<>();
-    private SiteDAO siteDAO = new SiteDAO();
+    private StoreDAO storesDAO = new StoreDAO();
     private DriverDAO driverDAO = new DriverDAO();
-
+    private SuppliersDAO suppliersDAO = new SuppliersDAO();
+    private ProductDAO productDAO = new ProductDAO();
 //    private final static OrderDocDAO INSTANCE = new OrderDocDAO();
 //    public static OrderDocDAO getInstance(){
 //        return INSTANCE;
@@ -32,12 +34,12 @@ public class OrderDocDAO {
             conn.executeUpdate(query,doc.getId(),doc.getDriver().getId(),doc.getTruck(),doc.getOrigin(),doc.getDate().toString(),doc.getTime(),0,"#f");
             driverDAO.setAvailability(doc.getDriver(),doc.getDate().toString(),doc.getTime(),false);
             new TruckDAO().setAvailability(new TruckDAO().getTruck(doc.getTruck()),doc.getDate().toString(),doc.getTime(),false);
-            for(Site dest: doc.getDestinations().keySet()){
+            for(Store dest: doc.getDestinations().keySet()){
                 query= "INSERT INTO Destinations(siteID,orderDocID) VALUES(?,?)";
                 conn.executeUpdate(query,dest.getId(),doc.getId());
-                for(Supply supp: doc.getDestinations().get(dest).keySet()){
+                for(String supp: doc.getDestinations().get(dest).keySet()){
                     query = "INSERT INTO order4Dest(siteID,orderDocID,supply,quantity) VALUES(?,?,?,?)";
-                    conn.executeUpdate(query,dest.getId(),doc.getId(),supp.getName(),doc.getDestinations().get(dest).get(supp));
+                    conn.executeUpdate(query,dest.getId(),doc.getId(),supp,doc.getDestinations().get(dest).get(supp));
                 }
 
             }
@@ -63,14 +65,14 @@ public class OrderDocDAO {
         }
         return "Unable to remove order document, ID: "+ID;
     }
-//    docid,storeid,destination
+    //    docid,storeid,destination
     public String removeDest(String docID, String siteID, String field){
         String query = "DELETE FROM "+"'"+field+"'"+" WHERE siteID = "+"'"+siteID+"'"+" AND orderDocID = "+ "'"+docID+"'";
         try {
             conn.executeUpdate(query);
             return "Success";
         } catch (SQLException e) {
-           // System.out.println("Unable to delete orderDOC");
+            // System.out.println("Unable to delete orderDOC");
             return "Failure to remove dest from doc";
         }
     }
@@ -115,6 +117,7 @@ public class OrderDocDAO {
         }
         return "Success";
     }
+
     public OrderDocument getOrderDoc(String docID){
         if(identityMap.containsKey(docID)){
             return identityMap.get(docID);
@@ -129,7 +132,7 @@ public class OrderDocDAO {
             String originID = (String)rs.get(0).get("origin");
             String date = (String)rs.get(0).get("date");
             String time = (String)rs.get(0).get("time");
-            double weight = (double)rs.get(0).get("weight");
+            double weight = Double.parseDouble(String.valueOf(rs.get(0).get("weight")));
             boolean finished;
             if(Objects.equals((String)rs.get(0).get("finished"), "#t")){
                 finished=true;
@@ -140,15 +143,23 @@ public class OrderDocDAO {
             Date da = createDate(date);
             Driver d = driverDAO.getDriver(driverID);
             Truck t = new TruckDAO().getTruck(licensePlate);
-            Site s = siteDAO.getSite(originID);
-            ConcurrentHashMap<Site,ConcurrentHashMap<Supply,Integer>> supplies =new ConcurrentHashMap<>();
+            Supplier s = suppliersDAO.getSupplier(Integer.parseInt(originID));
+            ConcurrentHashMap<Store,ConcurrentHashMap<String,Integer>> supplies =new ConcurrentHashMap<>();
             query = "SELECT * FROM order4Dest WHERE orderDocID = "+"'"+docID+"'";
             rs = conn.executeQuery(query);
             for (int i = 0; i < rs.size(); i++){
-                Site store = siteDAO.getSite((String)rs.get(i).get("siteID"));
-                supplies.put(store,showSupplies(docID,store.getId()));
+                Store store = storesDAO.getSite((String)rs.get(i).get("siteID"));
+                int miki = Integer.parseInt((String)rs.get(i).get("supply"));
+                Product p = productDAO.get(miki);
+                if(!supplies.containsKey(store)){
+                    supplies.put(store,new ConcurrentHashMap<>());
+                }
+                if(!supplies.get(store).containsKey(String.valueOf(p.getId()))){
+                    supplies.get(store).put(String.valueOf(p.getId()),(int)rs.get(i).get("quantity"));
+                }
+//                supplies.put(store,showSupplies(docID,store.getId()));
             }
-            OrderDocument doc = new OrderDocument(id,s,supplies,da,time);
+            OrderDocument doc = new OrderDocument(id,s.getSupplierNumber(),supplies,da,time);
             doc.setTruckandDriver(t,d);
             doc.setWeight(weight);
             doc.setFinished(finished);
@@ -158,6 +169,56 @@ public class OrderDocDAO {
             return null;
         }
     }
+//    public OrderDocument getOrderDoc(String docID){
+//        if(identityMap.containsKey(docID)){
+//            return identityMap.get(docID);
+//        }
+//        List<HashMap<String, Object>> rs;
+//        String query = "SELECT * FROM OrderDocs WHERE id = "+"'"+docID+"'";
+//        try {
+//            rs = conn.executeQuery(query);
+//            String id = (String)rs.get(0).get("id");
+//            String driverID = (String)rs.get(0).get("driverID");
+//            String licensePlate = (String)rs.get(0).get("licensePlate");
+//            String originID = (String)rs.get(0).get("origin");
+//            String date = (String)rs.get(0).get("date");
+//            String time = (String)rs.get(0).get("time");
+//            double weight = Double.parseDouble(String.valueOf(rs.get(0).get("weight")));
+//            boolean finished;
+//            if(Objects.equals((String)rs.get(0).get("finished"), "#t")){
+//                finished=true;
+//            }
+//            else{
+//                finished = false;
+//            }
+//            Date da = createDate(date);
+//            Driver d = driverDAO.getDriver(driverID);
+//            Truck t = new TruckDAO().getTruck(licensePlate);
+//            Supplier s = suppliersDAO.getSupplier(Integer.parseInt(originID));
+//            ConcurrentHashMap<Store,ConcurrentHashMap<String,Integer>> supplies =new ConcurrentHashMap<>();
+//            query = "SELECT * FROM order4Dest WHERE orderDocID = "+"'"+docID+"'";
+//            rs = conn.executeQuery(query);
+//            for (int i = 0; i < rs.size(); i++){
+//                Store store = storesDAO.getSite((String)rs.get(i).get("siteID"));
+//                Product p = productDAO.get((Integer.parseInt((String)rs.get(i).get("supply"))));
+//                if(!supplies.containsKey(store)){
+//                    supplies.put(store,new ConcurrentHashMap<>());
+//                }
+//                if(!supplies.get(store).containsKey(String.valueOf(p.getId()))){
+//                    supplies.get(store).put(String.valueOf(p.getId()),(int)rs.get(i).get("quantity"));
+//                }
+////                supplies.put(store,showSupplies(docID,store.getId()));
+//            }
+//            OrderDocument doc = new OrderDocument(id,s.getSupplierNumber(),supplies,da,time);
+//            doc.setTruckandDriver(t,d);
+//            doc.setWeight(weight);
+//            doc.setFinished(finished);
+//            identityMap.put(docID,doc);
+//            return doc;
+//        } catch (SQLException e) {
+//            return null;
+//        }
+//    }
     public ArrayList<OrderDocument> showDocs(String date){
         ArrayList<OrderDocument> orderdocs= new ArrayList<>();
         String query = "SELECT * FROM OrderDocs WHERE date = "+"'"+date+"'";
@@ -177,9 +238,9 @@ public class OrderDocDAO {
     public boolean containsStore(String docID,String storeID){
         try {
             if(identityMap.containsKey(docID)){
-                Site s = siteDAO.getSite(storeID);
+                Store s = storesDAO.getSite(storeID);
                 OrderDocument doc = identityMap.get(docID);
-                return identityMap.get(docID).containsStore(siteDAO.getSite(storeID).getId());
+                return identityMap.get(docID).containsStore(storesDAO.getSite(storeID).getId());
             }
             String res = (String) conn.executeQuery("SELECT siteID FROM order4Dest WHERE siteID = " + "'" + storeID + "'"+ "AND orderDocID = "+"'"+docID+"'").get(0).get("siteID");
             return Objects.equals(res, storeID);
@@ -187,15 +248,15 @@ public class OrderDocDAO {
             return false;
         }
     }
-    public ConcurrentHashMap<Supply,Integer> showSupplies(String docID,String storeID){
-        ConcurrentHashMap<Supply,Integer> supplies = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String,Integer> showSupplies(String docID,String storeID){
+        ConcurrentHashMap<String,Integer> supplies = new ConcurrentHashMap<>();
         String query = "SELECT * FROM order4Dest WHERE orderDocID = "+"'"+docID+"'"+" AND siteID = "+"'"+storeID+"'";
         try {
             List<HashMap<String, Object>> rs = conn.executeQuery(query);
             for (int i = 0; i < rs.size(); i++){
-                Supply supp = new SuppliesDAO().getSupply((String)rs.get(i).get("supply"));
+                Product supp = productDAO.get((int)rs.get(i).get("supply"));
                 int quantity = (int)rs.get(i).get("quantity");
-                supplies.put(supp,quantity);
+                supplies.put(supp.getName(),quantity);
             }
             return supplies;
 

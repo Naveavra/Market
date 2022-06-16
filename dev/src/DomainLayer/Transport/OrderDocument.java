@@ -5,9 +5,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class OrderDocument {
-    Site origin;
+    int supplierID;
     String id;
-    private final ConcurrentHashMap<Site,ConcurrentHashMap<Supply,Integer>> destinations;
+    private final ConcurrentHashMap<Store,ConcurrentHashMap<String,Integer>> destinations;
     Date date;
     boolean complete = false;
     Truck truck;
@@ -16,15 +16,15 @@ public class OrderDocument {
     String time;
     private final ConcurrentHashMap<Integer, DriverDocument> driverDocs;
 
-    public OrderDocument(String id, Site origin, ConcurrentHashMap<Site,ConcurrentHashMap<Supply,Integer>> destination, Date date, String time){
+    public OrderDocument(String id, int supplierID, ConcurrentHashMap<Store,ConcurrentHashMap<String,Integer>> destination, Date date, String time){
         this.id = id;
-        this.origin = origin;
+        this.supplierID = supplierID;
         this.date = date;
         this.destinations = destination;
         this.driverDocs = new ConcurrentHashMap<>();
         this.time = time;
     }
-    public ConcurrentHashMap<Site,ConcurrentHashMap<Supply,Integer>> getDestinations(){
+    public ConcurrentHashMap<Store,ConcurrentHashMap<String,Integer>> getDestinations(){
         return destinations;
     }
     public String setWeight(double weight){ //here the driver calls the manager after visits the supllier
@@ -36,7 +36,7 @@ public class OrderDocument {
         return "Success";
     }
     public String getOrigin(){
-        return origin.getId();
+        return String.valueOf(supplierID);
     }
     public String getTruck(){
         return truck.getLicensePlate();
@@ -52,9 +52,9 @@ public class OrderDocument {
 
     public String getDriverDoc(){ //here we create the document for the driver
         String res = "Doc id: " + this.id + "\n";
-        for(Site store:destinations.keySet()){
+        for(Store store:destinations.keySet()){
             res += store.getId()+"\n";
-            for(Supply s:destinations.get(store).keySet()){
+            for(String s:destinations.get(store).keySet()){
                 res+= s+ " -- " + destinations.get(store).get(s).toString()+"\n";
             }
         }
@@ -65,19 +65,19 @@ public class OrderDocument {
     public boolean isWeightLegit(double currweight){
         return currweight <= truck.maxWeight;
     }
-
+/*
     public double getTotalWeight(){ //this will give me the total weight of the supplies list
         // we will use this function after the user will finish listing all the supplies he needs
         double totalweight = 0;
-        for(ConcurrentHashMap<Supply,Integer> con:destinations.values()) {
-            for (Supply s : con.keySet()) {
+        for(ConcurrentHashMap<String,Integer> con:destinations.values()) {
+            for (String s : con.keySet()) {
                 totalweight += s.weight * con.get(s);
             }
         }
         return totalweight;
-    }
+    }*/
     public boolean containsStore(String id){
-        for(Site s : getDestinations().keySet()){
+        for(Store s : getDestinations().keySet()){
             if(Objects.equals(s.getId(), id)){
                 return true;
             }
@@ -85,7 +85,7 @@ public class OrderDocument {
         return false;
     }
     public void remove(String id){
-        for(Site s : getDestinations().keySet()){
+        for(Store s : getDestinations().keySet()){
             if(Objects.equals(s.getId(), id)){
                 getDestinations().remove(s);
             }
@@ -96,11 +96,11 @@ public class OrderDocument {
         String Date = "\ncreated in " + date;
         String drivertruck = "\nThe driver was " + driver.getName() + " he used the truck with the licenseplate number " +
                 truck.getLicensePlate() + "\nThe departure time was: " + this.time + "\nTruck weight: " + weight;
-        String supp = "\nHe carried supplies from " + origin+" to:\n";
-        for(Site store:destinations.keySet()){
+        String supp = "\nHe carried supplies from " + supplierID+" to:\n";
+        for(Store store:destinations.keySet()){
             supp+=store.getId() + "\nSupplies:\n";
-            for(Supply sup:destinations.get(store).keySet()){
-                supp+="Name: "+ sup.name +" ,Quantity: "+destinations.get(store).get(sup)+"\n";
+            for(String sup:destinations.get(store).keySet()){
+                supp+="Product id: "+ sup +" ,Quantity: "+destinations.get(store).get(sup)+"\n";
             }
         }
 
@@ -121,12 +121,12 @@ public class OrderDocument {
         return date;
     }
 
-    public void removeDest(Site site) {
-        destinations.remove(site);
+    public void removeDest(Store store) {
+        destinations.remove(store);
     }
 
-    public void addDest(Site site, ConcurrentHashMap<Supply, Integer> supplies) {
-        destinations.put(site,supplies);
+    public void addDest(Store store, ConcurrentHashMap<String, Integer> supplies) {
+        destinations.put(store,supplies);
     }
 
     public Driver getDriver() {
