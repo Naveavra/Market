@@ -83,10 +83,10 @@ public class CategoryController
         categoriesDAO.updateCategoriesForProduct(productId, newCategory, newSubCategory, newSubSubCategory);
     }
 
-    public boolean removeFromCatalog(int id){
+    public void removeFromCatalog(int id){
         Product p=getProductWithId(id);
         p.removeAllItems();
-        return categoriesDAO.removeProduct(id);
+        categoriesDAO.removeProduct(id);
     }
 
     public boolean removeCat(String catName){
@@ -99,12 +99,11 @@ public class CategoryController
         return categoriesDAO.getProduct(productId);
     }
 
-    public boolean addNewProduct(int productId, String productName, String desc,
+    public void addNewProduct(int productId, String productName, String desc,
                               double price, String maker, String catName, String subCatName, String subSubName){
         if(validId(productId) && categoriesDAO.hasSubSubCategory(catName, subCatName, subSubName)) {
-            return categoriesDAO.insertIntoProduct(new Product(productId, productName, desc, price, maker), catName, subCatName, subSubName);
+            categoriesDAO.insertIntoProduct(new Product(productId, productName, desc, price, maker), catName, subCatName, subSubName);
         }
-        return  false;
     }
     public void addItemToProduct(int id, String loc, int shelf, String ed){
         Product p = getProductWithId(id);
@@ -129,28 +128,22 @@ public class CategoryController
             return p.getCurAmount();
         return -1;
     }
-    public boolean setDiscountToOneItem(int productId, double discount)
+    public void setDiscountToOneItem(int productId, double discount)
     {
         Product p = getProductWithId(productId);
-        boolean ans = false;
         if(p != null) {
-            ans = true;
             p.setDiscount(discount);
             categoriesDAO.updateProduct(p);
-
         }
-        return ans;
     }
 
-    public boolean defineAsDamaged(int id, String description, String place, int shelf, String ed){
+    public void defineAsDamaged(int id, String description, String place, int shelf, String ed){
         Product p=getProductWithId(id);
-        boolean ans = false;
         if(p!=null) {
-            ans = p.setItemDamaged(id, ed, place, shelf, description);
+            p.setItemDamaged(id, ed, place, shelf, description);
             p.getRefill();
             categoriesDAO.updateProduct(p);
         }
-        return ans;
     }
 
     public List<Item> getDamagedItems(){

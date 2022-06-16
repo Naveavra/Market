@@ -18,7 +18,7 @@ public class EmployeeMainCLI extends MainCLI {
     private final EmployeeService serviceController;
 
     public EmployeeMainCLI() {
-        serviceController = new EmployeeService();
+        serviceController = EmployeeService.getInstance();
     }
 
     public void start() {
@@ -78,31 +78,10 @@ public class EmployeeMainCLI extends MainCLI {
             editDetails();
         } else if (action == Action.DELETE_EMPLOYEE){
             deleteEmployee();
-        } else if (action == Action.VIEW_SHIFT){
-            viewShift();
-        } else if (action == Action.DELETE_SHIFT)
-            deleteShift();
+        }
 //        } else if (action == Action.EXIT_SYSTEM){
 //            return () -> handleCloseSystem(employeeCli);
 //        }
-    }
-
-    private void deleteShift() {
-        String msg = "Enter the date and time of the shift you want to delete\nexample: 04/10/2022 morning";
-        String errMsg = "Invalid input, please follow the example";
-        String sShift = getValidInput(msg, errMsg, serviceController::assertShiftInput);
-        Response r = serviceController.deleteShift(sShift);
-        if (r.errorOccurred())
-            print(r.getErrorMessage());
-        else
-            print("Shift was deleted successfully");
-    }
-
-    private void viewShift() {
-        String msg = "Enter the date and time of the shift you want to view\nexample: 04/10/2022 morning";
-        String errMsg = "Invalid input, please follow the example";
-        String sShift = getValidInput(msg, errMsg, serviceController::assertShiftInput);
-        print(serviceController.viewShift(sShift));
     }
 
     public void register() {
@@ -174,7 +153,7 @@ public class EmployeeMainCLI extends MainCLI {
     }
 
     public void login() {
-        print("Please log in to the system:");
+        print("Please log in to the system");
         String id = getValidId();
         String password = getValidPassword();
         Response response = serviceController.login(id, password);

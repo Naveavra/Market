@@ -15,10 +15,9 @@ public class JobDAO {
 //        return instance;
 //    }
 
-    public boolean addLicense(String name, String id, String license){
+    public boolean addLicense(String id, String license){
         try {
-            conn.executeUpdate("INSERT OR IGNORE INTO Drivers(name, id, license) VALUES(?,?,?)", name,
-                    id, license.toUpperCase(Locale.ROOT));
+            conn.executeUpdate("INSERT OR IGNORE INTO DriversLicenses(id, license) VALUES(?,?)", id, license.toUpperCase(Locale.ROOT));
             return true;
         } catch (SQLException ignore) {
             return false;

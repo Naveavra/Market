@@ -3,35 +3,36 @@ package DomainLayer;
 
 //import SharedSpace.DBConnector;
 import DomainLayer.Employees.*;
-import DomainLayer.Suppliers.ProductSupplier;
 import DomainLayer.Transport.OrderController;
 import DomainLayer.Transport.ResourceController;
 import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FacadeEmployees_Transports {
+    private static final FacadeEmployees_Transports instance = new FacadeEmployees_Transports();
     private final EmployeeController employeeController;
     private final ShiftController shiftController;
     private final JobController jobController;
     private final OrderController orderController;
     ResourceController resourceController;
 
-    public FacadeEmployees_Transports(){
+    private FacadeEmployees_Transports(){
         employeeController = new EmployeeController();
         shiftController = new ShiftController();
         jobController = new JobController();
         createEmployee("318856994", "Itay Gershon", "123456", 1000000000, "Hapoalim 12 115", "The conditions for this employee are really terrific");
         certifyEmployee(JobType.HR_MANAGER, "318856994");
         certifyEmployee(JobType.STORE_MANAGER, "318856994");
-        certifyEmployee(JobType.STOCK_KEEPER, "318856994");
         orderController= new OrderController();
         resourceController = ResourceController.getInstance();
     }
 
+    public static FacadeEmployees_Transports getInstance() {
+        return instance;
+    }
 
 
     public Response createEmployee(String id, String name, String password, float salary, String bankAccount, String contractOfEmployment){
@@ -50,8 +51,7 @@ public class FacadeEmployees_Transports {
         Response r = certifyEmployee(JobType.DRIVER, id);
         if (r.errorOccurred())
             return false;
-        Employee e = employeeController.getEmployee(id);
-        return jobController.addLicense(e.getName() ,id, license);
+        return jobController.addLicense(id, license);
     }
 
 
@@ -335,9 +335,9 @@ public class FacadeEmployees_Transports {
         return resourceController.addTruck(type, licensePlate, maxWeight, initialWeight);
     }
 
-//    public boolean addSupply(String name, double weight) {
-//        return resourceController.addSupply(name, weight);
-//    }
+    public boolean addSupply(String name, double weight) {
+        return resourceController.addSupply(name, weight);
+    }
 
     public boolean addSite(String id, String contactaddress, String contactname, String contactphonenumber, int shippingArea, int type) {
         return resourceController.addSite(id, contactaddress, contactname, contactphonenumber, shippingArea, type);
@@ -354,10 +354,10 @@ public class FacadeEmployees_Transports {
     public boolean removeSite(String id) {
         return resourceController.removeSite(id);
     }
-//
-//    public String removeSupply(String suppName2Remove) {
-//        return resourceController.removeSupply(suppName2Remove);
-//    }
+
+    public String removeSupply(String suppName2Remove) {
+        return resourceController.removeSupply(suppName2Remove);
+    }
 
     public Set<JobType> getEmployeeRoles(String id) {
         return employeeController.getEmployeeRoles(id);
@@ -367,26 +367,7 @@ public class FacadeEmployees_Transports {
         return employeeController.displayMessages(id);
     }
 
-    public String viewShift(ShiftPair shiftPair) {
-        return shiftController.viewShift(shiftPair);
-    }
-
-    public Response deleteShift(ShiftPair shiftPair) {
-        return shiftController.deleteShift(shiftPair);
-    }
-
-    public boolean createAutoTransport(String supplierNumber, String date, Map<ProductSupplier, Integer> supplyList) {
-        ConcurrentHashMap<String,Integer> supplies = new ConcurrentHashMap<>();
-        for(ProductSupplier ps : supplyList.keySet()){
-            supplies.put(String.valueOf(ps.getSupplierNumber()),supplyList.get(ps));
-        }
-        return orderController.createAutoTransport(supplierNumber,date,supplies);
-    }
-
-
     public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId){
         return orderController.getOrderIdFromOrderDoc(orderDocId);
-
     }
-
 }

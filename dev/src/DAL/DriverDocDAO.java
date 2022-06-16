@@ -6,8 +6,8 @@ import DomainLayer.Transport.DriverDocument;
 import DomainLayer.Transport.Supply;
 //import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,10 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DriverDocDAO {
     private Connect conn = Connect.getInstance();
     private static HashMap<Integer, DriverDocument> identityMap = new HashMap<>();
-    private StoreDAO sitesDAO = new StoreDAO();
-//    private ProductDAO suppliesDAO = new ProductDAO();
+    private SiteDAO sitesDAO = new SiteDAO();
+    private SuppliesDAO suppliesDAO = new SuppliesDAO();
     private DriverDAO driverDAO = new DriverDAO();
-    private ProductDAO productDAO = new ProductDAO();
 
 //    private final static DriverDocDAO INSTANCE = new DriverDocDAO();
 //    public static DriverDocDAO getInstance(){
@@ -42,17 +41,18 @@ public class DriverDocDAO {
             List<HashMap<String, Object>> rs = conn.executeQuery(query);
             for (int i = 0; i < rs.size(); i++){
                 if(identityMap.containsKey((int)rs.get(i).get("id"))){
-                    docs.add(identityMap.get(Integer.parseInt((String)rs.get(i).get("id"))));
+                    docs.add(identityMap.get((int)rs.get(i).get("id")));
                     continue;
                 }
                 String query2 ="SELECT supply,quantity FROM order4Dest WHERE orderDocID = "+"'"+oDocID+"'"+" AND siteID = "+ "'"+rs.get(i).get("siteID")+"'";
                 List<HashMap<String, Object>> rs2 = conn.executeQuery(query2);
-                ConcurrentHashMap<String,Integer> orders = new ConcurrentHashMap<>();
-                for (int j = 0; j < rs2.size(); j++){
-                    orders.put(String.valueOf(productDAO.get(Integer.parseInt((String) rs2.get(j).get("supply"))).getId()),(int)rs2.get(j).get("quantity"));
+                ConcurrentHashMap<Supply,Integer> orders = new ConcurrentHashMap<>();
+                for (int j = 0; j < rs.size(); j++){
+
+                    orders.put(suppliesDAO.getSupply((String)rs2.get(j).get("supply")),(int)rs2.get(j).get("quantity"));
                 }
-                DriverDocument d = new DriverDocument(driverDAO.getDriver((String)rs.get(i).get("driverID")),(int)rs.get(i).get("id"),orders,sitesDAO.getSite((String)rs.get(i).get("siteID")),(String)rs.get(i).get("orderDocID"));
-                docs.add(d);
+                docs.add(new DriverDocument(driverDAO.getDriver((String)rs.get(i).get("driverID")),(int)rs.get(i).get("id"),orders,
+                        sitesDAO.getSite((String)rs.get(i).get("siteID")),(String)rs.get(i).get("orderDocID")));
             }
         } catch (SQLException e) {
 //            System.out.println("Unable to show driverDocs,Something went wrong in the DB");
@@ -64,12 +64,11 @@ public class DriverDocDAO {
         try {
             List<HashMap<String, Object>> rs = conn.executeQuery(query);
             conn.deleteRecordFromTableSTR("DriverDocs","id",String.valueOf(rs.get(0).get("id")));
-            int key = (int)rs.get(0).get("id");
-            if(identityMap.containsKey(key)){
-                identityMap.remove(Integer.parseInt((String)rs.get(0).get("id")));
+            if(identityMap.containsKey((int)rs.get(0).get("id"))){
+                identityMap.remove((int)rs.get(0).get("id"));
             }
         } catch (SQLException e) {
-            System.out.println("Unable to remove driverdoc");
+//            System.out.println("Unable to remove driverdoc");
             return "Failed to remove driverdoc";
         }
         return "Success";
@@ -101,8 +100,7 @@ public class DriverDocDAO {
 
 
     public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId) throws SQLException {
-        String query = "SELECT supply, quantity FROM order4Dest WHERE " +
-                String.format("orderDocID=\"%s\"", orderDocId);
+        String query = "SELECT  orderId FROM order4Dest WHERE orderDocID = "+"'"+orderDocId+"'";
         HashMap<Integer, Integer> ans =new HashMap<>();
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);

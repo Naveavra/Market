@@ -10,7 +10,7 @@ public class Pool {
     private final ConcurrentHashMap<String, OrderDocument> transportHistory; //<id, doc>
     private final ConcurrentHashMap<String, Truck> trucks; // the truck license-plate and the truck
     private final ConcurrentHashMap<String, Driver> drivers;
-    private final ConcurrentHashMap<String, Store> sites;
+    private final ConcurrentHashMap<String, Site> sites;
     private final ConcurrentHashMap<String, Supply> supplies;
     private final static Pool INSTANCE = new Pool();
     public static Pool getInstance(){
@@ -29,7 +29,7 @@ public class Pool {
     public ConcurrentHashMap<String,Driver> getDrivers(){
         return drivers;
     }
-    public ConcurrentHashMap<String, Store> getSites(){
+    public ConcurrentHashMap<String,Site> getSites(){
         return sites;
     }
     public ConcurrentHashMap<String,Supply> getSupplies(){
@@ -51,7 +51,7 @@ public class Pool {
         return trucks.get(id);
     }
 
-    public Store getSite(String id){
+    public Site getSite(String id){
         return sites.get(id);
     }
 
@@ -69,7 +69,7 @@ public class Pool {
         trucks.remove(id);
     }
 
-    public void addSite(Store s){
+    public void addSite(Site s){
         sites.put(s.getId(), s);
     }
 
@@ -148,7 +148,7 @@ public class Pool {
 
     public String showStores(String areacode) {
         String result = "";
-        for(Store store : sites.values()){
+        for(Site store : sites.values()){
             if(store.getType() == 1 && store.getAreaCode().toString() == areacode){
                 result += "ID: " +store + "\n";
             }
@@ -157,7 +157,7 @@ public class Pool {
     }
     public String showSuppliers(String areaCode) {
         String res = "";
-        for(Store supp : sites.values()){
+        for(Site supp : sites.values()){
             if(supp.getType() == 0 && supp.getAreaCode().toString().equals(areaCode)){
                 res += "ID: " +supp + "\n";
             }

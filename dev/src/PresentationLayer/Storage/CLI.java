@@ -5,7 +5,6 @@ import ServiceLayer.CategoryService;
 import ServiceLayer.ProductSupplierService;
 import ServiceLayer.ReportService;
 import ServiceLayer.SupplierService;
-import com.google.gson.Gson;
 
 import java.util.*;
 
@@ -23,7 +22,7 @@ public class CLI
         String detail;
         String line = "";
         System.out.println("Program Started");
-        while(!line.equals("exit"))
+        while(!line.equals("EXIT"))
         {
             System.out.println("Instructions for the warehouse worker:");
             System.out.println("\t1) Buy product Menu");
@@ -33,7 +32,7 @@ public class CLI
             System.out.println("insert commend number:");
             line = in.nextLine();
             command = line;
-            if(!command.equals("exit"))
+            if(!command.equals("EXIT"))
             {
                 switch (command)
                 {
@@ -58,16 +57,15 @@ public class CLI
                                 case("1"):
                                 {
                                     try {
-                                        System.out.println("enter the id/ name of the product you want to buy and the amount you want: ");
-                                        System.out.println("enter id/name");
+                                        System.out.println("enter id/name,amount");
                                         detail = in.nextLine();
+                                        String[] fields = detail.split(",");
                                         int id = -1;
-                                        if (checkId(detail))
-                                            id = Integer.parseInt(detail);
+                                        if (checkId(fields[0]))
+                                            id = Integer.parseInt(fields[0]);
                                         else
-                                            id = cC.getProductIdWithName(detail);
-                                        System.out.println("enter amount");
-                                        int amount = Integer.parseInt(in.nextLine());
+                                            id = cC.getProductIdWithName(fields[0]);
+                                        int amount = Integer.parseInt(fields[1]);
                                         double finalPrice = cC.buyItems(id, amount);
                                         if (finalPrice != -1)
                                             System.out.println("the price is: " + finalPrice);
@@ -86,27 +84,19 @@ public class CLI
                                 case("2"):
                                 {
                                     try {
-                                        System.out.println("enter damaged item attributes: ");
-                                        System.out.println("enter the id/name");
+                                        System.out.println("enter the id/name, damage description,place,shelf number, exp date");
                                         detail = in.nextLine();
+                                        String[] fields = detail.split(",");
                                         int id = -1;
-                                        if (checkId(detail))
-                                            id = Integer.parseInt(detail);
+                                        if (checkId(fields[0]))
+                                            id = Integer.parseInt(fields[0]);
                                         else
-                                            id = cC.getProductIdWithName(detail);
-                                        System.out.println("enter damage description");
-                                        String description = in.nextLine();
-                                        System.out.println("enter place of item (STORAGE or STORE)");
-                                        String place = in.nextLine();
-                                        System.out.println("enter shelf number");
-                                        int shelf = Integer.parseInt(in.nextLine());
-                                        System.out.println("enter exp date");
-                                        String ed = in.nextLine();
-                                        boolean ans = cC.defineAsDamaged(id, description, place, shelf, ed);
-                                        if(!ans)
-                                            System.out.println("couldn't define as damaged");
-                                        else
-                                            System.out.println("defined the item as damaged");
+                                            id = cC.getProductIdWithName(fields[0]);
+                                        String description = fields[1];
+                                        String place = fields[2];
+                                        int shelf = Integer.parseInt(fields[3]);
+                                        String ed = fields[4];
+                                        cC.defineAsDamaged(id, description, place, shelf, ed);
                                     }
                                     catch (Exception e){
                                         System.out.println("wrong input");
@@ -141,36 +131,18 @@ public class CLI
                                 case("1"):
                                 {
                                     try {
-                                        System.out.println("enter the attributes of product:");
-                                        System.out.println("enter id of product");
+                                        System.out.println("enter the attributes of product");
                                         detail = in.nextLine();
-                                        int id = Integer.parseInt(detail);
-                                        System.out.println("enter name of product");
-                                        detail = in.nextLine();
-                                        String name = detail;
-                                        System.out.println("enter description of product");
-                                        detail = in.nextLine();
-                                        String desc = detail;
-                                        System.out.println("enter the price of product");
-                                        detail = in.nextLine();
-                                        double price = Double.parseDouble(detail);
-                                        System.out.println("enter the maker of the product");
-                                        detail = in.nextLine();
-                                        String maker = detail;
-                                        System.out.println("write the category of the product");
+                                        String[] fields = detail.split(",");
+                                        int id = Integer.parseInt(fields[0]);
+                                        String name = fields[1];
+                                        String desc = fields[2];
+                                        double price = Double.parseDouble(fields[3]);
+                                        String maker = fields[4];
+                                        System.out.println("write the Category,subCategory,subSubCategory of the product in that format");
                                         line = in.nextLine();
-                                        String category = line;
-                                        System.out.println("write the subCategory of the product");
-                                        line = in.nextLine();
-                                        String subCategory = line;
-                                        System.out.println("write the subSubCategory of the product");
-                                        line = in.nextLine();
-                                        String subSubCategory = line;
-                                        boolean ans = cC.addNewProduct(id, name, desc, price, maker, category, subCategory, subSubCategory);
-                                        if(!ans)
-                                            System.out.println("couldn't make a new product");
-                                        else
-                                            System.out.println("the new product was added to the catalog");
+                                        String[] cats = line.split(",");
+                                        cC.addNewProduct(id, name, desc, price, maker, cats[0], cats[1], cats[2]);
                                     } catch (Exception e) {
                                         System.out.println("wrong input");
                                     }
@@ -179,58 +151,21 @@ public class CLI
                                 case("2"):
                                 {
                                     try {
-                                        System.out.println("enter the orderDocId of the transport");
+                                        System.out.println("enter id/name,amount,exp date, shelf number");
                                         detail = in.nextLine();
-                                        int orderDocId = Integer.parseInt(detail);
-                                        HashMap<Integer, Integer> itemsInOrder = cC.getItemsFromTransport(orderDocId);
-                                        System.out.println("the items in the transport were:");
-                                        for(int i :itemsInOrder.keySet()){
-                                            System.out.println("we got "+itemsInOrder.get(i)+" items of the product "+i);
-                                        }
-                                        System.out.println();
-                                        System.out.println("are there any items in the transport you would like to report as damaged");
-                                        System.out.println("\t1)yes");
-                                        System.out.println("\t2)no");
-                                        detail = in.nextLine();
-                                        if(Integer.parseInt(detail) == 1 || detail.equals("yes")){
-                                            boolean moreProblems = true;
-                                            while(moreProblems){
-                                                System.out.println("enter damaged item attributes: ");
-                                                System.out.println("enter the id/name");
-                                                detail = in.nextLine();
-                                                int id = -1;
-                                                if (checkId(detail))
-                                                    id = Integer.parseInt(detail);
-                                                else
-                                                    id = cC.getProductIdWithName(detail);
-                                                System.out.println("enter damage description");
-                                                String description = in.nextLine();
-                                                System.out.println("enter place of item (STORAGE or STORE");
-                                                String place = in.nextLine();
-                                                System.out.println("enter shelf number");
-                                                int shelf = Integer.parseInt(in.nextLine());
-                                                System.out.println("enter exp date");
-                                                String ed = in.nextLine();
-                                                if(checkId(id+"") && itemsInOrder.containsKey(id)) {
-                                                    boolean ans = cC.defineAsDamaged(id, description, place, shelf, ed);
-                                                    if(!ans)
-                                                        System.out.println("couldn't define as damaged");
-                                                    else
-                                                        System.out.println("defined the item as damaged");
-                                                }
-                                                else{
-                                                    System.out.println("the given attributes don't belong to an item that was in the transport");
-                                                }
-                                                System.out.println("are there any more items in the transport you would like to report as damaged");
-                                                System.out.println("\t1)yes");
-                                                System.out.println("\t2)no");
-                                                detail = in.nextLine();
-                                                if(!(Integer.parseInt(detail) == 1 || detail.equals("yes")))
-                                                    moreProblems = false;
-
-
-                                            }
-                                        }
+                                        String[] fields = detail.split(",");
+                                        int id = -1;
+                                        if (checkId(fields[0]))
+                                            id = Integer.parseInt(fields[0]);
+                                        else
+                                            id = cC.getProductIdWithName(fields[0]);
+                                        if (id != -1) {
+                                            int amount = Integer.parseInt(fields[1]);
+                                            String exp = fields[2];
+                                            int shelf = Integer.parseInt(fields[3]);
+                                            cC.addAllItems(id, amount, exp, shelf);
+                                        } else
+                                            System.out.println("no such product exists");
                                     }
                                     catch (Exception e){
                                         System.out.println("wrong input");
@@ -248,23 +183,17 @@ public class CLI
                                 case ("4"):
                                 {
                                     try {
-                                        System.out.println("enter the id/name");
+                                        System.out.println("enter the id/name, discount in %");
                                         detail = in.nextLine();
+                                        String[] fields = detail.split(",");
                                         int id = -1;
-                                        if (checkId(detail))
-                                            id = Integer.parseInt(detail);
+                                        if (checkId(fields[0]))
+                                            id = Integer.parseInt(fields[0]);
                                         else
-                                            id = cC.getProductIdWithName(detail);
-                                        System.out.println("enter the discount in %");
-                                        detail = in.nextLine();
-                                        double discount = Double.parseDouble(detail);
-                                        if(id!=-1) {
-                                            boolean ans = cC.setDiscountToOneItem(id, discount);
-                                            if(!ans)
-                                                System.out.println("the discount was not set for the product");
-                                            else
-                                                System.out.println("discount set successfully");
-                                        }
+                                            id = cC.getProductIdWithName(fields[0]);
+                                        double discount = Double.parseDouble(fields[1]);
+                                        if(id!=-1)
+                                            cC.setDiscountToOneItem(id, discount);
                                     }
                                     catch (Exception e){
                                         System.out.println("wrong input");
@@ -282,13 +211,8 @@ public class CLI
                                             id = Integer.parseInt(detail);
                                         else
                                             id = cC.getProductIdWithName(detail);
-                                        if (id != -1) {
-                                            boolean ans = cC.removeFromCatalog(id);
-                                            if(!ans)
-                                                System.out.println("didn't remove from catalog");
-                                            else
-                                                System.out.println("removed product successfully");
-                                        }
+                                        if (id != -1)
+                                            cC.removeFromCatalog(id);
                                     }
                                     catch (Exception e){
                                         System.out.println("wrong input");
@@ -333,13 +257,10 @@ public class CLI
                                 }
                                 case ("2"): {
                                     try {
-                                        System.out.println("enter category name");
+                                        System.out.println("enter category name,sub category name");
                                         detail = in.nextLine();
-                                        String category = detail;
-                                        System.out.println("enter sub category name");
-                                        detail = in.nextLine();
-                                        String subCategory = detail;
-                                        cC.addSubCat(category, subCategory);
+                                        String[] fields = detail.split(",");
+                                        cC.addSubCat(fields[0], fields[1]);
                                     } catch (Exception e) {
                                         System.out.println("wrong input");
                                     }
@@ -347,16 +268,10 @@ public class CLI
                                 }
                                 case ("3"): {
                                     try {
-                                        System.out.println("enter category name");
+                                        System.out.println("enter category name,sub category name, sub sub category name");
                                         detail = in.nextLine();
-                                        String category = detail;
-                                        System.out.println("enter sub category name");
-                                        detail = in.nextLine();
-                                        String subCategory = detail;
-                                        System.out.println("enter sub sub category name");
-                                        detail = in.nextLine();
-                                        String subSubCategory = detail;
-                                        cC.addSubSubCat(category, subCategory, subSubCategory);
+                                        String[] fields = detail.split(",");
+                                        cC.addSubSubCat(fields[0], fields[1], fields[2]);
                                     } catch (Exception e) {
                                         System.out.println("wrong input");
                                     }
@@ -364,25 +279,18 @@ public class CLI
                                 }
                                 case ("4"): {
                                     try {
-                                        System.out.println("enter the id/name ");
+                                        System.out.println("enter the id/name, category it belongs to, category to add to, sub category to add to, sub sub category to add to   ");
                                         detail = in.nextLine();
+                                        String[] fields = detail.split(",");
                                         int id = -1;
-                                        if (checkId(detail))
-                                            id = Integer.parseInt(detail);
+                                        if (checkId(fields[0]))
+                                            id = Integer.parseInt(fields[0]);
                                         else
-                                            id = cC.getProductIdWithName(detail);
-                                        System.out.println("enter the category it belongs to ");
-                                        detail = in.nextLine();
-                                        String catRemove = detail;
-                                        System.out.println("enter the category to add to ");
-                                        detail = in.nextLine();
-                                        String catAdd = detail;
-                                        System.out.println("enter the sub category to add to ");
-                                        detail = in.nextLine();
-                                        String subAdd = detail;
-                                        System.out.println("sub sub category to add to   ");
-                                        detail = in.nextLine();
-                                        String subSubAdd = detail;
+                                            id = cC.getProductIdWithName(fields[0]);
+                                        String catRemove = fields[1];
+                                        String catAdd = fields[2];
+                                        String subAdd = fields[3];
+                                        String subSubAdd = fields[4];
                                         cC.transferProduct(id, catAdd, subAdd, subSubAdd);
                                     } catch (Exception e) {
                                         System.out.println("wrong input");
@@ -393,12 +301,11 @@ public class CLI
                                 case ("5"):
                                 {
                                     try {
-                                        System.out.println("enter the name of the category");
+                                        System.out.println("enter the name of the category, discount in %");
                                         detail = in.nextLine();
-                                        String name = detail;
-                                        System.out.println("enter the discount in %");
-                                        detail = in.nextLine();
-                                        double discount = Double.parseDouble(detail);
+                                        String[] fields = detail.split(",");
+                                        String name = fields[0];
+                                        double discount = Double.parseDouble(fields[1]);
                                         cC.setDiscount(name, discount);
                                         break;
                                     }
@@ -430,7 +337,6 @@ public class CLI
                                 {
                                     try {
                                         System.out.println("enter the names of the categories");
-                                        System.out.println("enter the names in any order and put between them an , example: category1,category2,...(write with no spaces)");
                                         detail = in.nextLine();
                                         String[] fields = detail.split(",");
                                         List<String> cats = new LinkedList<String>();

@@ -2,8 +2,6 @@ package ServiceLayer;
 
 import DomainLayer.FacadeSupplier_Storage;
 
-import java.util.HashMap;
-
 public class CategoryService {
 
     private FacadeSupplier_Storage facadeSupplier;
@@ -16,9 +14,9 @@ public class CategoryService {
         facadeSupplier.addCategory(cName);
     }
 
-    public boolean addNewProduct(int pId, String pName, String desc, double price,
+    public void addNewProduct(int pId, String pName, String desc, double price,
                               String maker, String cat, String sub, String subSub) {
-        return facadeSupplier.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
+        facadeSupplier.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
     }
 
     public void addSubCat(String cName, String subName) {
@@ -39,8 +37,8 @@ public class CategoryService {
     }
 
 
-    public boolean removeFromCatalog(int id) {
-        return facadeSupplier.removeFromCatalog(id);
+    public void removeFromCatalog(int id) {
+        facadeSupplier.removeFromCatalog(id);
     }
 
 
@@ -58,13 +56,13 @@ public class CategoryService {
 
     }
 
-    public boolean setDiscountToOneItem(int id, double discount){
-        return facadeSupplier.setDiscountToOneItem(id, discount);
+    public void setDiscountToOneItem(int id, double discount){
+        facadeSupplier.setDiscountToOneItem(id, discount);
     }
 
-    public boolean defineAsDamaged(int id, String description,String place, int shelf, String ed)
+    public void defineAsDamaged(int id, String description,String place, int shelf, String ed)
     {
-        return facadeSupplier.defineAsDamaged(id, description, place, shelf, ed);
+        facadeSupplier.defineAsDamaged(id, description, place, shelf, ed);
     }
 
 
@@ -88,14 +86,10 @@ public class CategoryService {
         return facadeSupplier.printAllProducts();
     }
 
-    public HashMap<Integer, Integer> getItemsFromTransport(int id) {
-        return facadeSupplier.getItemsFromTransport(id);
+    public void getItemsFromTransport(int id) {
+        facadeSupplier.getItemsFromTransport(id);
     }
     public void addAllItems(int productId, int quantity, String ed, int shelf){
         facadeSupplier.addAllItems(productId, quantity, ed, shelf);
-    }
-
-    public void updateOrders(){
-        facadeSupplier.updateOrders();
     }
 }

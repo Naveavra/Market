@@ -208,11 +208,11 @@ public class CategoryToProductDAO {
         }
     }
 
-    public boolean removeProduct(int productId){
+    public void removeProduct(int productId){
         try {
-            return productDAO.removeProduct(productId);
+            productDAO.removeProduct(productId);
         } catch (SQLException ignored) {
-            return false;
+
         }
     }
 

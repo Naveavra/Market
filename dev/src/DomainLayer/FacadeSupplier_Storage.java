@@ -14,6 +14,7 @@ public class FacadeSupplier_Storage {
     private CategoryController categoryController;
     private ReportController reportController;
     private Gson gson;
+    private FacadeEmployees_Transports facadeEmployeesTransports;
     private  FacadeEmployees_Transports facade;
     private static boolean needsUpdateOrders=true;
 
@@ -24,11 +25,12 @@ public class FacadeSupplier_Storage {
         categoryController=new CategoryController();
         reportController=new ReportController(categoryController);
         gson=new Gson();
-        facade=new FacadeEmployees_Transports();
+        facade=FacadeEmployees_Transports.getInstance();
         if(needsUpdateOrders){
             updateOrders();
             needsUpdateOrders=false;
         }
+        facadeEmployeesTransports = FacadeEmployees_Transports.getInstance();
 
     }
 
@@ -306,9 +308,9 @@ public class FacadeSupplier_Storage {
         categoryController.addCategory(cName, 0);
     }
 
-    public boolean addNewProduct(int pId, String pName, String desc, double price,
+    public void addNewProduct(int pId, String pName, String desc, double price,
                               String maker, String cat, String sub, String subSub) {
-        return categoryController.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
+        categoryController.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
     }
     public void addSubCat(String cName, String subName) {
         categoryController.addSubCategory(cName, subName);
@@ -330,8 +332,8 @@ public class FacadeSupplier_Storage {
         return categoryController.hasCategory(cat);
     }
 
-    public boolean removeFromCatalog(int id) {
-        return categoryController.removeFromCatalog(id);
+    public void removeFromCatalog(int id) {
+        categoryController.removeFromCatalog(id);
     }
 
 
@@ -345,13 +347,13 @@ public class FacadeSupplier_Storage {
         return categoryController.getProductWithId(id).getName();
     }
 
-    public boolean setDiscountToOneItem(int id, double discount){
-        return categoryController.setDiscountToOneItem(id, discount);
+    public void setDiscountToOneItem(int id, double discount){
+        categoryController.setDiscountToOneItem(id, discount);
     }
 
-    public boolean defineAsDamaged(int id, String description,String place, int shelf, String ed)
+    public void defineAsDamaged(int id, String description,String place, int shelf, String ed)
     {
-        return categoryController.defineAsDamaged(id, description, place, shelf, ed);
+        categoryController.defineAsDamaged(id, description, place, shelf, ed);
     }
 
 
@@ -361,6 +363,7 @@ public class FacadeSupplier_Storage {
             //find supplier with the lowest price and make an order
             ordersController.createOrderWithMinPrice(id, categoryController.getProductWithId(id).getRefill());
         }
+
         return price;
     }
 
@@ -372,18 +375,16 @@ public class FacadeSupplier_Storage {
         return categoryController.needsRefill(productId);
     }
 
-    public HashMap<Integer, Integer> getItemsFromTransport(int id){
+    public void getItemsFromTransport(int id){
         HashMap<Integer, Integer> productsAndQuantity = facade.getProductsFromOrderDoc(id);
         for( int productId : productsAndQuantity.keySet()){
             String curDate= LocalDate.now().toString();
             int curYear=Integer.parseInt(curDate.substring(0, 4))+1;
-            String curMonth=curDate.substring(5, 7);
-            String curDay=curDate.substring(8, 10);
-            String expirationDate = curYear +"-"+ curMonth +"-"+ curDay;
+            int curMonth=Integer.parseInt(curDate.substring(5, 7));
+            int curDay=Integer.parseInt(curDate.substring(8, 10));
+            String expirationDate = curYear +""+ curMonth +""+ curDay;
             categoryController.addAllItems(productId, productsAndQuantity.get(productId), expirationDate, 1);
         }
-        facade.transportIsDone(id+"");
-        return productsAndQuantity;
     }
 
     public void addAllItems(int productId, int quantity, String ed, int shelf){

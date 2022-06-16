@@ -10,17 +10,21 @@ import java.util.*;
 import java.util.function.Function;
 
 public class EmployeeService {
+    private static final EmployeeService instance = new EmployeeService();
     private EmployeeServiceGeneric employeeService;// = new EmployeeServiceGeneric("");
     private final FacadeEmployees_Transports facade;
     private final Parser parser;
     private boolean dataHasLoaded; // this is only to indicate if the pre-made data was loaded into the system or not, so we wouldn't load it twice
 
-    public EmployeeService() {
-        facade = new FacadeEmployees_Transports();
+    private EmployeeService() {
+        facade = FacadeEmployees_Transports.getInstance();
         parser = new Parser();
         dataHasLoaded = false;
     }
 
+    public static EmployeeService getInstance() {
+        return instance;
+    }
 
     public String start() {
         String GREEN_BOLD = "\033[1;32m";  // GREEN
@@ -360,19 +364,5 @@ public class EmployeeService {
 
     private String displayMessages(String id) {
         return facade.displayMessages(id);
-    }
-
-    public String viewShift(String sShift) {
-        Response r = parser.isValidShiftInput(sShift);
-        if (r.errorOccurred())
-            return r.getErrorMessage();
-        return facade.viewShift(parser.getShiftPair(sShift));
-    }
-
-    public Response deleteShift(String sShift) {
-        Response r = parser.isValidShiftInput(sShift);
-        if (r.errorOccurred())
-            return r;
-        return facade.deleteShift(parser.getShiftPair(sShift));
     }
 }

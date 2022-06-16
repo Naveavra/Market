@@ -9,7 +9,7 @@ public class UserService {
     FacadeEmployees_Transports facadeEmployeesTransports;
     ResourceController resourceController = ResourceController.getInstance();
     public UserService(){
-        facadeEmployeesTransports = new FacadeEmployees_Transports();
+        facadeEmployeesTransports = FacadeEmployees_Transports.getInstance();
     }
 
     public boolean createDriver(String name, String id, String licence){
@@ -20,9 +20,9 @@ public class UserService {
         return facadeEmployeesTransports.addTruck(type, licenseplate, maxweight, initialweight);
     }
 
-//    public boolean createSupply(String name, double weight){
-//        return facadeEmployeesTransports.addSupply(name, weight);
-//    }
+    public boolean createSupply(String name, double weight){
+        return facadeEmployeesTransports.addSupply(name, weight);
+    }
 
     public boolean createSite(String id,String contactaddress, String contactname, String contactphonenumber
             , int shippingArea, int type){
@@ -42,9 +42,9 @@ public class UserService {
     }
 
 
-//    public String removeSupply(String suppName2Remove) {
-//        return facadeEmployeesTransports.removeSupply(suppName2Remove);
-//    }
+    public String removeSupply(String suppName2Remove) {
+        return facadeEmployeesTransports.removeSupply(suppName2Remove);
+    }
 
 
     //#TODO transport doc!!!!

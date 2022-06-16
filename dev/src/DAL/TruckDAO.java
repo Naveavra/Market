@@ -51,14 +51,13 @@ public class TruckDAO {
             String query = "SELECT available FROM TrucksAvailability WHERE licenseplate = ? AND date = ?";
             try {
                 List<HashMap<String, Object>> rs = conn.executeQuery(query,id,date);
-                if((rs.size() == 0) ||  Objects.equals((String)rs.get(0).get("available"), "#t")){
+                if(Objects.equals((String)rs.get(0).get("available"), "#t")){
                     return true;
                 }
                 else {
                     return false;
                 }
             } catch (SQLException e) {
-                System.out.println("problem with getAvailability");
                 return false;
             }
         }
@@ -138,9 +137,8 @@ public class TruckDAO {
             List<HashMap<String, Object>> rs = conn.executeQuery("SELECT * FROM Trucks Where licensePlate = "+"'"+licensePlate+"'");
             String type = (String)rs.get(0).get("type");
             String license = (String)rs.get(0).get("licensePlate");
-            double maxWeight = Double.parseDouble(String.valueOf(rs.get(0).get("maxWeight")));
-//            double maxWeight = (double)rs.get(0).get("maxWeight");
-            double initialWeight = Double.parseDouble(String.valueOf(rs.get(0).get("initialWeight")));
+            double maxWeight = (double)rs.get(0).get("maxWeight");
+            double initialWeight = (double)rs.get(0).get("initialWeight");
             Truck t = new Truck(type,license,maxWeight,initialWeight);
             identityMap.put(license,t);
             return t;
@@ -155,14 +153,14 @@ public class TruckDAO {
         List<HashMap<String, Object>> rs2;
         try {
             rs1 = conn.executeQuery("SELECT licenseplate from TrucksAvailability WHERE date = "+ "'"+date+"'"+" AND time = "+"'"+time+"'"+" AND available = #f");
-            rs2 = conn.executeQuery("SELECT licensePlate From TRUCKS WHERE type = "+ "'"+licenseType+"'");
+            rs2 = conn.executeQuery("SELECT licensePlate From TRUCKS");
             ArrayList<String> temp = new ArrayList<>();
             for (int i = 0; i < rs1.size(); i++){
-                temp.add((String)rs1.get(i).get("licensePlate"));
+                temp.add((String)rs1.get(0).get("licensePlate"));
             }
             for (int i = 0; i < rs2.size(); i++){
-                if(!temp.contains((String)rs2.get(i).get("licensePlate"))) {
-                    rval.add(getTruck((String)rs2.get(i).get("licensePlate")));
+                if(!temp.contains((String)rs2.get(0).get("licensePlate"))) {
+                    rval.add(getTruck((String)rs2.get(0).get("licensePlate")));
                 }
             }
 

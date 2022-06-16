@@ -16,12 +16,13 @@ import java.util.*;
 public class EmployeeDAO {
     private static Map<String, Employee> idMap = new HashMap<>();;
     private Connect conn = Connect.getInstance();
-//    private static final EmployeeDAO instance = new EmployeeDAO();
-
-//    public static EmployeeDAO getInstance() {
-//        return instance;
+    private static final EmployeeDAO instance = new EmployeeDAO();
+//    private EmployeeDAO(){
+//        idMap = new HashMap<>();
 //    }
-    public EmployeeDAO(){}
+    public static EmployeeDAO getInstance() {
+        return instance;
+    }
 
     public Employee getEmployee(String id){
         if (idMap.containsKey(id))
@@ -197,9 +198,6 @@ public class EmployeeDAO {
     }
 
     public Response removeEmployee(String id) {
-        if (hasUpcomingShifts(id)){
-            return new Response("Employee has upcoming shifts and cannot be deleted");
-        }
         idMap.remove(id);
         try {
             conn.deleteRecordFromTableSTR("Employees", "id", id);
@@ -208,10 +206,6 @@ public class EmployeeDAO {
         catch (SQLException e){
             return new Response("Unable to delete employee. Make sure the id is correct");
         }
-    }
-
-    private boolean hasUpcomingShifts(String id) {
-        return new ShiftDAO().hasUpcomingShifts(id);
     }
 
     public void clearMap() {
@@ -352,16 +346,6 @@ public class EmployeeDAO {
         }
     }
 
-    public boolean writeMessageToHR(String message){
-        try{
-            String query = "INSERT INTO Messages (message, read) VALUES(?,?)";
-            conn.executeUpdate(query, message, "false");
-            return true;
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
     public boolean editName(String id, String name) {
         if (idMap.containsKey(id)) {
             idMap.get(id).setName(name);
@@ -449,7 +433,7 @@ public class EmployeeDAO {
 //            return msg;
 //        }
         try {
-            List<HashMap<String, Object>> messagesDB = conn.executeQuery("SELECT message FROM Messages WHERE read = ?", "false");
+            List<HashMap<String, Object>> messagesDB = conn.executeQuery("SELECT message FROM Messages WHERE id = ? AND read = ?", id, "false");
             List<String> messages = new ArrayList<>();
             for (int i = 0; i < messagesDB.size(); i++) {
                 String message = (String) messagesDB.get(i).get("message");

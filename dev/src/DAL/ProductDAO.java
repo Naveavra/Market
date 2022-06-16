@@ -25,9 +25,9 @@ public class ProductDAO {
 
     public boolean insert(Product p, String catName, String subCatName, String subSubCatName) throws SQLException {
         if (get(p.getId()) == null) {
-            String query = "INSERT INTO Products (productId,name,description,maker,storageAmount,storeAmount,timesBought,price,discount,dayAdded, categoryName,subCategoryName,subSubCategoryName)" +
-                    " VALUES " + String.format("(%d,\"%s\",\"%s\",\"%s\",%d,%d,%d,%f,%f,\"%s\",\"%s\",\"%s\",\"%s\")", p.getId(), p.getName(), p.getDescription(), p.getMaker(),
-                    p.getStorageAmount(), p.getStoreAmount(), p.getTimesBought(), p.getPrice(),p.getDiscount(),p.getDayAdded(), catName, subCatName, subSubCatName);
+            String query = "INSERT INTO Products (productId,name,description,maker,storageAmount,storeAmount,timesBought,price,weight,discount,dayAdded, categoryName,subCategoryName,subSubCategoryName)" +
+                    " VALUES " + String.format("(%d,\"%s\",\"%s\",\"%s\",%d,%d,%d,%f,%f,%f,\"%s\",\"%s\",\"%s\",\"%s\")", p.getId(), p.getName(), p.getDescription(), p.getMaker(),
+                    p.getStorageAmount(), p.getStoreAmount(), p.getTimesBought(), p.getPrice(), p.getWeight(),p.getDiscount(),p.getDayAdded(), catName, subCatName, subSubCatName);
             try (Statement stmt = connect.createStatement()) {
                 stmt.execute(query);
             } catch (SQLException e) {
@@ -47,9 +47,10 @@ public class ProductDAO {
                 String.format("productId=%d", productId);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
+            rs.next();
             if (!rs.isClosed()) {
                 Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                        rs.getString("description"), rs.getDouble("price"),rs.getString("maker"));
+                        rs.getString("description"), rs.getDouble("price"), rs.getDouble("weight"),rs.getString("maker"));
                 p.setTimesBought(rs.getInt("timesBought"));
                 p.setStorageAmount(rs.getInt("storageAmount"));
                 p.setStoreAmount(rs.getInt("storeAmount"));
@@ -75,7 +76,7 @@ public class ProductDAO {
             rs.next();
             if (!rs.isClosed()) {
                 Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                        rs.getString("description"), rs.getInt("price"),rs.getString("maker"));
+                        rs.getString("description"), rs.getInt("price"), rs.getDouble("weight"),rs.getString("maker"));
                 p.setTimesBought(rs.getInt("timesBought"));
                 p.setStorageAmount(rs.getInt("storageAmount"));
                 p.setStoreAmount(rs.getInt("storeAmount"));
@@ -100,7 +101,7 @@ public class ProductDAO {
             List<Product> ans=new LinkedList<>();
                 while(!rs.isClosed()) {
                     Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                            rs.getString("description"), rs.getInt("price"), rs.getString("maker"));
+                            rs.getString("description"), rs.getInt("price"), rs.getDouble("weight"), rs.getString("maker"));
                     p.setTimesBought(rs.getInt("timesBought"));
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
@@ -137,7 +138,7 @@ public class ProductDAO {
             if(!rs.isClosed()) {
                 while (!rs.isClosed()) {
                     Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                            rs.getString("description"), rs.getInt("price"), rs.getString("maker"));
+                            rs.getString("description"), rs.getInt("price"), rs.getDouble("weight"), rs.getString("maker"));
                     p.setTimesBought(rs.getInt("timesBought"));
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
@@ -168,7 +169,7 @@ public class ProductDAO {
             if(!rs.isClosed()) {
                 while (!rs.isClosed()) {
                     Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                            rs.getString("description"), rs.getInt("price"), rs.getString("maker"));
+                            rs.getString("description"), rs.getInt("price"), rs.getDouble("weight"), rs.getString("maker"));
                     p.setTimesBought(rs.getInt("timesBought"));
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
@@ -197,7 +198,7 @@ public class ProductDAO {
             if(!rs.isClosed()) {
                 while (!rs.isClosed()) {
                     Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                            rs.getString("description"), rs.getInt("price"), rs.getString("maker"));
+                            rs.getString("description"), rs.getInt("price"), rs.getDouble("weight"), rs.getString("maker"));
                     p.setTimesBought(rs.getInt("timesBought"));
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
@@ -248,19 +249,18 @@ public class ProductDAO {
         }
     }
 
-    public boolean removeProduct(int productId) throws SQLException {
+    public void removeProduct(int productId) throws SQLException {
         String query = String.format("DELETE FROM Products WHERE productId=%d",
                 productId);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
             IMProducts.remove(1);
         } catch (SQLException e) {
-            return false;
+            throw e;
         }
         finally {
             connect.closeConnect();
         }
-        return true;
     }
     public static void reset(){
         IMProducts=new HashMap<>();

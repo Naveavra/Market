@@ -12,22 +12,5 @@
     <orderEntry type="library" name="dev" level="project" />
     <orderEntry type="library" name="lib1" level="project" />
     <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/emul-0.54.jar!/" />
-          <root url="jar://$MODULE_DIR$/gson-2.9.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/json-20220320.jar!/" />
-          <root url="jar://$MODULE_DIR$/sqlite-jdbc-3.36.0.3.jar!/" />
-          <root url="file://$MODULE_DIR$" />
-          <root url="file://$MODULE_DIR$" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/dev/src" />
-        </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$" recursive="false" />
-      </library>
-    </orderEntry>
   </component>
 </module>

@@ -3,12 +3,10 @@ package DomainLayer.Transport;
 public class Supply {
     String name;
     double weight;
-    String id;
 
-    public Supply(String name, double weight, String id){
+    public Supply(String name, double weight){
         this.name = name;
         this.weight = weight;
-        this.id = id;
     }
 
     public String getName() {
@@ -18,7 +16,6 @@ public class Supply {
     public double getWeight() {
         return weight;
     }
-    public String getId(){return id;}
     
     public String toString(){
         return "Name: "+ name +" ,Weight: "+ weight;

@@ -27,6 +27,8 @@ public class Connect {
     }
     private Connect() {
         try {
+            // db parameters
+            String url = "jdbc:sqlite:../dev/superli.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
             createTables();
@@ -55,6 +57,7 @@ public class Connect {
                     "\t\"timesBought\"\tINTEGER,\n"+
                     "\t\"amountNeededForRefill\"\tINTEGER,\n"+
                     "\t\"price\"\tInteger,\n"+
+                    "\t\"weight\"\tInteger,\n"+
                     "\t\"discount\"\tInteger,\n"+
                     "\t\"dayAdded\"\tTEXT,\n" +
 
@@ -223,7 +226,7 @@ public class Connect {
                     ");";
             statement.execute(query);
             query = "CREATE TABLE IF NOT EXISTS Messages(" +
-                    "messageID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "id VARCHAR(9)," +
                     "message VARCHAR(500)," +
                     "read VARCHAR(5)," +
                     "FOREIGN KEY (id) REFERENCES Employees(id) ON DELETE CASCADE" +
@@ -266,6 +269,14 @@ public class Connect {
                     "PRIMARY KEY (licenseplate,date,time)" +
                     ")";
             statement.execute(query);
+//            query = "CREATE TABLE IF NOT EXISTS DriverAvailability(" +
+//                    "id varchar(30)," +
+//                    "date VARCHAR(20)," +
+//                    "time varchar(10)," +
+//                    "available varchar(3)," +
+//                    "PRIMARY KEY (id,date,time)" +
+//                    ")";
+//            statement.execute(query);
             query = "CREATE Table IF NOT EXISTS OrderDocs(" +
                     "id varchar(20)," +
                     "driverID varchar(9)," +
@@ -276,7 +287,7 @@ public class Connect {
                     "weight DECIMAL," +
                     "finished varchar(3),"+
                     "PRIMARY KEY (id)," +
-                    "FOREIGN KEY (driverID) REFERENCES Employees(id)" +
+                    "FOREIGN KEY (driverID) REFERENCES Drivers(id)" +
                     ")";
             statement.execute(query);
             query = "CREATE TABLE IF NOT EXISTS Destinations(" +
@@ -291,7 +302,7 @@ public class Connect {
                     "orderDocID varchar (20)," +
                     "supply varchar (50)," +
                     "quantity integer," +
-                    "PRIMARY KEY (siteID,orderDocID)," +
+                    "PRIMARY KEY (siteID,orderDocID,OrderId)," +
                     "FOREIGN KEY (orderDocID) REFERENCES OrderDocs(id) ON DELETE CASCADE" +
                     ")";
             statement.execute(query);
@@ -311,7 +322,7 @@ public class Connect {
                     ")";
             statement.execute(query);
 
-            query = "CREATE TABLE IF NOT EXISTS Stores(" +
+            query = "CREATE TABLE IF NOT EXISTS Sites(" +
                     "id varchar (20)," +
                     "type INTEGER," +
                     "shippingArea INTEGER," +
@@ -370,16 +381,12 @@ public class Connect {
         }
     }
 
-
     public int executeUpdate(String query,Object... params) throws SQLException {
         try  {
             createStatement();
-            PreparedStatement statement = conn.prepareStatement("PRAGMA foreign_keys = ON");
-            statement.executeUpdate();
-            statement = conn.prepareStatement(query);
+            PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++)
                 statement.setObject(i+1, params[i]);
-
             int res = statement.executeUpdate();
             return res;
         } catch (SQLException throwable) {
@@ -478,44 +485,6 @@ public class Connect {
             //table pastOrder
             query = "DELETE from PastOrdersSupplier";
             stmt.execute(query);
-
-            query = "DELETE FROM Employees";
-            stmt.execute(query);
-            query = "DELETE FROM EmployeesInShift";
-            stmt.execute(query);
-            query = "DELETE FROM Roles";
-            stmt.execute(query);
-            query = "DELETE FROM Schedules";
-            stmt.execute(query);
-            query = "DELETE FROM Shifts";
-            stmt.execute(query);
-            query = "DELETE FROM Drivers";
-            stmt.execute(query);
-            query = "DELETE FROM DriverAvailability";
-            stmt.execute(query);
-            query = "DELETE FROM Destinations";
-            stmt.execute(query);
-            query = "DELETE FROM DriverDocs";
-            stmt.execute(query);
-            query = "DELETE FROM DriversLicenses";
-            stmt.execute(query);
-            query = "DELETE FROM Messages";
-            stmt.execute(query);
-            query = "DELETE FROM OrderDocs";
-            stmt.execute(query);
-            query = "DELETE FROM Stores";
-            stmt.execute(query);
-            query = "DELETE FROM Supplies";
-            stmt.execute(query);
-            query = "DELETE FROM Trucks";
-            stmt.execute(query);
-            query = "DELETE FROM TrucksAvailability";
-            stmt.execute(query);
-            query = "DELETE FROM order4Dest";
-            stmt.execute(query);
-
-
-
 
 
 
