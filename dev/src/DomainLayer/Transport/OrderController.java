@@ -14,18 +14,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class OrderController {
-    public DriverDocDAO driverDocs = new DriverDocDAO();
-    public OrderDocDAO orderDocs = new OrderDocDAO();
-    public TruckDAO trucks = new TruckDAO();
-    public StoreDAO sites = new StoreDAO();
-    public ProductDAO supplies = new ProductDAO();
-    public DriverDAO drivers = new DriverDAO();
-    AtomicInteger id = new AtomicInteger();
-    AtomicInteger driverDocID = new AtomicInteger();
-    public SuppliersDAO suppliers = new SuppliersDAO();
-    private final static OrderController INSTANCE = new OrderController();
-    public static OrderController getInstance(){
-        return INSTANCE;
+    public DriverDocDAO driverDocs;
+    public OrderDocDAO orderDocs;
+    public TruckDAO trucks;
+    public StoreDAO sites;
+    public ProductDAO supplies;
+    public DriverDAO drivers;
+    AtomicInteger id;
+    AtomicInteger driverDocID;
+    public SuppliersDAO suppliers;
+    public Store defaultStore;
+    public OrderController(){
+        driverDocs = new DriverDocDAO();
+        orderDocs = new OrderDocDAO();
+        trucks = new TruckDAO();
+        sites = new StoreDAO();
+        supplies = new ProductDAO();
+        drivers = new DriverDAO();
+        id = new AtomicInteger();
+        driverDocID = new AtomicInteger();
+        suppliers = new SuppliersDAO();
+        defaultStore = sites.getSite("616");
     }
 //    public OrderDoc getDocByID(String id){
 //        return pool.getOrderDocByID(id);
@@ -406,7 +415,7 @@ public class OrderController {
     }
     public boolean createAutoTransport(String supplierNumber, String date, ConcurrentHashMap<String,Integer> supplyList) {
         String time = "MORNING";
-        Store defaultStore = new Store("616",new Contact("Asgard","Thor","050866945"), Store.ShippingArea.North,1);
+        sites.addSite("616",0,1,"Asgard","Thor","050866945");
         Supplier origin = null;
         try {
             origin = suppliers.getSupplier(Integer.parseInt(supplierNumber));
@@ -428,6 +437,11 @@ public class OrderController {
         d.setTruckandDriver(truck,driver);
         orderDocs.addDoc(d);
         createDriverDocs(d.getId());
+        d.finishOrder();
         return true;
+    }
+
+    public String GetFinish(String docID) {
+        return orderDocs.getFinish(docID);
     }
 }

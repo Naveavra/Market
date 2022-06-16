@@ -146,6 +146,11 @@ public class UserInterface extends MainCLI {
         ArrayList<Integer> quantities =new ArrayList<>();
         try {
             doc = getDoc();
+            String finish = os.GetFinish(doc);
+            if (finish == "#t"){
+                System.out.println("Transport is already done homie");
+                return;
+            }
             System.out.println("Please enter store -ID- from the list below:");
             System.out.println(showStores(doc));
             Scanner input = new Scanner(System.in);
@@ -179,6 +184,11 @@ public class UserInterface extends MainCLI {
         while(true){
             try {
                 doc = getDoc();
+                String finish = os.GetFinish(doc);
+                if (finish == "#t"){
+                    System.out.println("Transport is already finished G");
+                    return;
+                }
                 double currentWeight = os.getCurrWeight(doc);
                 System.out.println("Current weight is: "+currentWeight+" \n" +
                         "Please enter new weight:");
@@ -242,6 +252,10 @@ public class UserInterface extends MainCLI {
             case 4:
                 try{
                     String doc = getDoc();
+                    if (os.GetFinish(doc) == "#t"){
+                        System.out.println("Transport is already finished cuz");
+                        break;
+                    }
                     os.transportIsDone(doc);
                     System.out.println("Transport ID: "+doc+" Is Finished, Nice Work G");
                 }catch (Exception e){
@@ -250,7 +264,10 @@ public class UserInterface extends MainCLI {
                 break;
             case 5:
                 try {
-                    removeSitesFromDoc(getDoc());
+                    if(!removeSitesFromDoc(getDoc())){
+                        System.out.println("Something went wrong");
+                        break;
+                    }
                     System.out.println("Site removed Successfully");
                 }catch (Exception e){
                     System.out.println("Something went wrong");
@@ -413,14 +430,23 @@ public class UserInterface extends MainCLI {
     private String showStores(String docID){
         return os.showStoresForDoc(docID);
     }
-    private void removeSitesFromDoc(String docID){
-        System.out.println("Please choose Store ID to remove:");
-        System.out.println(showStores(docID));
-        Scanner input = new Scanner(System.in);
-        String storeID = input.nextLine();
-        os.removeSiteFromDoc(docID, storeID);
+    private boolean removeSitesFromDoc(String docID) {
+        try {
+            String finish = os.GetFinish(docID);
+            if (finish == "#t"){
+                return false;
+            }
+            System.out.println("Please choose Store ID to remove:");
+            System.out.println(showStores(docID));
+            Scanner input = new Scanner(System.in);
+            String storeID = input.nextLine();
+            os.removeSiteFromDoc(docID, storeID);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
     }
-
     private void removeSupplies(String docID){
         System.out.println("Please select a -Store ID- you want to remove from:");
         System.out.println(showStores(docID));

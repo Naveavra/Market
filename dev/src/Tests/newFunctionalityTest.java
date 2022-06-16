@@ -30,7 +30,7 @@ public class newFunctionalityTest {
             Connect.getInstance().deleteRecordsOfTables();
             cC = new CategoryController();
             facadeSupplier =new FacadeSupplier_Storage();
-            facadeTransport=FacadeEmployees_Transports.getInstance();
+            facadeTransport=new FacadeEmployees_Transports();
             ordersController=new OrdersController();
             cC.addCategory("first", 0);
             cC.addSubCategory("first", "first1");

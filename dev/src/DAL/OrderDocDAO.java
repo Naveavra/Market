@@ -76,6 +76,22 @@ public class OrderDocDAO {
             return "Failure to remove dest from doc";
         }
     }
+
+    public String getFinish(String docID) {
+        String query = "SELECT finished FROM OrderDocs WHERE id = " + "'" + docID + "'";
+        if (identityMap.containsKey(docID)) {
+            return identityMap.get(docID).getFinished();
+        }
+        List<HashMap<String, Object>> rs = null;
+        try {
+            rs = conn.executeQuery(query);
+            String finished = (String)rs.get(0).get("finished");
+            return finished;
+            }
+        catch (SQLException e){
+            return "Fail";
+        }
+    }
     public String updateDocWeight(String docID,String value,String field){
         String query = "UPDATE OrderDocs SET weight = "+"'"+value+"'"+" WHERE id = "+"'"+docID+"'";
         try {

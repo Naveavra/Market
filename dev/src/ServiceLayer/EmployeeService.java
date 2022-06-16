@@ -17,7 +17,7 @@ public class EmployeeService {
     private boolean dataHasLoaded; // this is only to indicate if the pre-made data was loaded into the system or not, so we wouldn't load it twice
 
     private EmployeeService() {
-        facade = FacadeEmployees_Transports.getInstance();
+        facade = new FacadeEmployees_Transports();
         parser = new Parser();
         dataHasLoaded = false;
     }
