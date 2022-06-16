@@ -92,4 +92,8 @@ public class CategoryService {
     public void addAllItems(int productId, int quantity, String ed, int shelf){
         facadeSupplier.addAllItems(productId, quantity, ed, shelf);
     }
+
+    public void updateOrders(){
+        facadeSupplier.updateOrders();
+    }
 }

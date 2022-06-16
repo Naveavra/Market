@@ -49,7 +49,7 @@ public class ProductDAO {
             ResultSet rs = stmt.executeQuery(query);
             if (!rs.isClosed()) {
                 Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                        rs.getString("description"), rs.getDouble("price"), 0,rs.getString("maker"));
+                        rs.getString("description"), rs.getDouble("price"),rs.getString("maker"));
                 p.setTimesBought(rs.getInt("timesBought"));
                 p.setStorageAmount(rs.getInt("storageAmount"));
                 p.setStoreAmount(rs.getInt("storeAmount"));
@@ -75,7 +75,7 @@ public class ProductDAO {
             rs.next();
             if (!rs.isClosed()) {
                 Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                        rs.getString("description"), rs.getInt("price"), 0,rs.getString("maker"));
+                        rs.getString("description"), rs.getInt("price"),rs.getString("maker"));
                 p.setTimesBought(rs.getInt("timesBought"));
                 p.setStorageAmount(rs.getInt("storageAmount"));
                 p.setStoreAmount(rs.getInt("storeAmount"));
@@ -100,7 +100,7 @@ public class ProductDAO {
             List<Product> ans=new LinkedList<>();
                 while(!rs.isClosed()) {
                     Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                            rs.getString("description"), rs.getInt("price"), 0, rs.getString("maker"));
+                            rs.getString("description"), rs.getInt("price"), rs.getString("maker"));
                     p.setTimesBought(rs.getInt("timesBought"));
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
@@ -137,7 +137,7 @@ public class ProductDAO {
             if(!rs.isClosed()) {
                 while (!rs.isClosed()) {
                     Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                            rs.getString("description"), rs.getInt("price"), 0, rs.getString("maker"));
+                            rs.getString("description"), rs.getInt("price"), rs.getString("maker"));
                     p.setTimesBought(rs.getInt("timesBought"));
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
@@ -168,7 +168,7 @@ public class ProductDAO {
             if(!rs.isClosed()) {
                 while (!rs.isClosed()) {
                     Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                            rs.getString("description"), rs.getInt("price"), 0, rs.getString("maker"));
+                            rs.getString("description"), rs.getInt("price"), rs.getString("maker"));
                     p.setTimesBought(rs.getInt("timesBought"));
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));
@@ -197,7 +197,7 @@ public class ProductDAO {
             if(!rs.isClosed()) {
                 while (!rs.isClosed()) {
                     Product p = new Product(rs.getInt("productId"), rs.getString("name"),
-                            rs.getString("description"), rs.getInt("price"), 0, rs.getString("maker"));
+                            rs.getString("description"), rs.getInt("price"), rs.getString("maker"));
                     p.setTimesBought(rs.getInt("timesBought"));
                     p.setStorageAmount(rs.getInt("storageAmount"));
                     p.setStoreAmount(rs.getInt("storeAmount"));

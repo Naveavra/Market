@@ -65,15 +65,7 @@ public class SupplierMenu {
                 openOrderSupplierManagement(supNumber);
                 break;
             case 4:
-                Menu m =new Menu();
-                try{
-                m.initialMenu();
-                }catch (Exception e){
-                    System.out.println("something went wrong");
-                }
-            default:
-                System.out.println("You must type digit 1 to 3");
-                chooseSupplierMenu();
+                break;
         }
 
     }

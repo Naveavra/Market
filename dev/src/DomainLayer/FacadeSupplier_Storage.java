@@ -14,7 +14,6 @@ public class FacadeSupplier_Storage {
     private CategoryController categoryController;
     private ReportController reportController;
     private Gson gson;
-    private FacadeEmployees_Transports facadeEmployeesTransports;
     private  FacadeEmployees_Transports facade;
     private static boolean needsUpdateOrders=true;
 
@@ -30,7 +29,6 @@ public class FacadeSupplier_Storage {
             updateOrders();
             needsUpdateOrders=false;
         }
-        facadeEmployeesTransports = FacadeEmployees_Transports.getInstance();
 
     }
 
@@ -363,7 +361,6 @@ public class FacadeSupplier_Storage {
             //find supplier with the lowest price and make an order
             ordersController.createOrderWithMinPrice(id, categoryController.getProductWithId(id).getRefill());
         }
-
         return price;
     }
 
@@ -385,6 +382,7 @@ public class FacadeSupplier_Storage {
             String expirationDate = curYear +""+ curMonth +""+ curDay;
             categoryController.addAllItems(productId, productsAndQuantity.get(productId), expirationDate, 1);
         }
+        facade.transportIsDone(id+"");
     }
 
     public void addAllItems(int productId, int quantity, String ed, int shelf){

@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 @FixMethodOrder( MethodSorters.NAME_ASCENDING ) // force name ordering
-public class NewFunctionalityTest {
+public class RegularAndShortageOrdersTest {
 
     private CategoryController cC;
     private OrdersController ordersController;
@@ -24,8 +24,6 @@ public class NewFunctionalityTest {
     private static boolean setUpIsDone = false;
     @Before
     public void setUp() throws SQLException {
-//            File file=new File("..\\dev\\superli.db");
-//            file.delete();
             Connect.getInstance().deleteRecordsOfTables();
             cC = new CategoryController();
             facadeSupplier =new FacadeSupplier_Storage();
@@ -42,16 +40,14 @@ public class NewFunctionalityTest {
             String json = facadeSupplier.createOrder(1);
             order = Menu.fromJson(json,OrderFromSupplier.class);
             String json2 = facadeSupplier.createOrder(1);
-            order2 = Menu.fromJson(json,OrderFromSupplier.class);
-//            facade.createOrder(1);
-//            facade.createOrder(1);
+            order2 = Menu.fromJson(json2,OrderFromSupplier.class);
             String[]days=new String[1];
-            days[0]="4";
+            days[0]="1234567";
             facadeSupplier.addFixedDeliveryDaysForOrder(1, order2.getOrderId(), days);
             facadeSupplier.updateOrders();
             facadeSupplier.addProductToOrder(1, order.getOrderId(), 1, 2);
             facadeSupplier.addProductToOrder(1, order2.getOrderId(), 2, 2);
-            days[0]="1";
+            days[0]="4";
             facadeSupplier.addFixedDeliveryDaysForOrder(1, order.getOrderId(), days);
             setUpIsDone=true;
     }
@@ -92,8 +88,8 @@ public class NewFunctionalityTest {
     public void stage6_checkSendingOrderWhenRefillIsNotEnough() {
         facadeSupplier.buyItems(1, 6);
         facadeSupplier.addAllItems(1,1,"2027-06-01",12);
+        facadeSupplier.updateOrders();
         assertEquals(2, ordersController.getFinalOrders(1).size());
-
     }
 
     @org.junit.Test
@@ -101,7 +97,8 @@ public class NewFunctionalityTest {
         facadeSupplier.buyItems(1, 6);
         facadeSupplier.addAllItems(1,1,"2027-06-01",12);
         cC.addAllItems(1,100,"2027-06-01",12);
-        assertEquals(2, ordersController.getFinalOrders(1).size());// one order before and one order because of regular
+        facadeSupplier.updateOrders();
+        assertEquals(1, ordersController.getFinalOrders(1).size());
 
     }
 
@@ -120,7 +117,7 @@ public class NewFunctionalityTest {
         facadeSupplier.addAllItems(1,1,"2027-06-01",12);
         cC.addAllItems(1,100,"2027-06-01",12);
         facadeSupplier.updateOrders();
-        assertEquals(2, ordersController.getFinalOrders(1).size());//2 were already there, checking no other order was added
+        assertEquals(1, ordersController.getFinalOrders(1).size());
     }
 
     @org.junit.Test

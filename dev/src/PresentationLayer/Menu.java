@@ -2,6 +2,7 @@ package PresentationLayer;
 
 import DAL.Connect;
 import DomainLayer.Employees.JobType;
+import PresentationLayer.Suppliers.Supplier;
 import PresentationLayer.Transport_Emploees.EmployeeMainCLI;
 import ServiceLayer.EmployeeService;
 import PresentationLayer.Storage.CLI;
@@ -43,7 +44,8 @@ public class Menu {
         }
         if(choice==1)
             loadInitialData();
-        while (true){
+        boolean end = false;
+        while (!end){
             while (!employeeCLI.isLoggedIn()) {
                 employeeCLI.login();
             }
@@ -59,6 +61,7 @@ public class Menu {
                 choiceStr = sc.next();
                 if (choiceStr.equals("exit")){
                     System.out.println("Goodbye!");
+                    end = true;
                     break;
                 }
                 choice=Integer.parseInt(choiceStr);
@@ -163,7 +166,8 @@ public class Menu {
         os.addProductToOrder(1, o1.getOrderId(), 1 ,5);
         String[] days={"1", "2", "3", "4", "5", "6", "7"};
         os.addFixedDeliveryDaysForOrder(1, 1, days);
-        os.sendOrder(1, 1);
+        cC.updateOrders();
+//        os.sendOrder(1, 1);
 
         // empoly info
         LoadEmployeeData();

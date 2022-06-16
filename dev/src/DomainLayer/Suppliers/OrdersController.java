@@ -181,5 +181,12 @@ public class OrdersController {
         }
     }
 
+    public Map<ProductSupplier,Integer> getAllProductsOfOrder(int orderId){
+        try {
+            return ordersDAO.getAllProductsOfOrder(orderId);
+        } catch (SQLException e) {
+            return new HashMap<>();
+        }
+    }
 
 }
