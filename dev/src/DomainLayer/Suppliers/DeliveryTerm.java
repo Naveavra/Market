@@ -12,7 +12,8 @@ public class DeliveryTerm {
         Wednesday,
         Thursday,
         Friday,
-        Saturday
+        Saturday,
+        NoDays
     }
     public static Map<String, DaysInWeek> intToEnum  = new HashMap<String, DaysInWeek>() {{
         put("1", DaysInWeek.Sunday);
@@ -41,16 +42,21 @@ public class DeliveryTerm {
     }
     public DeliveryTerm (String days)  {
         if(days.length()!=0) {
-            this.daysInWeeks = new DaysInWeek[days.length()];
+            DaysInWeek[] dd = new DaysInWeek[days.length()];
             char[] arr = days.toCharArray();
             int i = 0;
             for (char c : arr) {
-                daysInWeeks[i] = fromStringToDays(String.valueOf(c));
+                String s= String.valueOf(c);
+                dd[i]=intToEnum.get(s);
                 i++;
             }
+            this.daysInWeeks=dd;
         }
-        else
-            this.daysInWeeks=new DaysInWeek[0];
+        else {
+            DaysInWeek[] dd = new DaysInWeek[1];
+             dd[0] = DaysInWeek.NoDays;
+             this.daysInWeeks = dd;
+        }
     }
 
     public DeliveryTerm(List<String> days){
@@ -99,14 +105,21 @@ public class DeliveryTerm {
     public int getDayValue(DaysInWeek d){
         return daysToInt.get(d);
     }
-    public Map<DaysInWeek,Integer> daysToInt = new HashMap<DaysInWeek,Integer>() {{
-        put(DaysInWeek.Sunday,7);
-        put(DaysInWeek.monday,1);
-        put(DaysInWeek.Tuesday,2);
-        put(DaysInWeek.Wednesday,3);
-        put(DaysInWeek.Thursday,4);
-        put(DaysInWeek.Friday,5);
-        put(DaysInWeek.Saturday,6);
-
+    public static Map<DaysInWeek,Integer> daysToInt = new HashMap<DaysInWeek,Integer>() {{
+        put(DaysInWeek.Sunday,1);
+        put(DaysInWeek.monday,2);
+        put(DaysInWeek.Tuesday,3);
+        put(DaysInWeek.Wednesday,4);
+        put(DaysInWeek.Thursday,5);
+        put(DaysInWeek.Friday,6);
+        put(DaysInWeek.Saturday,7);
+        put(DaysInWeek.NoDays,8);
     }};
+
+    public static Integer getDay(DaysInWeek d){
+        return daysToInt.get(d);
+    }
+    public static String getDayAsString(DaysInWeek d){
+        return String.valueOf(daysToInt.get(d));
+    }
 }

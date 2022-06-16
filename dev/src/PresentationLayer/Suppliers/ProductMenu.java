@@ -6,10 +6,8 @@ import ServiceLayer.ProductSupplierService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+
+import java.util.*;
 
 public class ProductMenu {
 
@@ -17,15 +15,20 @@ public class ProductMenu {
     private Scanner sc;
     private SupplierService ss;
     private ProductSupplierService ps;
+    private SupplierMenu sm;
     private Set<JobType> roles;
     public ProductMenu(Supplier s) {
         sc=new Scanner(System.in);
         supplier = s;
         ss = new SupplierService();
         ps = new ProductSupplierService();
+        roles=new HashSet<>();
+        sm =new SupplierMenu();
     }
     public void setRole(Set<JobType> roles){
         this.roles=roles;
+        sm.setRoles(roles);
+
     }
 
     public void manageProductsSupplierMenu() {
@@ -37,7 +40,7 @@ public class ProductMenu {
         System.out.println("\t 4. remove discount on product to supplier");
         System.out.println("\t 5. watch all supplier products");
         System.out.println("\t 6. update product");
-        System.out.println("\t 7 . go back");
+        System.out.println("\t 7. go back");
         String choiceStr = "";
         int choice =0;
         try{
@@ -74,7 +77,7 @@ public class ProductMenu {
                 updateProduct(supplier);
                 break;
             case 7:
-                new SupplierMenu().chooseSupplierMenu();
+                sm.chooseSupplierMenu();
                 break;
             default:
                 System.out.println("you must peek a number between 1 to 7");
