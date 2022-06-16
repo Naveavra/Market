@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 @FixMethodOrder( MethodSorters.NAME_ASCENDING ) // force name ordering
-public class NewFunctionalityTest {
+public class NewFunctionalityTestM2 {
 
     private CategoryController cC;
     private OrdersController ordersController;
