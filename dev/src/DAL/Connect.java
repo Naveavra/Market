@@ -225,15 +225,14 @@ public class Connect {
             query = "CREATE TABLE IF NOT EXISTS Messages(" +
                     "messageID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "message VARCHAR(500)," +
-                    "read VARCHAR(5)," +
-                    "FOREIGN KEY (id) REFERENCES Employees(id) ON DELETE CASCADE" +
+                    "read VARCHAR(5)" +
                     ")";
             statement.execute(query);
             query = "CREATE TABLE IF NOT EXISTS DriversLicenses (" +
                     "id VARCHAR(9)," +
                     "license VARCHAR(5)," +
                     "PRIMARY KEY (id, license)," +
-                    "FOREIGN KEY (id) REFERENCES Employees(id) ON DELETE CASCADE" +
+                    "FOREIGN KEY (id) REFERENCES Drivers(id) ON DELETE CASCADE" +
                     ");";
             statement.execute(query);
             query = "CREATE TABLE IF NOT EXISTS DriverAvailability(" +

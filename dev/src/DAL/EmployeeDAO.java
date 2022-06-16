@@ -466,7 +466,8 @@ public class EmployeeDAO {
             idMap.get(id).clearMessages();
         }
         try {
-            conn.updateRecordInTable("Messages", "read","id", id, "true");
+            conn.executeUpdate("UPDATE Messages SET read = true WHERE read = false");
+//            conn.updateRecordInTable("Messages", "read","id", id, "true");
         }
         catch (SQLException ignored){}
     }
