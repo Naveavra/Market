@@ -27,6 +27,7 @@ public class FacadeEmployees_Transports {
         createEmployee("318856994", "Itay Gershon", "123456", 1000000000, "Hapoalim 12 115", "The conditions for this employee are really terrific");
         certifyEmployee(JobType.HR_MANAGER, "318856994");
         certifyEmployee(JobType.STORE_MANAGER, "318856994");
+        certifyEmployee(JobType.STOCK_KEEPER, "318856994");
         orderController= new OrderController();
         resourceController = ResourceController.getInstance();
     }
@@ -49,7 +50,8 @@ public class FacadeEmployees_Transports {
         Response r = certifyEmployee(JobType.DRIVER, id);
         if (r.errorOccurred())
             return false;
-        return jobController.addLicense(id, license);
+        Employee e = employeeController.getEmployee(id);
+        return jobController.addLicense(e.getName() ,id, license);
     }
 
 

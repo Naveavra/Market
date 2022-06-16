@@ -223,7 +223,7 @@ public class Connect {
                     ");";
             statement.execute(query);
             query = "CREATE TABLE IF NOT EXISTS Messages(" +
-                    "id VARCHAR(9)," +
+                    "messageID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "message VARCHAR(500)," +
                     "read VARCHAR(5)," +
                     "FOREIGN KEY (id) REFERENCES Employees(id) ON DELETE CASCADE" +
@@ -478,6 +478,44 @@ public class Connect {
             //table pastOrder
             query = "DELETE from PastOrdersSupplier";
             stmt.execute(query);
+
+            query = "DELETE FROM Employees";
+            stmt.execute(query);
+            query = "DELETE FROM EmployeesInShift";
+            stmt.execute(query);
+            query = "DELETE FROM Roles";
+            stmt.execute(query);
+            query = "DELETE FROM Schedules";
+            stmt.execute(query);
+            query = "DELETE FROM Shifts";
+            stmt.execute(query);
+            query = "DELETE FROM Drivers";
+            stmt.execute(query);
+            query = "DELETE FROM DriverAvailability";
+            stmt.execute(query);
+            query = "DELETE FROM Destinations";
+            stmt.execute(query);
+            query = "DELETE FROM DriverDocs";
+            stmt.execute(query);
+            query = "DELETE FROM DriversLicenses";
+            stmt.execute(query);
+            query = "DELETE FROM Messages";
+            stmt.execute(query);
+            query = "DELETE FROM OrderDocs";
+            stmt.execute(query);
+            query = "DELETE FROM Stores";
+            stmt.execute(query);
+            query = "DELETE FROM Supplies";
+            stmt.execute(query);
+            query = "DELETE FROM Trucks";
+            stmt.execute(query);
+            query = "DELETE FROM TrucksAvailability";
+            stmt.execute(query);
+            query = "DELETE FROM order4Dest";
+            stmt.execute(query);
+
+
+
 
 
 

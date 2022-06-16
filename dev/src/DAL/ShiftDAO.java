@@ -15,8 +15,7 @@ public class ShiftDAO {
     private Connect connect = Connect.getInstance();
     private EmployeeDAO employeeDAO = new EmployeeDAO();
     private DriverDAO driverDAO = new DriverDAO();
-//    private static final ShiftDAO instance = new ShiftDAO();
-//    public static ShiftDAO getInstance(){return instance;}
+
 
     public Shift getShift(ShiftPair shiftPair){
         if(shiftID.containsKey(shiftPair)){
@@ -216,6 +215,40 @@ public class ShiftDAO {
             return new Response();
         } catch (SQLException e) {
             return new Response("Cannot find the specified shift");
+        }
+    }
+
+    public boolean hasUpcomingShifts(String id) {
+        try{
+            String query = "SELECT * FROM EmployeesInShift WHERE employeeID = ?";
+            List<HashMap<String, Object>> shifts = connect.executeQuery(query, id);
+            Calendar calendar = Calendar.getInstance();
+            String sTodayDay = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+            String sTodayMonth = String.valueOf(calendar.get(Calendar.MONTH)+1);
+            String sTodayYear = String.valueOf(calendar.get(Calendar.YEAR));
+            for (int i = 0; i < shifts.size(); i++){
+                String sDay = (String) shifts.get(i).get("day");
+                String sMonth = (String) shifts.get(i).get("month");
+                String sYear = (String) shifts.get(i).get("year");
+                int year = Integer.parseInt(sYear);
+                int tYear = Integer.parseInt(sTodayYear);
+                if (year > tYear){
+                    return true;
+                }
+                int month = Integer.parseInt(sMonth);
+                int tMonth = Integer.parseInt(sTodayMonth);
+                if (month > tMonth && year == tYear){
+                    return true;
+                }
+                int day = Integer.parseInt(sDay);
+                int tDay = Integer.parseInt(sTodayDay);
+                if (day > tDay && month == tMonth && year == tYear ){
+                    return true;
+                }
+            }
+            return false;
+        } catch (SQLException | NumberFormatException e) {
+            return false;
         }
     }
 }
