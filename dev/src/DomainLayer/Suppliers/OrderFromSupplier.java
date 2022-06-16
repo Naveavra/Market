@@ -19,7 +19,7 @@ public class OrderFromSupplier {
 
       public OrderFromSupplier(int supplierNumber){
        this.supplierNumber=supplierNumber;
-        String pattern = "MM-dd-yyyy";
+        String pattern = "dd/MM/yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         date = simpleDateFormat.format(new Date());
         DeliveryTerm.DaysInWeek[] daysInWeek = {};
