@@ -71,8 +71,8 @@ public class Menu {
                     break;
                 case 2: // transport
                     if (canUseTransportModule(roles)) {
-                        UserInterface cli3 = new UserInterface(roles); // transport
-                        cli3.start();
+                        UserInterface cli3 = new UserInterface(); // transport
+                        cli3.start(roles);
                     } else {
                         System.out.println("You are not authorized to enter this page");
                     }
