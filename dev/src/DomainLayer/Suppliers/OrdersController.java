@@ -164,7 +164,9 @@ public class OrdersController {
             if(order!=null) {
                 try {
                     ordersDAO.addProductToOrder(ps, order.getOrderId(), amount);
-                    createTransport(order);
+                    if(!createTransport(order)){
+                        return;
+                    }
                     finishOrder(order.getOrderId());
                 } catch (SQLException ignored) {
 

@@ -378,18 +378,19 @@ public class OrderController {
 //        Driver driver = null;
 //        Truck truck = null;
         int sevenAfter = 0;
-        int sevenBefore = 0;
+//        int sevenBefore = 0;
         ArrayList<Object> res = new ArrayList<>();
-        while (driver == null && truck == null || (sevenAfter != 7 && sevenBefore != 7)) {
+        while ((driver == null && truck == null) && (sevenAfter != 7)) {
             ArrayList<Driver> drivers = this.drivers.getDrivers(date.toString(), time);
             if (drivers.isEmpty()) {
                 if (sevenAfter != 7) {
                     date.AdvanceDate();
                     sevenAfter++;
-                } else {
-                    date.dayBefore();
-                    sevenBefore++;
                 }
+//                else {
+//                    date.dayBefore();
+//                    sevenBefore++;
+//                }
                 continue;
             } else {
                 driver = drivers.get(0);
@@ -400,7 +401,7 @@ public class OrderController {
                         sevenAfter++;
                     } else {
                         date.dayBefore();
-                        sevenBefore++;
+//                        sevenBefore++;
                     }
                     continue;
                 }
@@ -430,9 +431,8 @@ public class OrderController {
         Date date_ = createDate(date);
         Driver driver = null;
         Truck truck = null;
-        ArrayList<Object>truckAndDriver = getAutoTruckandDriver(date_,time,truck,driver);
+        ArrayList<Object> truckAndDriver = getAutoTruckandDriver(date_,time,truck,driver);
         if(truckAndDriver.isEmpty()){
-//TODO ADD MESSAGE HERE
             new EmployeeDAO().writeMessageToHR("cannot create order from "+supplierNumber);
             return false;
         }
