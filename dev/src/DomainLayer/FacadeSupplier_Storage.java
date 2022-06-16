@@ -306,9 +306,9 @@ public class FacadeSupplier_Storage {
         categoryController.addCategory(cName, 0);
     }
 
-    public void addNewProduct(int pId, String pName, String desc, double price,
+    public boolean addNewProduct(int pId, String pName, String desc, double price,
                               String maker, String cat, String sub, String subSub) {
-        categoryController.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
+        return categoryController.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
     }
     public void addSubCat(String cName, String subName) {
         categoryController.addSubCategory(cName, subName);
@@ -330,8 +330,8 @@ public class FacadeSupplier_Storage {
         return categoryController.hasCategory(cat);
     }
 
-    public void removeFromCatalog(int id) {
-        categoryController.removeFromCatalog(id);
+    public boolean removeFromCatalog(int id) {
+        return categoryController.removeFromCatalog(id);
     }
 
 
@@ -345,13 +345,13 @@ public class FacadeSupplier_Storage {
         return categoryController.getProductWithId(id).getName();
     }
 
-    public void setDiscountToOneItem(int id, double discount){
-        categoryController.setDiscountToOneItem(id, discount);
+    public boolean setDiscountToOneItem(int id, double discount){
+        return categoryController.setDiscountToOneItem(id, discount);
     }
 
-    public void defineAsDamaged(int id, String description,String place, int shelf, String ed)
+    public boolean defineAsDamaged(int id, String description,String place, int shelf, String ed)
     {
-        categoryController.defineAsDamaged(id, description, place, shelf, ed);
+        return categoryController.defineAsDamaged(id, description, place, shelf, ed);
     }
 
 

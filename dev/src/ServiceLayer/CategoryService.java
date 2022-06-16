@@ -16,9 +16,9 @@ public class CategoryService {
         facadeSupplier.addCategory(cName);
     }
 
-    public void addNewProduct(int pId, String pName, String desc, double price,
+    public boolean addNewProduct(int pId, String pName, String desc, double price,
                               String maker, String cat, String sub, String subSub) {
-        facadeSupplier.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
+        return facadeSupplier.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
     }
 
     public void addSubCat(String cName, String subName) {
@@ -39,8 +39,8 @@ public class CategoryService {
     }
 
 
-    public void removeFromCatalog(int id) {
-        facadeSupplier.removeFromCatalog(id);
+    public boolean removeFromCatalog(int id) {
+        return facadeSupplier.removeFromCatalog(id);
     }
 
 
@@ -58,13 +58,13 @@ public class CategoryService {
 
     }
 
-    public void setDiscountToOneItem(int id, double discount){
-        facadeSupplier.setDiscountToOneItem(id, discount);
+    public boolean setDiscountToOneItem(int id, double discount){
+        return facadeSupplier.setDiscountToOneItem(id, discount);
     }
 
-    public void defineAsDamaged(int id, String description,String place, int shelf, String ed)
+    public boolean defineAsDamaged(int id, String description,String place, int shelf, String ed)
     {
-        facadeSupplier.defineAsDamaged(id, description, place, shelf, ed);
+        return facadeSupplier.defineAsDamaged(id, description, place, shelf, ed);
     }
 
 
