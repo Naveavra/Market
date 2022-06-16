@@ -100,8 +100,8 @@ public class DriverDAO {
             rs = conn.executeQuery("Select * From DriverAvailability WHERE date = "
                     +"'"+date+"'"+ " AND time = "+"'"+time+"'");
             for (int i = 0 ; i< rs.size(); i++){
-                if(Objects.equals((String)rs.get(0).get("available"), "#t")) {
-                    rval.add(getDriver((String)rs.get(0).get("id")));
+                if(Objects.equals((String)rs.get(i).get("available"), "#t")) {
+                    rval.add(getDriver((String)rs.get(i).get("id")));
                 }
             }
 
@@ -115,15 +115,15 @@ public class DriverDAO {
     public boolean containsDriver(String driverID){
         try {
             return identityMap.containsKey(driverID) || conn.executeQuery("SELECT id FROM Drivers WHERE id = " + "'"+driverID+"'").size() > 0;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return false;
         }
     }
     public void addAvailability(String driverID){
         String query = "INSERT INTO DriverAvailability(id,date,time,available) VALUES(?,?,?,?)";
         try {
-            int day=19;
-            int month=5;
+            int day=11;
+            int month=6;
             String year = "/2022";
             String res;
             for(int i = 0; i<30;i++){
@@ -131,7 +131,7 @@ public class DriverDAO {
                     day = 1;
                     month++;
                 }
-                if(day>10){
+                if(day>=10){
                     res = String.valueOf(day)+"/0"+String.valueOf(month)+year;
                     conn.executeUpdate(query, driverID,res, "MORNING","#t");
                     conn.executeUpdate(query, driverID, res, "EVENING", "#t");
@@ -178,7 +178,7 @@ public class DriverDAO {
             }
             else
                 return false;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return false;
         }
     }

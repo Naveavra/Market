@@ -27,8 +27,6 @@ public class Connect {
     }
     private Connect() {
         try {
-            // db parameters
-            String url = "jdbc:sqlite:../dev/superli.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
             createTables();
@@ -57,7 +55,6 @@ public class Connect {
                     "\t\"timesBought\"\tINTEGER,\n"+
                     "\t\"amountNeededForRefill\"\tINTEGER,\n"+
                     "\t\"price\"\tInteger,\n"+
-                    "\t\"weight\"\tInteger,\n"+
                     "\t\"discount\"\tInteger,\n"+
                     "\t\"dayAdded\"\tTEXT,\n" +
 
@@ -269,14 +266,6 @@ public class Connect {
                     "PRIMARY KEY (licenseplate,date,time)" +
                     ")";
             statement.execute(query);
-//            query = "CREATE TABLE IF NOT EXISTS DriverAvailability(" +
-//                    "id varchar(30)," +
-//                    "date VARCHAR(20)," +
-//                    "time varchar(10)," +
-//                    "available varchar(3)," +
-//                    "PRIMARY KEY (id,date,time)" +
-//                    ")";
-//            statement.execute(query);
             query = "CREATE Table IF NOT EXISTS OrderDocs(" +
                     "id varchar(20)," +
                     "driverID varchar(9)," +
@@ -302,7 +291,7 @@ public class Connect {
                     "orderDocID varchar (20)," +
                     "supply varchar (50)," +
                     "quantity integer," +
-                    "PRIMARY KEY (siteID,orderDocID,OrderId)," +
+                    "PRIMARY KEY (siteID,orderDocID)," +
                     "FOREIGN KEY (orderDocID) REFERENCES OrderDocs(id) ON DELETE CASCADE" +
                     ")";
             statement.execute(query);
@@ -322,7 +311,7 @@ public class Connect {
                     ")";
             statement.execute(query);
 
-            query = "CREATE TABLE IF NOT EXISTS Sites(" +
+            query = "CREATE TABLE IF NOT EXISTS Stores(" +
                     "id varchar (20)," +
                     "type INTEGER," +
                     "shippingArea INTEGER," +
@@ -381,12 +370,16 @@ public class Connect {
         }
     }
 
+
     public int executeUpdate(String query,Object... params) throws SQLException {
         try  {
             createStatement();
-            PreparedStatement statement = conn.prepareStatement(query);
+            PreparedStatement statement = conn.prepareStatement("PRAGMA foreign_keys = ON");
+            statement.executeUpdate();
+            statement = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++)
                 statement.setObject(i+1, params[i]);
+
             int res = statement.executeUpdate();
             return res;
         } catch (SQLException throwable) {

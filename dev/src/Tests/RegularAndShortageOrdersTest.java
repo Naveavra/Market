@@ -31,7 +31,7 @@ public class RegularAndShortageOrdersTest {
             cC.addCategory("first", 0);
             cC.addSubCategory("first", "first1");
             cC.addSubSubCategory("first", "first1", "first11");
-            cC.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
+            cC.addNewProduct(1,"milk","hello",3,5,"me","first","first1", "first11");
             cC.addAllItems(1,7,"2027-06-01",12);
             facadeSupplier.openAccount(1,"eli", 1, new String[]{"1"},0);
             facadeSupplier.openAccount(2,"eli2", 2, new String[]{"1"},0);

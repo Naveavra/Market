@@ -139,14 +139,11 @@ public class OrdersController {
 
     //helper function to connect with Transport model
     private boolean createTransport(OrderFromSupplier o){
-        String supplierNumber =String.valueOf(o.getSupplierNumber());// nave this is the supplier number
-        String date = o.getDate();// i dont know the format suppoed is DD\MM\YYYY
-        Map<ProductSupplier,Integer> productToQuantity= new HashMap<>();
+        String supplierNumber =String.valueOf(o.getSupplierNumber());// miki this is the supplier number
+        String date = o.getDate();// i dont know the format i supposed is DD\MM\YYYY
+        Map<ProductSupplier,Integer> productToQuantity= new HashMap<ProductSupplier, Integer>();
         productToQuantity=o.getProducts();
-
-        //create transport
-//        employees_transports - fasade
-        return true;
+        return employees_transports.createAutoTransport(supplierNumber,date,productToQuantity);
     }
 
     private boolean checkDays(DeliveryTerm d) {

@@ -47,7 +47,6 @@ public class ProductDAO {
                 String.format("productId=%d", productId);
         try (Statement stmt = connect.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
-            rs.next();
             if (!rs.isClosed()) {
                 Product p = new Product(rs.getInt("productId"), rs.getString("name"),
                         rs.getString("description"), rs.getDouble("price"),rs.getString("maker"));
