@@ -57,7 +57,6 @@ public class Connect {
                     "\t\"price\"\tInteger,\n"+
                     "\t\"discount\"\tInteger,\n"+
                     "\t\"dayAdded\"\tTEXT,\n" +
-
                     "\t\"categoryName\"\tTEXT,\n" +
                     "\t\"subCategoryName\"\tTEXT,\n"+
                     "\t\"subSubCategoryName\"\tTEXT,\n"+
@@ -220,7 +219,7 @@ public class Connect {
                     "year VARCHAR(4)," +
                     "PRIMARY KEY (id, day, timeOfDay)," +
                     "FOREIGN KEY (id) REFERENCES Employees(id) ON DELETE CASCADE" +
-                    ");";
+                    ")";
             statement.execute(query);
             query = "CREATE TABLE IF NOT EXISTS Messages(" +
                     "messageID INTEGER PRIMARY KEY AUTOINCREMENT," +

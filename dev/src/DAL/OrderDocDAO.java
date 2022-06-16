@@ -5,6 +5,7 @@ import DomainLayer.Suppliers.Supplier;
 import DomainLayer.Transport.*;
 //import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +30,11 @@ public class OrderDocDAO {
 
     //FROM HERE
     public String addDoc(OrderDocument doc){
-        String query = "INSERT INTO OrderDocs(id,driverID,licensePlate,origin,date,time,weight,finished) VALUES(?,?,?,?,?,?,?,?)";
-        try {
-            conn.executeUpdate(query,doc.getId(),doc.getDriver().getId(),doc.getTruck(),doc.getOrigin(),doc.getDate().toString(),doc.getTime(),0,"#f");
+        String query = "INSERT INTO OrderDocs(id,driverID,licensePlate,origin,date,time,weight,finished)" +
+                " VALUES " + String.format("(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%d,\"%s\")",
+                doc.getId(),doc.getDriver().getId(),doc.getTruck(),doc.getOrigin(),doc.getDate().toString(),doc.getTime(),0,"#f");
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute(query);
             driverDAO.setAvailability(doc.getDriver(),doc.getDate().toString(),doc.getTime(),false);
             new TruckDAO().setAvailability(new TruckDAO().getTruck(doc.getTruck()),doc.getDate().toString(),doc.getTime(),false);
             for(Store dest: doc.getDestinations().keySet()){
@@ -139,7 +142,8 @@ public class OrderDocDAO {
             return identityMap.get(docID);
         }
         List<HashMap<String, Object>> rs;
-        String query = "SELECT * FROM OrderDocs WHERE id = "+"'"+docID+"'";
+        String query = "SELECT * FROM OrderDocs WHERE " +
+                String.format("id=\"%s\"", docID);
         try {
             rs = conn.executeQuery(query);
             String id = (String)rs.get(0).get("id");
