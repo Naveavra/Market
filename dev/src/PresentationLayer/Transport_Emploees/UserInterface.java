@@ -111,7 +111,7 @@ public class UserInterface extends MainCLI {
                         String docID = getDoc();
                         System.out.println(os.showDriverDocs(docID));
                     }catch (Exception e){
-                        System.out.println(e.getMessage());
+                        //System.out.println(e.getMessage());
                         System.out.println("Doc doesnt exist or ID is wrong");
                     }
                     break;

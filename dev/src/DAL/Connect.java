@@ -27,8 +27,6 @@ public class Connect {
     }
     private Connect() {
         try {
-            // db parameters
-            String url = "jdbc:sqlite:../dev/superli.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
             createTables();
