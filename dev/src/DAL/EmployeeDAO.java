@@ -16,13 +16,12 @@ import java.util.*;
 public class EmployeeDAO {
     private static Map<String, Employee> idMap = new HashMap<>();;
     private Connect conn = Connect.getInstance();
-    private static final EmployeeDAO instance = new EmployeeDAO();
-//    private EmployeeDAO(){
-//        idMap = new HashMap<>();
+//    private static final EmployeeDAO instance = new EmployeeDAO();
+
+//    public static EmployeeDAO getInstance() {
+//        return instance;
 //    }
-    public static EmployeeDAO getInstance() {
-        return instance;
-    }
+    public EmployeeDAO(){}
 
     public Employee getEmployee(String id){
         if (idMap.containsKey(id))

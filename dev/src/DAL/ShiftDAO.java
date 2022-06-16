@@ -50,7 +50,7 @@ public class ShiftDAO {
             List<HashMap<String, Object>> employeesIDs = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? AND timeOfDay = ? AND day = ? AND month = ? AND year = ?", jobType, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
             for (int i = 0; i < employeesIDs.size(); i++) {
                 String id = (String) employeesIDs.get(i).get("employeeID");
-                Employee e = EmployeeDAO.getInstance().getEmployee(id);
+                Employee e = employeeDAO.getEmployee(id);
                 employees.add(e);
             }
             return employees;

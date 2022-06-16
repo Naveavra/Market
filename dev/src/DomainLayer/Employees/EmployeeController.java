@@ -8,9 +8,10 @@ import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftPair;
 
 public class EmployeeController {
-    private final EmployeeDAO employeeDAO = EmployeeDAO.getInstance();
+    private final EmployeeDAO employeeDAO;
 
     public EmployeeController(){
+        employeeDAO = new EmployeeDAO();
     }
 
     public Employee getEmployee(String id){
@@ -26,7 +27,7 @@ public class EmployeeController {
     }
 
     public Response removeEmployee(String id){
-        
+
         return employeeDAO.removeEmployee(id);
     }
 
