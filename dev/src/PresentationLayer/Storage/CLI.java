@@ -137,7 +137,7 @@ public class CLI
                                 case("1"):
                                 {
                                     try {
-                                        System.out.println("enter the attributes of product: ");
+                                        System.out.println("enter the attributes of product:");
                                         System.out.println("enter id of product");
                                         detail = in.nextLine();
                                         int id = Integer.parseInt(detail);
