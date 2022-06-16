@@ -426,4 +426,10 @@ public class FacadeSupplier_Storage {
     public boolean updateContact(int supplierNumber, String name, String email, String telephone) {
         return supplierController.getSupplier(supplierNumber).updateContact(name,email,telephone);
     }
+
+
+    public boolean cencelOrder(int orderId) {
+        return ordersController.cencelOrder(orderId);
+        //return supplierController.getSupplier(supplierNumber).updateContact(name,email,telephone);
+    }
 }

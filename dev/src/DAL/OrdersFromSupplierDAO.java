@@ -81,6 +81,7 @@ public class OrdersFromSupplierDAO {
                 , orderId, productId);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
+
             //IMOrdersFromSupplier.put(order.getOrderId(), order);
         } catch (SQLException e) {
             throw e;
@@ -274,5 +275,19 @@ public class OrdersFromSupplierDAO {
         finally {
             connect.closeConnect();
         }
+    }
+
+    public boolean removeAllProductsFromOrder(int orderId) throws SQLException {
+        String query =String.format("DELETE FROM ProductsInOrder where orderId = %d ", orderId);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+            //IMOrdersFromSupplier.put(order.getOrderId(), order);
+        } catch (SQLException e) {
+            return false;
+        }
+        finally {
+            connect.closeConnect();
+        }
+        return true;
     }
 }

@@ -189,4 +189,14 @@ public class OrdersController {
         }
     }
 
+    public boolean cencelOrder(int orderId) {
+        try {
+            ordersDAO.removeAllProductsFromOrder(orderId);
+            ordersDAO.removeOrder(orderId);
+            return false;
+
+        } catch (SQLException e) {
+            return false;
+        }
+    }
 }
