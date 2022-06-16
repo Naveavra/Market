@@ -2,6 +2,7 @@ package PresentationLayer;
 
 import DAL.Connect;
 import DomainLayer.Employees.JobType;
+import PresentationLayer.Suppliers.Supplier;
 import PresentationLayer.Transport_Emploees.EmployeeMainCLI;
 import ServiceLayer.EmployeeService;
 import PresentationLayer.Storage.CLI;
@@ -9,6 +10,8 @@ import PresentationLayer.Suppliers.Order;
 import PresentationLayer.Suppliers.SupplierMenu;
 import PresentationLayer.Transport_Emploees.UserInterface;
 import ServiceLayer.*;
+import ServiceLayer.transport.OrderTransportService;
+import ServiceLayer.transport.UserService;
 import com.google.gson.Gson;
 import java.sql.SQLException;
 import java.util.Random;
@@ -24,7 +27,6 @@ public class Menu {
         m.initialMenu();
     }
     public void initialMenu() throws SQLException {
-
         int choice = 0;
         System.out.println("Welcome to Supper LI!!");
         System.out.println("Load Initial Data?");
@@ -41,22 +43,26 @@ public class Menu {
         }
         if(choice==1)
             loadInitialData();
-        while (true){
+        boolean end = false;
+        while (!end){
             while (!employeeCLI.isLoggedIn()) {
                 employeeCLI.login();
             }
             Set<JobType> roles = employeeCLI.getLoggedInUserRoles();
-            System.out.println(employeeCLI.displayLoggedInUserMessages());
+            if (roles.contains(JobType.HR_MANAGER)) {
+                System.out.println(employeeCLI.displayLoggedInUserMessages());
+            }
             System.out.println("Choose module:");
-            System.out.println("\t1.Supplier Model");
-            System.out.println("\t2.Storage Model");
-            System.out.println("\t3.Employee Model");
-            System.out.println("\t4.Transport Model");
+            System.out.println("\t1.Employee Model");
+            System.out.println("\t2.Transport Model");
+            System.out.println("\t3.Supplier Model");
+            System.out.println("\t4.Storage Model");
             System.out.println("To close the system - enter the word 'exit'");
             try{
                 choiceStr = sc.next();
                 if (choiceStr.equals("exit")){
                     System.out.println("Goodbye!");
+                    end = true;
                     break;
                 }
                 choice=Integer.parseInt(choiceStr);
@@ -64,33 +70,33 @@ public class Menu {
             catch (Exception e){
                 System.out.println("you must enter only 1 digit number");
                 continue;
-//                initialMenu();
             }
             switch (choice) {
-                case 1:
+                case 1: // employees
+                    employeeCLI.start();
+                    break;
+                case 2: // transport
+                    if (canUseTransportModule(roles)) {
+                        UserInterface cli3 = new UserInterface(); // transport
+                        cli3.start(roles);
+                    } else {
+                        System.out.println("You are not authorized to enter this page");
+                    }
+                    break;
+                case 3: // suppliers
                     if (canUseSupplierModule(roles)) {
                         SupplierMenu sm = new SupplierMenu();
+                        sm.setRoles(roles);
                         sm.chooseSupplierMenu();
                     } else {
                         System.out.println("You are not authorized to enter this page");
                     }
                     break;
-                case 2://storage
+
+                case 4:// storage
                     if (canUseStorageModule(roles)) {
                         CLI cli = new CLI();//storage
                         cli.startStorageModel(roles);
-                    } else {
-                        System.out.println("You are not authorized to enter this page");
-                    }
-                    break;
-                case 3://employees - transport
-        //                EmployeeMainCLI cli2 = new EmployeeMainCLI();
-                    employeeCLI.start();
-                    break;
-                case 4://employees - transport
-                    if (canUseTransportModule(roles)) {
-                        UserInterface cli3 = new UserInterface();
-                        cli3.start();
                     } else {
                         System.out.println("You are not authorized to enter this page");
                     }
@@ -100,22 +106,19 @@ public class Menu {
 //                    initialMenu();
             }
         }
-
     }
 
     private boolean canUseTransportModule(Set<JobType> roles) {
-        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER) ||
-                roles.contains(JobType.SHIFT_MANAGER) || roles.contains(JobType.TRANSPORT_MANAGER);
+        return roles.contains(JobType.STORE_MANAGER) || roles.contains(JobType.TRANSPORT_MANAGER);
     }
 
     private boolean canUseStorageModule(Set<JobType> roles) {
-        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER) ||
-                roles.contains(JobType.SHIFT_MANAGER);
+        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER);
     }
 
     private boolean canUseSupplierModule(Set<JobType> roles) {
         return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER)
-                || roles.contains(JobType.SHIFT_MANAGER) || roles.contains(JobType.LOGISTICS_MANAGER);
+                || roles.contains(JobType.LOGISTICS_MANAGER);
     }
 
     private void loadInitialData() {
@@ -137,8 +140,7 @@ public class Menu {
         cC.addCategory("second");
         cC.addSubCat("second", "second1");
         cC.addSubSubCat("second", "second1", "second11");
-        cC.addNewProduct(1, "milk", "from cow", 3, "me"
-                , "first", "first1", "first11");
+        cC.addNewProduct(1, "milk", "from cow", 5, "me", "first", "first1", "first11");
         cC.addNewProduct(2, "eggs", "from chicken", 5, "me",
                 "second", "second1", "second11");
         cC.addAllItems(1, 7, "2027-06-01", 1);
@@ -164,14 +166,16 @@ public class Menu {
         os.addProductToOrder(1, o1.getOrderId(), 1 ,5);
         String[] days={"1", "2", "3", "4", "5", "6", "7"};
         os.addFixedDeliveryDaysForOrder(1, 1, days);
-        os.sendOrder(1, 1);
+        cC.updateOrders();
+//        os.sendOrder(1, 1);
 
         // empoly info
         LoadEmployeeData();
+        LoadTransportData();
 
     }
     public void LoadEmployeeData() {
-        EmployeeService es = EmployeeService.getInstance();
+        EmployeeService es =new EmployeeService();
         es.register("234567891", "gal halifa", "123456", 1000, "yahav", "good conditions");
         es.register("123456789", "dan terem", "123456", 1000, "yahav", "good conditions");
         es.register("345678912", "noa aviv", "123456", 1000, "yahav", "good conditions");
@@ -190,6 +194,10 @@ public class Menu {
         es.register("111111111", "miki daniarov", "123456", 1, "yahav", "good");
         es.register("222222222", "eyal german", "123456", 1, "yahav", "good");
         es.register("333333333", "ziv cohen gvura", "123456", 1, "yahav", "good");
+        es.register("318856994", "Itay Gershon", "123456", 1000000000, "Hapoalim 12 115", "The conditions for this employee are really terrific");
+        es.certifyEmployee("318856994", "1");
+        es.certifyEmployee("318856994", "9");
+        es.certifyEmployee( "318856994", "4");
         es.certifyEmployee("318856994", "3");
         es.certifyEmployee("333333333", "1"); //HR M
         es.certifyEmployee("111111111", "8"); // TRANSPORT M
@@ -226,6 +234,8 @@ public class Menu {
                 "333333333,234567891", "123456780,000000000", "123456789", "111111111");
         es.createShift("01/07/2022 evening", "456789123",
                 "333333333,234567891", "258369147,000000000", "567801234", "345678912");
+        es.createShift("20/05/2022 evening", "456789123",
+                "222222222,234567891", "258369147,000000000", "567801234", "345678912");
 
         createAvailabilities("318856994");
         createAvailabilities("333333333");
@@ -249,7 +259,7 @@ public class Menu {
      * @param id employee to add availability to
      */
     private void createAvailabilities(String id){
-        EmployeeService es = EmployeeService.getInstance();
+        EmployeeService es = new EmployeeService();
         for (int i = 1; i < 31; i++){
             String day;
             if (i < 10)
@@ -267,6 +277,25 @@ public class Menu {
                 es.addAvailableTimeSlotToEmployee(day + "/07/2022 evening" ,id);
             }
         }
+    }
+
+    public void LoadTransportData() {
+        UserService us = new UserService();
+        OrderTransportService os = new OrderTransportService();
+        us.createTruck("C", "shahar", 150, 100);
+        us.createTruck("C1", "nadia", 100, 50);
+        us.createTruck("C", "nastia", 200, 100);
+        us.createDriver("nave", "315809376", "C");
+        us.createDriver("miki", "208163709", "C1");
+        us.createSite("1567", "hakanaim 16", "liron", "05068582", 0, 1);
+        us.createSite("156", "hakanaim 15", "liro", "0506858", 1, 1);
+        us.createSite("15", "hakanaim 14", "lir", "050685", 2, 1);
+        us.createSite("14", "hakanaim 13", "li", "05858", 0, 1);
+        us.createSite("13", "hakanaim 12", "lin", "05858", 1, 1);
+        us.createSite("12", "hakanaim 11", "lid", "058528", 2, 1);
+//        us.createSupply("milk", 1);
+//        us.createSupply("eggs", 2);
+        os.orderList();
     }
 
 
