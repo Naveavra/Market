@@ -67,7 +67,8 @@ public class CLI
                                         else
                                             id = cC.getProductIdWithName(detail);
                                         System.out.println("enter amount");
-                                        int amount = Integer.parseInt(in.nextLine());
+                                        detail = in.nextLine();
+                                        int amount = Integer.parseInt(detail);
                                         double finalPrice = cC.buyItems(id, amount);
                                         if (finalPrice != -1)
                                             System.out.println("the price is: " + finalPrice);

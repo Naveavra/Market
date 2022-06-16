@@ -64,7 +64,7 @@ public class EmployeeDAO {
             e.setMonthlyHours(monthlyHrs);
             List<HashMap<String,Object>> rolesSet = conn.executeQuery("SELECT jobType FROM Roles WHERE id = ?", id);
             List<HashMap<String,Object>> schedule = conn.executeQuery("SELECT * FROM Schedules WHERE id = ?", id);
-            List<HashMap<String,Object>> messages = conn.executeQuery("SELECT message FROM Messages WHERE id = ? AND read = ?", id, "false");
+            List<HashMap<String,Object>> messages = conn.executeQuery("SELECT message FROM Messages WHERE messageID = ? AND read = ?", id, "false");
             reconstructEmployeeAvailability(e, schedule);
             reconstructEmployeeRoles(e, rolesSet);
             reconstructEmployeeMessages(e, messages);
