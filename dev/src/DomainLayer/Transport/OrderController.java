@@ -20,8 +20,8 @@ public class OrderController {
     public StoreDAO sites;
     public ProductDAO supplies;
     public DriverDAO drivers;
-    AtomicInteger id;
-    AtomicInteger driverDocID;
+    public static AtomicInteger id = new AtomicInteger();
+    public static AtomicInteger driverDocID = new AtomicInteger();
     public SuppliersDAO suppliers;
     public Store defaultStore;
     public OrderController(){
@@ -31,8 +31,6 @@ public class OrderController {
         sites = new StoreDAO();
         supplies = new ProductDAO();
         drivers = new DriverDAO();
-        id = new AtomicInteger();
-        driverDocID = new AtomicInteger();
         suppliers = new SuppliersDAO();
         sites.addSite("616",0,1,"Asgard","Thor","050866945");
         defaultStore = sites.getSite("616");
@@ -376,11 +374,12 @@ public class OrderController {
         }
         return ans;
     }
-    public boolean getAutoTruckandDriver(Date date, String time,Truck truck,Driver driver) {
+    public ArrayList<Object> getAutoTruckandDriver(Date date, String time,Truck truck,Driver driver) {
 //        Driver driver = null;
 //        Truck truck = null;
         int sevenAfter = 0;
         int sevenBefore = 0;
+        ArrayList<Object> res = new ArrayList<>();
         while (driver == null && truck == null || (sevenAfter != 7 && sevenBefore != 7)) {
             ArrayList<Driver> drivers = this.drivers.getDrivers(date.toString(), time);
             if (drivers.isEmpty()) {
@@ -411,7 +410,11 @@ public class OrderController {
                 }
             }
         }
-        return truck != null && driver != null;
+        if(truck!= null && driver!= null){
+            res.add(truck);
+            res.add(driver);
+        }
+        return res;
 
     }
     public boolean createAutoTransport(String supplierNumber, String date, ConcurrentHashMap<String,Integer> supplyList) {
@@ -427,17 +430,19 @@ public class OrderController {
         Date date_ = createDate(date);
         Driver driver = null;
         Truck truck = null;
-        getAutoTruckandDriver(date_,time,truck,driver);
-        if(truck == null || driver == null){
+        ArrayList<Object>truckAndDriver = getAutoTruckandDriver(date_,time,truck,driver);
+        if(truckAndDriver.isEmpty()){
 //TODO ADD MESSAGE HERE
-            new EmployeeDAO();
+            new EmployeeDAO().writeMessageToHR("cannot create order from "+supplierNumber);
             return false;
         }
         OrderDocument d = new OrderDocument(String.valueOf(id.getAndIncrement()),origin.getSupplierNumber(),order,date_,time);
+        truck = (Truck)truckAndDriver.get(0);
+        driver = (Driver)truckAndDriver.get(1);
         d.setTruckandDriver(truck,driver);
         orderDocs.addDoc(d);
         createDriverDocs(d.getId());
-        d.finishOrder();
+        transportIsDone(d.getId());
         return true;
     }
 
