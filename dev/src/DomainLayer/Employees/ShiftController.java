@@ -95,4 +95,15 @@ public class ShiftController {
         return currentShift.displayWorkers();
     }
 
+    public String viewShift(ShiftPair shiftPair) {
+        Shift s = shiftDAO.getShift(shiftPair);
+        if (s == null){
+            return "Unable to access the specified shift. Make sure you have the right date and time";
+        }
+        return s.displayWorkers();
+    }
+
+    public Response deleteShift(ShiftPair shiftPair) {
+        return shiftDAO.deleteShift(shiftPair);
+    }
 }

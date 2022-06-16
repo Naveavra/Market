@@ -369,6 +369,13 @@ public class FacadeEmployees_Transports {
         return employeeController.displayMessages(id);
     }
 
+    public String viewShift(ShiftPair shiftPair) {
+        return shiftController.viewShift(shiftPair);
+    }
+
+    public Response deleteShift(ShiftPair shiftPair) {
+        return shiftController.deleteShift(shiftPair);
+    }
     public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId){
         return orderController.getOrderIdFromOrderDoc(orderDocId);
 

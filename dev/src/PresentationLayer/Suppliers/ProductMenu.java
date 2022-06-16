@@ -1,5 +1,6 @@
 package PresentationLayer.Suppliers;
 
+import DomainLayer.Employees.JobType;
 import PresentationLayer.Menu;
 import ServiceLayer.ProductSupplierService;
 import ServiceLayer.SupplierService;
@@ -8,6 +9,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class ProductMenu {
 
@@ -15,25 +17,27 @@ public class ProductMenu {
     private Scanner sc;
     private SupplierService ss;
     private ProductSupplierService ps;
-
+    private Set<JobType> roles;
     public ProductMenu(Supplier s) {
         sc=new Scanner(System.in);
         supplier = s;
         ss = new SupplierService();
         ps = new ProductSupplierService();
     }
-
+    public void setRole(Set<JobType> roles){
+        this.roles=roles;
+    }
 
     public void manageProductsSupplierMenu() {
         System.out.println("Manage products of supplier: "+ supplier.getSupplierName());
         System.out.println("Choose what you want to do:");
-        System.out.println("\t1. watch all supplier products.");
-        System.out.println("\t2. Add new product.");
-        System.out.println("\t3. Remove product.");
-        System.out.println("\t4. Update product.");
-        System.out.println("\t5. Add new discount on count of products.");
-        System.out.println("\t6. Remove discount on amount of product ");
-        System.out.println("\t7. Return to supplier page.");
+        System.out.println("\t 1. add product to supplier");
+        System.out.println("\t 2. remove product from supplier");
+        System.out.println("\t 3. add discount on product to supplier");
+        System.out.println("\t 4. remove discount on product to supplier");
+        System.out.println("\t 5. watch all supplier products");
+        System.out.println("\t 6. update product");
+        System.out.println("\t 7 . go back");
         String choiceStr = "";
         int choice =0;
         try{
@@ -44,27 +48,33 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             manageProductsSupplierMenu();
         }
+        if(choice !=5 & choice!=7){
+            if(!roles.contains(JobType.STOCK_KEEPER)){
+                System.out.println("u dont have access to this area");
+                manageProductsSupplierMenu();
+            }
+        }
         switch (choice){
             case 1:
-                watchSupplierProducts(supplier);
-                break;
-            case 2:
                 addProduct(supplier);
                 break;
-            case 3:
+            case 2:
                 removeProduct(supplier);
                 break;
-            case 4:
-                updateProduct(supplier);
-                break;
-            case 5:
+            case 3:
                 addDiscountOnProduct(supplier);
                 break;
-            case 6:
+            case 4:
                 removeDiscountOnProduct(supplier);
                 break;
+            case 5:
+                watchSupplierProducts(supplier);
+                break;
+            case 6:
+                updateProduct(supplier);
+                break;
             case 7:
-                new SupplierMenu().inSupplierMenu(supplier.getSupplierNumber());
+                new SupplierMenu().chooseSupplierMenu();
                 break;
             default:
                 System.out.println("you must peek a number between 1 to 7");

@@ -50,10 +50,10 @@ public class Menu {
             Set<JobType> roles = employeeCLI.getLoggedInUserRoles();
             System.out.println(employeeCLI.displayLoggedInUserMessages());
             System.out.println("Choose module:");
-            System.out.println("\t1.Supplier Model");
-            System.out.println("\t2.Storage Model");
-            System.out.println("\t3.Employee Model");
-            System.out.println("\t4.Transport Model");
+            System.out.println("\t1.Employee Model");
+            System.out.println("\t2.Transport Model");
+            System.out.println("\t3.Supplier Model");
+            System.out.println("\t4.Storage Model");
             System.out.println("To close the system - enter the word 'exit'");
             try{
                 choiceStr = sc.next();
@@ -66,33 +66,33 @@ public class Menu {
             catch (Exception e){
                 System.out.println("you must enter only 1 digit number");
                 continue;
-//                initialMenu();
             }
             switch (choice) {
-                case 1:
+                case 1: // employees
+                    employeeCLI.start();
+                    break;
+                case 2: // transport
+                    if (canUseTransportModule(roles)) {
+                        UserInterface cli3 = new UserInterface(); // transport
+                        cli3.start(roles);
+                    } else {
+                        System.out.println("You are not authorized to enter this page");
+                    }
+                    break;
+                case 3: // suppliers
                     if (canUseSupplierModule(roles)) {
                         SupplierMenu sm = new SupplierMenu();
+                        sm.setRoles(roles);
                         sm.chooseSupplierMenu();
                     } else {
                         System.out.println("You are not authorized to enter this page");
                     }
                     break;
-                case 2://storage
+
+                case 4:// storage
                     if (canUseStorageModule(roles)) {
                         CLI cli = new CLI();//storage
-                        cli.startStorageModel();
-                    } else {
-                        System.out.println("You are not authorized to enter this page");
-                    }
-                    break;
-                case 3://employees - transport
-        //                EmployeeMainCLI cli2 = new EmployeeMainCLI();
-                    employeeCLI.start();
-                    break;
-                case 4://employees - transport
-                    if (canUseTransportModule(roles)) {
-                        UserInterface cli3 = new UserInterface();
-                        cli3.start();
+                        cli.startStorageModel(roles);
                     } else {
                         System.out.println("You are not authorized to enter this page");
                     }
@@ -102,22 +102,19 @@ public class Menu {
 //                    initialMenu();
             }
         }
-
     }
 
     private boolean canUseTransportModule(Set<JobType> roles) {
-        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER) ||
-                roles.contains(JobType.SHIFT_MANAGER) || roles.contains(JobType.TRANSPORT_MANAGER);
+        return roles.contains(JobType.STORE_MANAGER) || roles.contains(JobType.TRANSPORT_MANAGER);
     }
 
     private boolean canUseStorageModule(Set<JobType> roles) {
-        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER) ||
-                roles.contains(JobType.SHIFT_MANAGER);
+        return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER);
     }
 
     private boolean canUseSupplierModule(Set<JobType> roles) {
         return roles.contains(JobType.STOCK_KEEPER) || roles.contains(JobType.STORE_MANAGER)
-                || roles.contains(JobType.SHIFT_MANAGER) || roles.contains(JobType.LOGISTICS_MANAGER);
+                || roles.contains(JobType.LOGISTICS_MANAGER);
     }
 
     private void loadInitialData() {
