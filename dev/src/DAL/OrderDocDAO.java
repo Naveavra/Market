@@ -270,7 +270,7 @@ public class OrderDocDAO {
         try {
             List<HashMap<String, Object>> rs = conn.executeQuery(query);
             for (int i = 0; i < rs.size(); i++){
-                Product supp = productDAO.get(Integer.parseInt((String)rs.get(i).get("supply")));
+                Product supp = productDAO.get((int)rs.get(i).get("supply"));
                 int quantity = (int)rs.get(i).get("quantity");
                 supplies.put(supp.getName(),quantity);
             }

@@ -232,7 +232,7 @@ public class Connect {
                     "id VARCHAR(9)," +
                     "license VARCHAR(5)," +
                     "PRIMARY KEY (id, license)," +
-                    "FOREIGN KEY (id) REFERENCES Employees(id) ON DELETE CASCADE" +
+                    "FOREIGN KEY (id) REFERENCES Drivers(id) ON DELETE CASCADE" +
                     ");";
             statement.execute(query);
             query = "CREATE TABLE IF NOT EXISTS DriverAvailability(" +
@@ -275,7 +275,7 @@ public class Connect {
                     "weight DECIMAL," +
                     "finished varchar(3),"+
                     "PRIMARY KEY (id)," +
-                    "FOREIGN KEY (driverID) REFERENCES Drivers(id)" +
+                    "FOREIGN KEY (driverID) REFERENCES Employees(id)" +
                     ")";
             statement.execute(query);
             query = "CREATE TABLE IF NOT EXISTS Destinations(" +

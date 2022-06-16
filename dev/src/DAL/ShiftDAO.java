@@ -170,12 +170,12 @@ public class ShiftDAO {
             for(Employee e : drivers) {
                 connect.executeUpdate("INSERT OR IGNORE INTO DriverAvailability(id, date, time, available) " +
                         "VALUES (?,?,?,?)", e.getId(), shift.getShiftTime().getDate().toString(), shift.getShiftTime().getTime().toString().toUpperCase(), "#t");
-                rs = connect.executeQuery("SELECT * FROM DriversLicenses WHERE id = ?",e.getId());
-                if(rs.size() > 0) {
-                    String id = (String) rs.get(0).get("id");
-                    String license = (String) rs.get(0).get("license");
-//                    driverDAO.addDriver(e.getName(), id, license);
-                }
+//                rs = connect.executeQuery("SELECT * FROM DriversLicenses WHERE id = ?",e.getId());
+//                if(rs.size() > 0) {
+//                    String id = (String) rs.get(0).get("id");
+//                    String license = (String) rs.get(0).get("license");
+////                    driverDAO.addDriver(e.getName(), id, license);
+//                }
             }
         } catch (SQLException ignore) {
         }

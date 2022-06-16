@@ -380,7 +380,7 @@ public class OrderController {
         int sevenAfter = 0;
         int sevenBefore = 0;
         ArrayList<Object> res = new ArrayList<>();
-        while (driver == null && truck == null && (sevenAfter != 7 && sevenBefore != 7)) {
+        while (driver == null && truck == null || (sevenAfter != 7 && sevenBefore != 7)) {
             ArrayList<Driver> drivers = this.drivers.getDrivers(date.toString(), time);
             if (drivers.isEmpty()) {
                 if (sevenAfter != 7) {
