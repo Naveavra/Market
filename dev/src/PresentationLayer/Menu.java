@@ -176,7 +176,7 @@ public class Menu {
 
     }
     public void LoadEmployeeData() {
-        EmployeeService es = EmployeeService.getInstance();
+        EmployeeService es =new EmployeeService();
         es.register("234567891", "gal halifa", "123456", 1000, "yahav", "good conditions");
         es.register("123456789", "dan terem", "123456", 1000, "yahav", "good conditions");
         es.register("345678912", "noa aviv", "123456", 1000, "yahav", "good conditions");
@@ -260,7 +260,7 @@ public class Menu {
      * @param id employee to add availability to
      */
     private void createAvailabilities(String id){
-        EmployeeService es = EmployeeService.getInstance();
+        EmployeeService es = new EmployeeService();
         for (int i = 1; i < 31; i++){
             String day;
             if (i < 10)

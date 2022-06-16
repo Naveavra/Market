@@ -156,4 +156,11 @@ public class OrderDocument {
     public void setFinished(boolean finished) {
         this.complete = finished;
     }
+
+    public String getFinished() {
+        if (this.complete){
+            return "#t";
+        }
+        return "#f";
+    }
 }

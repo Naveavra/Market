@@ -14,14 +14,13 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FacadeEmployees_Transports {
-    private static final FacadeEmployees_Transports instance = new FacadeEmployees_Transports();
     private final EmployeeController employeeController;
     private final ShiftController shiftController;
     private final JobController jobController;
     private final OrderController orderController;
     ResourceController resourceController;
 
-    private FacadeEmployees_Transports(){
+    public FacadeEmployees_Transports(){
         employeeController = new EmployeeController();
         shiftController = new ShiftController();
         jobController = new JobController();
@@ -33,9 +32,6 @@ public class FacadeEmployees_Transports {
         resourceController = ResourceController.getInstance();
     }
 
-    public static FacadeEmployees_Transports getInstance() {
-        return instance;
-    }
 
 
     public Response createEmployee(String id, String name, String password, float salary, String bankAccount, String contractOfEmployment){

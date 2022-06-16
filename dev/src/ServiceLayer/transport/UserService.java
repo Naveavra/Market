@@ -9,7 +9,7 @@ public class UserService {
     FacadeEmployees_Transports facadeEmployeesTransports;
     ResourceController resourceController = ResourceController.getInstance();
     public UserService(){
-        facadeEmployeesTransports = FacadeEmployees_Transports.getInstance();
+        facadeEmployeesTransports = new FacadeEmployees_Transports();
     }
 
     public boolean createDriver(String name, String id, String licence){
