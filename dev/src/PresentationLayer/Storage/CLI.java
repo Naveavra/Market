@@ -23,7 +23,7 @@ public class CLI
         String detail;
         String line = "";
         System.out.println("Program Started");
-        while(!line.equals("EXIT"))
+        while(!line.equals("exit"))
         {
             System.out.println("Instructions for the warehouse worker:");
             System.out.println("\t1) Buy product Menu");
@@ -33,7 +33,7 @@ public class CLI
             System.out.println("insert commend number:");
             line = in.nextLine();
             command = line;
-            if(!command.equals("EXIT"))
+            if(!command.equals("exit"))
             {
                 switch (command)
                 {
@@ -102,7 +102,11 @@ public class CLI
                                         int shelf = Integer.parseInt(in.nextLine());
                                         System.out.println("enter exp date");
                                         String ed = in.nextLine();
-                                        cC.defineAsDamaged(id, description, place, shelf, ed);
+                                        boolean ans = cC.defineAsDamaged(id, description, place, shelf, ed);
+                                        if(!ans)
+                                            System.out.println("couldn't define as damaged");
+                                        else
+                                            System.out.println("defined the item as damaged");
                                     }
                                     catch (Exception e){
                                         System.out.println("wrong input");
@@ -153,7 +157,7 @@ public class CLI
                                         System.out.println("enter the maker of the product");
                                         detail = in.nextLine();
                                         String maker = detail;
-                                        System.out.println("write the subCategory,subSubCategory of the product");
+                                        System.out.println("write the category of the product");
                                         line = in.nextLine();
                                         String category = line;
                                         System.out.println("write the subCategory of the product");
@@ -162,7 +166,11 @@ public class CLI
                                         System.out.println("write the subSubCategory of the product");
                                         line = in.nextLine();
                                         String subSubCategory = line;
-                                        cC.addNewProduct(id, name, desc, price, maker, category, subCategory, subSubCategory);
+                                        boolean ans = cC.addNewProduct(id, name, desc, price, maker, category, subCategory, subSubCategory);
+                                        if(!ans)
+                                            System.out.println("couldn't make a new product");
+                                        else
+                                            System.out.println("the new product was added to the catalog");
                                     } catch (Exception e) {
                                         System.out.println("wrong input");
                                     }
@@ -203,9 +211,12 @@ public class CLI
                                                 int shelf = Integer.parseInt(in.nextLine());
                                                 System.out.println("enter exp date");
                                                 String ed = in.nextLine();
-                                                cC.defineAsDamaged(id, description, place, shelf, ed);
                                                 if(checkId(id+"") && itemsInOrder.containsKey(id)) {
-                                                    cC.defineAsDamaged(id, description, place, shelf, ed);
+                                                    boolean ans = cC.defineAsDamaged(id, description, place, shelf, ed);
+                                                    if(!ans)
+                                                        System.out.println("couldn't define as damaged");
+                                                    else
+                                                        System.out.println("defined the item as damaged");
                                                 }
                                                 else{
                                                     System.out.println("the given attributes don't belong to an item that was in the transport");
@@ -247,8 +258,13 @@ public class CLI
                                         System.out.println("enter the discount in %");
                                         detail = in.nextLine();
                                         double discount = Double.parseDouble(detail);
-                                        if(id!=-1)
-                                            cC.setDiscountToOneItem(id, discount);
+                                        if(id!=-1) {
+                                            boolean ans = cC.setDiscountToOneItem(id, discount);
+                                            if(!ans)
+                                                System.out.println("the discount was not set for the product");
+                                            else
+                                                System.out.println("discount set successfully");
+                                        }
                                     }
                                     catch (Exception e){
                                         System.out.println("wrong input");
@@ -266,8 +282,13 @@ public class CLI
                                             id = Integer.parseInt(detail);
                                         else
                                             id = cC.getProductIdWithName(detail);
-                                        if (id != -1)
-                                            cC.removeFromCatalog(id);
+                                        if (id != -1) {
+                                            boolean ans = cC.removeFromCatalog(id);
+                                            if(!ans)
+                                                System.out.println("didn't remove from catalog");
+                                            else
+                                                System.out.println("removed product successfully");
+                                        }
                                     }
                                     catch (Exception e){
                                         System.out.println("wrong input");

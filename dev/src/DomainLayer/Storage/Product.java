@@ -264,16 +264,20 @@ public class Product
     public void setStorageAmount(int storageAmount){this.storageAmount=storageAmount;}
 
 
-    public void setItemDamaged(int productId, String expirationDate, String place, int shelf, String damageDescription){
+    public boolean setItemDamaged(int productId, String expirationDate, String place, int shelf, String damageDescription){
         try {
             if(itemsDAO.setItemDamaged(productId, expirationDate, place, shelf, damageDescription)) {
                 if (place.equals("STORAGE"))
                     storageAmount--;
                 else
                     storeAmount--;
+                return true;
             }
+            else
+                return false;
 
         } catch (SQLException ignored) {
+            return false;
         }
     }
 

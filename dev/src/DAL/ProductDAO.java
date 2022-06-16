@@ -248,18 +248,19 @@ public class ProductDAO {
         }
     }
 
-    public void removeProduct(int productId) throws SQLException {
+    public boolean removeProduct(int productId) throws SQLException {
         String query = String.format("DELETE FROM Products WHERE productId=%d",
                 productId);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
             IMProducts.remove(1);
         } catch (SQLException e) {
-            throw e;
+            return false;
         }
         finally {
             connect.closeConnect();
         }
+        return true;
     }
     public static void reset(){
         IMProducts=new HashMap<>();
