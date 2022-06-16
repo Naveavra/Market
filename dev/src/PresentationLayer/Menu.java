@@ -27,6 +27,7 @@ public class Menu {
         m.initialMenu();
     }
     public void initialMenu() throws SQLException {
+
         int choice = 0;
         System.out.println("Welcome to Supper LI!!");
         System.out.println("Load Initial Data?");

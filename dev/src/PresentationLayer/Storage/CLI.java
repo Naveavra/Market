@@ -5,6 +5,7 @@ import ServiceLayer.CategoryService;
 import ServiceLayer.ProductSupplierService;
 import ServiceLayer.ReportService;
 import ServiceLayer.SupplierService;
+import com.google.gson.Gson;
 
 import java.util.*;
 
@@ -151,21 +152,53 @@ public class CLI
                                 case("2"):
                                 {
                                     try {
-                                        System.out.println("enter id/name,amount,exp date, shelf number");
+                                        System.out.println("enter the orderDocId of the transport");
                                         detail = in.nextLine();
-                                        String[] fields = detail.split(",");
-                                        int id = -1;
-                                        if (checkId(fields[0]))
-                                            id = Integer.parseInt(fields[0]);
-                                        else
-                                            id = cC.getProductIdWithName(fields[0]);
-                                        if (id != -1) {
-                                            int amount = Integer.parseInt(fields[1]);
-                                            String exp = fields[2];
-                                            int shelf = Integer.parseInt(fields[3]);
-                                            cC.addAllItems(id, amount, exp, shelf);
-                                        } else
-                                            System.out.println("no such product exists");
+                                        int orderDocId = Integer.parseInt(detail);
+                                        HashMap<Integer, Integer> itemsInOrder = cC.getItemsFromTransport(orderDocId);
+                                        System.out.println("the items in the transport were:");
+                                        for(int i :itemsInOrder.keySet()){
+                                            System.out.println("we got "+itemsInOrder.get(i)+" items of the product "+i);
+                                        }
+                                        System.out.println();
+                                        System.out.println("are there any items in the transport you would like to report as damaged");
+                                        System.out.println("\t1)yes");
+                                        System.out.println("\t2)no");
+                                        detail = in.nextLine();
+                                        if(Integer.parseInt(detail) == 1 || detail.equals("yes")){
+                                            boolean moreProblems = true;
+                                            while(moreProblems){
+                                                System.out.println("please enter the damaged items attributes: ");
+                                                System.out.println("enter the id/name, damage description,place,shelf number, exp date");
+                                                detail = in.nextLine();
+                                                String[] fields = detail.split(",");
+                                                int id = -1;
+                                                if (checkId(fields[0]))
+                                                    id = Integer.parseInt(fields[0]);
+                                                else
+                                                    id = cC.getProductIdWithName(fields[0]);
+                                                String description = fields[1];
+                                                String place = fields[2];
+                                                int shelf = Integer.parseInt(fields[3]);
+                                                String ed = fields[4];
+                                                if(checkId(id+"") && itemsInOrder.containsKey(id)) {
+                                                    cC.defineAsDamaged(id, description, place, shelf, ed);
+                                                }
+                                                else{
+                                                    System.out.println("the given attributes don't belong to an item that was in the transport");
+                                                }
+                                                System.out.println("are there any more items in the transport you would like to report as damaged");
+                                                System.out.println("\t1)yes");
+                                                System.out.println("\t2)no");
+                                                detail = in.nextLine();
+                                                if(Integer.parseInt(detail) == 1 || detail.equals("yes"))
+                                                    moreProblems = true;
+                                                else
+                                                    moreProblems = false;
+
+
+                                            }
+                                        }
                                     }
                                     catch (Exception e){
                                         System.out.println("wrong input");

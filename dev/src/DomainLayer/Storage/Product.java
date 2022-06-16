@@ -19,7 +19,6 @@ public class Product
     private int amountNeededForRefill;
     private String dayAdded;
     private double price;
-    private double weight;
     private double discount;
     private transient ItemDAO itemsDAO;
     /**
@@ -30,13 +29,12 @@ public class Product
      * @param price
      * @param maker
      */
-    public Product(int productId, String pName, String desc, double price, double weight, String maker)
+    public Product(int productId, String pName, String desc, double price, String maker)
     {
         this.productId = productId;
         this.name = pName;
         this.description=desc;
         this.price = price;
-        this.weight=weight;
         this.storeAmount = 0;
         this.storageAmount = 0;
         this.timesBought=0;
@@ -307,7 +305,4 @@ public class Product
         return true;
     }
 
-    public double getWeight(){
-        return weight;
-    }
 }

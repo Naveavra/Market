@@ -1,6 +1,7 @@
 package DAL;
 import DomainLayer.Employees.Shift;
 import DomainLayer.Employees.JobType;
+import ServiceLayer.Utility.Response;
 import ServiceLayer.Utility.ShiftDate;
 import DomainLayer.Employees.Employee;
 import ServiceLayer.Utility.ShiftPair;
@@ -14,15 +15,17 @@ public class ShiftDAO {
     private Connect connect = Connect.getInstance();
     private EmployeeDAO employeeDAO = new EmployeeDAO();
     private DriverDAO driverDAO = new DriverDAO();
-//    private static final ShiftDAO instance = new ShiftDAO();
-//    public static ShiftDAO getInstance(){return instance;}
+
 
     public Shift getShift(ShiftPair shiftPair){
         if(shiftID.containsKey(shiftPair)){
             return shiftID.get(shiftPair);
         }
         try {
-            List<HashMap<String, Object>> res = connect.executeQuery("SELECT * FROM Shifts WHERE shiftID = ?", shiftID);
+            ShiftDate date = shiftPair.getDate();
+
+            List<HashMap<String, Object>> res = connect.executeQuery("SELECT * FROM Shifts WHERE timeOfDay = ?" +
+                    "AND day = ? AND month = ? AND year = ?", shiftPair.getTime(), date.getDay(), date.getMonth(), date.getYear());
             if (res.size() == 0)
                 return null;
             return shiftConvertor(shiftPair);
@@ -46,7 +49,7 @@ public class ShiftDAO {
             List<HashMap<String, Object>> employeesIDs = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? AND timeOfDay = ? AND day = ? AND month = ? AND year = ?", jobType, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
             for (int i = 0; i < employeesIDs.size(); i++) {
                 String id = (String) employeesIDs.get(i).get("employeeID");
-                Employee e = EmployeeDAO.getInstance().getEmployee(id);
+                Employee e = employeeDAO.getEmployee(id);
                 employees.add(e);
             }
             return employees;
@@ -76,9 +79,9 @@ public class ShiftDAO {
 
     public Shift shiftConvertor(ShiftPair shiftPair){
         try{
-            ShiftDate shiftID = shiftPair.getDate();
+            ShiftDate date = shiftPair.getDate();
             List<HashMap<String, Object>> shiftDate = connect.executeQuery("SELECT * FROM Shifts WHERE timeOfDay = ? and day = ? and month = ? and year = ?",
-                    shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
+                    shiftPair.getTime(), date.getDay(), date.getMonth(), date.getYear());
             if(shiftDate.size() == 0){
                 return null;
             }
@@ -89,7 +92,7 @@ public class ShiftDAO {
             if(manager == null)
                 return null;
             Shift s = new Shift(manager, employees, shiftPair);
-            this.shiftID.put(shiftPair, s);
+            shiftID.put(shiftPair, s);
             return s;
         }
         catch (SQLException e){
@@ -110,17 +113,10 @@ public class ShiftDAO {
             ShiftDate shiftID = shiftPair.getDate();
             List<HashMap<String, Object>> managerID = connect.executeQuery("SELECT * FROM EmployeesInShift WHERE job = ? and " +
                     "timeOfDay = ? and day = ? and month = ? and year = ?", JobType.SHIFT_MANAGER, shiftPair.getTime(), shiftID.getDay(), shiftID.getMonth(), shiftID.getYear());
-            return employeeDAO.getEmployee((String) managerID.get(0).get("id"));
+            return employeeDAO.getEmployee((String) managerID.get(0).get("employeeID"));
         }
         catch (SQLException e){
             return null;
-        }
-        finally {
-            try {
-                connect.closeConnect();
-            }
-            catch (SQLException ignored){
-            }
         }
     }
 
@@ -209,5 +205,50 @@ public class ShiftDAO {
     public void shutDown() {
         for (Shift shift : shiftID.values())
             insertShift(shift);
+    }
+
+    public Response deleteShift(ShiftPair shiftPair) {
+        try{
+            ShiftDate date = shiftPair.getDate();
+            String query = "DELETE FROM Shifts WHERE timeOfDay = ? AND day = ? AND month = ? AND year = ?";
+            connect.executeUpdate(query, shiftPair.getTime(), date.getDay(), date.getMonth(), date.getYear());
+            return new Response();
+        } catch (SQLException e) {
+            return new Response("Cannot find the specified shift");
+        }
+    }
+
+    public boolean hasUpcomingShifts(String id) {
+        try{
+            String query = "SELECT * FROM EmployeesInShift WHERE employeeID = ?";
+            List<HashMap<String, Object>> shifts = connect.executeQuery(query, id);
+            Calendar calendar = Calendar.getInstance();
+            String sTodayDay = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+            String sTodayMonth = String.valueOf(calendar.get(Calendar.MONTH)+1);
+            String sTodayYear = String.valueOf(calendar.get(Calendar.YEAR));
+            for (int i = 0; i < shifts.size(); i++){
+                String sDay = (String) shifts.get(i).get("day");
+                String sMonth = (String) shifts.get(i).get("month");
+                String sYear = (String) shifts.get(i).get("year");
+                int year = Integer.parseInt(sYear);
+                int tYear = Integer.parseInt(sTodayYear);
+                if (year > tYear){
+                    return true;
+                }
+                int month = Integer.parseInt(sMonth);
+                int tMonth = Integer.parseInt(sTodayMonth);
+                if (month > tMonth && year == tYear){
+                    return true;
+                }
+                int day = Integer.parseInt(sDay);
+                int tDay = Integer.parseInt(sTodayDay);
+                if (day > tDay && month == tMonth && year == tYear ){
+                    return true;
+                }
+            }
+            return false;
+        } catch (SQLException | NumberFormatException e) {
+            return false;
+        }
     }
 }
