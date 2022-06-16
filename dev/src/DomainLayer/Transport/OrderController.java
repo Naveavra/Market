@@ -418,9 +418,8 @@ public class OrderController {
         Date date_ = createDate(date);
         Driver driver = null;
         Truck truck = null;
-        ArrayList<Object>truckAndDriver = getAutoTruckandDriver(date_,time,truck,driver);
+        ArrayList<Object> truckAndDriver = getAutoTruckandDriver(date_,time,truck,driver);
         if(truckAndDriver.isEmpty()){
-//TODO ADD MESSAGE HERE
             new EmployeeDAO().writeMessageToHR("cannot create order from "+supplierNumber);
             return false;
         }
