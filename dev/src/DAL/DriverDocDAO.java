@@ -101,7 +101,8 @@ public class DriverDocDAO {
 
 
     public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId) throws SQLException {
-        String query = "SELECT  orderId FROM order4Dest WHERE orderDocID = "+"'"+orderDocId+"'";
+        String query = "SELECT supply, quantity FROM order4Dest WHERE " +
+                String.format("orderDocID=\"%s\"", orderDocId);
         HashMap<Integer, Integer> ans =new HashMap<>();
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);

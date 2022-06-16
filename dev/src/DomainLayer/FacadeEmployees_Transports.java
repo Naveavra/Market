@@ -374,10 +374,6 @@ public class FacadeEmployees_Transports {
     public Response deleteShift(ShiftPair shiftPair) {
         return shiftController.deleteShift(shiftPair);
     }
-    public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId){
-        return orderController.getOrderIdFromOrderDoc(orderDocId);
-
-    }
 
     public boolean createAutoTransport(String supplierNumber, String date, Map<ProductSupplier, Integer> supplyList) {
         ConcurrentHashMap<String,Integer> supplies = new ConcurrentHashMap<>();
@@ -386,4 +382,11 @@ public class FacadeEmployees_Transports {
         }
         return orderController.createAutoTransport(supplierNumber,date,supplies);
     }
+
+
+    public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId){
+        return orderController.getOrderIdFromOrderDoc(orderDocId);
+
+    }
+
 }
