@@ -21,7 +21,7 @@ public class OrdersController {
         this.productsDAO = new ProductsSupplierDAO();
         this.pastOrdersDAO =new PastOrdersSupplierDAO();
         this.suppliersDAO=new SuppliersDAO();
-        this.employees_transports=FacadeEmployees_Transports.getInstance();
+        this.employees_transports=new FacadeEmployees_Transports();
     }
 
     public OrderFromSupplier createOrder(int supplierNumber){
@@ -164,8 +164,8 @@ public class OrdersController {
             if(order!=null) {
                 try {
                     ordersDAO.addProductToOrder(ps, order.getOrderId(), amount);
-                    finishOrder(order.getOrderId());
                     createTransport(order);
+                    finishOrder(order.getOrderId());
                 } catch (SQLException ignored) {
 
                 }

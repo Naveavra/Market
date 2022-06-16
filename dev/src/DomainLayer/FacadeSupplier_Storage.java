@@ -24,7 +24,7 @@ public class FacadeSupplier_Storage {
         categoryController=new CategoryController();
         reportController=new ReportController(categoryController);
         gson=new Gson();
-        facade=FacadeEmployees_Transports.getInstance();
+        facade=new FacadeEmployees_Transports();
         if(needsUpdateOrders){
             updateOrders();
             needsUpdateOrders=false;
@@ -372,17 +372,18 @@ public class FacadeSupplier_Storage {
         return categoryController.needsRefill(productId);
     }
 
-    public void getItemsFromTransport(int id){
+    public HashMap<Integer, Integer> getItemsFromTransport(int id){
         HashMap<Integer, Integer> productsAndQuantity = facade.getProductsFromOrderDoc(id);
         for( int productId : productsAndQuantity.keySet()){
             String curDate= LocalDate.now().toString();
             int curYear=Integer.parseInt(curDate.substring(0, 4))+1;
-            int curMonth=Integer.parseInt(curDate.substring(5, 7));
-            int curDay=Integer.parseInt(curDate.substring(8, 10));
-            String expirationDate = curYear +""+ curMonth +""+ curDay;
+            String curMonth=curDate.substring(5, 7);
+            String curDay=curDate.substring(8, 10);
+            String expirationDate = curYear +"-"+ curMonth +"-"+ curDay;
             categoryController.addAllItems(productId, productsAndQuantity.get(productId), expirationDate, 1);
         }
         facade.transportIsDone(id+"");
+        return productsAndQuantity;
     }
 
     public void addAllItems(int productId, int quantity, String ed, int shelf){
