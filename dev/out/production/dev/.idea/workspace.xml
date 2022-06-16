@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ce0ff183-5cc8-443b-ab57-d2dfe560b972" name="Default Changelist" comment="" />
+    <list default="true" id="ce0ff183-5cc8-443b-ab57-d2dfe560b972" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/out/production/dev/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/dev/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,7 +22,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../הגשה מחודשת ניתוצ 2/adss_group_O" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
     <configuration name="Menu" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -53,32 +55,12 @@
       <workItem from="1654978873445" duration="1857000" />
       <workItem from="1655043634554" duration="18000" />
       <workItem from="1655134732968" duration="12750000" />
+      <workItem from="1655379047445" duration="618000" />
+      <workItem from="1655379780672" duration="235000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/DAL/ShiftDAO.java</url>
-          <line>20</line>
-          <properties class="DAL.ShiftDAO" method="getShift">
-            <option name="EMULATED" value="true" />
-          </properties>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/DAL/ShiftDAO.java</url>
-          <line>210</line>
-          <properties class="DAL.ShiftDAO" method="deleteShift">
-            <option name="EMULATED" value="true" />
-          </properties>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
