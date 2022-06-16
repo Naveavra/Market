@@ -34,6 +34,7 @@ public class OrderController {
         id = new AtomicInteger();
         driverDocID = new AtomicInteger();
         suppliers = new SuppliersDAO();
+        sites.addSite("616",0,1,"Asgard","Thor","050866945");
         defaultStore = sites.getSite("616");
     }
 //    public OrderDoc getDocByID(String id){
@@ -415,7 +416,6 @@ public class OrderController {
     }
     public boolean createAutoTransport(String supplierNumber, String date, ConcurrentHashMap<String,Integer> supplyList) {
         String time = "MORNING";
-        sites.addSite("616",0,1,"Asgard","Thor","050866945");
         Supplier origin = null;
         try {
             origin = suppliers.getSupplier(Integer.parseInt(supplierNumber));

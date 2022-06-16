@@ -18,7 +18,7 @@ public class EmployeeMainCLI extends MainCLI {
     private final EmployeeService serviceController;
 
     public EmployeeMainCLI() {
-        serviceController = EmployeeService.getInstance();
+        serviceController = new EmployeeService();
     }
 
     public void start() {
