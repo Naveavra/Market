@@ -104,36 +104,36 @@ public class newFunctionalityTest {
         assertEquals(1,lst.size());
     }
 
-    @org.junit.Test
-    public void stage3_checkStorageGotCorrectAmountFromTransport() {
-        facadeSupplier.buyItems(1, 4);
-        int before = cC.getProductWithId(1).getCurAmount();
-//        facadeSupplier.getItemsFromTransport(orderDocId);
-        int added = cC.getProductWithId(1).getCurAmount()-before;
-        int inOrder = 0;
-        for(int count : ordersController.getAllProductsOfOrder(order.getOrderId()).values()){
-            inOrder +=count;
-        }
-        assertEquals(added, inOrder);
-
-    }
-
-    @org.junit.Test
-    public void stage4_checkGettingMessageWhenNoAvailableDriver(){
-        //make here the there is no driver available and try to send an order
-        try {
-            ProductSupplier p = new ProductsSupplierDAO().getProduct(1,1);
-            HashMap<ProductSupplier,Integer> suppl = new HashMap<>();
-            suppl.put(p,15);
-            facadeTransport.createAutoTransport("1","19/20/2030",suppl);
-            String ans = facadeTransport.displayMessages("318856994");
-            System.out.println(ans);
-            assertFalse(ans.isEmpty());
-
-        } catch (SQLException e) {
-            assertTrue(false);
-        }
-
-    }
+//    @org.junit.Test
+//    public void stage3_checkStorageGotCorrectAmountFromTransport() {
+//        facadeSupplier.buyItems(1, 4);
+//        int before = cC.getProductWithId(1).getCurAmount();
+////        facadeSupplier.getItemsFromTransport(orderDocId);
+//        int added = cC.getProductWithId(1).getCurAmount()-before;
+//        int inOrder = 0;
+//        for(int count : ordersController.getAllProductsOfOrder(order.getOrderId()).values()){
+//            inOrder +=count;
+//        }
+//        assertEquals(added, inOrder);
+//
+//    }
+//
+//    @org.junit.Test
+//    public void stage4_checkGettingMessageWhenNoAvailableDriver(){
+//        //make here the there is no driver available and try to send an order
+//        try {
+//            ProductSupplier p = new ProductsSupplierDAO().getProduct(1,1);
+//            HashMap<ProductSupplier,Integer> suppl = new HashMap<>();
+//            suppl.put(p,15);
+//            facadeTransport.createAutoTransport("1","19/20/2030",suppl);
+//            String ans = facadeTransport.displayMessages("318856994");
+//            System.out.println(ans);
+//            assertFalse(ans.isEmpty());
+//
+//        } catch (SQLException e) {
+//            assertTrue(false);
+//        }
+//
+//    }
 
 }
