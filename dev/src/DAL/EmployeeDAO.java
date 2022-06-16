@@ -427,10 +427,11 @@ public class EmployeeDAO {
     }
 
     public String displayMessages(String id) {
-        if (idMap.containsKey(id)) {
-            markAllAsRead(id);
-            return idMap.get(id).displayMessages();
-        }
+//        if (idMap.containsKey(id)) {
+//            String msg = idMap.get(id).displayMessages();
+//            markAllAsRead(id);
+//            return msg;
+//        }
         try {
             List<HashMap<String, Object>> messagesDB = conn.executeQuery("SELECT message FROM Messages WHERE id = ? AND read = ?", id, "false");
             List<String> messages = new ArrayList<>();
@@ -450,7 +451,8 @@ public class EmployeeDAO {
             idMap.get(id).clearMessages();
         }
         try {
-            conn.updateRecordInTable("Messages", "read","id", id, "true");
+            conn.executeUpdate("UPDATE Messages SET read = true WHERE read = false");
+//            conn.updateRecordInTable("Messages", "read","id", id, "true");
         }
         catch (SQLException ignored){}
     }

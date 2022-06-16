@@ -21,7 +21,7 @@ public class OrdersController {
         this.productsDAO = new ProductsSupplierDAO();
         this.pastOrdersDAO =new PastOrdersSupplierDAO();
         this.suppliersDAO=new SuppliersDAO();
-        this.employees_transports=FacadeEmployees_Transports.getInstance();
+        this.employees_transports=new FacadeEmployees_Transports();
     }
 
     public OrderFromSupplier createOrder(int supplierNumber){
@@ -139,14 +139,11 @@ public class OrdersController {
 
     //helper function to connect with Transport model
     private boolean createTransport(OrderFromSupplier o){
-        String supplierNumber =String.valueOf(o.getSupplierNumber());// nave this is the supplier number
-        String date = o.getDate();// i dont know the format suppoed is DD\MM\YYYY
+        String supplierNumber =String.valueOf(o.getSupplierNumber());// miki this is the supplier number
+        String date = o.getDate();// i dont know the format i supposed is DD\MM\YYYY
         Map<ProductSupplier,Integer> productToQuantity= new HashMap<ProductSupplier, Integer>();
         productToQuantity=o.getProducts();
-
-        //create transport
-//        employees_transports - fasade
-        return true;
+        return employees_transports.createAutoTransport(supplierNumber,date,productToQuantity);
     }
 
     private boolean checkDays(DeliveryTerm d) {
@@ -167,8 +164,8 @@ public class OrdersController {
             if(order!=null) {
                 try {
                     ordersDAO.addProductToOrder(ps, order.getOrderId(), amount);
+//                    createTransport(order);
                     finishOrder(order.getOrderId());
-                    createTransport(order);
                 } catch (SQLException ignored) {
 
                 }
@@ -181,6 +178,14 @@ public class OrdersController {
             return productsDAO.getMinProductByProductId(productId, amount);
         } catch (SQLException e) {
             return null;
+        }
+    }
+
+    public Map<ProductSupplier,Integer> getAllProductsOfOrder(int orderId){
+        try {
+            return ordersDAO.getAllProductsOfOrder(orderId);
+        } catch (SQLException e) {
+            return new HashMap<>();
         }
     }
 
