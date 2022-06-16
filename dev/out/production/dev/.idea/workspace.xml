@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ce0ff183-5cc8-443b-ab57-d2dfe560b972" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/PresentationLayer/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PresentationLayer/Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ServiceLayer/EmployeeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ServiceLayer/EmployeeService.java" afterDir="false" />
-    </list>
+    <list default="true" id="ce0ff183-5cc8-443b-ab57-d2dfe560b972" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,17 +36,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Menu" />
@@ -64,7 +50,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1654978871703</updated>
-      <workItem from="1654978873445" duration="906000" />
+      <workItem from="1654978873445" duration="1857000" />
+      <workItem from="1655043634554" duration="18000" />
+      <workItem from="1655134732968" duration="329000" />
     </task>
     <servers />
   </component>

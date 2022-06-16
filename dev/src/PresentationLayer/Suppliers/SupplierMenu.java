@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class SupplierMenu {
 
-    private Scanner sc=new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in);
     private SupplierService ss = new SupplierService();
     private Set<JobType> roles;
 

@@ -365,4 +365,18 @@ public class EmployeeService {
     private String displayMessages(String id) {
         return facade.displayMessages(id);
     }
+
+    public String viewShift(String sShift) {
+        Response r = parser.isValidShiftInput(sShift);
+        if (r.errorOccurred())
+            return r.getErrorMessage();
+        return facade.viewShift(parser.getShiftPair(sShift));
+    }
+
+    public Response deleteShift(String sShift) {
+        Response r = parser.isValidShiftInput(sShift);
+        if (r.errorOccurred())
+            return r;
+        return facade.deleteShift(parser.getShiftPair(sShift));
+    }
 }
