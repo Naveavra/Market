@@ -306,9 +306,9 @@ public class FacadeSupplier_Storage {
         categoryController.addCategory(cName, 0);
     }
 
-    public void addNewProduct(int pId, String pName, String desc, double price, double weight,
+    public void addNewProduct(int pId, String pName, String desc, double price,
                               String maker, String cat, String sub, String subSub) {
-        categoryController.addNewProduct(pId, pName, desc, price, weight, maker, cat, sub, subSub);
+        categoryController.addNewProduct(pId, pName, desc, price, maker, cat, sub, subSub);
     }
     public void addSubCat(String cName, String subName) {
         categoryController.addSubCategory(cName, subName);

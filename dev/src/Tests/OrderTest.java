@@ -36,8 +36,8 @@ public class OrderTest {
             facadeSupplier.addCategory("second");
             facadeSupplier.addSubCat("second", "second1");
             facadeSupplier.addSubSubCat("second", "second1", "second11");
-            facadeSupplier.addNewProduct(1,"milk","hello",3,5,"me","first","first1", "first11");
-            facadeSupplier.addNewProduct(2,"eggs","hello",4,4,"me","first","first1", "first11");
+            facadeSupplier.addNewProduct(1,"milk","hello",3,"me","first","first1", "first11");
+            facadeSupplier.addNewProduct(2,"eggs","hello",4,"me","first","first1", "first11");
             facadeSupplier.addAllItems(1,4,"2027-06-01",12);
             ordersController = new OrdersController();
             facadeSupplier.openAccount(1, "eli", 1, new String[]{"1"},0);
