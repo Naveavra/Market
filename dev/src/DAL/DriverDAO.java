@@ -164,7 +164,7 @@ public class DriverDAO {
         String query = "INSERT OR IGNORE INTO Drivers(name,id,license) VALUES(?,?,?)";
         try {
             conn.executeUpdate(query,d.getName(),d.getId(),d.getLicense());
-            addAvailability(d.getId());
+//            addAvailability(d.getId());
         }catch (SQLException se){
 //            System.out.println("Cannot Insert a Driver,Something is wrong with the db");
         }

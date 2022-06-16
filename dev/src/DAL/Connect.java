@@ -276,7 +276,7 @@ public class Connect {
                     "weight DECIMAL," +
                     "finished varchar(3),"+
                     "PRIMARY KEY (id)," +
-                    "FOREIGN KEY (driverID) REFERENCES Drivers(id)" +
+                    "FOREIGN KEY (driverID) REFERENCES Employees(id)" +
                     ")";
             statement.execute(query);
             query = "CREATE TABLE IF NOT EXISTS Destinations(" +
