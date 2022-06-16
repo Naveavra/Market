@@ -60,6 +60,10 @@ public class FacadeSupplier_Storage {
         Map<Integer, OrderFromSupplier> orders = ordersController.getActiveOrders(supplierNumber);
         return gson.toJson(orders);
     }
+    public String getActiveOrders(){
+        Map<Integer, OrderFromSupplier> orders = ordersController.getActiveOrders();
+        return gson.toJson(orders);
+    }
 
     public String getFixedDaysOrders(int supplierNumber){
         Map<Integer, OrderFromSupplier> orders = ordersController.getActiveOrders(supplierNumber);
@@ -426,5 +430,11 @@ public class FacadeSupplier_Storage {
 
     public boolean updateContact(int supplierNumber, String name, String email, String telephone) {
         return supplierController.getSupplier(supplierNumber).updateContact(name,email,telephone);
+    }
+
+
+    public boolean cancelOrder(int orderId) {
+        return ordersController.cancelOrder(orderId);
+        //return supplierController.getSupplier(supplierNumber).updateContact(name,email,telephone);
     }
 }

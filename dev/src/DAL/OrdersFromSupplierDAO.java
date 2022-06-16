@@ -81,6 +81,7 @@ public class OrdersFromSupplierDAO {
                 , orderId, productId);
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
+
             //IMOrdersFromSupplier.put(order.getOrderId(), order);
         } catch (SQLException e) {
             throw e;
@@ -173,6 +174,27 @@ public class OrdersFromSupplierDAO {
             connect.closeConnect();
         }
     }
+    public Map<Integer, OrderFromSupplier> getActiveOrders() throws SQLException {
+        String query = "SELECT * FROM OrdersFromSupplier";
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            Map<Integer,OrderFromSupplier> orders = new HashMap<>();
+            int i=0;
+            while (rs.next()){
+                OrderFromSupplier order = new OrderFromSupplier(rs.getInt("supplierNumber"),rs.getInt("orderId"), rs.getString("date")
+                        ,getDeliveryTermOfOrder(rs.getInt("orderId")));
+                orders.put(i,order);
+                i++;
+            }
+            return orders;
+        } catch (SQLException e) {
+            throw e;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
+
 
     public boolean removeOrder(int orderId) throws SQLException {
         String query =String.format("DELETE FROM OrdersFromSupplier WHERE orderId = %d"
@@ -274,5 +296,19 @@ public class OrdersFromSupplierDAO {
         finally {
             connect.closeConnect();
         }
+    }
+
+    public boolean removeAllProductsFromOrder(int orderId) throws SQLException {
+        String query =String.format("DELETE FROM ProductsInOrder where orderId = %d ", orderId);
+        try (Statement stmt = connect.createStatement()) {
+            stmt.execute(query);
+            //IMOrdersFromSupplier.put(order.getOrderId(), order);
+        } catch (SQLException e) {
+            return false;
+        }
+        finally {
+            connect.closeConnect();
+        }
+        return true;
     }
 }

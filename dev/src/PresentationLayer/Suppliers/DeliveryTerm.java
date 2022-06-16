@@ -10,7 +10,8 @@ public class DeliveryTerm {
         Wednesday,
         Thursday,
         Friday,
-        Saturday
+        Saturday,
+        NoDays
     }
     Map<String, DaysInWeek> M  = new HashMap<String, DaysInWeek>() {{
         put("1", DaysInWeek.Sunday);
@@ -20,7 +21,17 @@ public class DeliveryTerm {
         put("5", DaysInWeek.Thursday);
         put("6", DaysInWeek.Friday);
         put("7", DaysInWeek.Saturday);
-
+        put("8", DaysInWeek.NoDays);
+    }};
+    Map<DaysInWeek,String> toM  = new HashMap<DaysInWeek,String>() {{
+        put( DaysInWeek.Sunday,"1");
+        put( DaysInWeek.monday,"2");
+        put( DaysInWeek.Tuesday,"3");
+        put( DaysInWeek.Wednesday,"4");
+        put( DaysInWeek.Thursday,"5");
+        put( DaysInWeek.Friday,"6");
+        put( DaysInWeek.Saturday,"7");
+        put( DaysInWeek.NoDays,"8");
     }};
 
     private DaysInWeek[] daysInWeeks;
@@ -34,7 +45,7 @@ public class DeliveryTerm {
     public String toString(){
         StringBuilder out= new StringBuilder();
         for(DaysInWeek a: daysInWeeks){
-            out.append(a.toString()).append(",");
+            out.append(toM.get(a)).append(",");
         }
         return out.substring(0, out.toString().length()-1);
     }
