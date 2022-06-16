@@ -141,7 +141,7 @@ public class OrdersController {
     private boolean createTransport(OrderFromSupplier o){
         String supplierNumber =String.valueOf(o.getSupplierNumber());// nave this is the supplier number
         String date = o.getDate();// i dont know the format suppoed is DD\MM\YYYY
-        Map<ProductSupplier,Integer> productToQuantity= new HashMap<ProductSupplier, Integer>();
+        Map<ProductSupplier,Integer> productToQuantity= new HashMap<>();
         productToQuantity=o.getProducts();
 
         //create transport
@@ -181,6 +181,14 @@ public class OrdersController {
             return productsDAO.getMinProductByProductId(productId, amount);
         } catch (SQLException e) {
             return null;
+        }
+    }
+
+    public Map<ProductSupplier,Integer> getAllProductsOfOrder(int orderId){
+        try {
+            return ordersDAO.getAllProductsOfOrder(orderId);
+        } catch (SQLException e) {
+            return new HashMap<>();
         }
     }
 
