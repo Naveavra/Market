@@ -16,8 +16,8 @@ public class JobController {
 
 
 
-    public boolean addLicense(String id, String license) {
-        return jobDAO.addLicense(id, license);
+    public boolean addLicense(String name, String id, String license) {
+        return jobDAO.addLicense(name, id, license);
     }
 
 }

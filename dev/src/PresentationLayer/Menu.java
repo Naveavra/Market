@@ -50,7 +50,9 @@ public class Menu {
                 employeeCLI.login();
             }
             Set<JobType> roles = employeeCLI.getLoggedInUserRoles();
-            System.out.println(employeeCLI.displayLoggedInUserMessages());
+            if (roles.contains(JobType.HR_MANAGER)) {
+                System.out.println(employeeCLI.displayLoggedInUserMessages());
+            }
             System.out.println("Choose module:");
             System.out.println("\t1.Employee Model");
             System.out.println("\t2.Transport Model");
@@ -193,6 +195,10 @@ public class Menu {
         es.register("111111111", "miki daniarov", "123456", 1, "yahav", "good");
         es.register("222222222", "eyal german", "123456", 1, "yahav", "good");
         es.register("333333333", "ziv cohen gvura", "123456", 1, "yahav", "good");
+        es.register("318856994", "Itay Gershon", "123456", 1000000000, "Hapoalim 12 115", "The conditions for this employee are really terrific");
+        es.certifyEmployee("318856994", "1");
+        es.certifyEmployee("318856994", "9");
+        es.certifyEmployee( "318856994", "4");
         es.certifyEmployee("318856994", "3");
         es.certifyEmployee("333333333", "1"); //HR M
         es.certifyEmployee("111111111", "8"); // TRANSPORT M
@@ -229,6 +235,8 @@ public class Menu {
                 "333333333,234567891", "123456780,000000000", "123456789", "111111111");
         es.createShift("01/07/2022 evening", "456789123",
                 "333333333,234567891", "258369147,000000000", "567801234", "345678912");
+        es.createShift("20/05/2022 evening", "456789123",
+                "222222222,234567891", "258369147,000000000", "567801234", "345678912");
 
         createAvailabilities("318856994");
         createAvailabilities("333333333");
