@@ -77,7 +77,7 @@ public class SupplierMenu {
 
     private void cancelOrder() {
         watchWaitOrders();
-        System.out.println(" please choose order number to cancel or \"break\" if u want to return to supplier menu");
+        System.out.println("please choose order number to cancel or \"break\" if u want to return to supplier menu");
         int orderId = 0;
         String choiceStr = "";
         try {
@@ -90,12 +90,17 @@ public class SupplierMenu {
             System.out.println("you must enter only 1 digit number");
             cancelOrder();
         }
-        Boolean check = orderService.cancelOrder(orderId);
-        if(check){
-            System.out.println("order deleted");
-        }
-        else{
+        LinkedList<Integer> ids =ordersIds();
+        if(!ids.contains(orderId)){
             System.out.println("order doesn't found");
+        }
+        else {
+            Boolean check = orderService.cancelOrder(orderId);
+            if (check) {
+                System.out.println("order deleted");
+            } else {
+                System.out.println("order doesn't found");
+            }
         }
         chooseSupplierMenu();
     }
@@ -109,6 +114,14 @@ public class SupplierMenu {
             System.out.println(o.toString());
         }
         //watchOrdersMenu(supplier);
+    }
+    private LinkedList<Integer> ordersIds(){
+        Map<Integer, Order> orders=orderService.getActiveOrders();
+        LinkedList<Integer> ids =new LinkedList<>();
+        for(Order x: orders.values()){
+            ids.addLast(x.getOrderId());
+        }
+        return ids;
     }
 
     private void openOrderSupplierManagement(int supplierNumber) {
