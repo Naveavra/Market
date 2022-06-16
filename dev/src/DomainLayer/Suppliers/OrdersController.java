@@ -1,9 +1,6 @@
 package DomainLayer.Suppliers;
 
-import DAL.OrdersFromSupplierDAO;
-import DAL.PastOrdersSupplierDAO;
-import DAL.ProductsSupplierDAO;
-import DAL.SuppliersDAO;
+import DAL.*;
 import DomainLayer.FacadeEmployees_Transports;
 
 import java.sql.SQLException;
@@ -165,6 +162,7 @@ public class OrdersController {
                 try {
                     ordersDAO.addProductToOrder(ps, order.getOrderId(), amount);
                     if(!createTransport(order)){
+                        new EmployeeDAO().writeMessageToHR("No drivers available");
                         return;
                     }
                     finishOrder(order.getOrderId());
