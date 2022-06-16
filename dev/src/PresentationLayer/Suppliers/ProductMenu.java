@@ -37,7 +37,7 @@ public class ProductMenu {
         System.out.println("\t 4. remove discount on product to supplier");
         System.out.println("\t 5. watch all supplier products");
         System.out.println("\t 6. update product");
-        System.out.println("\t 7 . go back");
+        System.out.println("\t 7. go back");
         String choiceStr = "";
         int choice =0;
         try{

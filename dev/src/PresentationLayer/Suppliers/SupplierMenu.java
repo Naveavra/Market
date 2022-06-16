@@ -2,12 +2,13 @@ package PresentationLayer.Suppliers;
 
 import DomainLayer.Employees.JobType;
 import PresentationLayer.Menu;
+import ServiceLayer.OrderService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 
-import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.Set;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class SupplierMenu {
@@ -15,6 +16,7 @@ public class SupplierMenu {
     private Scanner sc = new Scanner(System.in);
     private SupplierService ss = new SupplierService();
     private Set<JobType> roles;
+    private OrderService orderService =new OrderService();
 
 // HR_MANAGER, SHIFT_MANAGER ,CASHIER, STOCK_KEEPER, DRIVER, MERCHANDISER, LOGISTICS_MANAGER,
 //    TRANSPORT_MANAGER, STORE_MANAGER;
@@ -28,7 +30,8 @@ public class SupplierMenu {
         System.out.println("\t1. supplier management");
         System.out.println("\t2. supplier's product management");
         System.out.println("\t3. supplier's order management");
-        System.out.println("\t4. go back");
+        System.out.println("\t4. cancel orders");
+        System.out.println("\t5. go back");
         String choiceStr = "";
         int choice =0;
         try{
@@ -65,9 +68,74 @@ public class SupplierMenu {
                 openOrderSupplierManagement(supNumber);
                 break;
             case 4:
+                cancelOrders();
+                break;
+            case 5:
                 break;
         }
 
+    }
+
+    private void cancelOrders() {
+//        LinkedList<Integer> check= waitOrdersIds();
+//        if(check.isEmpty()){
+//         chooseSupplierMenu();
+//        }
+//        else {
+            //watchWaitOrdersForUpdate();
+            System.out.println(" please choose order number to cancel or \"break\" if u want to return to supplier menu");
+            int orderId = 0;
+            String choiceStr = "";
+            try {
+                choiceStr = sc.next();
+                if (choiceStr.equals("break")) {
+                    chooseSupplierMenu();
+                }
+                orderId = Integer.parseInt(choiceStr);
+            } catch (Exception e) {
+                System.out.println("you must enter only 1 digit number");
+                cancelOrders();
+            }
+//            if (!check.contains(orderId)) {
+//                System.out.println("the order didnt found");
+//                cancelOrders();
+//            }
+            Boolean check = orderService.cancelOrder(orderId);
+            if(check){
+                System.out.println("order deleted");
+            }
+            else{
+                System.out.println("order doesn't found");
+            }
+            chooseSupplierMenu();
+    }
+    private void watchWaitOrdersForUpdate() {
+        String json=orderService.getActiveOrders();
+        Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
+        orders = Menu.fromJson(json, orders.getClass());
+        if(orders.isEmpty()){
+            System.out.println("there is no orders to show");
+        }
+        for(LinkedTreeMap o: orders.values()){
+            Order order = Menu.fromJson(o.toString(), Order.class);
+            System.out.println(order.toString());
+        }
+    }
+    private LinkedList<Integer> waitOrdersIds(){
+        LinkedList<Integer> out =new LinkedList<>();
+        String json=orderService.getActiveOrders();
+        Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
+        orders = Menu.fromJson(json, orders.getClass());
+        if(orders.isEmpty()){
+            System.out.println("there is no orders to show");
+        }
+        for(LinkedTreeMap o: orders.values()){
+            Integer x = (Integer) o.get("OrderId");
+           // Order order = Menu.fromJson(o.toString(), Order.class);
+            //out.addLast(order.getOrderId());
+            out.addLast(x);
+        }
+        return out;
     }
 
     private void openOrderSupplierManagement(int supplierNumber) {

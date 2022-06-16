@@ -1,6 +1,8 @@
 package DomainLayer.Suppliers;
 
+import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,9 +14,10 @@ public class DeliveryTerm {
         Wednesday,
         Thursday,
         Friday,
-        Saturday
+        Saturday,
+        NoDays
     }
-    public static Map<String, DaysInWeek> intToEnum  = new HashMap<String, DaysInWeek>() {{
+    public transient static Map<String, DaysInWeek> intToEnum  = new HashMap<String, DaysInWeek>() {{
         put("1", DaysInWeek.Sunday);
         put("2", DaysInWeek.monday);
         put("3", DaysInWeek.Tuesday);
@@ -22,10 +25,8 @@ public class DeliveryTerm {
         put("5", DaysInWeek.Thursday);
         put("6", DaysInWeek.Friday);
         put("7", DaysInWeek.Saturday);
-
+        put("8", DaysInWeek.NoDays);
     }};
-
-
     private DaysInWeek[] daysInWeeks;
 
     public  DaysInWeek[] getDaysInWeeks(){
@@ -49,8 +50,12 @@ public class DeliveryTerm {
                 i++;
             }
         }
-        else
-            this.daysInWeeks=new DaysInWeek[0];
+        else {
+            //LinkedList<String> day=new LinkedList<>();
+            DaysInWeek[] d =new DaysInWeek[1];
+            d[0] =DaysInWeek.NoDays;
+            this.daysInWeeks = d;
+        }
     }
 
     public DeliveryTerm(List<String> days){
@@ -90,16 +95,19 @@ public class DeliveryTerm {
         return this.daysInWeeks.length==0;
     }
     public String toString(){
+        if(daysInWeeks.length==0){
+            return "";
+        }
         StringBuilder out= new StringBuilder();
         for(DaysInWeek a: daysInWeeks){
-            out.append(a.toString()).append(",");
+            out.append(daysToString.get(a)).append(",");
         }
         return out.substring(0, out.toString().length()-1);
     }
     public int getDayValue(DaysInWeek d){
         return daysToInt.get(d);
     }
-    public Map<DaysInWeek,Integer> daysToInt = new HashMap<DaysInWeek,Integer>() {{
+    public transient Map<DaysInWeek,Integer> daysToInt = new HashMap<DaysInWeek,Integer>() {{
         put(DaysInWeek.Sunday,7);
         put(DaysInWeek.monday,1);
         put(DaysInWeek.Tuesday,2);
@@ -107,6 +115,16 @@ public class DeliveryTerm {
         put(DaysInWeek.Thursday,4);
         put(DaysInWeek.Friday,5);
         put(DaysInWeek.Saturday,6);
-
+        put(DaysInWeek.NoDays, 8);
+    }};
+    public  transient Map<DaysInWeek,String> daysToString = new HashMap<DaysInWeek,String>() {{
+        put(DaysInWeek.Sunday,"7");
+        put(DaysInWeek.monday,"1");
+        put(DaysInWeek.Tuesday,"2");
+        put(DaysInWeek.Wednesday,"3");
+        put(DaysInWeek.Thursday,"4");
+        put(DaysInWeek.Friday,"5");
+        put(DaysInWeek.Saturday,"6");
+        put(DaysInWeek.NoDays, "8");
     }};
 }

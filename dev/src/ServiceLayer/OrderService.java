@@ -56,6 +56,9 @@ public class OrderService {
     public String getActiveOrders(int supplierNumber){
       return facadeSupplier.getActiveOrders(supplierNumber);
     }
+    public String getActiveOrders(){
+        return facadeSupplier.getActiveOrders();
+    }
 
     /**
      * the function gets the delivery days for each active order
@@ -128,5 +131,10 @@ public class OrderService {
      */
     public String getPastOrders(int supplierNumber) {
         return facadeSupplier.watchPastOrders(supplierNumber);
+    }
+
+    public boolean cancelOrder(int orderId) {
+        return facadeSupplier.cancelOrder(orderId);
+        //catch exaption
     }
 }

@@ -86,6 +86,13 @@ public class OrdersController {
         }
     }
 
+    public Map<Integer, OrderFromSupplier> getActiveOrders() {
+        try {
+            return ordersDAO.getActiveOrders();
+        } catch (SQLException e) {
+            return null;
+        }
+    }
 
     public Map<Integer,PastOrderSupplier> getFinalOrders(int supplierNumber) {
         try {
@@ -189,7 +196,7 @@ public class OrdersController {
         }
     }
 
-    public boolean cencelOrder(int orderId) {
+    public boolean cancelOrder(int orderId) {
         try {
             ordersDAO.removeAllProductsFromOrder(orderId);
             ordersDAO.removeOrder(orderId);

@@ -190,6 +190,7 @@ public class OrderMenu {
         System.out.println("\t6. See all your past orders..");
         System.out.println("\t7. Return to supplier page");
         String choiceStr = "";
+        //1
         int choice =0;
         try{
             choiceStr = sc.next();
@@ -200,7 +201,13 @@ public class OrderMenu {
             watchOrdersMenu(s);
             return;
         }
-        if(choice!=4& choice!=5 & choice!=6 & choice!=7){
+//        if(choice == 7){
+//            if(!(roles.contains(JobType.STOCK_KEEPER) | roles.contains(JobType.HR_MANAGER) | roles.contains(JobType.LOGISTICS_MANAGER))){
+//                System.out.println("u dont have access to this area");
+//                watchOrdersMenu(s);
+//            }
+//        }
+         if(choice!=4& choice!=5 & choice!=6 & choice!=7){
             if(!roles.contains(JobType.STOCK_KEEPER)){
                 System.out.println("u dont have access to this area");
                 watchOrdersMenu(s);
@@ -208,7 +215,7 @@ public class OrderMenu {
 
         }
         int orderId =0;
-        if(choice ==2 | choice ==3){
+        if(choice ==2 | choice ==3 | choice ==7){
             System.out.println("Enter orderID:");
             choiceStr = "";
             orderId =0;
@@ -250,6 +257,17 @@ public class OrderMenu {
                 watchOrdersMenu(s);
         }
         sm.chooseSupplierMenu();
+    }
+
+    private void deleteOrder(int orderId) {
+        System.out.println(" please choose order number to cancel:");
+        watchWaitOrdersForUpdate();
+        LinkedList<Integer> check= waitOrdersIds();
+        if(!check.contains(orderId)){
+            System.out.println("the order didnt found");
+            watchOrdersMenu(supplier);
+        }
+        orderService.cancelOrder(orderId);
     }
 
     private void watchPastOrders() {
@@ -330,6 +348,20 @@ public class OrderMenu {
             Order order = Menu.fromJson(o.toString(), Order.class);
             System.out.println(order.toString());
         }
+    }
+    private LinkedList<Integer> waitOrdersIds(){
+        LinkedList<Integer> out =new LinkedList<>();
+        String json=orderService.getActiveOrders(supplier.getSupplierNumber());
+        Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
+        orders = Menu.fromJson(json, orders.getClass());
+        if(orders.isEmpty()){
+            System.out.println("there is no orders to show");
+        }
+        for(LinkedTreeMap o: orders.values()){
+            Order order = Menu.fromJson(o.toString(), Order.class);
+            out.addLast(order.getOrderId());
+        }
+        return out;
     }
 
     private void updateOrderMenu(int orderID) {
