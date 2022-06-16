@@ -378,32 +378,19 @@ public class OrderController {
 //        Driver driver = null;
 //        Truck truck = null;
         int sevenAfter = 0;
-//        int sevenBefore = 0;
         ArrayList<Object> res = new ArrayList<>();
-        while ((driver == null && truck == null) && (sevenAfter != 7)) {
+        while (driver == null && truck == null && sevenAfter < 8) {
             ArrayList<Driver> drivers = this.drivers.getDrivers(date.toString(), time);
             if (drivers.isEmpty()) {
-                if (sevenAfter != 7) {
                     date.AdvanceDate();
                     sevenAfter++;
-                }
-//                else {
-//                    date.dayBefore();
-//                    sevenBefore++;
-//                }
-                continue;
-            } else {
+            }
+            else {
                 driver = drivers.get(0);
                 ArrayList<Truck> trucks = this.trucks.getTrucks(date.toString(), time, driver.getLicense());
                 if (trucks.isEmpty()) {
-                    if (sevenAfter != 7) {
                         date.AdvanceDate();
                         sevenAfter++;
-                    } else {
-                        date.dayBefore();
-//                        sevenBefore++;
-                    }
-                    continue;
                 }
                 else{
                     truck = trucks.get(0);
