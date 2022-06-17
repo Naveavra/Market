@@ -10,9 +10,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserInterface extends MainCLI {
-    public static String red = "\033[0;31m";
-    public static String reset = "\033[0m";
-    public static String RED_BOLD = "\033[1;31m";
+
 
     public void start(Set<JobType> roles) {
         menu();
@@ -24,8 +22,6 @@ public class UserInterface extends MainCLI {
    // }
 
     private boolean createTruck(String type, String licensePlate, double maxWeight, double initialweight) {
-        String temp = String.valueOf(maxWeight)+".0";
-        
         return us.createTruck(type, licensePlate, maxWeight, initialweight);
     }
 
@@ -56,7 +52,7 @@ public class UserInterface extends MainCLI {
         boolean closed = false;
         while (!closed) {
 
-            System.out.println(RED_BOLD+"Welcome to the Transport Management System."+reset+"\n" +
+            System.out.println("Welcome to the Transport Management System.\n" +
                     "Please choose an option\n" +
                     "\t1.Add/Remove resources\n" +
                     "\t2.Orders\n" +
@@ -73,7 +69,7 @@ public class UserInterface extends MainCLI {
                         break;
                     case 3:
                         closed=true;
-                        System.out.println(RED_BOLD+"Thank you for using our Transport System, see you again next time!\n"+reset);
+                        System.out.println("Thank you for using our Transport System, see you again next time!\n");
                         break;
                 }
             }catch (Exception e){
@@ -147,14 +143,21 @@ public class UserInterface extends MainCLI {
         try {
             doc = getDoc();
             String finish = os.GetFinish(doc);
-            if (finish == "#t"){
+            if (finish.equals("#t")){
                 System.out.println("Transport is already done homie");
                 return;
             }
             System.out.println("Please enter store -ID- from the list below:");
             System.out.println(showStores(doc));
+            if(showStores(doc).isEmpty()){
+                return;
+            }
             Scanner input = new Scanner(System.in);
             storeID = input.nextLine();
+            if(!areYouSure()){
+                System.out.println("Action Canceled Successfully");
+                return;
+            }
             changeOrderList(suppNames,quantities,doc,storeID);
             if(os.changeOrder(doc,storeID,suppNames,quantities)) {
                 System.out.println("Order changed hopefully");
@@ -194,6 +197,10 @@ public class UserInterface extends MainCLI {
                         "Please enter new weight:");
                 Scanner input = new Scanner(System.in);
                 double weight2add = input.nextDouble();
+                if(!areYouSure()){
+                    System.out.println("Action Canceled Successfully");
+                    return;
+                }
                 temp = os.setTrucksWeight(doc, weight2add);
                 while(!temp){
                     System.out.println("Weight exceeds maximum");
@@ -252,12 +259,14 @@ public class UserInterface extends MainCLI {
             case 4:
                 try{
                     String doc = getDoc();
-                    if (os.GetFinish(doc) == "#t"){
-                        System.out.println("Transport is already finished cuz");
-                        break;
+                    if(doc!=null) {
+                        if (os.GetFinish(doc).equals("#t")) {
+                            System.out.println("Transport is already finished cuz");
+                            break;
+                        }
+                        os.transportIsDone(doc);
+                        System.out.println("Transport ID: " + doc + " Is Finished, Nice Work G");
                     }
-                    os.transportIsDone(doc);
-                    System.out.println("Transport ID: "+doc+" Is Finished, Nice Work G");
                 }catch (Exception e){
                     System.out.println("Doc doesnt exist.");
                 }
@@ -344,23 +353,16 @@ public class UserInterface extends MainCLI {
         if(truckPlate==null){
             return false;
         }
+        if(!areYouSure()){
+            System.out.println("Action Canceled Successfully");
+            return false;
+        }
         String id=os.createDoc(orders, supplierID, date,driverID,truckPlate, time);
         System.out.println("Order created successfully please keep the document id for future needs, id:" + id);
         return true;
     }
 
-    //creates a contact
-    private Contact createContact() {
-        System.out.println("Please enter an address");
-        Scanner input = new Scanner(System.in);
-        String addr = input.nextLine();
-        System.out.println("Please enter contacts' name");
-        input = new Scanner(System.in);
-        String cName = input.nextLine();
-        System.out.println("Please enter a phone number");
-        String pNum = input.nextLine();
-        return new Contact(addr, cName, pNum);
-    }
+
 
     //creates a HashMap<Supply,Quantity(int)>.  i.e supplies list
     private ConcurrentHashMap<String, Integer> createOrderList() {
@@ -418,10 +420,13 @@ public class UserInterface extends MainCLI {
             input = new Scanner(System.in);
             String newStoreID = input.nextLine();
             try {
+                if(!areYouSure()){
+                    System.out.println("Action Canceled Successfully");
+                    return;
+                }
                 ConcurrentHashMap<String, Integer> supplies = createOrderList();
                 os.replaceStores(docID, id2replace, newStoreID, supplies);
-            } catch (NullPointerException e) {
-                //TODO
+            } catch (NullPointerException ignored) {
             }
         } else if (choice == 2) {
             removeSitesFromDoc(docID);
@@ -440,6 +445,10 @@ public class UserInterface extends MainCLI {
             System.out.println(showStores(docID));
             Scanner input = new Scanner(System.in);
             String storeID = input.nextLine();
+            if(!areYouSure()){
+                System.out.println("Action Canceled Successfully");
+                return false;
+            }
             os.removeSiteFromDoc(docID, storeID);
             return true;
         }
@@ -456,6 +465,10 @@ public class UserInterface extends MainCLI {
         ArrayList<Integer> quantities = new ArrayList<>();
             try {
                 changeOrderList(supplyNames,quantities,docID,storeID);
+                if(!areYouSure()){
+                    System.out.println("Action Canceled Successfully");
+                    return;
+                }
                 if(os.changeOrder(docID,storeID,supplyNames,quantities)) {
                     System.out.println("Order changed hopefully");
                 }
@@ -526,10 +539,10 @@ public class UserInterface extends MainCLI {
         String driversLst = "";
         String d;
         while (true) {
-            System.out.println("Please enter a "+RED_BOLD+"-Driver ID-"+reset+" from the list below:");
+            System.out.println("Please enter a "+" -Driver ID- "+" from the list below:");
             driversLst = os.showDrivers(date,time);
             if(driversLst.isEmpty()){
-                return null;
+
             }
             System.out.println(driversLst);
             Scanner input = new Scanner(System.in);
@@ -592,6 +605,10 @@ public class UserInterface extends MainCLI {
         System.out.println("Please enter trucks' initial weight:");
         input = new Scanner(System.in);
         double initialWeight = input.nextDouble();
+        if(!areYouSure()){
+            System.out.println("Action Canceled Successfully");
+            return;
+        }
         if (createTruck(type, licenseP, maxWeight, initialWeight)) {
             System.out.println("Action succeeded, new whip skrrttt skkkrrrtt!!");
         } else {
@@ -603,6 +620,10 @@ public class UserInterface extends MainCLI {
         System.out.println("Please enter the license plate of the truck you would like to remove:");
         Scanner input = new Scanner(System.in);
         String truck2remove = input.nextLine();
+        if(!areYouSure()){
+            System.out.println("Action Canceled Successfully");
+            return;
+        }
         if (removeTruck(truck2remove)) {
             System.out.println("Action succeeded");
         } else {
@@ -613,11 +634,7 @@ public class UserInterface extends MainCLI {
         System.out.println("Please enter sites' id:");
         Scanner input = new Scanner(System.in);
         String siteID = input.nextLine();
-        System.out.println("Is it a store or a supplier?\n" +
-                "0.Supplier\n" +
-                "1.Store");
-        input = new Scanner(System.in);
-        int type = input.nextInt();
+        int type = 1;
         System.out.println("Please enter contacts' address:");
         input = new Scanner(System.in);
         String addr = input.nextLine();
@@ -633,17 +650,21 @@ public class UserInterface extends MainCLI {
                 "2.South");
         input = new Scanner(System.in);
         int shippingArea = input.nextInt();
-        createSite(siteID, addr, cName, pNum, shippingArea, type);
-        if(type==0){
-            System.out.println("Supplier site created");
-        }else {
-            System.out.println("Store site created");
+        if(!areYouSure()){
+            System.out.println("Action Canceled Successfully");
+            return;
         }
+        createSite(siteID, addr, cName, pNum, shippingArea, type);
+        System.out.println("Store created successfully");
     }
     private void removeSite(){
         System.out.println("Please enter the sites' ID you would like to remove");
         Scanner input = new Scanner(System.in);
         String site2Remove = input.nextLine();
+        if(!areYouSure()){
+            System.out.println("Action Canceled Successfully");
+            return;
+        }
         if(removeSitebyID(site2Remove)){
             System.out.println("Site removed");
         }else{
@@ -745,14 +766,22 @@ public class UserInterface extends MainCLI {
         }
     }
 
-    private String getDoc() throws Exception {
-        System.out.println("Enter Order id:");
-        Scanner input = new Scanner(System.in);
-        String orderID= input.nextLine();
-        if(!os.getDoc(orderID)){
-             throw new Exception();
+    private String getDoc(){
+        System.out.println("Enter Order id from the list below:");
+        String ids = os.getAllOrderDocIDs();
+        if(ids.length()==0){
+            System.out.println("there are no available orders you can choose from");
+            return null;
         }
-        return orderID;
+        else {
+            System.out.println(ids);
+            Scanner input = new Scanner(System.in);
+            String orderID = input.nextLine();
+            if (!os.getDoc(orderID)) {
+                return null;
+            }
+            return orderID;
+        }
     }
 
 
@@ -762,6 +791,14 @@ public class UserInterface extends MainCLI {
             int year = Integer.parseInt(date.substring(6));
             return day <= 31 && month <= 12 && (year <= 2050 && year >= 1948);
 
+        }
+        public boolean areYouSure(){
+            System.out.println("Please Select (1 or 2),\nAre you sure you would like to complete this action? \n"+
+                    "\t1. Complete.\n"+
+                    "\t2. Cancel.");
+            Scanner input = new Scanner(System.in);
+            String res= input.nextLine();
+            return Objects.equals(res, "1");
         }
     }
 

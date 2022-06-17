@@ -4,6 +4,7 @@ import DomainLayer.Storage.Product;
 import DomainLayer.Suppliers.Supplier;
 import DomainLayer.Transport.*;
 //import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -154,7 +155,7 @@ public class OrderDocDAO {
             String time = (String)rs.get(0).get("time");
             double weight = Double.parseDouble(String.valueOf(rs.get(0).get("weight")));
             boolean finished;
-            if(Objects.equals((String)rs.get(0).get("finished"), "#t")){
+            if(Objects.equals(rs.get(0).get("finished"), "#t")){
                 finished=true;
             }
             else{
@@ -185,7 +186,7 @@ public class OrderDocDAO {
             doc.setFinished(finished);
             identityMap.put(docID,doc);
             return doc;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -274,7 +275,7 @@ public class OrderDocDAO {
         try {
             List<HashMap<String, Object>> rs = conn.executeQuery(query);
             for (int i = 0; i < rs.size(); i++){
-                Product supp = productDAO.get((int)rs.get(i).get("supply"));
+                Product supp = productDAO.get(Integer.parseInt((String) rs.get(i).get("supply")));
                 int quantity = (int)rs.get(i).get("quantity");
                 supplies.put(supp.getName(),quantity);
             }
@@ -328,5 +329,56 @@ public class OrderDocDAO {
         String[] temp = date.split("/");
         return new Date(temp[0], temp[1], temp[2]);
 
+    }
+
+    public ArrayList<OrderDocument> getAllDocs() {
+        List<HashMap<String, Object>> rs;
+        ArrayList<OrderDocument> docIds = new ArrayList<>();
+        String query = String.format("SELECT id FROM OrderDocs WHERE finished = \"%s\"" ,"#f");
+        try {
+            rs = conn.executeQuery(query);
+            for(int i=0; i<rs.size();i++){
+                docIds.add(getOrderDoc((String)rs.get(i).get("id")));
+            }
+            return docIds;
+        }catch (Exception ignored){}
+        return docIds;
+    }
+
+    public boolean checkIfFinished(String orderDocId) throws SQLException {
+        String query = "SELECT * FROM OrderDocs WHERE " +
+                String.format("id=\"%s\" And finished=\"%s\"", orderDocId, "#f");
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            return !rs.isClosed();
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            conn.closeConnect();
+        }
+    }
+
+
+    public int getLastId() {
+        String query = "SELECT Count(*) as count FROM orderDocs";
+        int ans = 0;
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            while(!rs.isClosed()){
+                ans = rs.getInt("count");
+                rs.next();
+            }
+        }
+        catch (Exception e){
+            return 1;
+        }
+        finally {
+            try {
+                conn.closeConnect();
+            } catch (SQLException ignored) {
+            }
+        }
+        ans++;
+        return ans;
     }
 }

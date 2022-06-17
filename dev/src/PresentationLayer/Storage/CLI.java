@@ -172,59 +172,67 @@ public class CLI
                                 case("2"):
                                 {
                                     try {
-                                        System.out.println("enter the orderDocId of the transport");
-                                        detail = in.nextLine();
-                                        int orderDocId = Integer.parseInt(detail);
-                                        HashMap<Integer, Integer> itemsInOrder = cC.getItemsFromTransport(orderDocId);
-                                        System.out.println("the items in the transport were:");
-                                        for(int i :itemsInOrder.keySet()){
-                                            System.out.println("we got "+itemsInOrder.get(i)+" items of the product "+i);
-                                        }
-                                        System.out.println();
-                                        System.out.println("are there any items in the transport you would like to report as damaged");
-                                        System.out.println("\t1)yes");
-                                        System.out.println("\t2)no");
-                                        detail = in.nextLine();
-                                        if(Integer.parseInt(detail) == 1 || detail.equals("yes")){
-                                            boolean moreProblems = true;
-                                            while(moreProblems){
-                                                System.out.println("enter damaged item attributes: ");
-                                                System.out.println("enter the id/name");
-                                                detail = in.nextLine();
-                                                int id = -1;
-                                                if (checkId(detail))
-                                                    id = Integer.parseInt(detail);
-                                                else
-                                                    id = cC.getProductIdWithName(detail);
-                                                System.out.println("enter damage description");
-                                                String description = in.nextLine();
-                                                System.out.println("enter place of item (STORAGE or STORE");
-                                                String place = in.nextLine();
-                                                System.out.println("enter shelf number");
-                                                int shelf = Integer.parseInt(in.nextLine());
-                                                System.out.println("enter exp date");
-                                                String ed = in.nextLine();
-                                                cC.defineAsDamaged(id, description, place, shelf, ed);
-                                                if(checkId(id+"") && itemsInOrder.containsKey(id)) {
-                                                    cC.defineAsDamaged(id, description, place, shelf, ed);
+                                        System.out.println("the available transports are:");
+                                        String orderDocsIds = cC.getAllOrderDocIDs();
+                                        System.out.println(orderDocsIds);
+                                        if(orderDocsIds.length()>0) {
+                                            System.out.println("enter the orderDocId of the transport");
+                                            detail = in.nextLine();
+                                            int orderDocId = Integer.parseInt(detail);
+                                            HashMap<Integer, Integer> itemsInOrder = cC.getItemsFromTransport(orderDocId);
+                                            if (itemsInOrder.size() > 0) {
+                                                System.out.println("the items in the transport were:");
+                                                for (int i : itemsInOrder.keySet()) {
+                                                    System.out.println("we got " + itemsInOrder.get(i) + " items of the product " + i);
                                                 }
-                                                else{
-                                                    System.out.println("the given attributes don't belong to an item that was in the transport");
-                                                }
-                                                System.out.println("are there any more items in the transport you would like to report as damaged");
+                                                System.out.println();
+                                                System.out.println("are there any items in the transport you would like to report as damaged");
                                                 System.out.println("\t1)yes");
                                                 System.out.println("\t2)no");
                                                 detail = in.nextLine();
-                                                if(!(Integer.parseInt(detail) == 1 || detail.equals("yes")))
-                                                    moreProblems = false;
-
-
-                                            }
+                                                if (Integer.parseInt(detail) == 1 || detail.equals("yes")) {
+                                                    boolean moreProblems = true;
+                                                    while (moreProblems) {
+                                                        System.out.println("enter damaged item attributes: ");
+                                                        System.out.println("enter the id/name");
+                                                        detail = in.nextLine();
+                                                        int id = -1;
+                                                        if (checkId(detail))
+                                                            id = Integer.parseInt(detail);
+                                                        else
+                                                            id = cC.getProductIdWithName(detail);
+                                                        System.out.println("enter damage description");
+                                                        String description = in.nextLine();
+                                                        System.out.println("enter place of item (STORAGE or STORE");
+                                                        String place = in.nextLine();
+                                                        System.out.println("enter shelf number");
+                                                        int shelf = Integer.parseInt(in.nextLine());
+                                                        System.out.println("enter exp date");
+                                                        String ed = in.nextLine();
+                                                        cC.defineAsDamaged(id, description, place, shelf, ed);
+                                                        if (checkId(id + "") && itemsInOrder.containsKey(id)) {
+                                                            cC.defineAsDamaged(id, description, place, shelf, ed);
+                                                        } else {
+                                                            System.out.println("the given attributes don't belong to an item that was in the transport");
+                                                        }
+                                                        System.out.println("are there any more items in the transport you would like to report as damaged");
+                                                        System.out.println("\t1)yes");
+                                                        System.out.println("\t2)no");
+                                                        detail = in.nextLine();
+                                                        if (!(Integer.parseInt(detail) == 1 || detail.equals("yes")))
+                                                            moreProblems = false;
+                                                    }
+                                                }
+                                            } else
+                                                System.out.println("the orderDocId that was given does not exist in the system or has already arrived");
                                         }
+                                        else
+                                            System.out.println("there are no available transports you can accept");
                                     }
                                     catch (Exception e){
                                         System.out.println("wrong input");
                                     }
+
 
                                     break;
                                 }

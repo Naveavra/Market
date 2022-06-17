@@ -117,4 +117,28 @@ public class DriverDocDAO {
     }
         return ans;
     }
+
+    public int getLastId() {
+        String query = "SELECT COUNT(*) as count FROM driverDocs";
+        int ans = 0;
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            while(!rs.isClosed()){
+//                ans = Integer.parseInt(rs.getString("id"));
+                ans = rs.getInt("count");
+                rs.next();
+            }
+        }
+        catch (Exception e){
+            return 1;
+        }
+        finally {
+            try {
+                conn.closeConnect();
+            } catch (SQLException ignored) {
+            }
+        }
+        ans++;
+        return ans;
+    }
 }

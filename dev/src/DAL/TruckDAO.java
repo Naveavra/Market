@@ -94,8 +94,8 @@ public class TruckDAO {
     public boolean addAvailability(String licenseplate){
         String query = "INSERT INTO TrucksAvailability(licenseplate,date,time,available) VALUES(?,?,?,?)";
         try {
-            int day=19;
-            int month=5;
+            int day=1;
+            int month=6;
             String year = "/2022";
             String res;
             for(int i = 0; i<30;i++){
@@ -103,7 +103,7 @@ public class TruckDAO {
                     day = 1;
                     month++;
                 }
-                if(day>10){
+                if(day>=10){
                     res = String.valueOf(day)+"/0"+String.valueOf(month)+year;
                     conn.executeUpdate(query, licenseplate,res, "MORNING","#t");
                     conn.executeUpdate(query, licenseplate, res, "EVENING", "#t");

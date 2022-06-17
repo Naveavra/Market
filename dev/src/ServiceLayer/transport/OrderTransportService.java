@@ -159,7 +159,7 @@ public class OrderTransportService {
         order.put(eggs.getId(), 3);
         Contact contact = new Contact("hakanaim 16", "liron", "05068582");
         Store.ShippingArea sa = Store.ShippingArea.North;
-        Store store1 = new Store("1567", contact, sa, 0);
+        Store store1 = new Store("616", contact, sa, 0);
         ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> des1 = new ConcurrentHashMap<>();
         des1.put(store1.getId(), order);
         DomainLayer.Transport.Date date1 = new Date("10", "06", "2022");
@@ -170,5 +170,9 @@ public class OrderTransportService {
 
     public String GetFinish(String docID) {
         return orderController.GetFinish(docID);
+    }
+
+    public String getAllOrderDocIDs() {
+        return facadeEmployeesTransports.getAllOrderDocIDs();
     }
 }
