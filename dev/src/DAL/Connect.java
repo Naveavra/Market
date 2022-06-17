@@ -421,97 +421,97 @@ public class Connect {
     public void deleteRecordsOfTables() throws SQLException {
         try (Statement stmt = createStatement()) {
             //table products
-            String query = "DELETE from Products";
+            String query = "DROP TABLE IF EXISTS Products";
             stmt.execute(query);
             ProductDAO.reset();
             //table category discount
-            query = "DELETE from CategoryDiscount";
+            query = "DROP TABLE IF EXISTS CategoryDiscount";
             stmt.execute(query);
             CategoryDAO.reset();
             OrdersFromSupplierDAO.reset();
             ProductsSupplierDAO.reset();
             SuppliersDAO.reset();
             //table category subCategory
-            query = "DELETE from SubCategories";
+            query = "DROP TABLE IF EXISTS SubCategories";
             stmt.execute(query);
             //table subCategory subSubCategory
-            query = "DELETE from SubSubCategories";
+            query = "DROP TABLE IF EXISTS SubSubCategories";
             stmt.execute(query);
             //table items
-            query = "DELETE from Items";
+            query = "DROP TABLE IF EXISTS Items";
             stmt.execute(query);
 
             //table product supplier
-            query = "DELETE from ProductSupplier";
+            query = "DROP TABLE IF EXISTS ProductSupplier";
             stmt.execute(query);
             //table DiscountProductSupplier
-            query = "DELETE from DiscountProductSupplier";
+            query = "DROP TABLE IF EXISTS DiscountProductSupplier";
             // amount discount on specific product to supplier
             stmt.execute(query);
 
             //table suppliers
-            query = "DELETE from Suppliers";
+            query = "DROP TABLE IF EXISTS Suppliers";
             stmt.execute(query);
 
             //add table contacts
-            query = "DELETE from ContactsSupplier";
+            query = "DROP TABLE IF EXISTS ContactsSupplier";
             stmt.execute(query);
 
             //table discount
-            query = "DELETE from DiscountSupplier";
+            query = "DROP TABLE IF EXISTS DiscountSupplier";
             //amount discount on sum of products in order
 
             stmt.execute(query);
             //table orderFromSupplier
-            query = "DELETE from OrdersFromSupplier";
+            query = "DROP TABLE IF EXISTS OrdersFromSupplier";
             stmt.execute(query);
 
             //table productsInOrder
-            query = "DELETE from ProductsInOrder";
+            query = "DROP TABLE IF EXISTS ProductsInOrder";
             stmt.execute(query);
             //table deliveryTerms
-            query = "DELETE from DeliveryTerms";
+            query = "DROP TABLE IF EXISTS DeliveryTerms";
             stmt.execute(query);
 
             //table pastOrder
-            query = "DELETE from PastOrdersSupplier";
+            query = "DROP TABLE IF EXISTS PastOrdersSupplier";
             stmt.execute(query);
 
-            query = "DELETE FROM Employees";
+            query = "DROP TABLE IF EXISTS Employees";
             stmt.execute(query);
-            query = "DELETE FROM EmployeesInShift";
+            query = "DROP TABLE IF EXISTS EmployeesInShift";
             stmt.execute(query);
-            query = "DELETE FROM Roles";
+            query = "DROP TABLE IF EXISTS Roles";
             stmt.execute(query);
-            query = "DELETE FROM Schedules";
+            query = "DROP TABLE IF EXISTS Schedules";
             stmt.execute(query);
-            query = "DELETE FROM Shifts";
+            query = "DROP TABLE IF EXISTS Shifts";
             stmt.execute(query);
-            query = "DELETE FROM Drivers";
+            query = "DROP TABLE IF EXISTS Drivers";
             stmt.execute(query);
-            query = "DELETE FROM DriverAvailability";
+            query = "DROP TABLE IF EXISTS DriverAvailability";
             stmt.execute(query);
-            query = "DELETE FROM Destinations";
+            query = "DROP TABLE IF EXISTS Destinations";
             stmt.execute(query);
-            query = "DELETE FROM DriverDocs";
+            query = "DROP TABLE IF EXISTS DriverDocs";
             stmt.execute(query);
-            query = "DELETE FROM DriversLicenses";
+            query = "DROP TABLE IF EXISTS DriversLicenses";
             stmt.execute(query);
-            query = "DELETE FROM Messages";
+            query = "DROP TABLE IF EXISTS Messages";
             stmt.execute(query);
-            query = "DELETE FROM OrderDocs";
+            query = "DROP TABLE IF EXISTS OrderDocs";
             stmt.execute(query);
-            query = "DELETE FROM Stores";
+            query = "DROP TABLE IF EXISTS Stores";
             stmt.execute(query);
-            query = "DELETE FROM Supplies";
+            query = "DROP TABLE IF EXISTS Supplies";
             stmt.execute(query);
-            query = "DELETE FROM Trucks";
+            query = "DROP TABLE IF EXISTS Trucks";
             stmt.execute(query);
-            query = "DELETE FROM TrucksAvailability";
+            query = "DROP TABLE IF EXISTS TrucksAvailability";
             stmt.execute(query);
-            query = "DELETE FROM order4Dest";
+            query = "DROP TABLE IF EXISTS order4Dest";
             stmt.execute(query);
-
+            createTables();
 
 
 

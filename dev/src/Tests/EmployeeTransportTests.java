@@ -24,11 +24,24 @@ public class EmployeeTransportTests {
     //private FacadeEmployees_Transports OrderCtrl;
 
 
+
     @BeforeAll
     public static void setup() throws SQLException {
 //        Facade.getInstance().loadPreMadeData();
 //        orderCtrl.build();
-//        Connect.getInstance().deleteRecordsOfTables();
+        try {
+            Connect.getInstance().deleteRecordsOfTables();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    public void reset(){
+        try {
+            Connect.getInstance().deleteRecordsOfTables();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
     }
 
 //    @After
@@ -96,11 +109,12 @@ public class EmployeeTransportTests {
     public void showDriversTest(){
         OrderController orderCtrl = new OrderController();
         Assertions.assertEquals("",orderCtrl.showDrivers("08/09/2022","MORNING"));
-        Assertions.assertNotEquals("",orderCtrl.showDrivers("20/05/2022","MORNING"));
+        Assertions.assertEquals("",orderCtrl.showDrivers("20/05/2022","MORNING"));
     }
 
     @Test
     public void createOrderTest(){
+        reset();
         createShift(1);
         FacadeEmployees_Transports facade = new FacadeEmployees_Transports();
         Driver d = new Driver("eyal","258369647","c");
@@ -118,12 +132,14 @@ public class EmployeeTransportTests {
         Store eretz_hakulin = new Store("156",con2 , Store.ShippingArea.North, 1);
         des1.put(eretz_hakulin, supplst1);
         Date date1 = new Date("16","05","2022");
-        OrderDocument doc1 = new OrderDocument("96",122, des1, date1,"morning");
+        OrderDocument doc1 = new OrderDocument("96",1, des1, date1,"MORNING");
         doc1.setTruckandDriver(t,d);
         OrderDocDAO orderDocDAO = new OrderDocDAO();
         ProductDAO productDAO = new ProductDAO();
         OrderDocument doc = orderDocDAO.getOrderDoc("96");
-        Assertions.assertNull(orderDocDAO.getOrderDoc("96"));
+        Assertions.assertNull(doc);
+        TruckDAO trucks = new TruckDAO();
+        trucks.addTruck(t.getType(), t.getLicensePlate(), t.getMaxWeight(), t.getInitialWeight());
 //        new OrderDocDAO();
         orderDocDAO.addDoc(doc1);
         Assertions.assertNotNull(orderDocDAO.getOrderDoc("96"));
@@ -159,7 +175,7 @@ public class EmployeeTransportTests {
         Store eretz_hakulin = new Store("156",con2 , Store.ShippingArea.North, 1);
         des1.put(eretz_hakulin, supplst1);
         Date date1 = new Date("14","05","2022");
-        OrderDocument doc1 = new OrderDocument("97",122, des1, date1,"morning");
+        OrderDocument doc1 = new OrderDocument("97",1, des1, date1,"morning");
         //OrderDocument doc1 = new OrderDocument("96",122, eretz_hakulin, des1, date1, "morning" );
         doc1.setTruckandDriver(t,d);
         try {
@@ -194,7 +210,7 @@ public class EmployeeTransportTests {
         DriverDAO driverDAO = new DriverDAO();
         Assertions.assertFalse(driverDAO.getAvailability("123","16/06/2022","MORNING"));
         Assertions.assertFalse(driverDAO.getAvailability("1234","17/06/2022","MORNING"));
-        Assertions.assertFalse(driverDAO.getAvailability("258369647","16/05/2022","MORNING"));
+        Assertions.assertFalse(driverDAO.getAvailability("258369647","16/05/2022","morning"));
     }
     @Test
     public void available(){
