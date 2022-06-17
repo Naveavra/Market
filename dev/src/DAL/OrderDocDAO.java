@@ -186,7 +186,7 @@ public class OrderDocDAO {
             doc.setFinished(finished);
             identityMap.put(docID,doc);
             return doc;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return null;
         }
     }
