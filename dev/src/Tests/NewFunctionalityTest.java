@@ -12,6 +12,7 @@ import DomainLayer.Suppliers.ProductSupplier;
 import PresentationLayer.Menu;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runners.MethodSorters;
 
 import java.sql.SQLException;
@@ -23,40 +24,46 @@ import static org.junit.Assert.*;
 @FixMethodOrder( MethodSorters.NAME_ASCENDING ) // force name ordering
 public class NewFunctionalityTest {
 
-    private CategoryController cC;
-    private OrdersController ordersController;
-    private FacadeSupplier_Storage facadeSupplier;
+    private CategoryController cC ;
+    private OrdersController ordersController ;
+    private FacadeSupplier_Storage facadeSupplier ;
     private FacadeEmployees_Transports facadeTransport;
     private OrderFromSupplier order;
 
-    @Before
+
     public void setUp(){
-        cC = new CategoryController();
-        facadeSupplier =new FacadeSupplier_Storage();
-        ordersController=new OrdersController();
         Menu menu = new Menu();
         menu.loadInitialData();
+
     }
 
-
+    public void assign(){
+        cC = new CategoryController();
+        ordersController = new OrdersController();
+        facadeSupplier = new FacadeSupplier_Storage();
+    }
     @org.junit.Test
     public void stage1_checkSendingAnOrderAfterShortage(){
+        setUp();
+        assign();
         facadeSupplier.buyItems(1, 3);
         assertEquals(1, ordersController.getFinalOrders(1).size());
     }
 
     @org.junit.Test
     public void stage2_checkTransportShippingTheOrder(){
+        assign();
         //need to check that in order4Dest there is 1 line with the correct orderDoc
         facadeSupplier.buyItems(1, 3);
         OrderDocDAO dao = new OrderDocDAO();
         int id = dao.getLastId()-1;
         ConcurrentHashMap<String,Integer> lst = dao.showSupplies(id+"","616");
-        assertEquals(2,lst.size());
+        assertEquals(1,lst.size());
     }
 
     @org.junit.Test
     public void stage3_checkStorageGotCorrectAmountFromTransport() {
+        assign();
         facadeSupplier.buyItems(1, 4);
         int before = cC.getProductWithId(1).getCurAmount();
 //        facadeSupplier.getItemsFromTransport(orderDocId);
@@ -71,11 +78,14 @@ public class NewFunctionalityTest {
 
     @org.junit.Test
     public void stage4_checkGettingMessageWhenNoAvailableDriver(){
+
         //make here the there is no driver available and try to send an order
         try {
+            assign();
             ProductSupplier p = new ProductsSupplierDAO().getProduct(1,1);
             HashMap<ProductSupplier,Integer> suppl = new HashMap<>();
             suppl.put(p,15);
+            facadeTransport = new FacadeEmployees_Transports();
             facadeTransport.createAutoTransport("1","19/20/2030",suppl);
             String ans = facadeTransport.displayMessages("318856994");
             System.out.println(ans);

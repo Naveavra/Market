@@ -360,17 +360,17 @@ public class OrderDocDAO {
 
 
     public int getLastId() {
-        String query = "SELECT id FROM orderDocs";
+        String query = "SELECT Count(*) as count FROM orderDocs";
         int ans = 0;
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             while(!rs.isClosed()){
-                ans = Integer.parseInt(rs.getString("id"));
+                ans = rs.getInt("count");
                 rs.next();
             }
         }
         catch (Exception e){
-            return 0;
+            return 1;
         }
         finally {
             try {

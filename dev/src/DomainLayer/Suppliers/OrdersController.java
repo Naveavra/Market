@@ -105,7 +105,7 @@ public class OrdersController {
             List<Integer> orderIds=ordersDAO.getRegularOrdersIds();
             for(Integer orderId: orderIds) {
                 DeliveryTerm d =ordersDAO.getDeliveryTermOfOrder(orderId);
-                if(checkDays(d)) {
+                if(checkDays(d) && productIds.size()!=0) {
                     Map<ProductSupplier, Integer> products = ordersDAO.getAllProductsOfOrder(orderId);
                     for (ProductSupplier product : products.keySet()) {
                         int productId = product.getProductId();
