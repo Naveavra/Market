@@ -1,6 +1,8 @@
 package DomainLayer.Transport;
 
 import DAL.*;
+import DomainLayer.Storage.CategoryController;
+import DomainLayer.Storage.Item;
 import DomainLayer.Storage.Product;
 import DomainLayer.Suppliers.Supplier;
 
@@ -20,8 +22,8 @@ public class OrderController {
     public StoreDAO sites;
     public ProductDAO supplies;
     public DriverDAO drivers;
-    public static AtomicInteger id = new AtomicInteger();
-    public static AtomicInteger driverDocID = new AtomicInteger();
+    public int id;
+    public int driverDocID;
     public SuppliersDAO suppliers;
     public Store defaultStore;
     public OrderController(){
@@ -34,6 +36,8 @@ public class OrderController {
         suppliers = new SuppliersDAO();
         sites.addSite("616",0,1,"Asgard","Thor","050866945");
         defaultStore = sites.getSite("616");
+        id = orderDocs.getLastId();
+        driverDocID = driverDocs.getLastId();
     }
 //    public OrderDoc getDocByID(String id){
 //        return pool.getOrderDocByID(id);
@@ -112,7 +116,7 @@ public class OrderController {
                 supplies.put(String.valueOf(this.supplies.get(Integer.parseInt(s)).getId()), supp.get(s));
             }
             catch (Exception e){
-                System.out.println(e.getMessage());
+                return new ConcurrentHashMap<>();
             }
         }
         return supplies;
@@ -121,7 +125,8 @@ public class OrderController {
         removeSiteFromDoc(doc,id2replace);
         orderDocs.getOrderDoc(doc).addDest(sites.getSite(newStoreID),createSupplyList(supplies));
         if(Objects.equals(orderDocs.replaceStore(doc,id2replace,newStoreID,supplies),"Success")){
-            driverDocs.addDriverDoc(driverDocID.getAndIncrement(),orderDocs.getOrderDoc(doc).getDriver().getId(),doc,newStoreID);
+            driverDocs.addDriverDoc(driverDocID,orderDocs.getOrderDoc(doc).getDriver().getId(),doc,newStoreID);
+            driverDocID++;
         };
     }
 
@@ -145,7 +150,7 @@ public class OrderController {
                 }
             }
             catch (Exception e){
-                System.out.println(e.getMessage());
+                return null;
             }
         }
 
@@ -179,7 +184,8 @@ public class OrderController {
     }
 
     public String createDoc(ConcurrentHashMap<String, ConcurrentHashMap<String, Integer>> orders, String supplier, String date,String driverID,String truckPlate, String time)  {
-        int docID = id.getAndIncrement();
+        int docID = id;
+        id++;
         ConcurrentHashMap<Store,ConcurrentHashMap<String,Integer>>orderList = new ConcurrentHashMap<>();
         for(String storeName:orders.keySet()){
             orderList.put(sites.getSite(storeName),createSupplyList(orders.get(storeName)));
@@ -260,15 +266,17 @@ public class OrderController {
         OrderDocument od = orderDocs.getOrderDoc(docID);
         drivers.setAvailability(od.driver, od.getDate().toString(), od.getTime(), true);
         trucks.setAvailability(od.truck, od.getDate().toString(), od.getTime(), true);
-        drivers.RemoveFromIdentityMap(od.driver.getId());
-        trucks.RemoveFromIdentityMap(od.truck.getLicensePlate());
+        //drivers.RemoveFromIdentityMap(od.driver.getId());
+        //trucks.RemoveFromIdentityMap(od.truck.getLicensePlate());
+        ConcurrentHashMap<Store,ConcurrentHashMap<String ,Integer>> AllProducts = od.getDestinations();
         orderDocs.getOrderDoc(docID).finishOrder();
         orderDocs.set(docID,"finished","#t");
     }
     public void createDriverDocs(String docID){
         OrderDocument doc = orderDocs.getOrderDoc(docID);
         for(Store store : doc.getDestinations().keySet()) {
-            int id = driverDocID.getAndIncrement();
+            int id = driverDocID;
+            driverDocID++;
             driverDocs.addDriverDoc(new DriverDocument(doc.driver,id,doc.getDestinations().get(store), store,doc.getId()));
         }
     }
@@ -359,18 +367,19 @@ public class OrderController {
 
             }
             catch (Exception e){
-                System.out.println(e.getMessage());
+                return null;
             }
         }
 
         return null;
     }
     public HashMap<Integer, Integer> getOrderIdFromOrderDoc(int orderDocId){
-        HashMap<Integer, Integer> ans=null;
+        HashMap<Integer, Integer> ans=new HashMap<>();
         try {
-            ans = driverDocs.getProductsFromOrderDoc(orderDocId);
+            if(orderDocs.checkIfFinished(orderDocId+""))
+                ans = driverDocs.getProductsFromOrderDoc(orderDocId);
         } catch (SQLException exp) {
-            System.out.println("didn't work");
+            return new HashMap<>();
         }
         return ans;
     }
@@ -423,17 +432,30 @@ public class OrderController {
             new EmployeeDAO().writeMessageToHR("cannot create order from "+supplierNumber);
             return false;
         }
-        OrderDocument d = new OrderDocument(String.valueOf(id.getAndIncrement()),origin.getSupplierNumber(),order,date_,time);
+        OrderDocument d = new OrderDocument(String.valueOf(id),origin.getSupplierNumber(),order,date_,time);
+        id++;
         truck = (Truck)truckAndDriver.get(0);
         driver = (Driver)truckAndDriver.get(1);
         d.setTruckandDriver(truck,driver);
         orderDocs.addDoc(d);
         createDriverDocs(d.getId());
-        transportIsDone(d.getId());
+        //transportIsDone(d.getId());
         return true;
     }
 
     public String GetFinish(String docID) {
         return orderDocs.getFinish(docID);
     }
+
+    public String getAllOrderDocIDs() {
+        ArrayList<OrderDocument> docs = orderDocs.getAllDocs();
+        StringBuilder res = new StringBuilder();
+        for(OrderDocument doc : docs){
+            res.append("ID: ").append(doc.getId());
+            res.append("\n");
+        }
+        return res.toString();
+
+    }
+
 }

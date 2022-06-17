@@ -27,20 +27,22 @@ public class EmployeeTransportTests {
 
     @BeforeAll
     public static void setup() throws SQLException {
+//        Facade.getInstance().loadPreMadeData();
+//        orderCtrl.build();
         try {
             Connect.getInstance().deleteRecordsOfTables();
-        } catch (Exception throwables) {
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
-//    public void reset(){
-//        try {
-//            Connect.getInstance().deleteRecordsOfTables();
-//        } catch (Exception throwables) {
-//            throwables.printStackTrace();
-//        }
-//
-//    }
+    public void reset(){
+        try {
+            Connect.getInstance().deleteRecordsOfTables();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
 
 //    @After
 //    static void finish(){
@@ -112,7 +114,7 @@ public class EmployeeTransportTests {
 
     @Test
     public void createOrderTest(){
-        //reset();
+        reset();
         createShift(1);
         FacadeEmployees_Transports facade = new FacadeEmployees_Transports();
         Driver d = new Driver("eyal","258369647","c");
@@ -131,12 +133,11 @@ public class EmployeeTransportTests {
         des1.put(eretz_hakulin, supplst1);
         Date date1 = new Date("16","05","2022");
         OrderDocument doc1 = new OrderDocument("96",1, des1, date1,"MORNING");
-
         doc1.setTruckandDriver(t,d);
         OrderDocDAO orderDocDAO = new OrderDocDAO();
         ProductDAO productDAO = new ProductDAO();
-        //OrderDocument doc = orderDocDAO.getOrderDoc("96");
-        //Assertions.assertNull(doc);
+        OrderDocument doc = orderDocDAO.getOrderDoc("96");
+        Assertions.assertNull(doc);
         TruckDAO trucks = new TruckDAO();
         trucks.addTruck(t.getType(), t.getLicensePlate(), t.getMaxWeight(), t.getInitialWeight());
 //        new OrderDocDAO();

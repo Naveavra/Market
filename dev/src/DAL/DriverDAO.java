@@ -61,8 +61,8 @@ public class DriverDAO {
                     return true;
                 }
                 else {return false;}
-            } catch (SQLException e) {
-//                e.printStackTrace();
+            } catch (Exception e) {
+                return false;
             }
         }
         return false;
@@ -87,10 +87,9 @@ public class DriverDAO {
             Driver d = new Driver(name,id,license);
             identityMap.put(id,d);
             return d;
-        } catch (SQLException e) {
-//            System.out.println("Unable to execute query getDriver");
+        } catch (Exception e) {
+            return null;
         }
-        return null;
     }
 
     public ArrayList<Driver> getDrivers(String date,String time){

@@ -123,7 +123,7 @@ public class Menu {
                 || roles.contains(JobType.LOGISTICS_MANAGER);
     }
 
-    private void loadInitialData() {
+    public void loadInitialData() {
 
         Gson gson = new Gson();
         try {
@@ -167,7 +167,7 @@ public class Menu {
         Order o1 = gson.fromJson(json,Order.class);
         os.addProductToOrder(1, o1.getOrderId(), 1 ,5);
         String[] days={"1", "2", "3", "4", "5", "6", "7"};
-        os.addFixedDeliveryDaysForOrder(1, 1, days);
+        os.addFixedDeliveryDaysForOrder(1, o1.getOrderId(), days);
         cC.updateOrders();
 //        os.sendOrder(1, 1);
 

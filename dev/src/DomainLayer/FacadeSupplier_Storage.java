@@ -378,15 +378,17 @@ public class FacadeSupplier_Storage {
 
     public HashMap<Integer, Integer> getItemsFromTransport(int id){
         HashMap<Integer, Integer> productsAndQuantity = facade.getProductsFromOrderDoc(id);
-        for( int productId : productsAndQuantity.keySet()){
-            String curDate= LocalDate.now().toString();
-            int curYear=Integer.parseInt(curDate.substring(0, 4))+1;
-            String curMonth=curDate.substring(5, 7);
-            String curDay=curDate.substring(8, 10);
-            String expirationDate = curYear +"-"+ curMonth +"-"+ curDay;
-            categoryController.addAllItems(productId, productsAndQuantity.get(productId), expirationDate, 1);
+        if(productsAndQuantity.size()>0) {
+            for (int productId : productsAndQuantity.keySet()) {
+                String curDate = LocalDate.now().toString();
+                int curYear = Integer.parseInt(curDate.substring(0, 4)) + 1;
+                String curMonth = curDate.substring(5, 7);
+                String curDay = curDate.substring(8, 10);
+                String expirationDate = curYear + "-" + curMonth + "-" + curDay;
+                categoryController.addAllItems(productId, productsAndQuantity.get(productId), expirationDate, 1);
+            }
+            facade.transportIsDone(id + "");
         }
-        facade.transportIsDone(id+"");
         return productsAndQuantity;
     }
 

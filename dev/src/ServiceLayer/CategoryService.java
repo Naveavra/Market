@@ -98,4 +98,8 @@ public class CategoryService {
     public void updateOrders(){
         facadeSupplier.updateOrders();
     }
+
+    public String getAllOrderDocIDs() {
+        return facadeSupplier.getAllOrderDocIDs();
+    }
 }

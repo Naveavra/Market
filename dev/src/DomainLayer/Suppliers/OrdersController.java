@@ -31,9 +31,9 @@ public class OrdersController {
         return order;
     }
     public boolean finishOrder(int orderId){
-        boolean finish =finishFixedDaysDeliveryOrder(orderId);
+        boolean finish = finishFixedDaysDeliveryOrder(orderId);
         try {
-            if(!finish)
+            if(finish)
                 ordersDAO.removeOrder(orderId);
         } catch (SQLException throwables) {
             return false;
@@ -105,7 +105,7 @@ public class OrdersController {
             List<Integer> orderIds=ordersDAO.getRegularOrdersIds();
             for(Integer orderId: orderIds) {
                 DeliveryTerm d =ordersDAO.getDeliveryTermOfOrder(orderId);
-                if(checkDays(d)) {
+                if(checkDays(d) && productIds.size()!=0) {
                     Map<ProductSupplier, Integer> products = ordersDAO.getAllProductsOfOrder(orderId);
                     for (ProductSupplier product : products.keySet()) {
                         int productId = product.getProductId();
@@ -132,10 +132,13 @@ public class OrdersController {
         try {
             totalPrice = updateTotalIncludeDiscounts(orderId);
             if(o.getCountProducts()>0) {
+                if(!createTransport(o)) {
+                    new EmployeeDAO().writeMessageToHR("No drivers available");
+                    return false;
+                }
                 pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o, totalPrice));
-                createTransport(o);
             }
-            return o.getDaysToDeliver().getDaysInWeeks().length > 0;
+            return true;
         } catch (SQLException e) {
             return false;
         }
@@ -143,9 +146,9 @@ public class OrdersController {
 
     //helper function to connect with Transport model
     private boolean createTransport(OrderFromSupplier o){
-        String supplierNumber =String.valueOf(o.getSupplierNumber());// miki this is the supplier number
-        String date = o.getDate();// i dont know the format i supposed is DD\MM\YYYY
-        Map<ProductSupplier,Integer> productToQuantity= new HashMap<ProductSupplier, Integer>();
+        String supplierNumber =String.valueOf(o.getSupplierNumber());
+        String date = o.getDate();
+        Map<ProductSupplier,Integer> productToQuantity= new HashMap<>();
         productToQuantity=o.getProducts();
         return employees_transports.createAutoTransport(supplierNumber,date,productToQuantity);
     }
@@ -173,6 +176,7 @@ public class OrdersController {
                         return;
                     }
                     finishOrder(order.getOrderId());
+
                 } catch (SQLException ignored) {
 
                 }
