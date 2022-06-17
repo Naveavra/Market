@@ -1,6 +1,14 @@
 package ServiceLayer;
 
 import DomainLayer.FacadeSupplier_Storage;
+import DomainLayer.Suppliers.OrderFromSupplier;
+import DomainLayer.Suppliers.PastOrderSupplier;
+import PresentationLayer.Suppliers.DeliveryTerm;
+import PresentationLayer.Suppliers.Order;
+import PresentationLayer.Suppliers.PastOrder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class OrderService {
@@ -53,8 +61,23 @@ public class OrderService {
      * @param supplierNumber the id of the supplier
      * @return gson string which wrappers the list of the active order
      */
-    public String getActiveOrders(int supplierNumber){
-      return facadeSupplier.getActiveOrders(supplierNumber);
+    public Map<Integer, Order> getActiveOrders(int supplierNumber){
+        Map<Integer, Order> out =new HashMap<>();
+        Map<Integer, OrderFromSupplier> from =facadeSupplier.getActiveOrders(supplierNumber);
+        for(Integer x: from.keySet()){
+            DeliveryTerm d =new DeliveryTerm(from.get(x).getDaysToDeliver().getDaysInWeeks());
+            out.put(x,new Order(from.get(x).getOrderId(),d,from.get(x).getSupplierNumber()));
+        }
+      return out;
+    }
+    public Map<Integer, Order> getActiveOrders(){
+        Map<Integer, Order> out =new HashMap<>();
+        Map<Integer, OrderFromSupplier> from =facadeSupplier.getActiveOrders();
+        for(Integer x: from.keySet()){
+            DeliveryTerm d =new DeliveryTerm(from.get(x).getDaysToDeliver().getDaysInWeeks());
+            out.put(x,new Order(from.get(x).getOrderId(),d,from.get(x).getSupplierNumber()));
+        }
+        return out;
     }
 
     /**
@@ -62,8 +85,23 @@ public class OrderService {
      * @param supplierNumber the id of the supplier
      * @return gson string which wrappers the dictionary<order id,days[]> of the delivery days of each active order
      */
-    public String getFixedDaysOrders(int supplierNumber){
-       return facadeSupplier.getFixedDaysOrders(supplierNumber);
+    public Map<Integer,DeliveryTerm> getFixedDaysOrders(int supplierNumber){
+        Map<Integer,DeliveryTerm> out =new HashMap<>();
+        Map<Integer, DomainLayer.Suppliers.DeliveryTerm> from = facadeSupplier.getFixedDaysOrders(supplierNumber);
+        for(Integer x :from.keySet()){
+            String days =getDays(from.get(x).getDaysInWeeks());
+            DeliveryTerm d =new DeliveryTerm(days);
+            out.put(x,d);
+        }
+       return out ;
+    }
+
+    private String getDays(DomainLayer.Suppliers.DeliveryTerm.DaysInWeek[] daysInWeeks) {
+        String out="";
+        for(DomainLayer.Suppliers.DeliveryTerm.DaysInWeek d:daysInWeeks){
+            out+= DomainLayer.Suppliers.DeliveryTerm.getDayAsString(d);
+        }
+        return out;
     }
 
     /**
@@ -126,7 +164,19 @@ public class OrderService {
      * @param supplierNumber the id of the supplier
      * @return Json string which wrappers the list of past order
      */
-    public String getPastOrders(int supplierNumber) {
-        return facadeSupplier.watchPastOrders(supplierNumber);
+    public Map<Integer, PastOrder> getPastOrders(int supplierNumber) {
+        Map<Integer, PastOrder> out =new HashMap<>();
+        Map<Integer,PastOrderSupplier> from =facadeSupplier.watchPastOrders(supplierNumber);
+        for(Integer x:from.keySet()){
+            DeliveryTerm d =new DeliveryTerm(from.get(x).getDaysToDeliver().getDaysInWeeks());
+            Order o =new Order(from.get(x).getOrderId(), d,from.get(x).getSupplierNumber());
+            PastOrder p =new PastOrder(o,from.get(x).getTotalPrice());
+            out.put(x,p);
+        }
+        return out;
+    }
+
+    public Boolean cancelOrder(int orderId) {
+        return facadeSupplier.cancelOrder(orderId);
     }
 }

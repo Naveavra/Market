@@ -56,12 +56,16 @@ public class FacadeSupplier_Storage {
         return ordersController.getOrder(orderId).removeProductFromOrder(p);
     }
 
-    public String getActiveOrders(int supplierNumber){
+    public Map<Integer, OrderFromSupplier> getActiveOrders(int supplierNumber){
         Map<Integer, OrderFromSupplier> orders = ordersController.getActiveOrders(supplierNumber);
-        return gson.toJson(orders);
+        return orders;
+    }
+    public Map<Integer, OrderFromSupplier> getActiveOrders(){
+        Map<Integer, OrderFromSupplier> orders = ordersController.getActiveOrders();
+        return orders;
     }
 
-    public String getFixedDaysOrders(int supplierNumber){
+    public Map<Integer, DeliveryTerm> getFixedDaysOrders(int supplierNumber){
         Map<Integer, OrderFromSupplier> orders = ordersController.getActiveOrders(supplierNumber);
         Map<Integer, DeliveryTerm> deliveryDays=new HashMap<>();
         for(Integer o: orders.keySet()){
@@ -69,7 +73,7 @@ public class FacadeSupplier_Storage {
                 deliveryDays.put(orders.get(o).getOrderId(),orders.get(o).getDaysToDeliver());
             }
         }
-        return gson.toJson(deliveryDays);
+        return deliveryDays;
     }
 
     public boolean sendOrder(int supplierNumber, int orderId){
@@ -294,10 +298,10 @@ public class FacadeSupplier_Storage {
         }
         return supplierController.getSupplier(supplierNumber).updateDeliveration(days);
     }
-    public String  watchPastOrders(int supplierNumber) {
+    public Map<Integer,PastOrderSupplier>  watchPastOrders(int supplierNumber) {
         Map<Integer,PastOrderSupplier> pastOrderList=new HashMap<>();
         pastOrderList=ordersController.getFinalOrders(supplierNumber);
-        return gson.toJson(pastOrderList);
+        return pastOrderList;
     }
 
 
@@ -374,15 +378,17 @@ public class FacadeSupplier_Storage {
 
     public HashMap<Integer, Integer> getItemsFromTransport(int id){
         HashMap<Integer, Integer> productsAndQuantity = facade.getProductsFromOrderDoc(id);
-        for( int productId : productsAndQuantity.keySet()){
-            String curDate= LocalDate.now().toString();
-            int curYear=Integer.parseInt(curDate.substring(0, 4))+1;
-            String curMonth=curDate.substring(5, 7);
-            String curDay=curDate.substring(8, 10);
-            String expirationDate = curYear +"-"+ curMonth +"-"+ curDay;
-            categoryController.addAllItems(productId, productsAndQuantity.get(productId), expirationDate, 1);
+        if(productsAndQuantity.size()>0) {
+            for (int productId : productsAndQuantity.keySet()) {
+                String curDate = LocalDate.now().toString();
+                int curYear = Integer.parseInt(curDate.substring(0, 4)) + 1;
+                String curMonth = curDate.substring(5, 7);
+                String curDay = curDate.substring(8, 10);
+                String expirationDate = curYear + "-" + curMonth + "-" + curDay;
+                categoryController.addAllItems(productId, productsAndQuantity.get(productId), expirationDate, 1);
+            }
+            facade.transportIsDone(id + "");
         }
-        facade.transportIsDone(id+"");
         return productsAndQuantity;
     }
 
@@ -426,5 +432,13 @@ public class FacadeSupplier_Storage {
 
     public boolean updateContact(int supplierNumber, String name, String email, String telephone) {
         return supplierController.getSupplier(supplierNumber).updateContact(name,email,telephone);
+    }
+
+    public Boolean cancelOrder(int orderId) {
+        return ordersController.cancelOrder(orderId);
+    }
+
+    public String getAllOrderDocIDs() {
+        return facade.getAllOrderDocIDs();
     }
 }

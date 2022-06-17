@@ -2,19 +2,19 @@ package PresentationLayer.Suppliers;
 
 import DomainLayer.Employees.JobType;
 import PresentationLayer.Menu;
+import ServiceLayer.OrderService;
 import ServiceLayer.SupplierService;
 import com.google.gson.Gson;
 
-import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class SupplierMenu {
 
     private Scanner sc = new Scanner(System.in);
     private SupplierService ss = new SupplierService();
-    private Set<JobType> roles;
+    private Set<JobType> roles = new HashSet<>();
+    private OrderService orderService =new OrderService();
 
 // HR_MANAGER, SHIFT_MANAGER ,CASHIER, STOCK_KEEPER, DRIVER, MERCHANDISER, LOGISTICS_MANAGER,
 //    TRANSPORT_MANAGER, STORE_MANAGER;
@@ -28,7 +28,9 @@ public class SupplierMenu {
         System.out.println("\t1. supplier management");
         System.out.println("\t2. supplier's product management");
         System.out.println("\t3. supplier's order management");
-        System.out.println("\t4. go back");
+        System.out.println("\t4. cancel orders");
+        System.out.println("\t5. go back");
+
         String choiceStr = "";
         int choice =0;
         try{
@@ -65,9 +67,62 @@ public class SupplierMenu {
                 openOrderSupplierManagement(supNumber);
                 break;
             case 4:
+                cancelOrder();
+                break;
+            case 5:
+
                 break;
         }
 
+    }
+
+    private void cancelOrder() {
+        watchWaitOrders();
+        System.out.println("please choose order number to cancel or \"break\" if u want to return to supplier menu");
+        int orderId = 0;
+        String choiceStr = "";
+        try {
+            choiceStr = sc.next();
+            if (choiceStr.equals("break")) {
+                chooseSupplierMenu();
+            }
+            orderId = Integer.parseInt(choiceStr);
+        } catch (Exception e) {
+            System.out.println("you must enter only 1 digit number");
+            cancelOrder();
+        }
+        LinkedList<Integer> ids =ordersIds();
+        if(!ids.contains(orderId)){
+            System.out.println("order doesn't found");
+        }
+        else {
+            Boolean check = orderService.cancelOrder(orderId);
+            if (check) {
+                System.out.println("order deleted");
+            } else {
+                System.out.println("order doesn't found");
+            }
+        }
+        chooseSupplierMenu();
+    }
+    private void watchWaitOrders() {
+        Map<Integer, Order> orders=orderService.getActiveOrders();
+        if(orders.isEmpty()){
+            System.out.println("there is no orders to show");
+            //watchOrdersMenu(supplier);
+        }
+        for(Order o: orders.values()){
+            System.out.println(o.toString());
+        }
+        //watchOrdersMenu(supplier);
+    }
+    private LinkedList<Integer> ordersIds(){
+        Map<Integer, Order> orders=orderService.getActiveOrders();
+        LinkedList<Integer> ids =new LinkedList<>();
+        for(Order x: orders.values()){
+            ids.addLast(x.getOrderId());
+        }
+        return ids;
     }
 
     private void openOrderSupplierManagement(int supplierNumber) {
@@ -132,6 +187,7 @@ public class SupplierMenu {
 
         Supplier s =null;
         if(choice!=1 & choice!=7){
+            System.out.println("please enter supplier number");
              choiceStr = "";
             int supplierNumber =0;
             try{
@@ -265,7 +321,7 @@ public class SupplierMenu {
         System.out.println("\t2. bank number");
         System.out.println("\t3. contacts");
         System.out.println("\t4. transportation");
-        System.out.println("\t5. Return to supplier page");
+        System.out.println("\t5. go back");
         String choiceStr = "";
         int choice =0;
         try{

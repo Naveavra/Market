@@ -117,4 +117,27 @@ public class DriverDocDAO {
     }
         return ans;
     }
+
+    public int getLastId() {
+        String query = "SELECT id FROM driverDocs";
+        int ans = 0;
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            while(!rs.isClosed()){
+                ans = Integer.parseInt(rs.getString("id"));
+                rs.next();
+            }
+        }
+        catch (Exception e){
+            return 0;
+        }
+        finally {
+            try {
+                conn.closeConnect();
+            } catch (SQLException ignored) {
+            }
+        }
+        ans++;
+        return ans;
+    }
 }

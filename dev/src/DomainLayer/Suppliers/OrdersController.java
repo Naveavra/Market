@@ -1,9 +1,6 @@
 package DomainLayer.Suppliers;
 
-import DAL.OrdersFromSupplierDAO;
-import DAL.PastOrdersSupplierDAO;
-import DAL.ProductsSupplierDAO;
-import DAL.SuppliersDAO;
+import DAL.*;
 import DomainLayer.FacadeEmployees_Transports;
 
 import java.sql.SQLException;
@@ -34,9 +31,9 @@ public class OrdersController {
         return order;
     }
     public boolean finishOrder(int orderId){
-        boolean finish =finishFixedDaysDeliveryOrder(orderId);
+        boolean finish = finishFixedDaysDeliveryOrder(orderId);
         try {
-            if(!finish)
+            if(finish)
                 ordersDAO.removeOrder(orderId);
         } catch (SQLException throwables) {
             return false;
@@ -85,6 +82,13 @@ public class OrdersController {
             return null;
         }
     }
+    public Map<Integer, OrderFromSupplier> getActiveOrders() {
+        try {
+            return ordersDAO.getActiveOrders();
+        } catch (SQLException e) {
+            return null;
+        }
+    }
 
 
     public Map<Integer,PastOrderSupplier> getFinalOrders(int supplierNumber) {
@@ -129,9 +133,12 @@ public class OrdersController {
             totalPrice = updateTotalIncludeDiscounts(orderId);
             if(o.getCountProducts()>0) {
                 pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o, totalPrice));
-                createTransport(o);
+                if(!createTransport(o)) {
+                    new EmployeeDAO().writeMessageToHR("No drivers available");
+                    return false;
+                }
             }
-            return o.getDaysToDeliver().getDaysInWeeks().length > 0;
+            return true;
         } catch (SQLException e) {
             return false;
         }
@@ -164,8 +171,8 @@ public class OrdersController {
             if(order!=null) {
                 try {
                     ordersDAO.addProductToOrder(ps, order.getOrderId(), amount);
-                    createTransport(order);
                     finishOrder(order.getOrderId());
+
                 } catch (SQLException ignored) {
 
                 }
@@ -189,4 +196,14 @@ public class OrdersController {
         }
     }
 
+    public Boolean cancelOrder(int orderId) {
+            try {
+                ordersDAO.removeAllProductsFromOrder(orderId);
+                ordersDAO.removeOrder(orderId);
+                return true;
+
+            } catch (SQLException e) {
+                return false;
+            }
+    }
 }

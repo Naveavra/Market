@@ -1,6 +1,7 @@
 package PresentationLayer.Suppliers;
 
 import DomainLayer.Employees.JobType;
+import DomainLayer.Suppliers.PastOrderSupplier;
 import PresentationLayer.Menu;
 import ServiceLayer.OrderService;
 import ServiceLayer.ProductSupplierService;
@@ -25,9 +26,12 @@ public class OrderMenu {
         orderService = new OrderService();
         gson = new Gson();
         sm =new SupplierMenu();
+        roles=new HashSet<>();
     }
     public void setRoles(Set<JobType> roles){
         this.roles=roles;
+        sm.setRoles(roles);
+
     }
 
     public void newOrder() {
@@ -188,7 +192,7 @@ public class OrderMenu {
         System.out.println("\t4. See all your wait orders.");
         System.out.println("\t5. See all your orders in fixed days delivery.");
         System.out.println("\t6. See all your past orders..");
-        System.out.println("\t7. Return to supplier page");
+        System.out.println("\t7. go back");
         String choiceStr = "";
         int choice =0;
         try{
@@ -232,7 +236,7 @@ public class OrderMenu {
                 sendOrders(orderId);
                 break;
             case 3:
-                watchWaitOrdersForUpdate();
+                watchWaitOrders();
                 updateOrderMenu(orderId);
                 break;
             case 4:
@@ -243,25 +247,25 @@ public class OrderMenu {
                 break;
             case 6:
                 watchPastOrders();
+                break;
             case 7:
                 sm.chooseSupplierMenu();
+                break;
             default:
                 System.out.println("You must type number between 1 to 8");
                 watchOrdersMenu(s);
         }
-        sm.chooseSupplierMenu();
+        //sm.chooseSupplierMenu();
     }
 
     private void watchPastOrders() {
-        String json =orderService.getPastOrders(supplier.getSupplierNumber());
-        Map<Integer,LinkedTreeMap> pastOrders =new HashMap<>();
-        pastOrders = Menu.fromJson(json, pastOrders.getClass());
-        if(pastOrders.isEmpty()){
+        Map<Integer, PastOrder> orders =orderService.getPastOrders(supplier.getSupplierNumber());
+        if(orders.isEmpty()){
             System.out.println("there is no past orders to display");
+            watchOrdersMenu(supplier);
         }
-        for(LinkedTreeMap p :pastOrders.values()){
-            PastOrder pastOrder =Menu.fromJson(p.toString(), PastOrder.class);
-            System.out.println(pastOrder.toString());
+        for(PastOrder p :orders.values()){
+            System.out.println(p.toString());
         }
         watchOrdersMenu(supplier);
     }
@@ -286,50 +290,27 @@ public class OrderMenu {
     }
 
     private void watchFixedDaysOrders() {
-        String json = orderService.getFixedDaysOrders(supplier.getSupplierNumber());
-        Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
-        orders = Menu.fromJson(json, orders.getClass());
-        List<Integer> list = new LinkedList<>();
+        Map<Integer,DeliveryTerm> orders= orderService.getFixedDaysOrders(supplier.getSupplierNumber());
         if(orders.isEmpty()){
             System.out.println("there is no orders to show");
+            watchOrdersMenu(supplier);
         }
-        for(Object x: orders.keySet()){
-         Integer integer=Menu.fromJson(x.toString(),Integer.class);
-         list.add(integer);
-        }
-        int i=0;
-        for(LinkedTreeMap x: orders.values()){
-            DeliveryTerm deliveryTerm = Menu.fromJson(x.toString(), DeliveryTerm.class);
-            System.out.println("\nOrderID:" +" "+list.get(i)+" , "+"days to deliver: "+ deliveryTerm.toString());
-            i++;
+        for(Integer x: orders.keySet()){
+            System.out.println("\nOrderID:" +" "+x+" , "+"days to deliver: "+ orders.get(x).toString());
         }
         watchOrdersMenu(supplier);
     }
 
     private void watchWaitOrders() {
-        String json=orderService.getActiveOrders(supplier.getSupplierNumber());
-        Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
-        orders = Menu.fromJson(json, orders.getClass());
+        Map<Integer, Order> orders=orderService.getActiveOrders(supplier.getSupplierNumber());
         if(orders.isEmpty()){
             System.out.println("there is no orders to show");
+            watchOrdersMenu(supplier);
         }
-        for(LinkedTreeMap o: orders.values()){
-            Order order = Menu.fromJson(o.toString(), Order.class);
-            System.out.println(order.toString());
+        for(Order o: orders.values()){
+            System.out.println(o.toString());
         }
         watchOrdersMenu(supplier);
-    }
-    private void watchWaitOrdersForUpdate() {
-        String json=orderService.getActiveOrders(supplier.getSupplierNumber());
-        Map<Integer, LinkedTreeMap> orders = new HashMap<Integer, LinkedTreeMap>();
-        orders = Menu.fromJson(json, orders.getClass());
-        if(orders.isEmpty()){
-            System.out.println("there is no orders to show");
-        }
-        for(LinkedTreeMap o: orders.values()){
-            Order order = Menu.fromJson(o.toString(), Order.class);
-            System.out.println(order.toString());
-        }
     }
 
     private void updateOrderMenu(int orderID) {

@@ -386,7 +386,10 @@ public class FacadeEmployees_Transports {
 
     public HashMap<Integer, Integer> getProductsFromOrderDoc(int orderDocId){
         return orderController.getOrderIdFromOrderDoc(orderDocId);
+    }
 
+    public String getAllOrderDocIDs() {
+        return orderController.getAllOrderDocIDs();
     }
 
 }
