@@ -128,7 +128,7 @@ public class Menu {
         Gson gson = new Gson();
         try {
             Connect.getInstance().deleteRecordsOfTables();
-        } catch (SQLException throwables) {
+        } catch (Exception throwables) {
             throwables.printStackTrace();
         }
         SupplierService ss =  new SupplierService();

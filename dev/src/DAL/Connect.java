@@ -418,7 +418,7 @@ public class Connect {
         }
     }
 
-    public void deleteRecordsOfTables() throws SQLException {
+    public void deleteRecordsOfTables() {
         try (Statement stmt = createStatement()) {
             //table products
             String query = "DELETE from Products";
@@ -517,11 +517,15 @@ public class Connect {
 
 
 
-        } catch (SQLException e) {
-            throw e;
+        } catch (Exception e) {
+            return;
         }
         finally {
-            closeConnect();
+            try {
+                closeConnect();
+            } catch (SQLException e) {
+                return;
+            }
         }
 
     }

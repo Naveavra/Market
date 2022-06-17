@@ -1,5 +1,6 @@
 package Tests;
 
+import DAL.Connect;
 import DomainLayer.Storage.CategoryController;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -15,8 +16,7 @@ public class CategoryControllerTest {
     @Before
     public void setUp()
     {
-        File file=new File("..\\dev\\superli.db");
-        file.delete();
+        Connect.getInstance().deleteRecordsOfTables();
         cC = new CategoryController();
         cC.addCategory("first", 0);
         cC.addSubCategory("first", "first1");
