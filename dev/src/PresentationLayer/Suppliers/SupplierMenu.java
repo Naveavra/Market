@@ -176,9 +176,8 @@ public class SupplierMenu {
             choice=Integer.parseInt(choiceStr);
         }
         catch (Exception e){
-
             System.out.println("you must enter only 1 digit number");
-            openSuppliersManagement();
+            return;
         }
 
         Supplier s =null;
@@ -190,9 +189,9 @@ public class SupplierMenu {
                 choiceStr = sc.next();
                 supplierNumber=Integer.parseInt(choiceStr);
             }
-            catch (Exception e){
-
+            catch (Exception e) {
                 System.out.println("you must enter only 1 digit number");
+                return;
             }
             String json = ss.getSupplier(supplierNumber);
             if (json == null || json.equals("null")){
@@ -319,7 +318,7 @@ public class SupplierMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            updateSupplierDetails(s);
+            return;
         }
         switch (choice) {
             case 1:
@@ -489,9 +488,9 @@ public class SupplierMenu {
                 contacts.add(new Contact(name, email,telephone));
             }
         }System.out.println("Choose the shipping area of the supplier");
-        System.out.println("\t1. 0.");
-        System.out.println("\t2. 1.");
-        System.out.println("\t3. 2.");
+        System.out.println("\t0. 0.");
+        System.out.println("\t1. 1.");
+        System.out.println("\t2. 2.");
         choiceStr = "";
         int area =0;
         try{
@@ -546,7 +545,7 @@ public class SupplierMenu {
         if(open & addContact) {
             System.out.println("The account opened and contacts created");
         }
-        if(open & !addContact) {
+        else if(open & !addContact) {
             System.out.println("The account opened but contacts was not created");
         }
         else{
