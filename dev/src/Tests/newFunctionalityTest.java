@@ -31,10 +31,9 @@ public class NewFunctionalityTest {
     private CategoryController cC;
     private OrdersController ordersController;
     private FacadeSupplier_Storage facadeSupplier;
-    private OrderFromSupplier order;
 
     @Before
-    public void setUp() throws SQLException {
+    public void setUp(){
         cC = new CategoryController();
         facadeSupplier =new FacadeSupplier_Storage();
         ordersController=new OrdersController();

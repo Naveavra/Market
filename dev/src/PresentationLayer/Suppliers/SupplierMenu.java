@@ -23,6 +23,8 @@ public class SupplierMenu {
         this.roles =roles;
     }
     public void chooseSupplierMenu() {
+        int choice =0;
+        while(choice != 5){
         System.out.println("***You enter to Suppliers page:***");
         System.out.println("Please choose what you want to do:");
         System.out.println("\t1. supplier management");
@@ -32,7 +34,6 @@ public class SupplierMenu {
         System.out.println("\t5. go back");
 
         String choiceStr = "";
-        int choice =0;
         try{
             choiceStr = sc.next();
             choice=Integer.parseInt(choiceStr);
@@ -40,7 +41,7 @@ public class SupplierMenu {
         catch (Exception e){
 
             System.out.println("you must enter only 1 digit number");
-            chooseSupplierMenu();
+            return;
         }
         int supNumber =0;
         if(choice==2 | choice ==3){
@@ -53,10 +54,10 @@ public class SupplierMenu {
             }
             catch (Exception e){
                 System.out.println("you must enter only 1 digit number");
-                chooseSupplierMenu();
+                return;
             }
         }
-        switch (choice){
+        switch (choice) {
             case 1:
                 openSuppliersManagement();
                 break;
@@ -70,8 +71,8 @@ public class SupplierMenu {
                 cancelOrder();
                 break;
             case 5:
-
                 break;
+        }
         }
 
     }
@@ -84,12 +85,12 @@ public class SupplierMenu {
         try {
             choiceStr = sc.next();
             if (choiceStr.equals("break")) {
-                chooseSupplierMenu();
+                return;
             }
             orderId = Integer.parseInt(choiceStr);
         } catch (Exception e) {
             System.out.println("you must enter only 1 digit number");
-            cancelOrder();
+            return;
         }
         LinkedList<Integer> ids =ordersIds();
         if(!ids.contains(orderId)){
@@ -103,18 +104,16 @@ public class SupplierMenu {
                 System.out.println("order doesn't found");
             }
         }
-        chooseSupplierMenu();
     }
     private void watchWaitOrders() {
         Map<Integer, Order> orders=orderService.getActiveOrders();
         if(orders.isEmpty()){
             System.out.println("there is no orders to show");
-            //watchOrdersMenu(supplier);
+            return;
         }
         for(Order o: orders.values()){
             System.out.println(o.toString());
         }
-        //watchOrdersMenu(supplier);
     }
     private LinkedList<Integer> ordersIds(){
         Map<Integer, Order> orders=orderService.getActiveOrders();
@@ -129,14 +128,12 @@ public class SupplierMenu {
         String json = ss.getSupplier(supplierNumber);
         if (json == null || json.equals("null")){
             System.out.println("supplier number don't found");
-            chooseSupplierMenu();
             return;
         }
         Gson gson = new Gson();
         Supplier s = gson.fromJson(json, Supplier.class);
         if(!s.isActive()){
             System.out.println("supplier account is closed");
-            chooseSupplierMenu();
             return;
         }
         OrderMenu om6 = new OrderMenu(s);
@@ -148,14 +145,12 @@ public class SupplierMenu {
         String json = ss.getSupplier(supplierNumber);
         if (json == null || json.equals("null")){
             System.out.println("supplier number don't found");
-            chooseSupplierMenu();
             return;
         }
         Gson gson = new Gson();
         Supplier s = gson.fromJson(json, Supplier.class);
         if(!s.isActive()){
             System.out.println("supplier account is closed");
-            chooseSupplierMenu();
             return;
         }
         ProductMenu pm = new ProductMenu(s);
@@ -165,6 +160,8 @@ public class SupplierMenu {
 
 
     private void openSuppliersManagement() {
+        int choice =0;
+        while(choice != 7){
         System.out.println("Enter the number of action you want to do:");
         System.out.println("\t 1. open supplier account");
         System.out.println("\t 2. close supplier number");
@@ -174,7 +171,6 @@ public class SupplierMenu {
         System.out.println("\t 6. remove discount from supplier");
         System.out.println("\t 7. go back");
         String choiceStr = "";
-        int choice =0;
         try{
             choiceStr = sc.next();
             choice=Integer.parseInt(choiceStr);
@@ -197,23 +193,20 @@ public class SupplierMenu {
             catch (Exception e){
 
                 System.out.println("you must enter only 1 digit number");
-                openSuppliersManagement();
             }
             String json = ss.getSupplier(supplierNumber);
             if (json == null || json.equals("null")){
                 System.out.println("supplier number don't found");
-                chooseSupplierMenu();
                 return;
             }
             Gson gson = new Gson();
             s = gson.fromJson(json, Supplier.class);
             if(!s.isActive()){
                 System.out.println("supplier account is closed");
-                chooseSupplierMenu();
                 return;
             }
         }
-        switch (choice){
+        switch (choice) {
             case 1:
                 openNewAccountSupplier();
                 break;
@@ -224,8 +217,8 @@ public class SupplierMenu {
                 updateSupplierDetails(s);
                 break;
             case 4:
-                 seeSupplierDetails(s);
-                 break;
+                seeSupplierDetails(s);
+                break;
             case 5:
                 addDiscountMenu(s);
                 break;
@@ -233,11 +226,10 @@ public class SupplierMenu {
                 removeDiscountMenu(s);
                 break;
             case 7:
-                chooseSupplierMenu();
                 break;
             default:
                 System.out.println("u must choose number between 1 to 7");
-                openSuppliersManagement();
+        }
         }
 
 
@@ -263,7 +255,7 @@ public class SupplierMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only digits number");
-            addDiscountMenu(s);
+            return;
         }
         boolean removed=ss.removeDiscountOnAmount(s.getSupplierNumber(), count);
         if(removed) {
@@ -272,7 +264,6 @@ public class SupplierMenu {
         else {
             System.out.println("catalog number or count were invalid");
         }
-       openSuppliersManagement();
     }
 
     private void addDiscountMenu(Supplier s) {
@@ -285,7 +276,7 @@ public class SupplierMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only digits number");
-            addDiscountMenu(s);
+            return;
         }
         System.out.println("Please write the discount?");
         choiceStr = "";
@@ -296,7 +287,6 @@ public class SupplierMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            addDiscountMenu(s);
         }
         boolean added=ss.addDiscount(s.getSupplierNumber(),count,discount);
         if(added) {
@@ -305,17 +295,17 @@ public class SupplierMenu {
         else {
             System.out.println("catalog number or count or discount were invalid");
         }
-        openSuppliersManagement();
 
     }
 
     private void seeSupplierDetails(Supplier s) {
         System.out.println(s.toString());
-        openSuppliersManagement();
     }
 
     private void updateSupplierDetails(Supplier s) {//need to imp
         System.out.println(s.toString());
+        int choice =0;
+        while (choice != 5){
         System.out.println("Choose what you want to update:");
         System.out.println("\t1. supplier name");
         System.out.println("\t2. bank number");
@@ -323,7 +313,6 @@ public class SupplierMenu {
         System.out.println("\t4. transportation");
         System.out.println("\t5. go back");
         String choiceStr = "";
-        int choice =0;
         try{
             choiceStr = sc.next();
             choice=Integer.parseInt(choiceStr);
@@ -332,59 +321,57 @@ public class SupplierMenu {
             System.out.println("you must enter only number");
             updateSupplierDetails(s);
         }
-        switch (choice){
+        switch (choice) {
             case 1:
                 String newSupplierName = "";
                 System.out.println("Enter Supplier's new name: ");
                 newSupplierName = sc.next();
-                boolean updateAccount=ss.updateAccount(s.getSupplierNumber(),newSupplierName, s.getBankNumber());
+                boolean updateAccount = ss.updateAccount(s.getSupplierNumber(), newSupplierName, s.getBankNumber());
                 s.setSupplierName(newSupplierName);
                 break;
             case 2:
                 System.out.println("Enter Supplier's new bankNumber: ");
                 choiceStr = "";
-                int bankNumber =0;
-                try{
+                int bankNumber = 0;
+                try {
                     choiceStr = sc.next();
-                    bankNumber=Integer.parseInt(choiceStr);
-                }
-                catch (Exception e){
+                    bankNumber = Integer.parseInt(choiceStr);
+                } catch (Exception e) {
                     System.out.println("you must enter only digits number");
-                    openNewAccountSupplier();
+                    return;
                 }
-                ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), bankNumber);
+                ss.updateAccount(s.getSupplierNumber(), s.getSupplierName(), bankNumber);
                 s.setBankAccount(bankNumber);
                 break;
             case 3://contacts
                 System.out.println("Enter count of contacts you have: ");
                 choiceStr = "";
-                int countContacts =0;
-                try{
+                int countContacts = 0;
+                try {
                     choiceStr = sc.next();
-                    countContacts=Integer.parseInt(choiceStr);
-                }
-                catch (Exception e){
+                    countContacts = Integer.parseInt(choiceStr);
+                } catch (Exception e) {
                     System.out.println("you must enter only digits number");
-                    openNewAccountSupplier();
+                    return;
                 }
-                LinkedList<Contact> contacts=new LinkedList<>();
-                for (int i=1; i<=countContacts; i++){
+                LinkedList<Contact> contacts = new LinkedList<>();
+                for (int i = 1; i <= countContacts; i++) {
                     System.out.println(i + ". enter the name: ");
                     String name = sc.next();
                     System.out.println(i + ". email: ");
                     String email = sc.next();
                     System.out.println(i + ". telephone: ");
                     String telephone = sc.next();
-                    contacts.add(new Contact(name,email,telephone));
+                    contacts.add(new Contact(name, email, telephone));
                 }
-               // ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), s.getBankNumber());
-                for(Contact c:contacts){
-                    ss.updateContact(s.getSupplierNumber(),c.getName(),c.getEmail(),c.getTelephone());
+                // ss.updateAccount(s.getSupplierNumber(),s.getSupplierName(), s.getBankNumber());
+                for (Contact c : contacts) {
+                    ss.updateContact(s.getSupplierNumber(), c.getName(), c.getEmail(), c.getTelephone());
                     s.setContact(c);
                 }
                 break;
             case 4:
-                System.out.println("Choose on which days the supplier "+s.getSupplierName()+" supplies");
+                System.out.println("Choose on which days the supplier " + s.getSupplierName() + " supplies");
                 System.out.println("Enter the numbers so that they are not separated by a space");
                 System.out.println("\t1. SUNDAY.");
                 System.out.println("\t2. MONDAY.");
@@ -395,49 +382,44 @@ public class SupplierMenu {
                 System.out.println("\t7. SATURDAY.");
                 String days = "";
                 days = sc.next();
-                String[] Days=days.split("");
+                String[] Days = days.split("");
                 for (String day : Days) {
                     if (day.length() >= 2) {
                         System.out.println("invalid input");
-                        openNewAccountSupplier();
+                        return;
                     }
-                    if(Integer.parseInt(day)<1|Integer.parseInt(day)>7){
+                    if (Integer.parseInt(day) < 1 | Integer.parseInt(day) > 7) {
                         System.out.println("invalid input");
-                        openNewAccountSupplier();
+                        return;
                     }
                 }
-                for(int i=0;i< Days.length;i++){
-                    for(int j=i+1;j< Days.length-1;j++){
-                        if(Days[i].equals(Days[j])){
+                for (int i = 0; i < Days.length; i++) {
+                    for (int j = i + 1; j < Days.length - 1; j++) {
+                        if (Days[i].equals(Days[j])) {
                             System.out.println("invalid input");
-                            openNewAccountSupplier();
+                            return;
                         }
                     }
                 }
-                if(Days.length>7){
+                if (Days.length > 7) {
                     System.out.println("invalid input");
-                    openNewAccountSupplier();
+                    return;
                 }
-                boolean update=ss.updateDeliveration(s.getSupplierNumber(),Days);
-                if(update) {
+                boolean update = ss.updateDeliveration(s.getSupplierNumber(), Days);
+                if (update) {
                     System.out.println(s.getSupplierName() + " has new delivery days");
-                }
-                else if(!update){
+                } else if (!update) {
                     System.out.println("!invalid input");
-                    updateSupplierDetails(s);
                 }
 
                 break;
             case 5:
-                openSuppliersManagement();
                 break;
             default:
                 System.out.println("you must peak number between 1 to 5");
-                updateSupplierDetails(s);
+        }
 
         }
-        updateSupplierDetails(s);
-
     }
 
 
@@ -455,11 +437,11 @@ public class SupplierMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only digits number");
-            openNewAccountSupplier();
+            return;
         }
         if(supNumber<=0){
             System.out.println("you must enter only positive number");
-            openNewAccountSupplier();
+            return;
         }
         System.out.println("Enter Supplier's bankNumber: ");
         choiceStr = "";
@@ -470,11 +452,11 @@ public class SupplierMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only digits number");
-            openNewAccountSupplier();
+            return;
         }
         if(bankNumber<=0){
             System.out.println("you must enter only positive number");
-            openNewAccountSupplier();
+            return;
         }
         System.out.println("Enter count of contacts you have: ");
         choiceStr = "";
@@ -485,11 +467,11 @@ public class SupplierMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only digits number");
-            openNewAccountSupplier();
+            return;
         }
         if(countContacts<0) {
             System.out.println("you must enter only digits number");
-            openNewAccountSupplier();
+            return;
         }
         LinkedList<Contact> contacts = new LinkedList<>();
         for (int i=1; i<=countContacts; i++){
@@ -517,11 +499,11 @@ public class SupplierMenu {
             area=Integer.parseInt(choiceStr);
         }catch (Exception e){
             System.out.println("you must enter only digits number");
-            openNewAccountSupplier();
+            return;
         }
         if(area<0 |area >2){
             System.out.println("you must enter only  0 or 1 or 2");
-            openNewAccountSupplier();
+            return;
         }
         System.out.println("Choose on which days the supplier "+supName+" supplies");
         System.out.println("\t1. SUNDAY.");
@@ -537,24 +519,24 @@ public class SupplierMenu {
         for (String day : Days) {
             if (day.length() >= 2) {
                 System.out.println("invalid input");
-                openNewAccountSupplier();
+                return;
             }
             if(Integer.parseInt(day)<1|Integer.parseInt(day)>7){
                 System.out.println("invalid input");
-                openNewAccountSupplier();
+                return;
             }
         }
         for(int i=0;i< Days.length;i++){
             for(int j=i+1;j< Days.length-1;j++){
                 if(Days[i].equals(Days[j])){
                     System.out.println("invalid input");
-                    openNewAccountSupplier();
+                    return;
                 }
             }
         }
         if(Days.length>7){
             System.out.println("invalid input");
-            openNewAccountSupplier();
+            return;
         }
         boolean open=ss.openAccount(supNumber,supName, bankNumber,Days,area);
         boolean addContact =true;
@@ -563,15 +545,13 @@ public class SupplierMenu {
         }
         if(open & addContact) {
             System.out.println("The account opened and contacts created");
-            chooseSupplierMenu();
         }
         if(open & !addContact) {
             System.out.println("The account opened but contacts was not created");
-            chooseSupplierMenu();
         }
         else{
             System.out.println("one of the details is invalid");
-            openNewAccountSupplier();
+            return;
         }
     }
     public boolean checkEmail(String email){

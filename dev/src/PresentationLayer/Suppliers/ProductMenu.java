@@ -32,6 +32,8 @@ public class ProductMenu {
     }
 
     public void manageProductsSupplierMenu() {
+        int choice =0;
+        while(choice != 7){
         System.out.println("Manage products of supplier: "+ supplier.getSupplierName());
         System.out.println("Choose what you want to do:");
         System.out.println("\t 1. add product to supplier");
@@ -42,22 +44,21 @@ public class ProductMenu {
         System.out.println("\t 6. update product");
         System.out.println("\t 7. go back");
         String choiceStr = "";
-        int choice =0;
         try{
             choiceStr = sc.next();
             choice=Integer.parseInt(choiceStr);
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            manageProductsSupplierMenu();
+            return;
         }
         if(choice !=5 & choice!=7){
             if(!roles.contains(JobType.STOCK_KEEPER)){
                 System.out.println("u dont have access to this area");
-                manageProductsSupplierMenu();
+                return;
             }
         }
-        switch (choice){
+        switch (choice) {
             case 1:
                 addProduct(supplier);
                 break;
@@ -77,11 +78,10 @@ public class ProductMenu {
                 updateProduct(supplier);
                 break;
             case 7:
-                sm.chooseSupplierMenu();
                 break;
             default:
                 System.out.println("you must peek a number between 1 to 7");
-                manageProductsSupplierMenu();
+        }
         }
     }
 
@@ -98,7 +98,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            manageProductsSupplierMenu();
+            return;
         }
         System.out.println("Enter product id:");
         int productId=0;
@@ -108,7 +108,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            manageProductsSupplierMenu();
+            return;
         }
         System.out.println("Enter price:");
         int price =0;
@@ -118,7 +118,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            manageProductsSupplierMenu();
+            return;
         }
         boolean added=ps.addProduct(supplier.getSupplierNumber(), catalogNum,price, productId);
         if(added) {
@@ -127,8 +127,6 @@ public class ProductMenu {
         else{
             System.out.println("The product is already exist or the price is invalid ");
         }
-        manageProductsSupplierMenu();
-
     }
 
     private void removeProduct(Supplier supplier) {
@@ -142,7 +140,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            removeProduct(supplier);
+            return;
         }
         boolean removed=ps.removeProduct(supplier.getSupplierNumber(), catalogNum);
         if(removed) {
@@ -151,7 +149,6 @@ public class ProductMenu {
         else{
             System.out.println("product didn't exist");
         }
-        manageProductsSupplierMenu();
     }
 
     private void updateProduct(Supplier supplier) {
@@ -165,7 +162,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            updateProduct(supplier);
+            return;
         }
         System.out.println("Enter product id of the product:");
         int productId =0;
@@ -175,7 +172,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            updateProduct(supplier);
+            return;
         }
         System.out.println("Enter new price for product:");
         choiceStr = "";
@@ -186,7 +183,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            updateProduct(supplier);
+            return;
         }
         boolean updated=ps.updateProduct(supplier.getSupplierNumber(),catalogNum, productId,price);
         if(updated) {
@@ -195,7 +192,6 @@ public class ProductMenu {
         else{
             System.out.println("product didn't found or the price was invalid number");
         }
-        manageProductsSupplierMenu();
     }
 
     private void watchSupplierProducts(Supplier supplier) {
@@ -206,7 +202,7 @@ public class ProductMenu {
         int i = 1;
         if(products.size() == 0){
             System.out.println("There is no products to show");
-            manageProductsSupplierMenu();
+            return;
         }
        // assert products != null;
         for (LinkedTreeMap p: products.values()){
@@ -214,7 +210,6 @@ public class ProductMenu {
             System.out.println(i + ". "+ product.toString());
             i++;
         }
-        manageProductsSupplierMenu();
     }
     private void addDiscountOnProduct(Supplier supplier){
         System.out.println("enter catalog number of product to add discount");
@@ -226,7 +221,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            addDiscountOnProduct(supplier);
+            return;
         }
         System.out.println("enter amount of discount");
         choiceStr = "";
@@ -237,7 +232,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            addDiscountOnProduct(supplier);
+            return;
         }
         System.out.println("Please write on how much product you want add discount?");
         choiceStr = "";
@@ -248,7 +243,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only digits number");
-            addDiscountOnProduct(supplier);
+            return;
         }
         boolean added = ss.addDiscount(supplier.getSupplierNumber(),catalogNum ,count , discount);
         if (added){
@@ -257,8 +252,6 @@ public class ProductMenu {
         else{
             System.out.println("invalid input");
         }
-
-        manageProductsSupplierMenu();
     }
     private void removeDiscountOnProduct(Supplier supplier) {
         System.out.println("enter catalog number of product to remove discount");
@@ -270,7 +263,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            manageProductsSupplierMenu();
+            return;
         }
         System.out.println("Please write on how much product you want remove discount?");
         choiceStr = "";
@@ -281,7 +274,7 @@ public class ProductMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only digits number");
-            manageProductsSupplierMenu();
+            return;
         }
         boolean removed = ss.removeDiscountOnProduct(supplier.getSupplierNumber(), catalogNum, count);
         if (removed){
@@ -290,7 +283,5 @@ public class ProductMenu {
         else{
             System.out.println("invalid input");
         }
-
-        manageProductsSupplierMenu();
     }
 }

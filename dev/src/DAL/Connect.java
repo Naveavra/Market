@@ -289,7 +289,7 @@ public class Connect {
                     "orderDocID varchar (20)," +
                     "supply varchar (50)," +
                     "quantity integer," +
-                    "PRIMARY KEY (siteID,orderDocID)," +
+                    "PRIMARY KEY (siteID,orderDocID,supply)," +
                     "FOREIGN KEY (orderDocID) REFERENCES OrderDocs(id) ON DELETE CASCADE" +
                     ")";
             statement.execute(query);

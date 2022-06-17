@@ -378,7 +378,7 @@ public class FacadeEmployees_Transports {
     public boolean createAutoTransport(String supplierNumber, String date, Map<ProductSupplier, Integer> supplyList) {
         ConcurrentHashMap<String,Integer> supplies = new ConcurrentHashMap<>();
         for(ProductSupplier ps : supplyList.keySet()){
-            supplies.put(String.valueOf(ps.getSupplierNumber()),supplyList.get(ps));
+            supplies.put(String.valueOf(ps.getProductId()),supplyList.get(ps));
         }
         return orderController.createAutoTransport(supplierNumber,date,supplies);
     }

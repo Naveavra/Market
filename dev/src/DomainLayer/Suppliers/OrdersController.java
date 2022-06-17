@@ -132,11 +132,11 @@ public class OrdersController {
         try {
             totalPrice = updateTotalIncludeDiscounts(orderId);
             if(o.getCountProducts()>0) {
-                pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o, totalPrice));
                 if(!createTransport(o)) {
                     new EmployeeDAO().writeMessageToHR("No drivers available");
                     return false;
                 }
+                pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o, totalPrice));
             }
             return true;
         } catch (SQLException e) {
@@ -146,9 +146,9 @@ public class OrdersController {
 
     //helper function to connect with Transport model
     private boolean createTransport(OrderFromSupplier o){
-        String supplierNumber =String.valueOf(o.getSupplierNumber());// miki this is the supplier number
-        String date = o.getDate();// i dont know the format i supposed is DD\MM\YYYY
-        Map<ProductSupplier,Integer> productToQuantity= new HashMap<ProductSupplier, Integer>();
+        String supplierNumber =String.valueOf(o.getSupplierNumber());
+        String date = o.getDate();
+        Map<ProductSupplier,Integer> productToQuantity= new HashMap<>();
         productToQuantity=o.getProducts();
         return employees_transports.createAutoTransport(supplierNumber,date,productToQuantity);
     }
