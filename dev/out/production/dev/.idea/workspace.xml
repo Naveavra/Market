@@ -9,7 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="195f0d91-2040-4c78-849c-9acc95a41163" name="Changes" comment="update tests" />
+    <list default="true" id="195f0d91-2040-4c78-849c-9acc95a41163" name="Changes" comment="update project">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/6b6b1013-d390-4725-b876-cc8c376f15cc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/6b6b1013-d390-4725-b876-cc8c376f15cc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/dev/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/dev/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,7 +40,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Tests/RegularAndShortageOrdersTest.java" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../release" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -47,7 +50,7 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/src/Tests/RegularAndShortageOrdersTest.java" />
   </component>
-  <component name="RunManager" selected="JUnit.Tests in dev">
+  <component name="RunManager" selected="Application.Menu">
     <configuration name="Menu" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="PresentationLayer.Menu" />
       <module name="dev" />
@@ -57,6 +60,22 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NewFunctionalityTest.stage3_checkStorageGotCorrectAmountFromTransport" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="dev" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Tests" />
+      <option name="MAIN_CLASS_NAME" value="Tests.NewFunctionalityTest" />
+      <option name="METHOD_NAME" value="stage3_checkStorageGotCorrectAmountFromTransport" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -77,10 +96,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.Tests in dev" />
         <item itemvalue="Application.Menu" />
         <item itemvalue="JUnit.Tests in dev" />
-        <item itemvalue="Application.Menu" />
+        <item itemvalue="JUnit.NewFunctionalityTest.stage3_checkStorageGotCorrectAmountFromTransport" />
+        <item itemvalue="JUnit.Tests in dev" />
         <item itemvalue="Application.Menu" />
       </list>
     </recent_temporary>
@@ -94,7 +113,8 @@
       <option name="presentableId" value="Default" />
       <updated>1655402468213</updated>
       <workItem from="1655402469590" duration="2627000" />
-      <workItem from="1655477599617" duration="3028000" />
+      <workItem from="1655477599617" duration="4248000" />
+      <workItem from="1655490810020" duration="139000" />
     </task>
     <task id="LOCAL‎00001" summary="ttt">
       <created>1655404330683</created>
@@ -120,7 +140,13 @@
       <option name="presentableId" value="LOCAL‎00004" />
       <updated>1655487232818</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL‎00005" summary="update project">
+      <created>1655488344817</created>
+      <option name="number" value="LOCAL‎00005" />
+      <option name="presentableId" value="LOCAL‎00005" />
+      <updated>1655488344817</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,20 +167,16 @@
     <MESSAGE value="ttt" />
     <MESSAGE value="add jar" />
     <MESSAGE value="update tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="update tests" />
+    <MESSAGE value="update project" />
+    <option name="LAST_COMMIT_MESSAGE" value="update project" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/DomainLayer/FacadeEmployees_Transports.java</url>
-          <line>52</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/DAL/OrderDocDAO.java</url>
-          <line>149</line>
-          <option name="timeStamp" value="3" />
+          <url>file://$PROJECT_DIR$/src/Tests/NewFunctionalityTest.java</url>
+          <line>72</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
