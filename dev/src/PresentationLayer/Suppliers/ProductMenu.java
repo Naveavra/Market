@@ -78,7 +78,6 @@ public class ProductMenu {
                 updateProduct(supplier);
                 break;
             case 7:
-                sm.chooseSupplierMenu();
                 break;
             default:
                 System.out.println("you must peek a number between 1 to 7");

@@ -418,7 +418,7 @@ public class Connect {
         }
     }
 
-    public void deleteRecordsOfTables() {
+    public void deleteRecordsOfTables() throws SQLException {
         try (Statement stmt = createStatement()) {
             //table products
             String query = "DROP TABLE IF EXISTS Products";
@@ -517,15 +517,11 @@ public class Connect {
 
 
 
-        } catch (Exception e) {
-            return;
+        } catch (SQLException e) {
+            throw e;
         }
         finally {
-            try {
-                closeConnect();
-            } catch (SQLException e) {
-                return;
-            }
+            closeConnect();
         }
 
     }

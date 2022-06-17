@@ -85,12 +85,12 @@ public class SupplierMenu {
         try {
             choiceStr = sc.next();
             if (choiceStr.equals("break")) {
-                chooseSupplierMenu();
+                return;
             }
             orderId = Integer.parseInt(choiceStr);
         } catch (Exception e) {
             System.out.println("you must enter only 1 digit number");
-            cancelOrder();
+            return;
         }
         LinkedList<Integer> ids =ordersIds();
         if(!ids.contains(orderId)){
@@ -104,18 +104,16 @@ public class SupplierMenu {
                 System.out.println("order doesn't found");
             }
         }
-        chooseSupplierMenu();
     }
     private void watchWaitOrders() {
         Map<Integer, Order> orders=orderService.getActiveOrders();
         if(orders.isEmpty()){
             System.out.println("there is no orders to show");
-            //watchOrdersMenu(supplier);
+            return;
         }
         for(Order o: orders.values()){
             System.out.println(o.toString());
         }
-        //watchOrdersMenu(supplier);
     }
     private LinkedList<Integer> ordersIds(){
         Map<Integer, Order> orders=orderService.getActiveOrders();
@@ -178,8 +176,9 @@ public class SupplierMenu {
             choice=Integer.parseInt(choiceStr);
         }
         catch (Exception e){
+
             System.out.println("you must enter only 1 digit number");
-            return;
+            openSuppliersManagement();
         }
 
         Supplier s =null;
@@ -191,9 +190,9 @@ public class SupplierMenu {
                 choiceStr = sc.next();
                 supplierNumber=Integer.parseInt(choiceStr);
             }
-            catch (Exception e) {
+            catch (Exception e){
+
                 System.out.println("you must enter only 1 digit number");
-                return;
             }
             String json = ss.getSupplier(supplierNumber);
             if (json == null || json.equals("null")){
@@ -320,7 +319,7 @@ public class SupplierMenu {
         }
         catch (Exception e){
             System.out.println("you must enter only number");
-            return;
+            updateSupplierDetails(s);
         }
         switch (choice) {
             case 1:
@@ -490,9 +489,9 @@ public class SupplierMenu {
                 contacts.add(new Contact(name, email,telephone));
             }
         }System.out.println("Choose the shipping area of the supplier");
-        System.out.println("\t0. 0.");
-        System.out.println("\t1. 1.");
-        System.out.println("\t2. 2.");
+        System.out.println("\t1. 0.");
+        System.out.println("\t2. 1.");
+        System.out.println("\t3. 2.");
         choiceStr = "";
         int area =0;
         try{
@@ -547,7 +546,7 @@ public class SupplierMenu {
         if(open & addContact) {
             System.out.println("The account opened and contacts created");
         }
-        else if(open & !addContact) {
+        if(open & !addContact) {
             System.out.println("The account opened but contacts was not created");
         }
         else{

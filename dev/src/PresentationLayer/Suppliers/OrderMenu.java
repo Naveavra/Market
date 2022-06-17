@@ -183,16 +183,6 @@ public class OrderMenu {
         }
     }
     public void watchOrdersMenu(Supplier s) {
-        System.out.println("You can now see and manage your orders:");
-        System.out.println("Choose what you want");
-        System.out.println("\t1. create order to supplier.");
-        System.out.println("\t2. Send orders.");
-        System.out.println("\t3. update order.");
-        System.out.println("\t4. See all your wait orders.");
-        System.out.println("\t5. See all your orders in fixed days delivery.");
-        System.out.println("\t6. See all your past orders..");
-        System.out.println("\t7. go back");
-        String choiceStr = "";
         int choice =0;
         while(choice != 7) {
             System.out.println("You can now see and manage your orders:");
@@ -235,7 +225,9 @@ public class OrderMenu {
             }
             switch (choice) {
                 case 1:
-                    newOrder();
+                    OrderMenu om = new OrderMenu(s);
+                    om.setRoles(roles);
+                    om.newOrder();
                     break;
                 case 2:
                     sendOrders(orderId);
@@ -259,41 +251,12 @@ public class OrderMenu {
             }
             //sm.chooseSupplierMenu();
         }
-        switch (choice){
-            case 1:
-                OrderMenu om = new OrderMenu(s);
-                om.setRoles(roles);
-                om.newOrder();
-                break;
-            case 2:
-                sendOrders(orderId);
-                break;
-            case 3:
-                watchWaitOrders();
-                updateOrderMenu(orderId);
-                break;
-            case 4:
-                watchWaitOrders();
-                break;
-            case 5:
-                watchFixedDaysOrders();
-                break;
-            case 6:
-                watchPastOrders();
-            case 7:
-                sm.chooseSupplierMenu();
-            default:
-                System.out.println("You must type number between 1 to 8");
-                watchOrdersMenu(s);
-        }
-        sm.chooseSupplierMenu();
     }
 
     private void watchPastOrders() {
         Map<Integer, PastOrder> orders =orderService.getPastOrders(supplier.getSupplierNumber());
         if(orders.isEmpty()){
             System.out.println("there is no past orders to display");
-            watchOrdersMenu(supplier);
         }
         for(PastOrder p :orders.values()){
             System.out.println(p.toString());
@@ -322,19 +285,25 @@ public class OrderMenu {
         Map<Integer,DeliveryTerm> orders= orderService.getFixedDaysOrders(supplier.getSupplierNumber());
         if(orders.isEmpty()){
             System.out.println("there is no orders to show");
-            watchOrdersMenu(supplier);
         }
         for(Integer x: orders.keySet()){
             System.out.println("\nOrderID:" +" "+x+" , "+"days to deliver: "+ orders.get(x).toString());
         }
-        watchOrdersMenu(supplier);
     }
 
     private void watchWaitOrders() {
         Map<Integer, Order> orders=orderService.getActiveOrders(supplier.getSupplierNumber());
         if(orders.isEmpty()){
             System.out.println("there is no orders to show");
-            watchOrdersMenu(supplier);
+        }
+        for(Order o: orders.values()){
+            System.out.println(o.toString());
+        }
+    }
+    private void watchWaitOrders1() {
+        Map<Integer, Order> orders=orderService.getActiveOrders(supplier.getSupplierNumber());
+        if(orders.isEmpty()){
+            System.out.println("there is no orders to show");
         }
         for(Order o: orders.values()){
             System.out.println(o.toString());
@@ -362,7 +331,7 @@ public class OrderMenu {
                 choice = Integer.parseInt(choiceStr);
             } catch (Exception e) {
                 System.out.println("you must enter only 1 digit number");
-                return;
+                updateOrderMenu(orderID);
             }
             switch (choice) {
                 case 1:
@@ -438,24 +407,24 @@ public class OrderMenu {
         for (String day : Days) {
             if (day.length() >= 2) {
                 System.out.println("invalid input");
-                return;
+                updateDeliverDaysInOrder(orderID);
             }
             if(Integer.parseInt(day)<1|Integer.parseInt(day)>7){
                 System.out.println("invalid input");
-                return;
+                updateDeliverDaysInOrder(orderID);
             }
         }
         for(int i=0;i< Days.length;i++){
             for(int j=i+1;j< Days.length-1;j++){
                 if(Days[i].equals(Days[j])){
                     System.out.println("invalid input");
-                    return;
+                    updateDeliverDaysInOrder(orderID);
                 }
             }
         }
         if(Days.length>7){
             System.out.println("invalid input");
-            return;
+            updateDeliverDaysInOrder(orderID);
         }
         boolean added=orderService.updateFixedDeliveryDaysForOrder(supplier.getSupplierNumber(), orderID, Days);
         if(added){
@@ -464,9 +433,11 @@ public class OrderMenu {
         else{
             System.out.println("Invalid Input");
         }
+        updateOrderMenu(orderID);
     }
 
     private void updateProductInOrder(int orderID) {
+        //watchOrdersMenu();
         System.out.println("choose product you want to edit and enter the catalog number:");
         String choiceStr = "";
         int catalogNum =0;

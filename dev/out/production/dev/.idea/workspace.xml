@@ -1,30 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="dev:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="ce0ff183-5cc8-443b-ab57-d2dfe560b972" name="Default Changelist" comment="latest">
-      <change beforePath="$PROJECT_DIR$/src/Tests/newFunctionalityTest.java" beforeDir="false" />
-    </list>
+    <list default="true" id="195f0d91-2040-4c78-849c-9acc95a41163" name="Changes" comment="update tests" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="NaveNew" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
-  <component name="ProjectId" id="2ARibmEqSMjgmUunpAnJJgpexYX" />
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2AfZBqWMtgnhJnHErQOZ1ulFW84" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Tests/RegularAndShortageOrdersTest.java" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/src/Tests/RegularAndShortageOrdersTest.java" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.Tests in dev">
     <configuration name="Menu" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="PresentationLayer.Menu" />
       <module name="dev" />
@@ -38,8 +61,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Tests in dev" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="dev" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Tests" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.Tests in dev" />
+        <item itemvalue="Application.Menu" />
+        <item itemvalue="JUnit.Tests in dev" />
+        <item itemvalue="Application.Menu" />
         <item itemvalue="Application.Menu" />
       </list>
     </recent_temporary>
@@ -47,55 +88,39 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="ce0ff183-5cc8-443b-ab57-d2dfe560b972" name="Default Changelist" comment="" />
-      <created>1654978871703</created>
+      <changelist id="195f0d91-2040-4c78-849c-9acc95a41163" name="Changes" comment="" />
+      <created>1655402468213</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1654978871703</updated>
-      <workItem from="1654978873445" duration="1857000" />
-      <workItem from="1655043634554" duration="18000" />
-      <workItem from="1655134732968" duration="12750000" />
-      <workItem from="1655379047445" duration="618000" />
-      <workItem from="1655379780672" duration="235000" />
-      <workItem from="1655380061912" duration="10598000" />
-      <workItem from="1655393435074" duration="5316000" />
+      <updated>1655402468213</updated>
+      <workItem from="1655402469590" duration="2627000" />
+      <workItem from="1655477599617" duration="3028000" />
     </task>
-    <task id="LOCAL-00001" summary="added primary key to msg table">
-      <created>1655385143705</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1655385143705</updated>
+    <task id="LOCAL‎00001" summary="ttt">
+      <created>1655404330683</created>
+      <option name="number" value="LOCAL‎00001" />
+      <option name="presentableId" value="LOCAL‎00001" />
+      <updated>1655404330683</updated>
     </task>
-    <task id="LOCAL-00002" summary="bug fix">
-      <created>1655389551661</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1655389551661</updated>
+    <task id="LOCAL‎00002" summary="ttt">
+      <created>1655404551355</created>
+      <option name="number" value="LOCAL‎00002" />
+      <option name="presentableId" value="LOCAL‎00002" />
+      <updated>1655404551355</updated>
     </task>
-    <task id="LOCAL-00003" summary="bug fix">
-      <created>1655392893945</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1655392893945</updated>
+    <task id="LOCAL‎00003" summary="add jar">
+      <created>1655405119187</created>
+      <option name="number" value="LOCAL‎00003" />
+      <option name="presentableId" value="LOCAL‎00003" />
+      <updated>1655405119187</updated>
     </task>
-    <task id="LOCAL-00004" summary="bug fix">
-      <created>1655393230614</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1655393230614</updated>
+    <task id="LOCAL‎00004" summary="update tests">
+      <created>1655487232818</created>
+      <option name="number" value="LOCAL‎00004" />
+      <option name="presentableId" value="LOCAL‎00004" />
+      <updated>1655487232818</updated>
     </task>
-    <task id="LOCAL-00005" summary="latest">
-      <created>1655400912904</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1655400912904</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -111,26 +136,25 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added primary key to msg table" />
-    <MESSAGE value="bug fix" />
-    <MESSAGE value="latest" />
-    <option name="LAST_COMMIT_MESSAGE" value="latest" />
+    <MESSAGE value="ttt" />
+    <MESSAGE value="add jar" />
+    <MESSAGE value="update tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="update tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/DAL/EmployeeDAO.java</url>
-          <line>199</line>
-          <option name="timeStamp" value="3" />
+          <url>file://$PROJECT_DIR$/src/DomainLayer/FacadeEmployees_Transports.java</url>
+          <line>52</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/PresentationLayer/Storage/CLI.java</url>
-          <line>70</line>
-          <option name="timeStamp" value="4" />
+          <url>file://$PROJECT_DIR$/src/DAL/OrderDocDAO.java</url>
+          <line>149</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

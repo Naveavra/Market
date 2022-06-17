@@ -7,6 +7,7 @@ import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
 import java.io.File;
+import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 @FixMethodOrder( MethodSorters.NAME_ASCENDING ) // force name ordering
@@ -14,8 +15,7 @@ public class CategoryControllerTest {
 
     private CategoryController cC;
     @Before
-    public void setUp()
-    {
+    public void setUp() throws SQLException {
         Connect.getInstance().deleteRecordsOfTables();
         cC = new CategoryController();
         cC.addCategory("first", 0);
