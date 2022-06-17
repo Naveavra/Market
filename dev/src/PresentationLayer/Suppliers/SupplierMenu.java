@@ -85,12 +85,12 @@ public class SupplierMenu {
         try {
             choiceStr = sc.next();
             if (choiceStr.equals("break")) {
-                return;
+                chooseSupplierMenu();
             }
             orderId = Integer.parseInt(choiceStr);
         } catch (Exception e) {
             System.out.println("you must enter only 1 digit number");
-            return;
+            cancelOrder();
         }
         LinkedList<Integer> ids =ordersIds();
         if(!ids.contains(orderId)){
@@ -104,16 +104,18 @@ public class SupplierMenu {
                 System.out.println("order doesn't found");
             }
         }
+        chooseSupplierMenu();
     }
     private void watchWaitOrders() {
         Map<Integer, Order> orders=orderService.getActiveOrders();
         if(orders.isEmpty()){
             System.out.println("there is no orders to show");
-            return;
+            //watchOrdersMenu(supplier);
         }
         for(Order o: orders.values()){
             System.out.println(o.toString());
         }
+        //watchOrdersMenu(supplier);
     }
     private LinkedList<Integer> ordersIds(){
         Map<Integer, Order> orders=orderService.getActiveOrders();

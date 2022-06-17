@@ -171,6 +171,10 @@ public class OrdersController {
             if(order!=null) {
                 try {
                     ordersDAO.addProductToOrder(ps, order.getOrderId(), amount);
+                    if(!createTransport(order)){
+                        new EmployeeDAO().writeMessageToHR("No drivers available");
+                        return;
+                    }
                     finishOrder(order.getOrderId());
 
                 } catch (SQLException ignored) {

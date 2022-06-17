@@ -437,8 +437,4 @@ public class FacadeSupplier_Storage {
     public Boolean cancelOrder(int orderId) {
         return ordersController.cancelOrder(orderId);
     }
-
-    public String getAllOrderDocIDs() {
-        return facade.getAllOrderDocIDs();
-    }
 }
