@@ -97,6 +97,7 @@ public class Connect {
                     "\t\"productId\"\tInteger,\n" +
                     "\t\"supplierNumber\"\tInteger,\n" +
                     "\t\"catalogNumber\"\tINTEGER,\n" +
+                    "\t\"daysUntilExpiration\"\tINTEGER,\n" +
                     "\t\"price\"\tInteger,\n"+
                     "\tPRIMARY KEY(\"supplierNumber\",\"productId\")\n"+ ")";
             statement.execute(query);

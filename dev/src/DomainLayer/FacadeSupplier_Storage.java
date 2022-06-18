@@ -148,14 +148,15 @@ public class FacadeSupplier_Storage {
     }
 
     //Product supplier service
-    public boolean addProductToSupplier(int supplierNumber, int catalogNumber, int price, int productId){
+    public boolean addProductToSupplier(int supplierNumber, int catalogNumber, int daysUntilExpiration, int price, int productId){
         if(supplierController.getSupplier(supplierNumber)==null){
             return false;
         }
         if(categoryController.getProductWithId(productId)==null){
             return false;
         }
-        return supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, price, productId);
+
+        return supplierController.getSupplier(supplierNumber).addProduct(catalogNumber, daysUntilExpiration, price, productId);
     }
     public String getProductsOfSupplier(int supplierNumber){
         if(supplierController.getSupplier(supplierNumber)==null){
@@ -378,18 +379,23 @@ public class FacadeSupplier_Storage {
 
     public HashMap<Integer, Integer> getItemsFromTransport(int id){
         HashMap<Integer, Integer> productsAndQuantity = facade.getProductsFromOrderDoc(id);
+        int supplierNumber = getSupplierNumberFromOrderDoc(id);
         if(productsAndQuantity.size()>0) {
             for (int productId : productsAndQuantity.keySet()) {
-                String curDate = LocalDate.now().toString();
-                int curYear = Integer.parseInt(curDate.substring(0, 4)) + 1;
-                String curMonth = curDate.substring(5, 7);
-                String curDay = curDate.substring(8, 10);
-                String expirationDate = curYear + "-" + curMonth + "-" + curDay;
+                String expirationDate = getExpirationDate(supplierNumber, productId);
                 categoryController.addAllItems(productId, productsAndQuantity.get(productId), expirationDate, 1);
             }
             facade.transportIsDone(id + "");
         }
         return productsAndQuantity;
+    }
+
+    private String getExpirationDate(int supplierNumber, int productId) {
+        return ordersController.getExpirationDate(supplierNumber, productId);
+    }
+
+    private int getSupplierNumberFromOrderDoc(int orderDocId) {
+        return ordersController.getSupplierNumberFromOrderDoc(orderDocId);
     }
 
     public void addAllItems(int productId, int quantity, String ed, int shelf){

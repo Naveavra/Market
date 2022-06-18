@@ -5,19 +5,22 @@ public class Product {
     private int catalogNumber;
     private int productId;
     private double price;
+    private int daysUntilExpiration;
     private LinkedList<Discount> discounts;//sum of specific product
 
 
-    public Product(int catalogNumber,int productId,double price){
+    public Product(int catalogNumber,int productId,double price, int daysUntilExpiration){
         this.catalogNumber =catalogNumber;
         this.productId=productId;
         this.price=price;
+        this.daysUntilExpiration = daysUntilExpiration;
         discounts = new LinkedList<>();// keep it sorted
     }
     public Product(Product product){
         this.catalogNumber = product.catalogNumber;
         this.productId= product.productId;
         this.price=product.price;
+        this.daysUntilExpiration = product.daysUntilExpiration;
         discounts=new LinkedList<>();
         this.discounts.addAll(product.discounts);
     }
@@ -38,11 +41,15 @@ public class Product {
     public double getPrice() {
         return price;
     }
+    public int getDaysUntilExpiration(){
+        return daysUntilExpiration;
+    }
 
     public String toString(){
         String ans = "catalog Number: " + catalogNumber;
         ans+= ", product Id: " +productId;
         ans+= ", price: "+ price;
+        ans+=", days until expiration: "+daysUntilExpiration;
         return ans;
     }
 }

@@ -9,15 +9,17 @@ public class ProductSupplier {
     private int catalogNumber;//unique number in supplier
     private int productId;//unique number to product in the system
     private int supplierNumber;
+    private int daysUntilExpiration;
     private double price;
     private LinkedList<Discount> discounts;//sum of specific product
     private transient ProductsSupplierDAO productsSupplierDAO = new ProductsSupplierDAO();
 
 
 
-    public ProductSupplier(int supplierNumber,int catalogNumber, double price, int productId,LinkedList<Discount> discount){
+    public ProductSupplier(int supplierNumber,int catalogNumber, int daysUntilExpiration, double price, int productId,LinkedList<Discount> discount){
         this.supplierNumber=supplierNumber;
         this.catalogNumber =catalogNumber;
+        this.daysUntilExpiration = daysUntilExpiration;
         this.price=price;
         this.productId = productId;
         this.discounts=discount;
@@ -64,7 +66,8 @@ public class ProductSupplier {
     }
 
     public double getPriceAfterDiscount(int count) {
-        return this.price*count*findMaxUnder(this,count);
+        double ans = this.price*count*findMaxUnder(this,count);
+        return ans;
     }
     private double findMaxUnder(ProductSupplier p,int count){
         double discount=findMaxUnder(discounts,count);
@@ -113,5 +116,8 @@ public class ProductSupplier {
     }
     public void remove(LinkedList<Discount> discounts,int amount){
         discounts.removeIf(d -> d.getAmount() == amount);
+    }
+    public int getDaysUntilExpiration(){
+        return daysUntilExpiration;
     }
 }

@@ -103,7 +103,6 @@ public class OrderMenu {
                     break;
                 case 2:
                     determineDeliveryDays(o);
-                    watchOrdersMenu(supplier);
             }
         }
     }
@@ -127,10 +126,8 @@ public class OrderMenu {
                     addDeliveryDays(o);
                     break;
                 case 2:
-                    watchOrdersMenu(supplier);
                     break;
             }
-            watchOrdersMenu(supplier);
         }
     }
 
@@ -331,7 +328,7 @@ public class OrderMenu {
                 choice = Integer.parseInt(choiceStr);
             } catch (Exception e) {
                 System.out.println("you must enter only 1 digit number");
-                updateOrderMenu(orderID);
+                return;
             }
             switch (choice) {
                 case 1:
@@ -407,24 +404,24 @@ public class OrderMenu {
         for (String day : Days) {
             if (day.length() >= 2) {
                 System.out.println("invalid input");
-                updateDeliverDaysInOrder(orderID);
+                return;
             }
             if(Integer.parseInt(day)<1|Integer.parseInt(day)>7){
                 System.out.println("invalid input");
-                updateDeliverDaysInOrder(orderID);
+                return;
             }
         }
         for(int i=0;i< Days.length;i++){
             for(int j=i+1;j< Days.length-1;j++){
                 if(Days[i].equals(Days[j])){
                     System.out.println("invalid input");
-                    updateDeliverDaysInOrder(orderID);
+                    return;
                 }
             }
         }
         if(Days.length>7){
             System.out.println("invalid input");
-            updateDeliverDaysInOrder(orderID);
+            return;
         }
         boolean added=orderService.updateFixedDeliveryDaysForOrder(supplier.getSupplierNumber(), orderID, Days);
         if(added){
@@ -437,7 +434,6 @@ public class OrderMenu {
     }
 
     private void updateProductInOrder(int orderID) {
-        //watchOrdersMenu();
         System.out.println("choose product you want to edit and enter the catalog number:");
         String choiceStr = "";
         int catalogNum =0;
