@@ -57,7 +57,7 @@ public class NewFunctionalityTest {
         assign();
         //need to check that in order4Dest there is 1 line with the correct orderDoc
         OrderDocDAO dao = new OrderDocDAO();
-        int id = dao.getLastId();
+        int id = dao.getLastId() -1;
         facadeSupplier.buyItems(1, 3);
         ConcurrentHashMap<String,Integer> lst = dao.showSupplies(id+"","616");
         assertEquals(1,lst.size());
