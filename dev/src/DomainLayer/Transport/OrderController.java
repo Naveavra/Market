@@ -458,4 +458,16 @@ public class OrderController {
 
     }
 
+    public boolean setTruckAndDriver(String driverID, String truckPlate, String time, String date) {
+        try {
+            Driver d = drivers.getDriver(driverID);
+            Truck t = trucks.getTruck(truckPlate);
+            drivers.setAvailability(d, date, time, false);
+            trucks.setAvailability(t, date, time, false);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
 }

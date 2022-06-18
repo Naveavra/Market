@@ -119,13 +119,13 @@ public class DriverDocDAO {
     }
 
     public int getLastId() {
-        String query = "SELECT COUNT(*) as count FROM driverDocs";
-        int ans = 0;
+        String query = "SELECT(*) as count FROM driverDocs";
+        String ans = "";
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             while(!rs.isClosed()){
 //                ans = Integer.parseInt(rs.getString("id"));
-                ans = rs.getInt("count");
+                ans = rs.getString("id");
                 rs.next();
             }
         }
@@ -138,7 +138,9 @@ public class DriverDocDAO {
             } catch (SQLException ignored) {
             }
         }
-        ans++;
-        return ans;
+        if (ans.isEmpty()){
+            return 1;
+        }
+        return Integer.parseInt(ans) + 1;
     }
 }

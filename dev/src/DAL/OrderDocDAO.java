@@ -360,12 +360,12 @@ public class OrderDocDAO {
 
 
     public int getLastId() {
-        String query = "SELECT Count(*) as count FROM orderDocs";
-        int ans = 0;
+        String query = "SELECT * FROM orderDocs";
+        String ans = "";
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             while(!rs.isClosed()){
-                ans = rs.getInt("count");
+                ans = rs.getString("id");
                 rs.next();
             }
         }
@@ -378,7 +378,9 @@ public class OrderDocDAO {
             } catch (SQLException ignored) {
             }
         }
-        ans++;
-        return ans;
+        if (ans.isEmpty()){
+            return 1;
+        }
+        return Integer.parseInt(ans) + 1;
     }
 }

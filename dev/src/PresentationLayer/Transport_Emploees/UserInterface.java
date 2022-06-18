@@ -357,6 +357,11 @@ public class UserInterface extends MainCLI {
             System.out.println("Action Canceled Successfully");
             return false;
         }
+        if (!os.setTruckAndDriver(driverID, truckPlate, time, date))//set for their availability
+         {
+            System.out.println("Something went wrong while trying set driver and truck availability");
+            return false;
+        }
         String id=os.createDoc(orders, supplierID, date,driverID,truckPlate, time);
         System.out.println("Order created successfully please keep the document id for future needs, id:" + id);
         return true;

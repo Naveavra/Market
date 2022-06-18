@@ -175,4 +175,8 @@ public class OrderTransportService {
     public String getAllOrderDocIDs() {
         return facadeEmployeesTransports.getAllOrderDocIDs();
     }
+
+    public boolean setTruckAndDriver(String driverID, String truckPlate, String time, String date) {
+        return orderController.setTruckAndDriver(driverID, truckPlate, time, date);
+    }
 }
