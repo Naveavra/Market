@@ -155,8 +155,9 @@ public class Menu {
         ss.addContact(1, "nave","nave@gmail.com", "0501234567");
         ss.addContact(2, "itay", "itay@gmail.com", "0501234567");
 
-        ps.addProduct(1, 1, 2, 1);
-        ps.addProduct(2, 2,3, 2);
+        ps.addProduct(1, 1, 100,2, 1);
+        ps.addProduct(1, 2, 50,4, 2);
+        ps.addProduct(2, 2,50,3, 2);
 
         ss.addDiscount(1, 5, 0.8);
 

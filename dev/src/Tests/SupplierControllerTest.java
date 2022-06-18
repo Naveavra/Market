@@ -15,19 +15,13 @@ import static org.junit.Assert.*;
 
 public class SupplierControllerTest {
 private SupplierController sc;
-private static boolean setUpIsDone = false;
 
     @Before
     public void setUp() throws SQLException {
-        if(!setUpIsDone){
             Connect.getInstance().deleteRecordsOfTables();
             sc=new SupplierController();
             sc.openAccount(1, "ziv", 12, new String[]{"1"},0);
             sc.openAccount(2, "ziv", 12, new String[]{"1"},0);
-            setUpIsDone=true;
-        }
-        else
-            sc=new SupplierController();
     }
 
     @Test
@@ -69,24 +63,24 @@ private static boolean setUpIsDone = false;
 
     @Test
     public void addProduct() {
-        Assert.assertTrue(sc.getSupplier(1).addProduct(1, 5,1)) ;
-        Assert.assertFalse(sc.getSupplier(1).addProduct(1,5,1));
-        Assert.assertFalse(sc.getSupplier(1).addProduct(-334, 5, 2));
-        Assert.assertFalse(sc.getSupplier(1).addProduct(2, 5, -50));
+        Assert.assertTrue(sc.getSupplier(1).addProduct(1, 100,5,1)) ;
+        Assert.assertFalse(sc.getSupplier(1).addProduct(1,100,5,1));
+        Assert.assertFalse(sc.getSupplier(1).addProduct(-334, 50,5, 2));
+        Assert.assertFalse(sc.getSupplier(1).addProduct(2, 50,5, -50));
 
 
     }
 
     @Test
     public void removeProduct() {
-        sc.getSupplier(1).addProduct(1, 5,1);
+        sc.getSupplier(1).addProduct(1, 100,5,1);
         Assert.assertTrue(sc.getSupplier(1).removeProduct(1));
         Assert.assertFalse(sc.getSupplier(1).removeProduct(1));
     }
 
     @Test
     public void getProduct() {
-        sc.getSupplier(1).addProduct(1,5,1);
+        sc.getSupplier(1).addProduct(1,100,5,1);
         ProductSupplier p2=sc.getSupplier(1).getProduct(1);
         assertEquals(p2.getProductId(), 1);
         assertEquals(p2.getPrice(), 5, 0.0);
@@ -98,7 +92,7 @@ private static boolean setUpIsDone = false;
 
     @Test
     public void isProductExist() {
-        sc.getSupplier(1).addProduct(1,5,1);
+        sc.getSupplier(1).addProduct(1,100,5,1);
         Assert.assertTrue(sc.getSupplier(1).isProductExist(1));
         Assert.assertFalse(sc.getSupplier(1).isProductExist(12));
         sc.getSupplier(1).removeProduct(1);

@@ -7,6 +7,7 @@ import DomainLayer.Transport.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -334,7 +335,12 @@ public class OrderDocDAO {
     public ArrayList<OrderDocument> getAllDocs() {
         List<HashMap<String, Object>> rs;
         ArrayList<OrderDocument> docIds = new ArrayList<>();
-        String query = String.format("SELECT id FROM OrderDocs WHERE finished = \"%s\"" ,"#f");
+        String curDate = LocalDate.now().toString();
+        int curYear = Integer.parseInt(curDate.substring(0, 4));
+        String curMonth = curDate.substring(5, 7);
+        String curDay = curDate.substring(8, 10);
+        String exp = curYear+"-"+curMonth+"-"+curDay;
+        String query = String.format("SELECT id FROM OrderDocs WHERE finished = \"%s\" AND date<=\"%s\"" ,"#f", exp);
         try {
             rs = conn.executeQuery(query);
             for(int i=0; i<rs.size();i++){

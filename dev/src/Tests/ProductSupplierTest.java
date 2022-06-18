@@ -33,7 +33,7 @@ private SupplierController supplierController;
             facadeSupplier.addNewProduct(2,"eggs","hello",4,"me","first","first1", "first11");
             facadeSupplier.addAllItems(1,4,"2027-06-01",12);
             facadeSupplier.openAccount(1, "eli", 3, new String[]{"1"},0);
-            facadeSupplier.addProductToSupplier(1, 1, 5, 1);
+            facadeSupplier.addProductToSupplier(1, 1, 50,5, 1);
             //setUpIsDone=true;
         }
         else{

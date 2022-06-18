@@ -35,8 +35,8 @@ public class RegularAndShortageOrdersTest {
             cC.addAllItems(1,7,"2027-06-01",12);
             facadeSupplier.openAccount(1,"eli", 1, new String[]{"1"},0);
             facadeSupplier.openAccount(2,"eli2", 2, new String[]{"1"},0);
-            facadeSupplier.addProductToSupplier(1, 1, 2, 1);
-            facadeSupplier.addProductToSupplier(2, 1, 4, 1);
+            facadeSupplier.addProductToSupplier(1, 1, 50,2, 1);
+            facadeSupplier.addProductToSupplier(2, 1, 30,4, 1);
             String json = facadeSupplier.createOrder(1);
             order = Menu.fromJson(json,OrderFromSupplier.class);
             String json2 = facadeSupplier.createOrder(1);

@@ -6,6 +6,7 @@ import DomainLayer.Suppliers.ProductSupplier;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -27,8 +28,8 @@ public class ProductsSupplierDAO {
     }
 
     public void insert(ProductSupplier ps) throws SQLException {
-        String query = String.format("INSERT INTO ProductSupplier (productId,catalogNumber,supplierNumber,price)" +
-                " VALUES (%d,%d,%d,%f)",ps.getProductId(),ps.getCatalogNumber(), ps.getSupplierNumber(),ps.getPrice());
+        String query = String.format("INSERT INTO ProductSupplier (productId,catalogNumber,supplierNumber,daysUntilExpiration, price)" +
+                " VALUES (%d,%d,%d,%d,%f)",ps.getProductId(),ps.getCatalogNumber(), ps.getSupplierNumber(),ps.getDaysUntilExpiration(), ps.getPrice());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
             for(Discount k:ps.getDiscount()){
@@ -54,7 +55,7 @@ public class ProductsSupplierDAO {
             ResultSet rs =stmt.executeQuery(query);
             if (!rs.next())
                 return null;
-            ProductSupplier p = new ProductSupplier(rs.getInt("supplierNumber"),rs.getInt("catalogNumber"),rs.getDouble("price"),rs.getInt("productId"),getDiscountsOnProduct(rs.getInt("supplierNumber"),rs.getInt("productId")));
+            ProductSupplier p = new ProductSupplier(rs.getInt("supplierNumber"),rs.getInt("catalogNumber"),rs.getInt("daysUntilExpiration"),rs.getDouble("price"),rs.getInt("productId"),getDiscountsOnProduct(rs.getInt("supplierNumber"),rs.getInt("productId")));
             HashMap<Integer,ProductSupplier> add = new HashMap<>();
             add.put(productId,p);
             IMProductSupplier.put(supplierNumber, add);
@@ -91,7 +92,7 @@ public class ProductsSupplierDAO {
             ResultSet rs =stmt.executeQuery(query);
             Map<Integer, ProductSupplier> products = new HashMap<>();
             while (rs.next()){
-                ProductSupplier p = new ProductSupplier(rs.getInt("supplierNumber"), rs.getInt("catalogNumber"),rs.getDouble("price"),rs.getInt("productId"),getDiscountsOnProduct(rs.getInt("supplierNumber"),rs.getInt("productId")));
+                ProductSupplier p = new ProductSupplier(rs.getInt("supplierNumber"), rs.getInt("catalogNumber"),rs.getInt("daysUntilExpiration"),rs.getDouble("price"),rs.getInt("productId"),getDiscountsOnProduct(rs.getInt("supplierNumber"),rs.getInt("productId")));
 
                 products.put(p.getProductId(),p);
             }
@@ -121,9 +122,7 @@ public class ProductsSupplierDAO {
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query1);
             stmt.execute(query2);
-            HashMap<Integer,Integer> key =new HashMap<>();
-            key.put(catalogNumber, supplierNumber);
-            IMProductSupplier.remove(key);
+            IMProductSupplier.remove(supplierNumber);
         } catch (SQLException e) {
             throw e;
         }
@@ -139,7 +138,7 @@ public class ProductsSupplierDAO {
             ResultSet rs =stmt.executeQuery(query);
             if (!rs.next())
                 return null;
-            ProductSupplier p = new ProductSupplier(rs.getInt("supplierNumber"),rs.getInt("catalogNumber"),rs.getDouble("price"),rs.getInt("productId"),getDiscountsOnProduct(rs.getInt("supplierNumber"),rs.getInt("productId")));
+            ProductSupplier p = new ProductSupplier(rs.getInt("supplierNumber"),rs.getInt("catalogNumber"),rs.getInt("daysUntilExpiration"),rs.getDouble("price"),rs.getInt("productId"),getDiscountsOnProduct(rs.getInt("supplierNumber"),rs.getInt("productId")));
             HashMap<Integer,Integer> key =new HashMap<>();
             key.put(supplierNumber,p.getProductId());
             if(IMProductSupplier.containsKey(supplierNumber) && IMProductSupplier.get(supplierNumber).containsKey(catalogNumber)) {
@@ -261,5 +260,53 @@ public class ProductsSupplierDAO {
         }
     }
 
+    public String getExpirationDate(int supplierNumber, int productId) throws SQLException {
+        String query = "SELECT daysUntilExpiration FROM ProductSupplier WHERE " +
+                String.format("supplierNumber=%d AND productId=%d", supplierNumber, productId);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs =stmt.executeQuery(query);
+            if (!rs.next()) {
+                String curDate = LocalDate.now().toString();
+                int curYear = Integer.parseInt(curDate.substring(0, 4)) -1;
+                String curMonth = curDate.substring(5, 7);
+                String curDay = curDate.substring(8, 10);
+                String exp = curYear+"-"+curMonth+"-"+curDay;
+                return exp;
+            }
+            else {
+                int daysUntilExpiration = rs.getInt("daysUntilExpiration");
+                String curDate = LocalDate.now().toString();
+                int curYear = Integer.parseInt(curDate.substring(0, 4)) +daysUntilExpiration/365;
+                daysUntilExpiration = daysUntilExpiration % 365;
+                int curMonth = Integer.parseInt(curDate.substring(5, 7))+daysUntilExpiration/30;
+                daysUntilExpiration = daysUntilExpiration %30;
+                int curDay = Integer.parseInt(curDate.substring(8, 10))+daysUntilExpiration;
+                curMonth+=curDay/30;
+                curDay = curDay%30;
+                curYear +=curMonth/12;
+                curMonth = curMonth %12;
+                String exp;
+                if(curDay<10 && curMonth<10)
+                    exp = curYear+"-0"+curMonth+"-0"+curDay;
+                else if(curMonth < 10)
+                    exp = curYear+"-0"+curMonth+"-"+curDay;
+                else if(curDay<10)
+                    exp = curYear+"-"+curMonth+"-0"+curDay;
+                else
+                    exp = curYear+"-"+curMonth+"-"+curDay;
+                return exp;
+            }
+        } catch (SQLException e) {
+            String curDate = LocalDate.now().toString();
+            int curYear = Integer.parseInt(curDate.substring(0, 4)) -1;
+            String curMonth = curDate.substring(5, 7);
+            String curDay = curDate.substring(8, 10);
+            String exp = curYear+"-"+curMonth+"-"+curDay;
+            return exp;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
 }
 

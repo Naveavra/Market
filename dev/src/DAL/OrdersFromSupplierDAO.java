@@ -335,4 +335,20 @@ public class OrdersFromSupplierDAO {
         }
     }
 
+    public int getSupplierNumberFromOrderDoc(int orderDocId) throws SQLException {
+        String query =String.format("SELECT supplierNumber FROM PastOrdersSupplier WHERE orderId=%d",orderDocId);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            if(rs.isClosed())
+                return rs.getInt("supplierNumber");
+            else
+                return 1;
+        }
+        catch (Exception e){
+            return 1;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
 }

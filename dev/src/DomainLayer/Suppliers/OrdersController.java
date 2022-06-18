@@ -4,6 +4,7 @@ import DAL.*;
 import DomainLayer.FacadeEmployees_Transports;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 public class OrdersController {
@@ -217,5 +218,26 @@ public class OrdersController {
             return 0;
         }
 
+    }
+
+    public int getSupplierNumberFromOrderDoc(int orderDocId) {
+        try {
+            return ordersDAO.getSupplierNumberFromOrderDoc(orderDocId);
+        } catch (SQLException e) {
+            return 1;
+        }
+    }
+
+    public String getExpirationDate(int supplierNumber, int productId) {
+        try {
+            return productsDAO.getExpirationDate(supplierNumber, productId);
+        } catch (SQLException e) {
+            String curDate = LocalDate.now().toString();
+            int curYear = Integer.parseInt(curDate.substring(0, 4)) -1;
+            String curMonth = curDate.substring(5, 7);
+            String curDay = curDate.substring(8, 10);
+            String exp = curYear+"-"+curMonth+"-"+curDay;
+            return exp;
+        }
     }
 }

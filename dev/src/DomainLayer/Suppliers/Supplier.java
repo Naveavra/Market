@@ -111,7 +111,7 @@ public class Supplier {
         discountByAmount.removeIf(d -> d.getAmount() == count);
     }
 
-    public boolean addProduct(int catalogNumber, double price, int productId){
+    public boolean addProduct(int catalogNumber, int daysUntilExpiration, double price, int productId){
         if(catalogNumber<0){
             return false;
         }
@@ -127,7 +127,7 @@ public class Supplier {
             if(isProductExist(catalogNumber, supplierNumber)){
                 return false;
             }
-            ProductSupplier productSupplier = new ProductSupplier(supplierNumber,catalogNumber, price, productId,new LinkedList<>());
+            ProductSupplier productSupplier = new ProductSupplier(supplierNumber,catalogNumber, daysUntilExpiration, price, productId,new LinkedList<>());
             productsDAO.insert(productSupplier);
             //products.put(catalogNumber, productSupplier);
             return true;
