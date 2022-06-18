@@ -17,7 +17,6 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/junit-platform-engine-1.8.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../emul-0.54.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../sqlite-jdbc-3.36.0.3.jar" path-in-jar="/" />
-      <element id="file-copy" path="$PROJECT_DIR$/superli.db" />
     </root>
   </artifact>
 </component>
