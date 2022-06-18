@@ -17,8 +17,8 @@ public class ProductSupplierService {
      * @param productId unique number to product in the system
      * @return true if succeed, false if failed
      */
-    public boolean addProduct(int supplierNumber, int catalogNumber, int price, int productId){
-       return facadeSupplier.addProductToSupplier(supplierNumber, catalogNumber, price, productId);
+    public boolean addProduct(int supplierNumber, int catalogNumber, int daysUntilExpiration, int price, int productId){
+       return facadeSupplier.addProductToSupplier(supplierNumber, catalogNumber, daysUntilExpiration, price, productId);
     }
 
     /**

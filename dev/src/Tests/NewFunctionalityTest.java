@@ -29,7 +29,6 @@ public class NewFunctionalityTest {
     private OrdersController ordersController ;
     private FacadeSupplier_Storage facadeSupplier ;
     private FacadeEmployees_Transports facadeTransport;
-    private OrderFromSupplier order;
 
 
     public void setUp() throws SQLException {
@@ -43,6 +42,7 @@ public class NewFunctionalityTest {
         cC = new CategoryController();
         ordersController = new OrdersController();
         facadeSupplier = new FacadeSupplier_Storage();
+        facadeTransport = new FacadeEmployees_Transports();
     }
     @org.junit.Test
     public void stage1_checkSendingAnOrderAfterShortage() throws SQLException {
@@ -56,9 +56,9 @@ public class NewFunctionalityTest {
     public void stage2_checkTransportShippingTheOrder(){
         assign();
         //need to check that in order4Dest there is 1 line with the correct orderDoc
-        facadeSupplier.buyItems(1, 3);
         OrderDocDAO dao = new OrderDocDAO();
-        int id = dao.getLastId()-1;
+        int id = dao.getLastId() -1;
+        facadeSupplier.buyItems(1, 3);
         ConcurrentHashMap<String,Integer> lst = dao.showSupplies(id+"","616");
         assertEquals(1,lst.size());
     }
@@ -66,14 +66,16 @@ public class NewFunctionalityTest {
     @org.junit.Test
     public void stage3_checkStorageGotCorrectAmountFromTransport() {
         assign();
+        OrderDocDAO dao = new OrderDocDAO();
         facadeSupplier.buyItems(1, 4);
+        int id = dao.getLastId()-1;
         int before = cC.getProductWithId(1).getCurAmount();
-//        facadeSupplier.getItemsFromTransport(orderDocId);
+        facadeSupplier.getItemsFromTransport(id);
         int added = cC.getProductWithId(1).getCurAmount()-before;
         int inOrder = 0;
-        for(int count : ordersController.getAllProductsOfOrder(order.getOrderId()).values()){
-            inOrder +=count;
-        }
+        ConcurrentHashMap<String,Integer> lst = dao.showSupplies(id+"","616");
+        for(String productId : lst.keySet())
+            inOrder+=lst.get(productId);
         assertEquals(added, inOrder);
 
     }
@@ -82,66 +84,26 @@ public class NewFunctionalityTest {
     public void stage4_checkGettingMessageWhenNoAvailableDriver(){
 
         //make here the there is no driver available and try to send an order
-        try {
-            assign();
-            ProductSupplier p = new ProductsSupplierDAO().getProduct(1,1);
-            HashMap<ProductSupplier,Integer> suppl = new HashMap<>();
-            suppl.put(p,15);
-            facadeTransport = new FacadeEmployees_Transports();
-            facadeTransport.createAutoTransport("1","19/20/2030",suppl);
-            String ans = facadeTransport.displayMessages("318856994");
-            System.out.println(ans);
-            assertFalse(ans.isEmpty());
-
-        } catch (SQLException e) {
-            assertTrue(false);
-        }
+        assign();
+        facadeSupplier.buyItems(1,1);
+        facadeSupplier.buyItems(1,1);
+        String ans = facadeTransport.displayMessages("318856994");
+        assertTrue(ans.length()>2);
 
     }
 
-//
-//    @org.junit.Test
-//    public void stage3_checkRightAmount(){
-//        //need to check that in order4Dest there is 1 line with the correct orderDoc
-//        facadeSupplier.buyItems(1, 3);
-//        OrderDocDAO dao = new OrderDocDAO();
-//        ConcurrentHashMap<String,Integer> lst = dao.showSupplies("5","616");
-//        int count = 0;
-//        for(String id : lst.keySet())
-//            count+=lst.get(id);
-//        assertEquals(cC.getProductWithId(1).getRefill(),count);
-//    }
-
-//    @org.junit.Test
-//    public void stage3_checkStorageGotCorrectAmountFromTransport() {
-//        facadeSupplier.buyItems(1, 4);
-//        int before = cC.getProductWithId(1).getCurAmount();
-////        facadeSupplier.getItemsFromTransport(orderDocId);
-//        int added = cC.getProductWithId(1).getCurAmount()-before;
-//        int inOrder = 0;
-//        for(int count : ordersController.getAllProductsOfOrder(order.getOrderId()).values()){
-//            inOrder +=count;
-//        }
-//        assertEquals(added, inOrder);
-//
-//    }
-//
-//    @org.junit.Test
-//    public void stage4_checkGettingMessageWhenNoAvailableDriver(){
-//        //make here the there is no driver available and try to send an order
-//        try {
-//            ProductSupplier p = new ProductsSupplierDAO().getProduct(1,1);
-//            HashMap<ProductSupplier,Integer> suppl = new HashMap<>();
-//            suppl.put(p,15);
-//            facadeTransport.createAutoTransport("1","19/20/2030",suppl);
-//            String ans = facadeTransport.displayMessages("318856994");
-//            System.out.println(ans);
-//            assertFalse(ans.isEmpty());
-//
-//        } catch (SQLException e) {
-//            assertTrue(false);
-//        }
-//
-//    }
-
+    @org.junit.Test
+    public void stage5_checkRegularOrderIsSendingAnOrderAndTransportWhenNeeded(){
+        assign();
+        OrderDocDAO dao = new OrderDocDAO();
+        int id = dao.getLastId()-1;
+        while(id>0){
+            facadeTransport.transportIsDone(id+"");
+            id--;
+        }
+        facadeSupplier.updateOrders();
+        id = dao.getLastId()-1;
+        facadeSupplier.getItemsFromTransport(id);
+        assertEquals(0, cC.getProductWithId(1).getRefill() );
+    }
 }

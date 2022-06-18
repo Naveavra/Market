@@ -118,36 +118,6 @@ public class DriverDAO {
             return false;
         }
     }
-    public void addAvailability(String driverID){
-        String query = "INSERT INTO DriverAvailability(id,date,time,available) VALUES(?,?,?,?)";
-        try {
-            int day=11;
-            int month=6;
-            String year = "/2022";
-            String res;
-            for(int i = 0; i<30;i++){
-                if(day==30){
-                    day = 1;
-                    month++;
-                }
-                if(day>=10){
-                    res = String.valueOf(day)+"/0"+String.valueOf(month)+year;
-                    conn.executeUpdate(query, driverID,res, "MORNING","#t");
-                    conn.executeUpdate(query, driverID, res, "EVENING", "#t");
-                }
-                else{
-                    res = "0"+String.valueOf(day)+"/0"+String.valueOf(month)+year;
-                    conn.executeUpdate(query, driverID,res, "MORNING","#t");
-                    conn.executeUpdate(query, driverID, res, "EVENING", "#t");
-                }
-                day++;
-            }
-
-        }
-        catch (SQLException e){
-//            e.printStackTrace();
-        }
-    }
 
 
     public void addDriver(String name,String id, String license) {

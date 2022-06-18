@@ -429,7 +429,6 @@ public class OrderController {
         Truck truck = null;
         ArrayList<Object> truckAndDriver = getAutoTruckandDriver(date_,time,truck,driver);
         if(truckAndDriver.isEmpty()){
-            new EmployeeDAO().writeMessageToHR("cannot create order from "+supplierNumber);
             return false;
         }
         OrderDocument d = new OrderDocument(String.valueOf(id),origin.getSupplierNumber(),order,date_,time);

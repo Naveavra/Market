@@ -318,4 +318,37 @@ public class OrdersFromSupplierDAO {
         return true;
     }
 
+    public int allOrdersOfSupplier(int supplierNumber, int pastOrders) throws SQLException {
+        String query = String.format("SELECT * FROM OrdersFromSupplier WHERE supplierNumber = %d"
+                , supplierNumber);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            int ans = pastOrders;
+            while (rs.next()) {
+                ans++;
+            }
+            return ans;
+        } catch (SQLException e) {
+            return 0;
+        } finally {
+            connect.closeConnect();
+        }
+    }
+
+    public int getSupplierNumberFromOrderDoc(int orderDocId) throws SQLException {
+        String query =String.format("SELECT supplierNumber FROM PastOrdersSupplier WHERE orderId=%d",orderDocId);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            if(rs.isClosed())
+                return rs.getInt("supplierNumber");
+            else
+                return 1;
+        }
+        catch (Exception e){
+            return 1;
+        }
+        finally {
+            connect.closeConnect();
+        }
+    }
 }

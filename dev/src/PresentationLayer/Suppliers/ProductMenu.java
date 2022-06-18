@@ -110,6 +110,16 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             return;
         }
+        System.out.println("Enter days until expiration for every new item of this product: ");
+        int daysUntilExpiration =0;
+        try{
+            choiceStr = sc.next();
+            daysUntilExpiration=Integer.parseInt(choiceStr);
+        }
+        catch (Exception e){
+            System.out.println("you must enter only number");
+            return;
+        }
         System.out.println("Enter price:");
         int price =0;
         try{
@@ -120,7 +130,7 @@ public class ProductMenu {
             System.out.println("you must enter only number");
             return;
         }
-        boolean added=ps.addProduct(supplier.getSupplierNumber(), catalogNum,price, productId);
+        boolean added=ps.addProduct(supplier.getSupplierNumber(), catalogNum, daysUntilExpiration, price, productId);
         if(added) {
             System.out.println("product added");
         }

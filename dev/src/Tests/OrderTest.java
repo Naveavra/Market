@@ -42,8 +42,8 @@ public class OrderTest {
             ordersController = new OrdersController();
             facadeSupplier.openAccount(1, "eli", 1, new String[]{"1"},0);
             facadeSupplier.openAccount(2, "eli2", 2, new String[]{"1"},0);
-            facadeSupplier.addProductToSupplier(1, 1, 4, 1);
-            facadeSupplier.addProductToSupplier(2, 2, 3, 2);
+            facadeSupplier.addProductToSupplier(1, 1, 100,4, 1);
+            facadeSupplier.addProductToSupplier(2, 2, 50,3, 2);
 //            facade.createOrder(1);
 //            facade.addProductToOrder(1, 1, 1, 3);
 //            facade.createOrder(2);

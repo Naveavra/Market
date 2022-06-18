@@ -191,6 +191,8 @@ public class CLI
                                                 System.out.println("\t2)no");
                                                 detail = in.nextLine();
                                                 if (Integer.parseInt(detail) == 1 || detail.equals("yes")) {
+                                                    System.out.println("if you want to report an expired item please write in the description \"expired date\" ");
+                                                    System.out.println("otherwise you can write any description you would like");
                                                     boolean moreProblems = true;
                                                     while (moreProblems) {
                                                         System.out.println("enter damaged item attributes: ");
@@ -203,13 +205,12 @@ public class CLI
                                                             id = cC.getProductIdWithName(detail);
                                                         System.out.println("enter damage description");
                                                         String description = in.nextLine();
-                                                        System.out.println("enter place of item (STORAGE or STORE");
+                                                        System.out.println("enter place of item (STORAGE or STORE)");
                                                         String place = in.nextLine();
                                                         System.out.println("enter shelf number");
                                                         int shelf = Integer.parseInt(in.nextLine());
                                                         System.out.println("enter exp date");
                                                         String ed = in.nextLine();
-                                                        cC.defineAsDamaged(id, description, place, shelf, ed);
                                                         if (checkId(id + "") && itemsInOrder.containsKey(id)) {
                                                             cC.defineAsDamaged(id, description, place, shelf, ed);
                                                         } else {

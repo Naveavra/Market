@@ -4,6 +4,7 @@ import DAL.*;
 import DomainLayer.FacadeEmployees_Transports;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 public class OrdersController {
@@ -133,7 +134,7 @@ public class OrdersController {
             totalPrice = updateTotalIncludeDiscounts(orderId);
             if(o.getCountProducts()>0) {
                 if(!createTransport(o)) {
-                    new EmployeeDAO().writeMessageToHR("No drivers available");
+                    new EmployeeDAO().writeMessageToHR("No available drivers to ship order "+o.getOrderId()+" from supplier "+o.getSupplierNumber());
                     return false;
                 }
                 pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o, totalPrice));
@@ -205,5 +206,38 @@ public class OrdersController {
             } catch (SQLException e) {
                 return false;
             }
+    }
+
+    public int allOrdersOfSupplier(int supplierNumber){
+        try {
+            int past = pastOrdersDAO.getAllPastOrders(supplierNumber).size();
+            int ans = ordersDAO.allOrdersOfSupplier(supplierNumber, past);
+            return ans;
+        }
+        catch (Exception e){
+            return 0;
+        }
+
+    }
+
+    public int getSupplierNumberFromOrderDoc(int orderDocId) {
+        try {
+            return ordersDAO.getSupplierNumberFromOrderDoc(orderDocId);
+        } catch (SQLException e) {
+            return 1;
+        }
+    }
+
+    public String getExpirationDate(int supplierNumber, int productId) {
+        try {
+            return productsDAO.getExpirationDate(supplierNumber, productId);
+        } catch (SQLException e) {
+            String curDate = LocalDate.now().toString();
+            int curYear = Integer.parseInt(curDate.substring(0, 4)) -1;
+            String curMonth = curDate.substring(5, 7);
+            String curDay = curDate.substring(8, 10);
+            String exp = curYear+"-"+curMonth+"-"+curDay;
+            return exp;
+        }
     }
 }
