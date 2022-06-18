@@ -340,7 +340,7 @@ public class OrderDocDAO {
         String curMonth = curDate.substring(5, 7);
         String curDay = curDate.substring(8, 10);
         String exp = curYear+"-"+curMonth+"-"+curDay;
-        String query = String.format("SELECT id FROM OrderDocs WHERE finished = \"%s\" AND date<=\"%s\"" ,"#f", exp);
+        String query = String.format("SELECT id FROM OrderDocs WHERE finished = \"%s\"" ,"#f");
         try {
             rs = conn.executeQuery(query);
             for(int i=0; i<rs.size();i++){
