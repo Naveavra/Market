@@ -133,7 +133,7 @@ public class OrdersController {
             totalPrice = updateTotalIncludeDiscounts(orderId);
             if(o.getCountProducts()>0) {
                 if(!createTransport(o)) {
-                    new EmployeeDAO().writeMessageToHR("No drivers available");
+                    new EmployeeDAO().writeMessageToHR("No available drivers to ship order "+o.getOrderId()+" from supplier "+o.getSupplierNumber());
                     return false;
                 }
                 pastOrdersDAO.insertPastOrder(new PastOrderSupplier(o, totalPrice));
@@ -205,5 +205,17 @@ public class OrdersController {
             } catch (SQLException e) {
                 return false;
             }
+    }
+
+    public int allOrdersOfSupplier(int supplierNumber){
+        try {
+            int past = pastOrdersDAO.getAllPastOrders(supplierNumber).size();
+            int ans = ordersDAO.allOrdersOfSupplier(supplierNumber, past);
+            return ans;
+        }
+        catch (Exception e){
+            return 0;
+        }
+
     }
 }

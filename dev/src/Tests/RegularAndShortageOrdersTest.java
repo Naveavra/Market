@@ -36,19 +36,19 @@ public class RegularAndShortageOrdersTest {
             facadeSupplier.openAccount(1,"eli", 1, new String[]{"1"},0);
             facadeSupplier.openAccount(2,"eli2", 2, new String[]{"1"},0);
             facadeSupplier.addProductToSupplier(1, 1, 2, 1);
-            facadeSupplier.addProductToSupplier(2, 2, 4, 1);
+            facadeSupplier.addProductToSupplier(2, 1, 4, 1);
             String json = facadeSupplier.createOrder(1);
             order = Menu.fromJson(json,OrderFromSupplier.class);
             String json2 = facadeSupplier.createOrder(1);
             order2 = Menu.fromJson(json2,OrderFromSupplier.class);
             String[]days=new String[1];
             days[0]="1234567";
+            facadeSupplier.addFixedDeliveryDaysForOrder(1, order.getOrderId(), days);
+            days[0]="4";
             facadeSupplier.addFixedDeliveryDaysForOrder(1, order2.getOrderId(), days);
             facadeSupplier.updateOrders();
             facadeSupplier.addProductToOrder(1, order.getOrderId(), 1, 2);
             facadeSupplier.addProductToOrder(1, order2.getOrderId(), 2, 2);
-            days[0]="4";
-            facadeSupplier.addFixedDeliveryDaysForOrder(1, order.getOrderId(), days);
             setUpIsDone=true;
     }
 
@@ -65,8 +65,10 @@ public class RegularAndShortageOrdersTest {
     }
     @org.junit.Test
     public void stage3_checkRequestingAnOrderAfterShortage() {
+        int before = ordersController.allOrdersOfSupplier(1);
         facadeSupplier.buyItems(1, 6);
-        assertEquals(1, ordersController.getFinalOrders(1).size());
+        int after = ordersController.allOrdersOfSupplier(1);
+        assertEquals(1, after - before);
 
     }
 
@@ -80,25 +82,32 @@ public class RegularAndShortageOrdersTest {
 
     @org.junit.Test
     public void stage5_checkSendingRegularOrder() {
+        int before = ordersController.allOrdersOfSupplier(1);
         facadeSupplier.buyItems(1, 6);
-        assertTrue(ordersController.getFinalOrders(1).size()>0);
+        facadeSupplier.updateOrders();
+        int after = ordersController.allOrdersOfSupplier(1);
+        assertEquals(1, after - before);
     }
 
     @org.junit.Test
     public void stage6_checkSendingOrderWhenRefillIsNotEnough() {
+        int before = ordersController.allOrdersOfSupplier(1);
         facadeSupplier.buyItems(1, 6);
         facadeSupplier.addAllItems(1,1,"2027-06-01",12);
-        facadeSupplier.updateOrders();
-        assertEquals(2, ordersController.getFinalOrders(1).size());
+        facadeSupplier.buyItems(1, 1);
+        int after = ordersController.allOrdersOfSupplier(1);
+        assertEquals(2, after-before);
     }
 
     @org.junit.Test
     public void stage7_checkStopSendingOrderAfterRefill() {
+        int before = ordersController.allOrdersOfSupplier(1);
         facadeSupplier.buyItems(1, 6);
         facadeSupplier.addAllItems(1,1,"2027-06-01",12);
         cC.addAllItems(1,100,"2027-06-01",12);
-        facadeSupplier.updateOrders();
-        assertEquals(1, ordersController.getFinalOrders(1).size());
+        facadeSupplier.buyItems(1, 1);
+        int after = ordersController.allOrdersOfSupplier(1);
+        assertEquals(1, after-before);
 
     }
 
@@ -112,21 +121,19 @@ public class RegularAndShortageOrdersTest {
     }
 
     @org.junit.Test
-    public void stage9_checkSendingRegularOrderWhenCountIs0() {
+    public void stage9_checkNotSendingRegularOrderWhenCountIs0() {
+        int before = ordersController.allOrdersOfSupplier(1);
         facadeSupplier.buyItems(1, 6);
         facadeSupplier.addAllItems(1,1,"2027-06-01",12);
         cC.addAllItems(1,100,"2027-06-01",12);
         facadeSupplier.updateOrders();
-        assertEquals(1, ordersController.getFinalOrders(1).size());
+        int after = ordersController.allOrdersOfSupplier(1);
+        assertEquals(1, after-before);
     }
 
     @org.junit.Test
     public void stage9z_checkGotMinPriceForProduct(){
-        facadeSupplier.buyItems(1, 6);
-        facadeSupplier.addAllItems(1,1,"2027-06-01",12);
-        cC.addAllItems(1,100,"2027-06-01",12);
-        facadeSupplier.updateOrders();
-        assertEquals(2, ordersController.getProductWithMinPrice(1, 5).getPrice(), 0.0);
+        assertEquals(2, ordersController.getProductWithMinPrice(1, 1).getPrice(), 0.0);
     }
 
 

@@ -318,4 +318,21 @@ public class OrdersFromSupplierDAO {
         return true;
     }
 
+    public int allOrdersOfSupplier(int supplierNumber, int pastOrders) throws SQLException {
+        String query = String.format("SELECT * FROM OrdersFromSupplier WHERE supplierNumber = %d"
+                , supplierNumber);
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            int ans = pastOrders;
+            while (rs.next()) {
+                ans++;
+            }
+            return ans;
+        } catch (SQLException e) {
+            return 0;
+        } finally {
+            connect.closeConnect();
+        }
+    }
+
 }

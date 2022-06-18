@@ -232,12 +232,12 @@ public class Menu {
         es.certifyDriver("123456780", "c");
 
 
-        es.createShift("01/07/2022 morning", "318856994",
-                "333333333,234567891", "123456780,000000000", "123456789", "111111111");
-        es.createShift("01/07/2022 evening", "456789123",
-                "333333333,234567891", "258369147,000000000", "567801234", "345678912");
+        es.createShift("01/08/2022 morning", "318856994",
+                "333333333,234567891", "123456780", "123456789", "111111111");
+        es.createShift("01/08/2022 evening", "456789123",
+                "333333333,234567891", "258369147", "567801234", "345678912");
         es.createShift("20/05/2022 evening", "456789123",
-                "222222222,234567891", "258369147,000000000", "567801234", "345678912");
+                "222222222,234567891", "258369147", "567801234", "345678912");
 
         Calendar calendar = Calendar.getInstance();
         String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
@@ -249,7 +249,15 @@ public class Menu {
             month = "0" + month;
         String thisDay = day + '/' + month + '/' + year;
         es.createShift(thisDay + " morning", "456789123",
-                "222222222,234567891", "258369147,000000000", "567801234", "345678912");
+                "222222222,234567891", "258369147", "567801234", "345678912");
+        day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)+3);
+        String thisDay2 = day + '/' + month + '/' + year;
+        es.createShift(thisDay2 + " morning", "456789123",
+                "333333333,234567891", "123456789", "567801234", "345678912");
+        day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)+4);
+        String thisDay3 = day + '/' + month + '/' + year;
+        es.createShift(thisDay3 + " morning", "456789123",
+                "222222222,234567891", "123456789", "567801234", "345678912");
 
         createAvailabilities("318856994");
         createAvailabilities("333333333");

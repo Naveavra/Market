@@ -64,7 +64,8 @@ public class ProductSupplier {
     }
 
     public double getPriceAfterDiscount(int count) {
-        return this.price*count*findMaxUnder(this,count);
+        double ans = this.price*count*findMaxUnder(this,count);
+        return ans;
     }
     private double findMaxUnder(ProductSupplier p,int count){
         double discount=findMaxUnder(discounts,count);

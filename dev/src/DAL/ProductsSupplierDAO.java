@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class ProductsSupplierDAO {
     private final Connect connect;
-    private static HashMap<HashMap<Integer,Integer>, ProductSupplier> IMProductSupplier =new HashMap<>(); //key: productID, supplierNumber
+    private static HashMap<Integer, HashMap<Integer,ProductSupplier>> IMProductSupplier =new HashMap<>(); //key: productID, supplierNumber
 
     /**
      * constructor
@@ -45,10 +45,8 @@ public class ProductsSupplierDAO {
     }
 
     public ProductSupplier getProduct(int supplierNumber,int productId) throws SQLException {
-        HashMap<Integer,Integer> keySet =new HashMap<>();
-        keySet.put(supplierNumber,productId);
-        if(IMProductSupplier.containsKey(keySet)) {
-            return IMProductSupplier.get(keySet);
+        if(IMProductSupplier.containsKey(supplierNumber) && IMProductSupplier.get(supplierNumber).containsKey(productId)) {
+            return IMProductSupplier.get(supplierNumber).get(productId);
         }
         String query = String.format("SELECT * FROM ProductSupplier WHERE supplierNumber = %d and productId = %d "
                 ,supplierNumber, productId);
@@ -57,7 +55,9 @@ public class ProductsSupplierDAO {
             if (!rs.next())
                 return null;
             ProductSupplier p = new ProductSupplier(rs.getInt("supplierNumber"),rs.getInt("catalogNumber"),rs.getDouble("price"),rs.getInt("productId"),getDiscountsOnProduct(rs.getInt("supplierNumber"),rs.getInt("productId")));
-            IMProductSupplier.put(keySet, p);
+            HashMap<Integer,ProductSupplier> add = new HashMap<>();
+            add.put(productId,p);
+            IMProductSupplier.put(supplierNumber, add);
             return p;
         } catch (SQLException e) {
             throw e;
@@ -73,9 +73,9 @@ public class ProductsSupplierDAO {
                 productSupplier.getSupplierNumber());
         try (Statement stmt = connect.createStatement()) {
             stmt.execute(query);
-            HashMap<Integer,Integer> keySet =new HashMap<>();
-            keySet.put(productSupplier.getProductId(), productSupplier.getCatalogNumber());
-            IMProductSupplier.put(keySet, productSupplier);
+            HashMap<Integer,ProductSupplier> add = new HashMap<>();
+            add.put(productSupplier.getProductId(),productSupplier);
+            IMProductSupplier.put(productSupplier.getSupplierNumber(), add);
         } catch (SQLException e) {
             throw e;
         }
@@ -142,10 +142,12 @@ public class ProductsSupplierDAO {
             ProductSupplier p = new ProductSupplier(rs.getInt("supplierNumber"),rs.getInt("catalogNumber"),rs.getDouble("price"),rs.getInt("productId"),getDiscountsOnProduct(rs.getInt("supplierNumber"),rs.getInt("productId")));
             HashMap<Integer,Integer> key =new HashMap<>();
             key.put(supplierNumber,p.getProductId());
-            if(IMProductSupplier.containsKey(key)) {
-                return IMProductSupplier.get(key);
+            if(IMProductSupplier.containsKey(supplierNumber) && IMProductSupplier.get(supplierNumber).containsKey(catalogNumber)) {
+                return IMProductSupplier.get(supplierNumber).get(catalogNumber);
             }
-            IMProductSupplier.put(key, p);
+            HashMap<Integer,ProductSupplier> add = new HashMap<>();
+            add.put(catalogNumber,p);
+            IMProductSupplier.put(supplierNumber, add);
             return p;
         } catch (SQLException e) {
             throw e;
@@ -165,10 +167,11 @@ public class ProductsSupplierDAO {
                 int supplierNumber=rs.getInt("supplierNumber");
                 ProductSupplier p = getProduct(supplierNumber, productId);
                 if(ans==null || ans.getPriceAfterDiscount(amount)>p.getPriceAfterDiscount(amount))
-                    ans=p;
+                    ans = p;
                 HashMap<Integer,Integer> key =new HashMap<>();
-                key.put(p.getProductId(), p.getCatalogNumber());
-                IMProductSupplier.put(key, p);
+                HashMap<Integer,ProductSupplier> add = new HashMap<>();
+                add.put(productId,p);
+                IMProductSupplier.put(supplierNumber, add);
             }
             return ans;
         } catch (SQLException e) {
