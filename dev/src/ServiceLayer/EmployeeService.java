@@ -375,4 +375,29 @@ public class EmployeeService {
             return r;
         return facade.deleteShift(parser.getShiftPair(sShift));
     }
+
+    public String displaySubMenu(String action) {
+        return parser.displaySubMenu(action, facade.isHRManager(employeeService.getID()));
+    }
+
+    public boolean isHR(){
+        return facade.isHRManager(employeeService.getID());
+    }
+
+
+    public Action parseManageSchedule(String choice) {
+        return parser.parseManageSchedule(choice);
+    }
+
+    public Action parseManageEmployees(String choice) {
+        return parser.parseManageEmployees(choice);
+    }
+
+    public Action parseManageDetails(String choice) {
+        return parser.parseManageDetails(choice);
+    }
+
+    public Action parseManageShifts(String choice) {
+        return parser.parseManageShifts(choice);
+    }
 }

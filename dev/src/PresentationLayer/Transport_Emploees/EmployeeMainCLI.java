@@ -1,14 +1,12 @@
 package PresentationLayer.Transport_Emploees;
 
 import DomainLayer.Employees.JobType;
-import PresentationLayer.Transport_Emploees.MainCLI;
 import ServiceLayer.Action;
 import ServiceLayer.EmployeeService;
 import ServiceLayer.Utility.Response;
 
 //import SharedSpace.MainCLI;
 
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.Set;
@@ -32,13 +30,11 @@ public class EmployeeMainCLI extends MainCLI {
                     break;
                 print(serviceController.displayActions());
                 String action = getUserInput();
-                if (action.equals("exit")) {
-                    print("exit");
+                if (action.equals("0")) {
+                    print("Goodbye!");
                     break;
                 }
                 parseAndDoAction(action);
-//            serviceController.doAction(action, this);
-//            ans.run();
             }
             catch (Exception e){
                 print("Something went wrong and we couldn't complete your request");
@@ -47,44 +43,99 @@ public class EmployeeMainCLI extends MainCLI {
     }
 
     private void parseAndDoAction(String choice) {
-        Action action = serviceController.parseActionChoice(choice);
-        if (action == Action.DISPLAY_SCHEDULE) {
-            displaySchedule();
-        } else if (action == Action.CHANGE_SCHEDULE) {
-            changeSchedule();
+        boolean isHR = serviceController.isHR();
+        if (choice.equals("1")){
+            manageSchedule();
         }
-        else if (action == Action.START_SHIFT){
-            startShift();
-        }
-        else if (action == Action.END_SHIFT){
-            endShift();
-        }
-        else if (action == Action.MID_SHIFT_ACTIONS){
+        else if (choice.equals("2")){
             midShiftActions();
         }
-        else if (action == Action.LOGOUT){
+        else if (choice.equals("3") && isHR){
+            manageEmployees();
+        }
+        else if (choice.equals("4") && isHR){
+            manageShifts();
+        }
+        else if (choice.equals("5") && isHR){
             logout();
         }
-        else if (action == Action.REGISTER_EMPLOYEE){
-            register();
-        } else if (action == Action.CERTIFY_EMPLOYEE){
-            certify();
+        else if (choice.equals("3")){
+            logout();
         }
-        else if (action == Action.CREATE_SHIFT){
-            createShift();
-        } else if(action == Action.VIEW_EMPLOYEE_DETAILS){
-            viewDetails();
-        } else if(action == Action.EDIT_EMPLOYEE_DETAILS){
-            editDetails();
-        } else if (action == Action.DELETE_EMPLOYEE){
-            deleteEmployee();
-        } else if (action == Action.VIEW_SHIFT){
-            viewShift();
-        } else if (action == Action.DELETE_SHIFT)
-            deleteShift();
-//        } else if (action == Action.EXIT_SYSTEM){
-//            return () -> handleCloseSystem(employeeCli);
-//        }
+    }
+
+    private void manageShifts() {
+        while (true) {
+            print("0.Go back\n1.Create shift\n2.View shit\n3.Delete shift");
+            String choice = getUserInput();
+            Action action = serviceController.parseManageShifts(choice);
+            if (action == Action.GO_BACK) {
+                return;
+            } else if (action == Action.CREATE_SHIFT) {
+                createShift();
+            } else if (action == Action.VIEW_SHIFT) {
+                viewShift();
+            } else if (action == Action.DELETE_SHIFT) {
+                deleteShift();
+            } else {
+                print("Invalid choice");
+            }
+        }
+    }
+
+    private void manageEmployees() {
+        while (true) {
+            print("0.Go back\n1.Register employee\n2.Delete employee\n3.Certify employee\n4.Manage employee Details");
+            String choice = getUserInput();
+            Action action = serviceController.parseManageEmployees(choice);
+            if (action == Action.GO_BACK) {
+                break;
+            } else if (action == Action.REGISTER_EMPLOYEE) {
+                register();
+            } else if (action == Action.DELETE_EMPLOYEE) {
+                deleteEmployee();
+            } else if (action == Action.CERTIFY_EMPLOYEE) {
+                certify();
+            } else if (action == Action.MANAGE_DETAILS) {
+                manageEmployeeDetails();
+            } else {
+                print("Invalid choice");
+            }
+        }
+    }
+
+    private void manageEmployeeDetails() {
+        while (true) {
+            print("0.Go back\n1.View employee details\n2.Edit employee details");
+            String choice = getUserInput();
+            Action action = serviceController.parseManageDetails(choice);
+            if (action == Action.GO_BACK) {
+                break;
+            } else if (action == Action.VIEW_EMPLOYEE_DETAILS) {
+                viewDetails();
+            } else if (action == Action.EDIT_EMPLOYEE_DETAILS) {
+                editDetails();
+            } else {
+                print("Invalid choice");
+            }
+        }
+    }
+
+    private void manageSchedule() {
+        while (true) {
+            print("0.Go back\n1.View schedule\n2.Change schedule");
+            String choice = getUserInput();
+            Action action = serviceController.parseManageSchedule(choice);
+            if (action == Action.GO_BACK) {
+                return;
+            } else if (action == Action.DISPLAY_SCHEDULE) {
+                displaySchedule();
+            } else if (action == Action.CHANGE_SCHEDULE) {
+                changeSchedule();
+            } else if (action == Action.ILLEGAL_ACTION) {
+                print("Invalid choice");
+            }
+        }
     }
 
     private void deleteShift() {
@@ -201,39 +252,44 @@ public class EmployeeMainCLI extends MainCLI {
     }
 
     public void changeSchedule() {
-        print("Choose an option:\n1. Reset your schedule\n2. Add an available shift\n3. Remove an available shift");
-        String input = getUserInput();
-        while (!input.equals("1") && !input.equals("2") && !input.equals("3")) {
-            print("You must choose the number of operation you want to perform");
-            print("Choose an option:\n1. Reset your schedule\n2. Add an available shift\n3. Remove an available shift");
-            input = getUserInput();
-        }
-        if (input.equals("1")) {
-            if (serviceController.resetSchedule()) {
-                print("Your schedule was reset successfully");
-            } else {
-                print("Something went wrong and we were unable to reset your schedule");
+        while (true) {
+            print("Choose an option:\n0.Go back\n1. Reset your schedule\n2. Add an available shift\n3. Remove an available shift");
+            String input = getUserInput();
+            while (!input.equals("0") && !input.equals("1") && !input.equals("2") && !input.equals("3")) {
+                print("You must choose the number of operation you want to perform");
+                print("Choose an option:\n1. Reset your schedule\n2. Add an available shift\n3. Remove an available shift");
+                input = getUserInput();
             }
-        } else if (input.equals("2")) {
-            print("Type in the shift you want to add.\nExample:  19/10/1998 evening");
-            String shiftInput = getUserInput().toLowerCase(Locale.ROOT);
-            Response r = serviceController.addAvailableTimeSlotToEmployee(shiftInput);
-            if (r.errorOccurred()) {
-                print(r.getErrorMessage());
-            } else {
-                print("Your schedule was changed successfully.\nYour new schedule:");
-                print(serviceController.displaySchedule());
+            if (input.equals("0")){
+                break;
             }
-        } else {
-            print(serviceController.displaySchedule());
-            print("Enter the shift you want to remove:");
-            String shiftInput = getUserInput();
-            Response response = serviceController.removeShift(shiftInput);
-            if (response.errorOccurred()) {
-                print(response.getErrorMessage());
+            if (input.equals("1")) {
+                if (serviceController.resetSchedule()) {
+                    print("Your schedule was reset successfully");
+                } else {
+                    print("Something went wrong and we were unable to reset your schedule");
+                }
+            } else if (input.equals("2")) {
+                print("Type in the shift you want to add.\nExample:  19/10/1998 evening");
+                String shiftInput = getUserInput().toLowerCase(Locale.ROOT);
+                Response r = serviceController.addAvailableTimeSlotToEmployee(shiftInput);
+                if (r.errorOccurred()) {
+                    print(r.getErrorMessage());
+                } else {
+                    print("Your schedule was changed successfully.\nYour new schedule:");
+                    print(serviceController.displaySchedule());
+                }
             } else {
-                print("Shift was removed successfully.\nYour new schedule:");
                 print(serviceController.displaySchedule());
+                print("Enter the shift you want to remove:");
+                String shiftInput = getUserInput();
+                Response response = serviceController.removeShift(shiftInput);
+                if (response.errorOccurred()) {
+                    print(response.getErrorMessage());
+                } else {
+                    print("Shift was removed successfully.\nYour new schedule:");
+                    print(serviceController.displaySchedule());
+                }
             }
         }
     }
@@ -259,29 +315,36 @@ public class EmployeeMainCLI extends MainCLI {
     }
 
     public void midShiftActions() {
-        String optionList = "\nChoose your action:\n1. Cancel customer purchase\n2. Add an employee to the shift" +
-                "\n3. Remove an employee from the shift";
-        String input = getValidInput(optionList, "",
-                (arg) -> !arg.equals("1") && !arg.equals("2") && !arg.equals("3") ?
-                        new Response("You must choose the number of operation you want to perform") :
-                        new Response());
-        if (input.equals("1")) {
-            print("Sorry, this feature is not supported at this moment.");
-        } else if (input.equals("2")) {
-            String toPrint = "Choose the type of job the employee will be doing in this shift:\n1.Human resources manager\n2.Shift manager (notice that the new shift manager will replace the current one, and the current one will leave the shift)" +
-                    "\n3.Cashier\n4.Stock keeper\n5.Driver\n6.Merchandiser\n7.Logistics manager\n8.Transport manager";
-            String jobNum = getValidInput(toPrint, "", serviceController::isValidJobNumber);
-            print(serviceController.getAllCertified(jobNum, false).toString());
-            print("From the above list, enter the id of the employee you want to add");
-            String id = getValidId();
-            Response response = serviceController.isCertified(id, jobNum);
-            if (response.errorOccurred()) {
-                print(response.getErrorMessage());
-            } else {
-                if (!serviceController.addEmployeeToCurrentShift(id, jobNum)) {
-                    print("Employee is already working in this shift");
+        while (true) {
+            String optionList = "\nChoose your action:\n0.Go back\n1.Start shift\n2.End shift\n3.Add an employee to the shift" +
+                    "\n4.Remove an employee from the shift";
+            String input = getValidInput(optionList, "",
+                    (arg) -> !arg.equals("0") && !arg.equals("1") && !arg.equals("2") && !arg.equals("3") && !arg.equals("4") ?
+                            new Response("You must choose the number of operation you want to perform") :
+                            new Response());
+            if (input.equals("0")) {
+                return;
+            } else if (input.equals("1")) {
+                startShift();
+//            print("Sorry, this feature is not supported at this moment.");
+            } else if (input.equals("2")) {
+                endShift();
+            } else if (input.equals("3")) {
+                String toPrint = "Choose the type of job the employee will be doing in this shift:\n1.Human resources manager\n2.Shift manager (notice that the new shift manager will replace the current one, and the current one will leave the shift)" +
+                        "\n3.Cashier\n4.Stock keeper\n5.Driver\n6.Merchandiser\n7.Logistics manager\n8.Transport manager";
+                String jobNum = getValidInput(toPrint, "", serviceController::isValidJobNumber);
+                print(serviceController.getAllCertified(jobNum, false).toString());
+                print("From the above list, enter the id of the employee you want to add");
+                String id = getValidId();
+                Response response = serviceController.isCertified(id, jobNum);
+                if (response.errorOccurred()) {
+                    print(response.getErrorMessage());
                 } else {
-                    print("Employee was added successfully");
+                    if (!serviceController.addEmployeeToCurrentShift(id, jobNum)) {
+                        print("Employee is already working in this shift");
+                    } else {
+                        print("Employee was added successfully");
+                    }
                 }
             }
         }
@@ -338,7 +401,7 @@ public class EmployeeMainCLI extends MainCLI {
     public void editDetails() {
         print("Enter the id of the employee you want to edit");
         String id = getValidId();
-        String detailList = "Choose which detail you want to edit:\n1.name\n2.password\n3.salary\n4.bank account " +
+        String detailList = "Choose which detail you want to edit:\n0.Go back\n1.name\n2.password\n3.salary\n4.bank account " +
                 "information\n5.contract of employment";
         String sChoice = getValidInput(detailList, "You must choose one of the given options",
                 (choice) -> (choice.equals("1") || choice.equals("2") || choice.equals("3") || choice.equals("4")
@@ -347,6 +410,7 @@ public class EmployeeMainCLI extends MainCLI {
                         new Response("Invalid choice")));
         boolean success = false;
         switch (sChoice) {
+            case "0" : return;
             case "1": {
                 print("Enter the new name of the employee");
                 String newName = getValidName();

@@ -236,4 +236,94 @@ public class Parser {
             return new Response("Invalid license");
         return new Response();
     }
+
+    public String displaySubMenu(String action, boolean hrManager) {
+        if (hrManager){
+            switch (action){
+                case "1": return "1.View schedule\n2.Add available time slot\n3.Remove available time slot\n4.Reset schedule";
+                case "2": return "1.Start shift\n2.End shift\n3.Add employee to current shift\n4.Remove employee from current shift";
+                case "3": return "1.Register employee\n2.Delete employee\n3.Certify employee\n4.Manage employee Details";
+                case "4": return "1.Create shift\n2.View shift\n3.Delete shift";
+                case "5": return "Logging out...";
+                default: return "Invalid choice";
+            }
+        }
+        else{
+            switch (action){
+                case "1": return "1.View schedule\n2.Add available time slot\n3.Remove available time slot\n4.Reset schedule";
+                case "2": return "1.Start shift\n2.End shift\n3.Add employee to current shift\n4.Remove employee from current shift";
+                case "3": return "Logging out...";
+                default: return "Invalid choice";
+            }
+        }
+    }
+
+    public Action parseManageSchedule(String choice) {
+        if (choice.equals("0")){
+            return Action.GO_BACK;
+        }
+        else if (choice.equals("1")){
+            return Action.DISPLAY_SCHEDULE;
+        }
+        else if (choice.equals("2")){
+            return Action.CHANGE_SCHEDULE;
+        }
+        else {
+            return Action.ILLEGAL_ACTION;
+        }
+    }
+
+    public Action parseManageEmployees(String choice) {
+        if (choice.equals("0")){
+            return Action.GO_BACK;
+        }
+        else if (choice.equals("1")){
+            return Action.REGISTER_EMPLOYEE;
+        }
+        else if (choice.equals("2")){
+            return Action.DELETE_EMPLOYEE;
+        }
+        else if (choice.equals("3")){
+            return Action.CERTIFY_EMPLOYEE;
+        }
+        else if (choice.equals("4")){
+            return Action.MANAGE_DETAILS;
+        }
+        else{
+            return Action.ILLEGAL_ACTION;
+        }
+    }
+
+    public Action parseManageDetails(String choice) {
+        if (choice.equals("0")){
+            return Action.GO_BACK;
+        }
+        else if (choice.equals("1")){
+            return Action.VIEW_EMPLOYEE_DETAILS;
+        }
+        else if (choice.equals("2")){
+            return Action.EDIT_EMPLOYEE_DETAILS;
+        }
+        else{
+            return Action.ILLEGAL_ACTION;
+        }
+    }
+
+    public Action parseManageShifts(String choice) {
+        if (choice.equals("0")){
+            return Action.GO_BACK;
+        }
+        else if (choice.equals("1")){
+            return Action.CREATE_SHIFT;
+        }
+        else if (choice.equals("2")){
+            return Action.VIEW_SHIFT;
+        }
+        else if (choice.equals("3")){
+            return Action.DELETE_SHIFT;
+        }
+        else{
+            return Action.ILLEGAL_ACTION;
+        }
+    }
 }
