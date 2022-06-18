@@ -547,7 +547,7 @@ public class UserInterface extends MainCLI {
             System.out.println("Please enter a "+" -Driver ID- "+" from the list below:");
             driversLst = os.showDrivers(date,time);
             if(driversLst.isEmpty()){
-
+                return null;
             }
             System.out.println(driversLst);
             Scanner input = new Scanner(System.in);
