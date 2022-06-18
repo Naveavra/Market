@@ -32,8 +32,8 @@ public class EmployeeMainCLI extends MainCLI {
                     break;
                 print(serviceController.displayActions());
                 String action = getUserInput();
-                if (action.equals("goodbye")) {
-                    print("Goodbye");
+                if (action.equals("exit")) {
+                    print("exit");
                     break;
                 }
                 parseAndDoAction(action);

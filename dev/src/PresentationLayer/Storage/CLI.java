@@ -23,9 +23,9 @@ public class CLI
         String detail;
         String line = "";
         System.out.println("Program Started");
-        while(!line.equals("go back"))
+        while(!line.equals("exit"))
         {
-            System.out.println("Instructions for the warehouse worker:");
+            System.out.println("Instructions for the warehouse worker: \n for exit please insert \"exit\":");
             System.out.println("\t1) Buy product Menu");
             System.out.println("\t2) Add new Product Menu");
             System.out.println("\t3) Add new category Menu");
@@ -33,7 +33,7 @@ public class CLI
             System.out.println("insert commend number:");
             line = in.nextLine();
             command = line;
-            if(!command.equals("go back"))
+            if(!command.equals("exit"))
             {
                 switch (command)
                 {
