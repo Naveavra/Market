@@ -68,7 +68,7 @@ public class NewFunctionalityTest {
         assign();
         OrderDocDAO dao = new OrderDocDAO();
         facadeSupplier.buyItems(1, 4);
-        int id = dao.getLastId();
+        int id = dao.getLastId()-1;
         int before = cC.getProductWithId(1).getCurAmount();
         facadeSupplier.getItemsFromTransport(id);
         int added = cC.getProductWithId(1).getCurAmount()-before;
@@ -85,6 +85,7 @@ public class NewFunctionalityTest {
 
         //make here the there is no driver available and try to send an order
         assign();
+        facadeSupplier.buyItems(1,1);
         facadeSupplier.buyItems(1,1);
         String ans = facadeTransport.displayMessages("318856994");
         assertTrue(ans.length()>2);
